@@ -13,7 +13,7 @@ import { Config } from '../interfaces/config.model';
 })
 export class ConfigService {
 
-  defaultConfig = ConfigName.apollo;
+  defaultConfig = ConfigName.ikaros;
 
   configs: Config[] = configs;
 
