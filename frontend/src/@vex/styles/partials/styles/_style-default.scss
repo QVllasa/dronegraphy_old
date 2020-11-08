@@ -8,7 +8,9 @@
   --padding-8: 0.5rem;
   --padding-4: 0.25rem;
 
-  --color-primary: 92, 119, 255;
+
+
+  --color-primary: 65, 160, 240;
   --color-primary-contrast: 255, 255, 255;
 
   --color-accent: 255, 64, 129;
@@ -91,7 +93,7 @@
   --elevation-z20: #{vex-elevation(20)};
 
   // Sidenav
-  --sidenav-width: 280px;
+  --sidenav-width: 32rem;
   --sidenav-collapsed-width: 72px;
   --sidenav-background: #{$sidenav-background};
   --sidenav-color: white;
@@ -100,9 +102,9 @@
   --sidenav-item-padding: var(--padding);
   --sidenav-toolbar-background: #{darken($sidenav-background, 1.5)};
   --sidenav-item-background-active: #{darken($sidenav-background, 3)};
-  --sidenav-item-color: #A1A2B6;
+  --sidenav-item-color: #0073ec;
   --sidenav-item-color-active: #{$light-primary-text};
-  --sidenav-item-icon-color: #494B74;
+  --sidenav-item-icon-color: #0073ec;
   --sidenav-item-icon-color-active: rgb(var(--color-primary));
   --sidenav-item-icon-gap: 16px;
   --sidenav-item-icon-size: 24px;
@@ -113,7 +115,7 @@
   --sidenav-item-dropdown-gap: 12px;
 
   // Toolbar
-  --toolbar-height: 64px;
+  --toolbar-height: 56px;
   --toolbar-background: white;
   --toolbar-color: #{$dark-primary-text};
   --toolbar-icon-color: rgb(var(--color-primary));

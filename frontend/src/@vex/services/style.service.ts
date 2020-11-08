@@ -16,7 +16,7 @@ export enum Style {
 })
 export class StyleService {
 
-  defaultStyle = Style.default;
+  defaultStyle = Style.light;
 
   private _styleSubject = new BehaviorSubject<Style>(this.defaultStyle);
   style$ = this._styleSubject.asObservable();

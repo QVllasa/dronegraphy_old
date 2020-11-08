@@ -7,19 +7,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { VexModule } from '../@vex/vex.module';
 import { HttpClientModule } from '@angular/common/http';
 import { CustomLayoutModule } from './custom-layout/custom-layout.module';
+import {ToolbarModule} from "../@vex/layout/toolbar/toolbar.module";
+import { HomeComponent } from './pages/home/home.component';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
 
-    // Vex
-    VexModule,
-    CustomLayoutModule
-  ],
+        // Vex
+        VexModule,
+        CustomLayoutModule,
+        ToolbarModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

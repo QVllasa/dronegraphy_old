@@ -78,11 +78,35 @@ export class AppComponent {
 
     this.navigationService.items = [
       {
+        type: 'header-link',
+        label: 'Durchsuchen',
+        route: '/'
+      },
+      {
+        type: 'header-link',
+        label: 'Cockpit',
+        route: '/'
+      },
+      {
+        type: 'header-link',
+        label: 'Piloten',
+        route: '/'
+      },
+      {
         type: 'link',
         label: 'Dashboard',
-        route: '/',
-        icon: icLayers
-      }
+        route: '/'
+      },
+      {
+        type: 'button',
+        label: 'Dashboard',
+        route: '/'
+      },
+      {
+        type: 'button',
+        label: 'Dashboard',
+        route: '/'
+      },
     ];
   }
 }

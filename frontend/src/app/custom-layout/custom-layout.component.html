@@ -3,17 +3,15 @@
 </ng-template>
 
 <ng-template #toolbarRef>
-  <vex-toolbar [hasShadow]="toolbarShadowEnabled$ | async"
-               [mobileQuery]="!(isDesktop$ | async)"
-               class="vex-toolbar"></vex-toolbar>
+  <vex-toolbar class="vex-toolbar fixed  z-50"></vex-toolbar>
 </ng-template>
 
 <ng-template #footerRef>
-  <vex-footer *ngIf="isFooterVisible$ | async" class="vex-footer"></vex-footer>
+<!--  <vex-footer *ngIf="isFooterVisible$ | async" class="vex-footer"></vex-footer>-->
 </ng-template>
 
 <ng-template #quickpanelRef>
-  <vex-quickpanel></vex-quickpanel>
+<!--  <vex-quickpanel></vex-quickpanel>-->
 </ng-template>
 
 <vex-layout [footerRef]="footerRef"
@@ -21,7 +19,7 @@
             [sidenavRef]="sidenavRef"
             [toolbarRef]="toolbarRef"></vex-layout>
 
-<vex-config-panel-toggle (openConfig)="configpanel.open()"></vex-config-panel-toggle>
+<!--<vex-config-panel-toggle (openConfig)="configpanel.open()"></vex-config-panel-toggle>-->
 
 <!-- CONFIGPANEL -->
 <vex-sidebar #configpanel [invisibleBackdrop]="true" position="right">

@@ -26,11 +26,11 @@ import icSearch from '@iconify/icons-ic/twotone-search';
 })
 export class ToolbarComponent implements OnInit {
 
-  @Input() mobileQuery: boolean;
+  // @Input() mobileQuery: boolean;
 
   @Input()
   @HostBinding('class.shadow-b')
-  hasShadow: boolean;
+  // hasShadow: boolean;
 
   navigationItems = this.navigationService.items;
 
