@@ -1,0 +1,43 @@
+<div (mouseenter)="onShow()" (mouseleave)="onHide()" class="video-container rounded" [style.backgroundImage]="poster">
+  <app-vjs-player fxFill [style.backgroundImage]="poster" *ngIf="loadStatus" [options]=
+    "{
+    poster: videoItem.poster,
+    fluid: false,
+    aspectRatio: '16:9',
+    autoplay: true,
+    controls: false,
+    inactivityTimeout: 0,
+    videopage: false,
+    sources: [{src: videoItem.itemPath, type: 'application/x-mpegURL'}]
+    }"
+  ></app-vjs-player>
+<!--  <div class="position-absolute" fxLayout="column" fxLayoutAlign="space-between" fxFill>-->
+<!--    <div fxFlex="20" fxLayoutAlign="end start" fxFlexFill >-->
+<!--      <mat-chip-list>-->
+<!--        <mat-chip *ngIf="videoItem.sell" color="primary" selected>pro</mat-chip>-->
+<!--        <mat-chip *ngIf="!videoItem.sell" color="accent">linzenzfrei</mat-chip>-->
+<!--      </mat-chip-list>-->
+<!--    </div>-->
+<!--    <div fxFlex="20" fxFlexFill>-->
+<!--      <div fxFlex="70">-->
+<!--        <div fxLayout="column" fxLayoutAlign="center start" class="video-item-title" fxFill-->
+<!--           (click)="onLoadVideo()">-->
+<!--          <mat-label class="font-s  mat-body-strong">{{videoItem.title}}</mat-label>-->
+<!--          <mat-label class=" font-s mat-body-1 font-weight-lighter">Von {{videoItem.creator}}</mat-label>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div fxFlex="auto" fxLayoutAlign="end center" class="video-item-button-wrapper">-->
+<!--        <button mat-icon-button>-->
+<!--          <mat-icon class="material-icons-round mat-icon-sm">add_shopping_cart</mat-icon>-->
+<!--        </button>-->
+<!--        <button mat-icon-button>-->
+<!--          <mat-icon class="material-icons-round mat-icon-sm">favorite_border</mat-icon>-->
+<!--        </button>-->
+<!--        <button mat-icon-button>-->
+<!--          <mat-icon  class="material-icons-round mat-icon-sm">share</mat-icon>-->
+<!--        </button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+</div>
+

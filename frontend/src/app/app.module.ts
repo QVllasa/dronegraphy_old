@@ -8,22 +8,27 @@ import { VexModule } from '../@vex/vex.module';
 import { HttpClientModule } from '@angular/common/http';
 import { CustomLayoutModule } from './custom-layout/custom-layout.module';
 import {ToolbarModule} from "../@vex/layout/toolbar/toolbar.module";
-import { HomeComponent } from './pages/home/home.component';
+
+import {GridModule} from "@angular/flex-layout";
+
+
+
 
 @NgModule({
-  declarations: [AppComponent],
+    declarations: [AppComponent],
     imports: [
         BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
         HttpClientModule,
-
-        // Vex
         VexModule,
         CustomLayoutModule,
-        ToolbarModule
+        ToolbarModule,
+        GridModule
     ],
-  providers: [],
-  bootstrap: [AppComponent]
+    providers: [],
+    exports: [
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,0 +1,26 @@
+.center {
+  text-align: center;
+
+  .d-flex.justify-content-center{
+    top: 30px;
+    position: relative;
+  }
+
+}
+
+mat-form-field{
+  max-width: 600px;
+  min-width: 50px;
+  width: 100%;
+}
+
+
+
+.intro-background{
+  position: absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index: -1;
+}

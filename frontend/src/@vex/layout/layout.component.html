@@ -17,7 +17,6 @@
 
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav
-                 [disableClose]="isDesktop$ | async"
                  [fixedInViewport]="!(isDesktop$ | async)"
                  [mode]="!(isDesktop$ | async) || (isLayoutVertical$ | async) ? 'over' : 'side'"
                  [opened]="(isDesktop$ | async) && !(isLayoutVertical$ | async)"
