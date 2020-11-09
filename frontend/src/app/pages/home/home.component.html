@@ -3,10 +3,13 @@
         <vex-start></vex-start>
     </section>
     <section fxLayout="row" fxLayoutGap="24px">
-        <div fxLayout="column" fxFlex="20">
-            <tree-checkboxes class="bg-green shadow-md"></tree-checkboxes>
+        <div fxLayout="column" fxFlex="">
+            <div class="sticky top-100 text-center shadow-md bg-white pb-8">
+                <tree-checkboxes class="bg-green "></tree-checkboxes>
+                <button mat-flat-button color="primary" class="mt-8" >Starten</button>
+            </div>
         </div>
-        <div fxLayout="column" fxFlex="80" class="">
+        <div fxLayout="column" fxFlex="auto" class="">
             <vex-video-grid></vex-video-grid>
         </div>
     </section>
