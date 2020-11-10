@@ -1,7 +1,7 @@
 <div class="toolbar w-full px-gutter shadow-md" fxLayout="row" fxLayoutAlign="space-between center">
 
     <div>
-        <button class="absolute" (click)="openSidenav()" mat-fab color="primary" type="button">
+        <button class="absolute top-8" (click)="openSidenav()" mat-fab color="primary" type="button">
             <mat-icon class="text-white">menu</mat-icon>
         </button>
     </div>
@@ -13,9 +13,9 @@
 
     <vex-toolbar-search></vex-toolbar-search>
 
-    <div class="-mx-1 flex items-center">
-        <div class="px-1">
-            <vex-toolbar-user></vex-toolbar-user>
-        </div>
+    <div class="-mx-1 flex items-center" fxLayoutGap="8px">
+        <button mat-flat-button color="primary">Starten</button>
+        <button mat-flat-button class="text-primary">Preise</button>
+        <vex-toolbar-user></vex-toolbar-user>
     </div>
 </div>
