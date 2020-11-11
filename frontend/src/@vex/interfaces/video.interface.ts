@@ -1,9 +1,9 @@
-import {User} from './user.interface';
+import {IUser} from './user.interface';
 
 export interface Video {
    id: number;
    title: string;
-   creator: User;
+   creator: IUser;
    location: string;
    poster: string;
    itemPath: string;

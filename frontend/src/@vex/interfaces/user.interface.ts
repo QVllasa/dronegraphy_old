@@ -1,7 +1,4 @@
-import {Video} from './video.interface';
-import {Order} from './order.interface';
-
-export interface User {
+export interface IUser {
    userId: string;
    email: string;
    password?: string;
@@ -12,8 +9,8 @@ export interface User {
    imgPath?: string;
    activated?: boolean;
    // [videos: number]: Video[];
-   orders?: Order[];
-   favorites?: Video[];
-   saved?: User[];
-   job?: any;
+   // orders?: Order[];
+   // favorites?: Video[];
+   // saved?: IUser[];
+   // job?: any;
 }

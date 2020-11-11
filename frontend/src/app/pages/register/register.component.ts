@@ -2,7 +2,8 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {particleConfig} from "../../../../particle";
-import {AngularFireAuth} from "@angular/fire/auth";
+import {AuthenticationService} from "../../../@vex/services/auth.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
     selector: 'vex-register',
@@ -14,7 +15,7 @@ export class RegisterComponent implements OnInit {
     form: FormGroup;
 
     particlesOptions = particleConfig;
-
+    isLoading: boolean;
     inputType = 'password';
     visible = false;
 
@@ -22,7 +23,8 @@ export class RegisterComponent implements OnInit {
     constructor(private router: Router,
                 private fb: FormBuilder,
                 private cd: ChangeDetectorRef,
-                private auth: AngularFireAuth
+                private authService: AuthenticationService,
+                private _snackBar: MatSnackBar
     ) {
     }
 
@@ -35,13 +37,24 @@ export class RegisterComponent implements OnInit {
     }
 
     send() {
-        this.auth.createUserWithEmailAndPassword(this.form.get('email').value, this.form.get('password').value)
+        this.isLoading = true;
+        const name = this.form.get('name').value;
+        const email = this.form.get('email').value;
+        const password = this.form.get('password').value;
+        this.authService.signUp(email, password)
             .then(res => {
-            console.log(res);
-        }).catch(err => {
-            console.log(err);
-        })
-
+               this.isLoading = false;
+               this.router.navigate(['/']);
+            })
+            .catch(err => {
+                this.isLoading = false;
+                console.log(err);
+                if (err.code === 'auth/email-already-in-use'){
+                    this._snackBar.open('Pilot existiert bereits.', 'SCHLIESSEN');
+                }else {
+                    this._snackBar.open('Unbekannter Fehler', 'SCHLIESSEN');
+                }
+            })
     }
 
     toggleVisibility() {

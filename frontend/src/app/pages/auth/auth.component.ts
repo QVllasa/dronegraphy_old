@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AngularFireAuth} from "@angular/fire/auth";
+import {AuthenticationService} from "../../../@vex/services/auth.service";
 
 @Component({
     selector: 'vex-auth',
@@ -20,7 +21,7 @@ export class AuthComponent implements OnInit {
     constructor(private router: Router,
                 private fb: FormBuilder,
                 private cd: ChangeDetectorRef,
-                public auth: AngularFireAuth,
+                private authService: AuthenticationService,
                 private _snackBar: MatSnackBar
     ) {
     }
@@ -33,25 +34,24 @@ export class AuthComponent implements OnInit {
         });
     }
 
-    login() {
-
-    }
 
     send() {
         this.isLoading = true;
-        this.auth.signInWithEmailAndPassword(this.form.get('email').value, this.form.get('password').value).then(res => {
+        const email = this.form.get('email').value;
+        const password = this.form.get('password').value;
+        this.authService.signIn(email, password)
+            .then(res => {
             console.log(res);
             this.isLoading = false;
-            this.router.navigate(['/']);
-        }).catch(err => {
+            this.router.navigate(['/']);})
+            .catch(err => {
             this.isLoading = false;
             console.log(err);
             if (err.code === 'auth/user-not-found'){
                 this._snackBar.open('Pilot nicht gefunden.', 'SCHLIESSEN');
             }else {
                 this._snackBar.open('Unbekannter Fehler', 'SCHLIESSEN');
-            }
-        });
+            }});
     }
 
     toggleVisibility() {

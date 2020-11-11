@@ -13,6 +13,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {RegisterRoutingModule} from "./register-routing.module";
 import {NgParticlesModule} from "ng-particles";
 import {MatListModule} from "@angular/material/list";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 
@@ -31,7 +32,8 @@ import {MatListModule} from "@angular/material/list";
         RouterModule,
         MatIconModule,
         NgParticlesModule,
-        MatListModule
+        MatListModule,
+        MatSnackBarModule
     ]
 })
 export class RegisterModule { }
