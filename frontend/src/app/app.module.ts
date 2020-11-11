@@ -8,8 +8,10 @@ import { VexModule } from '../@vex/vex.module';
 import { HttpClientModule } from '@angular/common/http';
 import { CustomLayoutModule } from './custom-layout/custom-layout.module';
 import {ToolbarModule} from "../@vex/layout/toolbar/toolbar.module";
-
 import {GridModule} from "@angular/flex-layout";
+import {AngularFireModule} from "@angular/fire";
+import {environment} from "../environments/environment";
+
 
 
 
@@ -23,6 +25,7 @@ import {GridModule} from "@angular/flex-layout";
         HttpClientModule,
         VexModule,
         CustomLayoutModule,
+        AngularFireModule.initializeApp(environment.firebase),
         ToolbarModule,
         GridModule
     ],

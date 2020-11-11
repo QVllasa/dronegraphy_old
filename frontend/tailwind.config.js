@@ -12,7 +12,8 @@ module.exports = {
     screens: {
       sm: '600px',
       md: '960px',
-      lg: '1280px'
+      lg: '1280px',
+      xl: '1440px'
     },
     colors: {
       current: 'currentColor',

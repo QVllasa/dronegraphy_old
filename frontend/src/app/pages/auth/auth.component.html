@@ -1,0 +1,47 @@
+<div class="w-full h-screen bg-pattern" fxLayout="column" fxLayoutAlign="center center">
+    <h1 fxLayoutAlign="center" class="mat-display-2">Login</h1>
+    <div class="card overflow-hidden w-full max-w-xs">
+        <div [formGroup]="form" class="p-6" fxLayout="column" fxLayoutGap="16px">
+            <div fxFlex="auto" fxLayout="column">
+                <mat-form-field fxFlex="grow" appearance="outline" >
+                    <mat-label>E-Mail</mat-label>
+                    <input formControlName="email" matInput required>
+                    <mat-error *ngIf="!form.get('email').valid || form.get('email').hasError('required')"> Ohne E-Mail besteht leider kein Funkkontakt.</mat-error>
+                </mat-form-field>
+                <mat-form-field fxFlex="grow" appearance="outline">
+                    <mat-label>Password</mat-label>
+                    <input [type]="inputType" formControlName="password" matInput required>
+                    <button (click)="toggleVisibility()" mat-icon-button matSuffix matTooltip="Toggle Visibility" type="button">
+                        <mat-icon *ngIf="visible">visibility</mat-icon>
+                        <mat-icon *ngIf="!visible">visibility_off</mat-icon>
+                    </button>
+                    <mat-hint>Click the eye to toggle visibility</mat-hint>
+                    <mat-error *ngIf="form.get('password').hasError('required')">Oops, das Password fehlt.</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <mat-checkbox class="caption" color="primary">Angemeldet bleiben</mat-checkbox>
+            </div>
+
+            <button (click)="send()" [color]="!isLoading ? 'primary' : null" mat-flat-button type="button" [disabled]="!form.valid" >
+                <div  *ngIf="isLoading" class="h-10 w-full" fxLayout="row" fxLayoutAlign="center center">
+                    <mat-spinner color="primary" diameter="25" ></mat-spinner>
+                </div>
+                <span *ngIf="!isLoading">LOGIN</span>
+            </button>
+
+            <button mat-button [routerLink]="['/register']">
+                <span>Noch keinen Account?</span>
+                <mat-icon inline>keyboard_arrow_right</mat-icon>
+            </button>
+            <button mat-button [routerLink]="['/forgot-password']">
+                <span>Passwort vergessen?</span>
+                <mat-icon inline>keyboard_arrow_right</mat-icon>
+            </button>
+
+        </div>
+    </div>
+</div>
+
+

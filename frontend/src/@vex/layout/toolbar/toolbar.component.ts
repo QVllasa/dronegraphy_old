@@ -32,6 +32,9 @@ export class ToolbarComponent implements OnInit {
   @HostBinding('class.shadow-b')
   // hasShadow: boolean;
 
+      isLoggedIn: boolean = false;
+
+
   navigationItems = this.navigationService.items;
 
   isHorizontalLayout$ = this.configService.config$.pipe(map(config => config.layout === 'horizontal'));

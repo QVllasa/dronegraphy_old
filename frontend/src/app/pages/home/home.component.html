@@ -1,13 +1,14 @@
 <div class="w-full h-full p-gutter container bg-pattern" fxLayout="column" fxFill>
     <section fxLayout="row" fxLayoutAlign="center center" fxFlex="450px" class="bg-blue">
-        <vex-start></vex-start>
+        <vex-header></vex-header>
     </section>
     <section fxLayout="row" fxLayoutGap="24px">
         <div fxLayout="column" fxFlex="250px">
-            <div class="sticky top-100 text-center shadow-md bg-white pb-8">
+            <div class="sticky top-32 text-center shadow-md bg-white pb-8">
                 <tree-checkboxes class="bg-green "></tree-checkboxes>
-                <button mat-flat-button color="primary" class="mt-8">Starten</button>
             </div>
+            <button mat-flat-button color="primary" class="mt-8">Starten</button>
+            <button mat-flat-button  class="mt-8">Alle Piloten</button>
         </div>
         <div fxLayout="column" fxFlex="auto" class="">
             <vex-video-grid></vex-video-grid>

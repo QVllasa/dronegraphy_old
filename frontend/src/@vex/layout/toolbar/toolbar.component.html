@@ -1,21 +1,47 @@
 <div class="toolbar w-full px-gutter shadow-md" fxLayout="row" fxLayoutAlign="space-between center">
-
     <div>
         <button class="absolute top-8" (click)="openSidenav()" mat-fab color="primary" type="button">
             <mat-icon class="text-white">menu</mat-icon>
         </button>
     </div>
-
-    <!--        <div class="absolute">-->
-    <!--            <img class="inline h-8" src="assets/img/logo/dronegraphy_Logo_V2.4.svg" alt="">-->
-    <!--            <img class="inline h-8" src="assets/img/logo/dronegraphy_Schrift_V2.0.svg" alt="dronegraphy">-->
-    <!--        </div>-->
-
     <vex-toolbar-search></vex-toolbar-search>
 
-    <div class="-mx-1 flex items-center" fxLayoutGap="8px">
-        <button mat-flat-button color="primary">Starten</button>
-        <button mat-flat-button class="text-primary">Preise</button>
-        <vex-toolbar-user></vex-toolbar-user>
-    </div>
+    <ng-container *ngIf="!isLoggedIn">
+        <div class="-mx-1 flex items-center" fxLayoutGap="8px">
+            <button mat-flat-button color="primary" routerLink="/register">Starten</button>
+            <button mat-flat-button class="text-primary" routerLink="/pricing">Preise</button>
+            <vex-toolbar-user></vex-toolbar-user>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="isLoggedIn">
+        <div>
+            <mat-icon>
+
+            </mat-icon>
+        </div>
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>
+                keyboard_arrow_down
+            </mat-icon>
+        </button>
+    </ng-container>
+
+
 </div>
+
+
+<mat-menu #menu="matMenu">
+    <button mat-menu-item>
+        <mat-icon> dialpad</mat-icon>
+        <span> Redial </span>
+    </button>
+    <button mat-menu-item disabled>
+        <mat-icon> voicemail</mat-icon>
+        <span> Check voicemail </span>
+    </button>
+    <button mat-menu-item>
+        <mat-icon> notifications_off</mat-icon>
+        <span> Disable alerts </span>
+    </button>
+</mat-menu>
