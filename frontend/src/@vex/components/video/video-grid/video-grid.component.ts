@@ -24,7 +24,6 @@ export class VideoGridComponent implements OnInit {
 
   ngOnInit() {
     this.videos = this.videoService.getVideos(0, this.initialBatch);
-    console.log(this.videos);
   }
 
   // onScrollDown() {

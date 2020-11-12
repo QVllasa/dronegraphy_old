@@ -1,7 +1,38 @@
-<div class="flex items-center rounded cursor-pointer relative trans-ease-out select-none py-1 pr-1 pl-3 hover:bg-hover"
-     matRipple routerLink="login">
-  <div class="rounded-full h-9 w-9 flex items-center justify-center text-primary bg-primary-light">
-    <mat-icon>account_circle</mat-icon>
+<ng-container *ngIf="auth.user$ | async as user; else login" >
+  <div class="-mx-1 flex items-center " fxLayoutGap="8px">
+    <div class="rounded-full flex items-center justify-center text-primary bg-primary-light cursor-pointer">
+      <mat-icon>account_circle</mat-icon>
+      <a class="px-3 text-primary">{{user.firstName}}'s Aufnahmen</a>
+    </div>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon color="primary">
+        keyboard_arrow_down
+      </mat-icon>
+    </button>
   </div>
-  <div class="body-1 font-medium leading-snug mx-3 text-primary" fxHide.xs>Login</div>
-</div>
+</ng-container>
+
+<ng-template  #login>
+  <div class="flex items-center rounded cursor-pointer relative trans-ease-out select-none py-1 pr-1 pl-3 hover:bg-hover"
+       matRipple routerLink="login">
+    <div class="rounded-full h-9 w-9 flex items-center justify-center text-primary bg-primary-light">
+      <mat-icon>account_circle</mat-icon>
+    </div>
+    <div class="body-1 font-medium leading-snug mx-3 text-primary" fxHide.xs>Login</div>
+
+  </div>
+</ng-template>
+
+
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item>
+    <span> Account </span>
+  </button>
+  <button mat-menu-item>
+    <span> Cockpit </span>
+  </button>
+  <button mat-menu-item (click)="auth.signOut()">
+    <span> Ausloggen </span>
+  </button>
+</mat-menu>

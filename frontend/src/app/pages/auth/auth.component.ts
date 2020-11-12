@@ -5,6 +5,12 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {AngularFireAuth} from "@angular/fire/auth";
 import {AuthenticationService} from "../../../@vex/services/auth.service";
 
+export interface Roles {
+    standard?: boolean;
+    creator?: boolean;
+    admin?: boolean;
+}
+
 @Component({
     selector: 'vex-auth',
     templateUrl: './auth.component.html',

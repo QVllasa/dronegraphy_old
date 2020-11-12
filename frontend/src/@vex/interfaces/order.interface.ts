@@ -1,8 +1,8 @@
-import {User} from './user.interface';
+import {IUser} from './user.interface';
 
 export interface Order {
   id: number;
-  user: User;
+  user: IUser;
   amount: number;
   payment: 'paypal' | 'other';
 }

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { PopoverService } from '../../../components/popover/popover.service';
 import { ToolbarUserDropdownComponent } from './toolbar-user-dropdown/toolbar-user-dropdown.component';
 import icPerson from '@iconify/icons-ic/twotone-person';
+import {AuthenticationService} from "../../../services/auth.service";
 
 @Component({
   selector: 'vex-toolbar-user',
@@ -13,10 +14,15 @@ export class ToolbarUserComponent implements OnInit {
   dropdownOpen: boolean;
   icPerson = icPerson;
 
+
   constructor(private popover: PopoverService,
+              public auth: AuthenticationService,
               private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.auth.user$.subscribe(user => {
+      console.log('current user: ', user);
+    })
   }
 
   showPopover(originRef: HTMLElement) {

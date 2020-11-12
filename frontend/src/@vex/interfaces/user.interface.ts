@@ -1,11 +1,13 @@
+import {Roles} from "../../app/pages/auth/auth.component";
+
 export interface IUser {
-   userId: string;
+   uid: string;
    email: string;
    password?: string;
    firstName?: string;
    lastName?: string;
    country?: string;
-   role?: 'admin' | 'pilot' | 'standard';
+   roles?: Roles;
    imgPath?: string;
    activated?: boolean;
    // [videos: number]: Video[];

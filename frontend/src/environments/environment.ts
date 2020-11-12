@@ -5,10 +5,14 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: 'AIzaSyA18nrjbOfo5clPbCwNbna0f9oSfjckLOg',
-    authDomain: 'drophy-24f06.firebaseapp.com',
-    databaseURL: 'https://drophy-24f06.firebaseio.com/',
-    projectId: 'drophy-24f06'
+    apiKey: "AIzaSyA18nrjbOfo5clPbCwNbna0f9oSfjckLOg",
+    authDomain: "drophy-24f06.firebaseapp.com",
+    databaseURL: "https://drophy-24f06.firebaseio.com",
+    projectId: "drophy-24f06",
+    storageBucket: "drophy-24f06.appspot.com",
+    messagingSenderId: "410023781698",
+    appId: "1:410023781698:web:b6119632db9e59171a14db",
+    measurementId: "G-ZGXXDP1T0J"
   }
 };
 

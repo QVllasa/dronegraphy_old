@@ -6,42 +6,19 @@
     </div>
     <vex-toolbar-search></vex-toolbar-search>
 
-    <ng-container *ngIf="!isLoggedIn">
+    <ng-container>
         <div class="-mx-1 flex items-center" fxLayoutGap="8px">
-            <button mat-flat-button color="primary" routerLink="/register">Starten</button>
+            <button *ngIf="(authService.user$ | async)" mat-icon-button>
+                <div class="rounded-full flex items-center justify-center text-primary bg-primary-light cursor-pointer h-9 w-9">
+                    <mat-icon>shopping_cart</mat-icon>
+                </div>
+            </button>
+            <button *ngIf="!(authService.user$ | async)" mat-flat-button color="primary" routerLink="/register">Starten</button>
             <button mat-flat-button class="text-primary" routerLink="/pricing">Preise</button>
             <vex-toolbar-user></vex-toolbar-user>
         </div>
     </ng-container>
 
-    <ng-container *ngIf="isLoggedIn">
-        <div>
-            <mat-icon>
-
-            </mat-icon>
-        </div>
-        <button mat-icon-button [matMenuTriggerFor]="menu">
-            <mat-icon>
-                keyboard_arrow_down
-            </mat-icon>
-        </button>
-    </ng-container>
-
-
 </div>
 
 
-<mat-menu #menu="matMenu">
-    <button mat-menu-item>
-        <mat-icon> dialpad</mat-icon>
-        <span> Redial </span>
-    </button>
-    <button mat-menu-item disabled>
-        <mat-icon> voicemail</mat-icon>
-        <span> Check voicemail </span>
-    </button>
-    <button mat-menu-item>
-        <mat-icon> notifications_off</mat-icon>
-        <span> Disable alerts </span>
-    </button>
-</mat-menu>

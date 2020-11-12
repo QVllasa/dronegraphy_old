@@ -39,22 +39,29 @@ export class RegisterComponent implements OnInit {
     send() {
         this.isLoading = true;
         const name = this.form.get('name').value;
+        const firstName = name.substr(0, name.indexOf(' '));
+        const lastName = name.substr(name.indexOf(' ') + 1);
         const email = this.form.get('email').value;
         const password = this.form.get('password').value;
         this.authService.signUp(email, password)
             .then(res => {
-               this.isLoading = false;
-               this.router.navigate(['/']);
-            })
-            .catch(err => {
-                this.isLoading = false;
-                console.log(err);
-                if (err.code === 'auth/email-already-in-use'){
-                    this._snackBar.open('Pilot existiert bereits.', 'SCHLIESSEN');
-                }else {
-                    this._snackBar.open('Unbekannter Fehler', 'SCHLIESSEN');
+                    this.authService.updateUserData(res.user, firstName, lastName).catch(err => {
+                        console.log(err);
+                    })
                 }
-            })
+            )
+            .then(() => {
+                this.isLoading = false;
+                this.router.navigate(['/']);
+            }).catch(err => {
+            this.isLoading = false;
+            if (err.code === 'auth/email-already-in-use') {
+                this._snackBar.open('Pilot existiert bereits.', 'SCHLIESSEN');
+            } else {
+                this._snackBar.open('Unbekannter Fehler', 'SCHLIESSEN');
+            }
+        })
+
     }
 
     toggleVisibility() {

@@ -11,6 +11,8 @@ import {ToolbarModule} from "../@vex/layout/toolbar/toolbar.module";
 import {GridModule} from "@angular/flex-layout";
 import {AngularFireModule} from "@angular/fire";
 import {environment} from "../environments/environment";
+import {AngularFirestoreModule} from "@angular/fire/firestore";
+import {AngularFireAuthModule} from "@angular/fire/auth";
 
 
 
@@ -26,6 +28,8 @@ import {environment} from "../environments/environment";
         VexModule,
         CustomLayoutModule,
         AngularFireModule.initializeApp(environment.firebase),
+        AngularFirestoreModule, // firestore
+        AngularFireAuthModule,
         ToolbarModule,
         GridModule
     ],
