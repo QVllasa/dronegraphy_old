@@ -4,6 +4,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {particleConfig} from "../../../../particle";
 import {AuthenticationService} from "../../../@vex/services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {Roles} from "../auth/auth.component";
 
 @Component({
     selector: 'vex-register',
@@ -43,9 +44,14 @@ export class RegisterComponent implements OnInit {
         const lastName = name.substr(name.indexOf(' ') + 1);
         const email = this.form.get('email').value;
         const password = this.form.get('password').value;
+        const roles: Roles = {
+            standard: true,
+            creator: false,
+            admin: false,
+        }
         this.authService.signUp(email, password)
             .then(res => {
-                    this.authService.updateUserData(res.user, firstName, lastName).catch(err => {
+                    this.authService.updateUserData(res.user, firstName, lastName, roles).catch(err => {
                         console.log(err);
                     })
                 }

@@ -34,7 +34,6 @@ export class ToolbarComponent implements OnInit {
         // hasShadow: boolean;
 
 
-
     navigationItems = this.navigationService.items;
 
     isHorizontalLayout$ = this.configService.config$.pipe(map(config => config.layout === 'horizontal'));

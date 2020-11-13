@@ -1,11 +1,11 @@
 import {Injectable} from "@angular/core";
-import {BehaviorSubject, Observable, of} from "rxjs";
+import { Observable, of} from "rxjs";
 import {IUser} from "../interfaces/user.interface";
 import {AngularFireAuth} from "@angular/fire/auth";
-import {AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument} from "@angular/fire/firestore";
-
+import {AngularFirestore, AngularFirestoreDocument} from "@angular/fire/firestore";
 import {switchMap} from 'rxjs/operators';
 import {Router} from "@angular/router";
+import {AngularFireFunctions} from "@angular/fire/functions";
 
 
 @Injectable({
@@ -16,7 +16,8 @@ export class AuthenticationService {
     user$: Observable<IUser>;
 
     constructor(public afAuth: AngularFireAuth,
-                private afs: AngularFirestore, private router: Router) {
+                private afs: AngularFirestore, private router: Router,
+                private fns: AngularFireFunctions) {
         this.user$ = this.afAuth.authState.pipe(
             switchMap(user => {
                 if (user) {
@@ -42,14 +43,17 @@ export class AuthenticationService {
         return this.router.navigate(['/']);
     }
 
-    updateUserData(user, firstName, lastName) {
+    updateUserData(user, firstName, lastName, roles) {
         const userRef: AngularFirestoreDocument<IUser> = this.afs.doc<IUser>(`users/${user.uid}`);
         const userData: IUser = {
             uid: user.uid,
             email: user.email,
             firstName: firstName,
             lastName: lastName,
+            roles: roles
         }
         return userRef.set(userData, {merge: true});
     }
+
+
 }
