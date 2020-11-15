@@ -1,17 +1,22 @@
 package main
 
 import (
-	"net/http"
+	"github.com/labstack/echo/v4"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type MyWebServer bool
+var (
+	c *mongo.Client
+	db *mongo.Database
+	col *mongo.Collection
+	cfg config.Properties
+)
 
-func (m MyWebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func init(){
 
 }
 
 func main() {
-	var k MyWebServer
-	k.ServeHTTP()
-	http.ListenAndServe("localhost:8080", nil)
+	e := echo.New()
+	e.POST('/videos', CreateVideo)
 }
