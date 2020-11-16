@@ -1,15 +1,18 @@
-package main
+package handler
 
 import (
 	"context"
 	"dronegraphy/backend/config"
-	"dronegraphy/backend/handler"
 	"fmt"
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/gommon/log"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
+	"net/http/httptest"
+	"strings"
+	"testing"
 )
 
 var (
@@ -17,6 +20,7 @@ var (
 	db  *mongo.Database
 	col *mongo.Collection
 	cfg config.Properties
+	h   VideoHandler
 )
 
 //Init database and .env
@@ -33,11 +37,27 @@ func init() {
 	col = db.Collection(cfg.CollectionName)
 }
 
-func main() {
-	e := echo.New()
-	//e.Pre(middleware.RemoveTrailingSlash())
-	h := handler.VideoHandler{Col: col}
-	e.POST("/videos", h.CreateVideos)
-	e.Logger.Printf("Listening on %v:%v", cfg.Host, cfg.Port)
-	e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%s", cfg.Host, cfg.Port)))
+func TestVideo(t *testing.T) {
+	t.Run("test create video", func(t *testing.T) {
+		body := `
+			[{
+				"title": "asdadsad",
+				"location": "germany",
+				"formats": ["mp4", "mov" ],
+				"resolution":"1920x1080",
+				"length":123,
+				"fps":24,
+				"camera":"sony"
+			}]
+			`
+
+		req := httptest.NewRequest("POST", "/videos", strings.NewReader(body))
+		res := httptest.NewRecorder()
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		e := echo.New()
+		c := e.NewContext(req, res)
+		h.Col = col
+		err := h.CreateVideos(c)
+		assert.Nil(t, err)
+	})
 }
