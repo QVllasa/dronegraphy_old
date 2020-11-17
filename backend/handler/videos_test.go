@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"context"
 	"dronegraphy/backend/config"
 	"fmt"
 	"github.com/ilyakaznacheev/cleanenv"
+	"github.com/kamva/mgm/v3"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -13,28 +13,38 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 )
 
 var (
-	c   *mongo.Client
-	db  *mongo.Database
-	col *mongo.Collection
-	cfg config.Properties
-	h   VideoHandler
+	c    *mongo.Client
+	db   *mongo.Database
+	coll mgm.Collection
+	cfg  config.Properties
+	h    VideoHandler
 )
 
+//Init database and .env
 //Init database and .env
 func init() {
 	if err := cleanenv.ReadEnv(&cfg); err != nil {
 		log.Printf("Configuration cannot be read: %v", err)
 	}
 	connectURI := fmt.Sprintf("mongodb://%s:%s", cfg.DBHost, cfg.DBPort)
-	c, err := mongo.Connect(context.Background(), options.Client().ApplyURI(connectURI))
+
+	// Setup mgm default config using ODM
+	err := mgm.SetDefaultConfig(&mgm.Config{CtxTimeout: 12 * time.Second}, cfg.DBName, options.Client().ApplyURI(connectURI))
 	if err != nil {
 		log.Printf("Unable to connect to database: %v", err)
 	}
-	db = c.Database(cfg.DBName)
-	col = db.Collection(cfg.CollectionName)
+
+	// Default MongoDriver
+	//c, err := mongo.Connect(context.Background(), options.Client().ApplyURI(connectURI))
+	//if err != nil {
+	//	log.Printf("Unable to connect to database: %v", err)
+	//}
+
+	coll = *mgm.Coll(&Video{})
 }
 
 func TestVideo(t *testing.T) {
@@ -56,7 +66,7 @@ func TestVideo(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		e := echo.New()
 		c := e.NewContext(req, res)
-		h.Col = col
+		h.Coll = coll
 		err := h.CreateVideos(c)
 		assert.Nil(t, err)
 	})
