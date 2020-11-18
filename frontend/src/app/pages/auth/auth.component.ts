@@ -47,17 +47,21 @@ export class AuthComponent implements OnInit {
         const password = this.form.get('password').value;
         this.authService.signIn(email, password)
             .then(res => {
-            console.log(res);
-            this.isLoading = false;
-            this.router.navigate(['/']);})
+                console.log("1. then signin")
+                console.log(res)
+                this.authService.verifyUser();
+                this.isLoading = false;
+                this.router.navigate(['/']);
+            })
             .catch(err => {
-            this.isLoading = false;
-            console.log(err);
-            if (err.code === 'auth/user-not-found'){
-                this._snackBar.open('Pilot nicht gefunden.', 'SCHLIESSEN');
-            }else {
-                this._snackBar.open('Unbekannter Fehler', 'SCHLIESSEN');
-            }});
+                this.isLoading = false;
+                console.log(err);
+                if (err.code === 'auth/user-not-found') {
+                    this._snackBar.open('Pilot nicht gefunden.', 'SCHLIESSEN');
+                } else {
+                    this._snackBar.open('Unbekannter Fehler', 'SCHLIESSEN');
+                }
+            });
     }
 
     toggleVisibility() {

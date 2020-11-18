@@ -3,6 +3,7 @@ module dronegraphy/backend
 go 1.15
 
 require (
+	firebase.google.com/go/v4 v4.1.0 // indirect
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/ilyakaznacheev/cleanenv v1.2.5
 	github.com/kamva/mgm/v3 v3.1.0

@@ -4,6 +4,7 @@ import (
 	"context"
 	"dronegraphy/backend/config"
 	"dronegraphy/backend/handler"
+	firebase "firebase.google.com/go/v4"
 	"fmt"
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/labstack/echo/v4"
@@ -12,6 +13,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"google.golang.org/api/option"
 )
 
 var (
@@ -24,6 +26,7 @@ var (
 
 //Init database and .env
 func init() {
+
 	if err := cleanenv.ReadEnv(&cfg); err != nil {
 		log.Printf("Configuration cannot be read: %v", err)
 	}
@@ -53,6 +56,14 @@ func init() {
 		log.Fatalf("Unable to create an index: %v", err)
 	}
 
+}
+
+func initFirebase() {
+	opt := option.WithCredentialsFile("path/to/serviceAccountKey.json")
+	app, err := firebase.NewApp(context.Background(), nil, opt)
+	if err != nil {
+		return nil, fmt.Errorf("error initializing app: %v", err)
+	}
 }
 
 func main() {

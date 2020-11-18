@@ -1,9 +1,9 @@
 import {Injectable} from "@angular/core";
-import { Observable, of} from "rxjs";
+import {Observable, of} from "rxjs";
 import {IUser} from "../interfaces/user.interface";
 import {AngularFireAuth} from "@angular/fire/auth";
 import {AngularFirestore, AngularFirestoreDocument} from "@angular/fire/firestore";
-import {switchMap} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import {Router} from "@angular/router";
 import {AngularFireFunctions} from "@angular/fire/functions";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
@@ -23,15 +23,15 @@ export class AuthenticationService {
                 private http: HttpClient,
                 private router: Router,
                 private fns: AngularFireFunctions) {
-        // this.user$ = this.afAuth.authState.pipe(
-        //     switchMap(user => {
-        //         if (user) {
-        //             return of(null)
-        //         } else {
-        //             return of(null);
-        //         }
-        //     })
-        // )
+        this.user$ = this.afAuth.authState.pipe(
+            switchMap(user => {
+                if (user) {
+                    return of(null)
+                } else {
+                    return of(null);
+                }
+            })
+        )
     }
 
 
@@ -42,7 +42,7 @@ export class AuthenticationService {
     }
 
     // Store User Data in Backend
-    registerUser(user, firstName, lastName){
+    registerUser(user, firstName, lastName) {
         const userData: IUser = {
             uid: user.uid,
             email: user.email,
@@ -52,11 +52,23 @@ export class AuthenticationService {
         console.log("register")
         console.log(userData)
         console.log("2. Promise returned")
-        return this.http.post(environment.apiUrl+'/users', userData).toPromise()
+        return this.http.post(environment.apiUrl + '/users', userData).toPromise();
     }
 
     signIn(email: string, password: string) {
         return this.afAuth.signInWithEmailAndPassword(email, password);
+    }
+
+    verifyUser() {
+        this.afAuth.idTokenResult.subscribe(
+            res => {
+                console.log(res);
+            },
+            err => {
+                console.log(err);
+            }
+        )
+
     }
 
     async signOut() {
