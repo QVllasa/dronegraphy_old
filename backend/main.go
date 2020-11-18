@@ -39,10 +39,10 @@ func init() {
 	videoColl = db.Collection(cfg.VideoCollection)
 	usersColl = db.Collection(cfg.UsersCollection)
 
-	//Example of indexing username
+	//Example of indexing email and make it unique
 	isUserIndexUnique := true
 	indexModel := mongo.IndexModel{
-		Keys: bson.D{{"username", 1}},
+		Keys: bson.D{{"email", 1}},
 		Options: &options.IndexOptions{
 			Unique: &isUserIndexUnique,
 		},
@@ -58,12 +58,16 @@ func init() {
 func main() {
 	e := echo.New()
 	e.Logger.SetLevel(log.ERROR)
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		//AllowOrigins: []string{"*"},
+		//AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	}))
 	e.Pre(middleware.RemoveTrailingSlash())
 
 	h := handler.VideoHandler{Coll: videoColl}
 
 	//TODO
-	//uh := handler.UsersHandler{Coll: usersColl}
+	uh := handler.UsersHandler{Coll: usersColl}
 
 	e.POST("/videos", h.CreateVideos, middleware.BodyLimit("1M"))
 	e.GET("/videos", h.GetVideos)
@@ -72,7 +76,7 @@ func main() {
 	e.DELETE("/videos/:id", h.DeleteVideo)
 
 	//TODO
-	//e.POST("users", uh.CreateUser)
+	e.POST("/users", uh.SignUp)
 
 	e.Logger.Printf("Listening on %v:%v", cfg.Host, cfg.Port)
 	e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%s", cfg.Host, cfg.Port)))

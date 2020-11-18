@@ -5,9 +5,9 @@ export interface IUser {
    email: string;
    firstName: string;
    lastName: string;
-   roles: Roles;
-   imgPath?: string;
-   activated?: boolean;
+   // roles: Roles;
+   // imgPath?: string;
+   // activated?: boolean;
    // [videos: number]: Video[];
    // orders?: Order[];
    // favorites?: Video[];

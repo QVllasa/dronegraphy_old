@@ -4,7 +4,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {particleConfig} from "../../../../particle";
 import {AuthenticationService} from "../../../@vex/services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Roles} from "../auth/auth.component";
+import {Info} from "luxon";
 
 @Component({
     selector: 'vex-register',
@@ -39,34 +39,30 @@ export class RegisterComponent implements OnInit {
 
     send() {
         this.isLoading = true;
-        const name = this.form.get('name').value;
+        const name = this.form.get('name').value.trim();
         const firstName = name.substr(0, name.indexOf(' '));
         const lastName = name.substr(name.indexOf(' ') + 1);
         const email = this.form.get('email').value;
-        const password = this.form.get('password').value;
-        const roles: Roles = {
-            standard: true,
-            creator: false,
-            admin: false,
-        }
-        this.authService.signUp(email, password)
+        const password = this.form.get('password').value.trim();
+
+        this.authService.signUp(email, password, name)
             .then(res => {
-                    this.authService.updateUserData(res.user, firstName, lastName, roles).catch(err => {
-                        console.log(err);
-                    })
-                }
-            )
+                console.log("1. then")
+                return this.authService.registerUser(res.user, firstName, lastName)
+            })
             .then(() => {
+                console.log("2. then")
                 this.isLoading = false;
                 this.router.navigate(['/']);
-            }).catch(err => {
-            this.isLoading = false;
-            if (err.code === 'auth/email-already-in-use') {
-                this._snackBar.open('Pilot existiert bereits.', 'SCHLIESSEN');
-            } else {
-                this._snackBar.open('Unbekannter Fehler', 'SCHLIESSEN');
-            }
-        })
+            })
+            .catch(err => {
+                this.isLoading = false;
+                if (err.code === 'auth/email-already-in-use') {
+                    this._snackBar.open('Pilot existiert bereits.', 'SCHLIESSEN');
+                } else {
+                    this._snackBar.open('Unbekannter Fehler', 'SCHLIESSEN');
+                }
+            })
 
     }
 

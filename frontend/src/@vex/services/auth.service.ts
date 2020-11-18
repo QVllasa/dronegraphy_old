@@ -6,6 +6,10 @@ import {AngularFirestore, AngularFirestoreDocument} from "@angular/fire/firestor
 import {switchMap} from 'rxjs/operators';
 import {Router} from "@angular/router";
 import {AngularFireFunctions} from "@angular/fire/functions";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {environment} from "../../environments/environment";
+import {Roles} from "../../app/pages/auth/auth.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 
 @Injectable({
@@ -16,22 +20,39 @@ export class AuthenticationService {
     user$: Observable<IUser>;
 
     constructor(public afAuth: AngularFireAuth,
-                private afs: AngularFirestore, private router: Router,
+                private http: HttpClient,
+                private router: Router,
                 private fns: AngularFireFunctions) {
-        this.user$ = this.afAuth.authState.pipe(
-            switchMap(user => {
-                if (user) {
-                    return this.afs.doc<IUser>(`users/${user.uid}`).valueChanges();
-                } else {
-                    return of(null);
-                }
-            })
-        )
+        // this.user$ = this.afAuth.authState.pipe(
+        //     switchMap(user => {
+        //         if (user) {
+        //             return of(null)
+        //         } else {
+        //             return of(null);
+        //         }
+        //     })
+        // )
     }
 
 
-    signUp(email, password) {
+    // Sign Up User on Firebase
+    signUp(email, password, name) {
+        console.log("1. Promise returned")
         return this.afAuth.createUserWithEmailAndPassword(email, password)
+    }
+
+    // Store User Data in Backend
+    registerUser(user, firstName, lastName){
+        const userData: IUser = {
+            uid: user.uid,
+            email: user.email,
+            firstName: firstName,
+            lastName: lastName,
+        }
+        console.log("register")
+        console.log(userData)
+        console.log("2. Promise returned")
+        return this.http.post(environment.apiUrl+'/users', userData).toPromise()
     }
 
     signIn(email: string, password: string) {
@@ -43,16 +64,16 @@ export class AuthenticationService {
         return this.router.navigate(['/']);
     }
 
-    updateUserData(user, firstName, lastName, roles) {
-        const userRef: AngularFirestoreDocument<IUser> = this.afs.doc<IUser>(`users/${user.uid}`);
+    updateUserData(user, firstName, lastName) {
+        // const userRef: AngularFirestoreDocument<IUser> = this.afs.doc<IUser>(`users/${user.uid}`);
         const userData: IUser = {
             uid: user.uid,
             email: user.email,
             firstName: firstName,
             lastName: lastName,
-            roles: roles
         }
-        return userRef.set(userData, {merge: true});
+        console.log("userData:", userData)
+        // return userRef.set(userData, {merge: true});
     }
 
 
