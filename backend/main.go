@@ -61,7 +61,9 @@ func main() {
 	e.Pre(middleware.RemoveTrailingSlash())
 
 	h := handler.VideoHandler{Coll: videoColl}
-	uh := handler.UsersHandler{Coll: usersColl}
+
+	//TODO
+	//uh := handler.UsersHandler{Coll: usersColl}
 
 	e.POST("/videos", h.CreateVideos, middleware.BodyLimit("1M"))
 	e.GET("/videos", h.GetVideos)
@@ -69,7 +71,8 @@ func main() {
 	e.GET("/videos/:id", h.GetVideo)
 	e.DELETE("/videos/:id", h.DeleteVideo)
 
-	e.POST("users", uh.CreateUser)
+	//TODO
+	//e.POST("users", uh.CreateUser)
 
 	e.Logger.Printf("Listening on %v:%v", cfg.Host, cfg.Port)
 	e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%s", cfg.Host, cfg.Port)))
