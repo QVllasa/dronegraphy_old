@@ -60,7 +60,7 @@ export class AuthenticationService {
     }
 
     verifyUser() {
-        this.afAuth.idTokenResult.subscribe(
+        this.afAuth.idToken.subscribe(
             res => {
                 console.log(res);
             },

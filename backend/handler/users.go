@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"net/http"
 )
@@ -16,10 +17,11 @@ type UsersHandler struct {
 
 type (
 	User struct {
-		Email     string `json:"email" validate:"required,email"`
-		FirstName string `json:"firstName" validate:"required"`
-		LastName  string `json:"lastName" validate:"required"`
-		UID       string `json:"uid" validate:"required"`
+		ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+		Email     string             `json:"email" validate:"required,email"`
+		FirstName string             `json:"firstName" validate:"required"`
+		LastName  string             `json:"lastName" validate:"required"`
+		UID       string             `json:"uid" validate:"required"`
 	}
 
 	UserValidator struct {
@@ -54,6 +56,52 @@ func (this *UsersHandler) SignUp(c echo.Context) error {
 	return c.JSON(http.StatusOK, ID)
 }
 
+func (this *UsersHandler) GetUser(c echo.Context) error {
+	var user User
+	user, err := findUser(context.Background(), c.Param("id"), this.Coll)
+	if err != nil {
+		log.Errorf("Unable to find User: %v", err)
+		return err
+	}
+
+	return c.JSON(http.StatusOK, user)
+}
+
+func (this *UsersHandler) GetAllUser(c echo.Context) error {
+	users, err := findAllUsers(context.Background(), this.Coll)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, users)
+}
+
+func findUser(ctx context.Context, id string, collection *mongo.Collection) (User, error) {
+	var user User
+	filter := bson.M{"uid": id}
+	res := collection.FindOne(ctx, filter)
+	if err := res.Decode(&user); err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
+func findAllUsers(ctx context.Context, collection *mongo.Collection) ([]User, error) {
+	var users []User
+
+	cursor, err := collection.Find(ctx, bson.M{})
+
+	if err != nil {
+		log.Errorf("Unable to fetch videos from database: %v", err)
+		return users, err
+	}
+
+	if err := cursor.All(ctx, &users); err != nil {
+		log.Errorf("Unable to read the cursor: %v", err)
+		return users, err
+	}
+	return users, nil
+}
+
 func insertUser(ctx context.Context, user User, collection *mongo.Collection) (interface{}, error) {
 	var newUser User
 	res := collection.FindOne(ctx, bson.M{"email": user.Email})
@@ -73,9 +121,4 @@ func insertUser(ctx context.Context, user User, collection *mongo.Collection) (i
 	}
 
 	return ID, nil
-}
-
-// Check if User is authenticated via firebase and retrieve his info from database
-func AuthorizeUser() {
-
 }

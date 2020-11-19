@@ -72,8 +72,8 @@ func (this *VideoHandler) UpdateVideo(c echo.Context) error {
 	return c.JSON(http.StatusOK, video)
 }
 
-func (this *VideoHandler) GetVideos(c echo.Context) error {
-	videos, err := findVideos(context.Background(), c.QueryParams(), this.Coll)
+func (this *VideoHandler) GetAllVideos(c echo.Context) error {
+	videos, err := findAllVideos(context.Background(), c.QueryParams(), this.Coll)
 	if err != nil {
 		return err
 	}
@@ -174,7 +174,7 @@ func findVideo(ctx context.Context, id string, collection *mongo.Collection) (Vi
 	return video, nil
 }
 
-func findVideos(ctx context.Context, q url.Values, collection *mongo.Collection) ([]Video, error) {
+func findAllVideos(ctx context.Context, q url.Values, collection *mongo.Collection) ([]Video, error) {
 	var videos []Video
 	filter := make(map[string]interface{})
 	for k, v := range q {

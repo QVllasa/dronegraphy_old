@@ -4,7 +4,7 @@ import (
 	"context"
 	"dronegraphy/backend/config"
 	"dronegraphy/backend/handler"
-	firebase "firebase.google.com/go/v4"
+	customMiddleware "dronegraphy/backend/middleware"
 	"fmt"
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/labstack/echo/v4"
@@ -13,7 +13,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"google.golang.org/api/option"
 )
 
 var (
@@ -22,6 +21,7 @@ var (
 	videoColl *mongo.Collection
 	usersColl *mongo.Collection
 	cfg       config.Properties
+
 )
 
 //Init database and .env
@@ -58,36 +58,33 @@ func init() {
 
 }
 
-func initFirebase() {
-	opt := option.WithCredentialsFile("path/to/serviceAccountKey.json")
-	app, err := firebase.NewApp(context.Background(), nil, opt)
-	if err != nil {
-		return nil, fmt.Errorf("error initializing app: %v", err)
-	}
-}
 
 func main() {
 	e := echo.New()
-	e.Logger.SetLevel(log.ERROR)
+	e.Logger.SetLevel(log.DEBUG)
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		//AllowOrigins: []string{"*"},
 		//AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
+	e.Use()
 	e.Pre(middleware.RemoveTrailingSlash())
 
 	h := handler.VideoHandler{Coll: videoColl}
 
 	//TODO
-	uh := handler.UsersHandler{Coll: usersColl}
+	u := handler.UsersHandler{Coll: usersColl}
 
 	e.POST("/videos", h.CreateVideos, middleware.BodyLimit("1M"))
-	e.GET("/videos", h.GetVideos)
+	e.GET("/videos", h.GetAllVideos, customMiddleware.Auth())
 	e.PUT("/videos/:id", h.UpdateVideo, middleware.BodyLimit("1M"))
 	e.GET("/videos/:id", h.GetVideo)
 	e.DELETE("/videos/:id", h.DeleteVideo)
 
 	//TODO
-	e.POST("/users", uh.SignUp)
+	e.POST("/users", u.SignUp)
+	e.GET("/users/:id", u.GetUser, customMiddleware.Auth())
+	e.GET("/users", u.GetAllUser, customMiddleware.Auth())
+
 
 	e.Logger.Printf("Listening on %v:%v", cfg.Host, cfg.Port)
 	e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%s", cfg.Host, cfg.Port)))
