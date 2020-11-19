@@ -21,7 +21,6 @@ var (
 	videoColl *mongo.Collection
 	usersColl *mongo.Collection
 	cfg       config.Properties
-
 )
 
 //Init database and .env
@@ -58,7 +57,6 @@ func init() {
 
 }
 
-
 func main() {
 	e := echo.New()
 	e.Logger.SetLevel(log.DEBUG)
@@ -70,22 +68,28 @@ func main() {
 	e.Pre(middleware.RemoveTrailingSlash())
 
 	h := handler.VideoHandler{Coll: videoColl}
-
-	//TODO
 	u := handler.UsersHandler{Coll: usersColl}
 
+	//Video Endpoints
 	e.POST("/videos", h.CreateVideos, middleware.BodyLimit("1M"))
 	e.GET("/videos", h.GetAllVideos, customMiddleware.Auth())
 	e.PUT("/videos/:id", h.UpdateVideo, middleware.BodyLimit("1M"))
 	e.GET("/videos/:id", h.GetVideo)
 	e.DELETE("/videos/:id", h.DeleteVideo)
 
-	//TODO
+	//Users Endpoints
 	e.POST("/users", u.SignUp)
 	e.GET("/users/:id", u.GetUser, customMiddleware.Auth())
 	e.GET("/users", u.GetAllUser, customMiddleware.Auth())
 
-
 	e.Logger.Printf("Listening on %v:%v", cfg.Host, cfg.Port)
 	e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%s", cfg.Host, cfg.Port)))
 }
+
+//Usage of Firebase Middleware Auth
+//
+//e.GET("/api/private", privateAPI, middleware.Auth())
+//token := c.Get("token").(*auth.Token)
+//claims := token.Claims
+//name, ok := claims["name"].(string)
+//email, ok := claims["email"].(string)

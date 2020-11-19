@@ -40,19 +40,11 @@ export class RegisterComponent implements OnInit {
     send() {
         this.isLoading = true;
         const name = this.form.get('name').value.trim();
-        const firstName = name.substr(0, name.indexOf(' '));
-        const lastName = name.substr(name.indexOf(' ') + 1);
         const email = this.form.get('email').value;
         const password = this.form.get('password').value.trim();
 
         this.authService.signUp(email, password, name)
-            .then(res => {
-                console.log("1. then")
-                return this.authService.registerUser(res.user, firstName, lastName)
-            })
-            .then(res => {
-                console.log("2. then")
-                console.log(res)
+            .then(() => {
                 this.isLoading = false;
                 this.router.navigate(['/']);
             })
