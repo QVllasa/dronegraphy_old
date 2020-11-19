@@ -50,8 +50,9 @@ export class RegisterComponent implements OnInit {
                 console.log("1. then")
                 return this.authService.registerUser(res.user, firstName, lastName)
             })
-            .then(() => {
+            .then(res => {
                 console.log("2. then")
+                console.log(res)
                 this.isLoading = false;
                 this.router.navigate(['/']);
             })

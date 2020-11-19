@@ -48,12 +48,12 @@ func (this *UsersHandler) SignUp(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, ErrorMessage{Message: "Validation Error: unable to parse request payload"})
 	}
 
-	ID, err := insertUser(context.Background(), newUser, this.Coll)
+	newUser, err := insertUser(context.Background(), newUser, this.Coll)
 	if err != nil {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, ID)
+	return c.JSON(http.StatusOK, newUser)
 }
 
 func (this *UsersHandler) GetUser(c echo.Context) error {
@@ -102,23 +102,29 @@ func findAllUsers(ctx context.Context, collection *mongo.Collection) ([]User, er
 	return users, nil
 }
 
-func insertUser(ctx context.Context, user User, collection *mongo.Collection) (interface{}, error) {
+func insertUser(ctx context.Context, user User, collection *mongo.Collection) (User, error) {
 	var newUser User
 	res := collection.FindOne(ctx, bson.M{"email": user.Email})
 	err := res.Decode(&newUser)
 	if err != nil && err != mongo.ErrNoDocuments {
 		log.Errorf("Unable to decode retrieved user: %v", err)
-		return nil, echo.NewHTTPError(500, "Unable to decode retrieved user")
+		return newUser, echo.NewHTTPError(500, "Unable to decode retrieved user")
 	}
 	if newUser.Email != "" {
 		log.Errorf("Email already exists: %v", err)
-		return nil, echo.NewHTTPError(400, "User already exists")
+		return newUser, echo.NewHTTPError(400, "User already exists")
 	}
 	ID, err := collection.InsertOne(ctx, user)
 	if err != nil {
 		log.Errorf("Unable to store in database: %s", err)
-		return ID, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Email already exists"})
+		return newUser, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Email already exists"})
 	}
 
-	return ID, nil
+	res = collection.FindOne(ctx, bson.M{"_id": ID.InsertedID})
+	if err := res.Decode(&newUser); err != nil {
+		log.Errorf("Unable to fetch User: %v", err)
+		return newUser, err
+	}
+
+	return newUser, nil
 }
