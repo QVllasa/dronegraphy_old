@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthenticationService} from "../../../@vex/services/auth.service";
+import {AuthenticationService} from "../../../@dg/services/auth.service";
 
 @Component({
-  selector: 'vex-home',
+  selector: 'dg-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })

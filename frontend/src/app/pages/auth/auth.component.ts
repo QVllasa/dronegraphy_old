@@ -2,17 +2,13 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {AngularFireAuth} from "@angular/fire/auth";
-import {AuthenticationService} from "../../../@vex/services/auth.service";
+import {AuthenticationService} from "../../../@dg/services/auth.service";
 
-export interface Roles {
-    standard?: boolean;
-    creator?: boolean;
-    admin?: boolean;
-}
+
+
 
 @Component({
-    selector: 'vex-auth',
+    selector: 'dg-auth',
     templateUrl: './auth.component.html',
     styleUrls: ['./auth.component.scss']
 })

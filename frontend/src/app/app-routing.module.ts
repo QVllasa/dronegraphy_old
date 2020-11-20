@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CustomLayoutComponent } from './custom-layout/custom-layout.component';
 import {HomeComponent} from "./pages/home/home.component";
-import {AnonymousGuard} from "../@vex/guards/anonymous.guard";
+import {AnonymousGuard} from "../@dg/guards/anonymous.guard";
+
 
 
 const routes: Routes = [
@@ -14,6 +15,11 @@ const routes: Routes = [
         path: '',
         pathMatch: 'full',
         component: HomeComponent,
+      },
+      {
+        path: 'pricing',
+        loadChildren: () => import('./pages/pricing/pricing.module').then(m => m.PricingModule),
+        canActivate:[]
       },
       {
         path: 'login',

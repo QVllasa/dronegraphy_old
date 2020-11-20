@@ -1,23 +1,26 @@
-import { Component, Inject, LOCALE_ID, Renderer2 } from '@angular/core';
-import { ConfigService } from '../@vex/services/config.service';
+import {Component, Inject, LOCALE_ID, OnInit, Renderer2} from '@angular/core';
 import { Settings } from 'luxon';
 import { DOCUMENT } from '@angular/common';
 import { Platform } from '@angular/cdk/platform';
-import { NavigationService } from '../@vex/services/navigation.service';
-import { LayoutService } from '../@vex/services/layout.service';
 import { ActivatedRoute } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Style, StyleService } from '../@vex/services/style.service';
-import { ConfigName } from '../@vex/interfaces/config-name.model';
+import {ConfigService} from "../@dg/services/config.service";
+import {Style, StyleService} from "../@dg/services/style.service";
+import {LayoutService} from "../@dg/services/layout.service";
+import {NavigationService} from "../@dg/services/navigation.service";
+import {ConfigName} from "../@dg/interfaces/config-name.model";
+import {AuthenticationService} from "../@dg/services/auth.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
+
 
 @Component({
-  selector: 'vex-root',
+  selector: 'dg-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'vex';
+  title = 'dg';
 
   constructor(private configService: ConfigService,
               private styleService: StyleService,
@@ -27,7 +30,25 @@ export class AppComponent {
               @Inject(LOCALE_ID) private localeId: string,
               private layoutService: LayoutService,
               private route: ActivatedRoute,
-              private navigationService: NavigationService) {
+              private _snackBar: MatSnackBar,
+              private navigationService: NavigationService,
+              private authService: AuthenticationService) {
+
+
+    this.authService.autoLogin().subscribe(
+        user => {
+          this.authService.user$.next(user)
+        },
+        err => {
+          console.log(err)
+          this._snackBar.open('Server nicht erreichbar.', 'SCHLIESSEN', {
+            horizontalPosition: 'end',
+            verticalPosition: 'top',
+          });
+        })
+
+
+
     Settings.defaultLocale = this.localeId;
 
     if (this.platform.BLINK) {

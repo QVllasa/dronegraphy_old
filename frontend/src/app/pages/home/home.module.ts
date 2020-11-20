@@ -8,8 +8,8 @@ import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
 import {AppModule} from "../../app.module";
 import {MatChipsModule} from "@angular/material/chips";
-import {TreeCheckboxesModule} from "../../../@vex/components/tree-checkboxes/tree-checkboxes.module";
-import {VideoGridModule} from "../../../@vex/components/video/video-grid/video-grid.module";
+import {TreeCheckboxesModule} from "../../../@dg/components/tree-checkboxes/tree-checkboxes.module";
+import {VideoGridModule} from "../../../@dg/components/video/video-grid/video-grid.module";
 import {HeaderComponent} from "./header/header.component";
 
 

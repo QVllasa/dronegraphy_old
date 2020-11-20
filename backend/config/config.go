@@ -8,4 +8,5 @@ type Properties struct {
 	DBName          string `env:"DB_NAME" env-default:"dronegraphy_db"`
 	VideoCollection string `env:"VIDEO_COLLECTION_NAME" env-default:"videos"`
 	UsersCollection string `env:"USERS_COLLECTION_NAME" env-default:"users"`
+	RolesCollection string `env:"ROLES_COLLECTION_NAME" env-default:"roles"`
 }

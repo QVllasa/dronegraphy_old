@@ -20,6 +20,7 @@ var (
 	db        *mongo.Database
 	videoColl *mongo.Collection
 	usersColl *mongo.Collection
+	rolesColl *mongo.Collection
 	cfg       config.Properties
 )
 
@@ -40,6 +41,7 @@ func init() {
 	db = c.Database(cfg.DBName)
 	videoColl = db.Collection(cfg.VideoCollection)
 	usersColl = db.Collection(cfg.UsersCollection)
+	rolesColl = db.Collection(cfg.RolesCollection)
 
 	//Example of indexing email and make it unique
 	isUserIndexUnique := true

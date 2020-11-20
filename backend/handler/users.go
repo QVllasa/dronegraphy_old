@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
@@ -17,12 +16,21 @@ type UsersHandler struct {
 }
 
 type (
+	Roles struct {
+		Admin   bool `json:"admin"`
+		Creator bool `json:"creator"`
+		Member  bool `json:"member"`
+	}
+)
+
+type (
 	User struct {
 		ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 		Email     string             `json:"email" validate:"required,email"`
 		FirstName string             `json:"firstName" validate:"required"`
 		LastName  string             `json:"lastName" validate:"required"`
 		UID       string             `json:"uid" validate:"required"`
+		Roles     Roles              `json:"roles" validate:"required"`
 	}
 
 	UserValidator struct {
@@ -39,6 +47,8 @@ func (this *UsersHandler) SignUp(c echo.Context) error {
 	var newUser User
 	c.Echo().Validator = &UserValidator{Validator: validator.New()}
 
+
+
 	if err := c.Bind(&newUser); err != nil {
 		log.Errorf("Unable to bind : %v", err)
 		return c.JSON(http.StatusUnprocessableEntity, ErrorMessage{Message: "Binding Error: unable to parse request payload"})
@@ -48,6 +58,8 @@ func (this *UsersHandler) SignUp(c echo.Context) error {
 		log.Errorf("Unable to validate the product %+v %v", newUser, err)
 		return c.JSON(http.StatusUnprocessableEntity, ErrorMessage{Message: "Validation Error: unable to parse request payload"})
 	}
+
+
 
 	newUser, err := insertUser(context.Background(), newUser, this.Coll)
 	if err != nil {
@@ -65,7 +77,7 @@ func (this *UsersHandler) GetUser(c echo.Context) error {
 		return err
 	}
 
-	fmt.Println(c.Get("token"))
+	//fmt.Println(c.Get("token"))
 
 	return c.JSON(http.StatusOK, user)
 }

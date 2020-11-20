@@ -1,0 +1,31 @@
+<div class="toolbar w-full px-gutter shadow-md" fxLayout="row" fxLayoutAlign="space-between center">
+    <div fxFlex>
+        <button class="absolute top-8" (click)="openSidenav()" mat-fab color="primary" type="button">
+            <mat-icon class="text-white">menu</mat-icon>
+        </button>
+    </div>
+
+
+    <dg-toolbar-search></dg-toolbar-search>
+
+
+    <ng-container>
+        <div fxFlex fxLayoutAlign="end" class="-mx-1 " fxLayoutGap="8px">
+            <button *ngIf="authService.user$ | async as user" mat-icon-button>
+                <div *ngIf="user.roles.member" class="rounded-full flex items-center justify-center text-primary bg-primary-light cursor-pointer h-9 w-9">
+                    <mat-icon>shopping_cart</mat-icon>
+                </div>
+                <div *ngIf="user.roles.creator" class="rounded-full flex items-center justify-center text-primary bg-primary-light cursor-pointer h-9 w-9">
+                    <mat-icon>account_balance</mat-icon>
+                </div>
+            </button>
+            <button *ngIf="!(authService.user$ | async)" mat-flat-button color="primary" routerLink="/register">
+                Starten
+            </button>
+            <button mat-flat-button class="text-primary" routerLink="/pricing">Preise</button>
+            <dg-toolbar-user></dg-toolbar-user>
+        </div>
+    </ng-container>
+</div>
+
+

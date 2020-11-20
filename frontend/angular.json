@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "vex": {
+    "dg": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -12,12 +12,12 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "vex",
+      "prefix": "dg",
       "architect": {
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
-            "outputPath": "dist/vex",
+            "outputPath": "dist/dg",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -31,7 +31,7 @@
               "src/CHANGELOG.md"
             ],
             "styles": [
-              "src/@vex/styles/tailwind.scss",
+              "src/@dg/styles/tailwind.scss",
               "src/styles.scss"
             ],
             "scripts": [],
@@ -85,18 +85,18 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "vex:build"
+            "browserTarget": "dg:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "vex:build:production"
+              "browserTarget": "dg:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "vex:build"
+            "browserTarget": "dg:build"
           }
         },
         "test": {
@@ -133,15 +133,15 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "vex:serve"
+            "devServerTarget": "dg:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "vex:serve:production"
+              "devServerTarget": "dg:serve:production"
             }
           }
         }
       }
     }},
-  "defaultProject": "vex"
+  "defaultProject": "dg"
 }

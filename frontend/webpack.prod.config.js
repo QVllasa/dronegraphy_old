@@ -32,7 +32,7 @@ module.exports = {
         ]
       },
       {
-        test: /@vex[\\\/]styles[\\\/]tailwind\.scss$/,
+        test: /@dg[\\\/]styles[\\\/]tailwind\.scss$/,
         use: [
           {
             loader: '@fullhuman/purgecss-loader',

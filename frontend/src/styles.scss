@@ -1,7 +1,7 @@
 @import "~simplebar/dist/simplebar.css";
 @import "~highlight.js/styles/androidstudio.css";
-// Vex Core
-@import "./@vex/styles/core";
+// dg Core
+@import "./@dg/styles/core";
 
 /*
   You can override any CSS Variable or style here
@@ -11,7 +11,7 @@
    --sidenav-background: #333333;
   }
 
-  All possible variables can be found in @vex/styles/core or by simply inspecting the element you want to change
+  All possible variables can be found in @dg/styles/core or by simply inspecting the element you want to change
   in Chrome/Firefox DevTools
 */
 

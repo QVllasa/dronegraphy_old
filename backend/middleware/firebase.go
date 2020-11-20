@@ -4,7 +4,6 @@ import (
 	"context"
 	"dronegraphy/backend/handler"
 	firebase "firebase.google.com/go/v4"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"google.golang.org/api/option"
@@ -49,8 +48,8 @@ func auth(next echo.HandlerFunc) echo.HandlerFunc {
 
 		c.Set("token", token)
 
-		fmt.Println(token)
-		fmt.Println("Token verified!")
+		//fmt.Println(token)
+		//fmt.Println("Token verified!")
 
 		return next(c)
 	}

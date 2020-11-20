@@ -2,12 +2,12 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {particleConfig} from "../../../../particle";
-import {AuthenticationService} from "../../../@vex/services/auth.service";
+import {AuthenticationService} from "../../../@dg/services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Info} from "luxon";
 
 @Component({
-    selector: 'vex-register',
+    selector: 'dg-register',
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.scss']
 })

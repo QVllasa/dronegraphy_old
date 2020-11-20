@@ -1,0 +1,9 @@
+.dg-layout-ikaros {
+  --navigation-height: 0px;
+
+  &.dg-style-default {
+    --toolbar-background: #{$sidenav-background};
+    --navigation-color: white;
+    --toolbar-color: white;
+  }
+}

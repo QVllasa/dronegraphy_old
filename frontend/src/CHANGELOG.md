@@ -1,5 +1,5 @@
-<img style="float: left; height: 80px; width: unset;" src="/assets/img/demo/logo.svg" alt="Vex Logo"/>
-<h1 style="height: 80px; line-height: 80px; margin: 0 0 0 70px; font-weight: 700; border: none;">VEX</h1>
+<img style="float: left; height: 80px; width: unset;" src="/assets/img/demo/logo.svg" alt="dg Logo"/>
+<h1 style="height: 80px; line-height: 80px; margin: 0 0 0 70px; font-weight: 700; border: none;">dg</h1>
 
 # Changelog
 
@@ -15,7 +15,7 @@
 ### Breaking Changes
 
 We switched from ngx-take-until-destroy to ngneat/until-destroy (the successor of the first library available for Angular 10+) and there are adjustments needed. There's an easy migration script:
-1. `cd src` (into your /src folder in the vex-angular folder)
+1. `cd src` (into your /src folder in the dg-angular folder)
 2. run `npx @ngneat/until-destroy --removeOnDestroy`
 
 A few occurences could still appear, because the automated script can't pick them up. Here's a step-by-step on how to manually adjust the entries:
