@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
@@ -63,6 +64,8 @@ func (this *UsersHandler) GetUser(c echo.Context) error {
 		log.Errorf("Unable to find User: %v", err)
 		return err
 	}
+
+	fmt.Println(c.Get("token"))
 
 	return c.JSON(http.StatusOK, user)
 }

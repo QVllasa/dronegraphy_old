@@ -71,11 +71,11 @@ func main() {
 	u := handler.UsersHandler{Coll: usersColl}
 
 	//Video Endpoints
-	e.POST("/videos", h.CreateVideos, middleware.BodyLimit("1M"))
-	e.GET("/videos", h.GetAllVideos, customMiddleware.Auth())
-	e.PUT("/videos/:id", h.UpdateVideo, middleware.BodyLimit("1M"))
+	e.POST("/videos", h.CreateVideos, middleware.BodyLimit("1M"), customMiddleware.Auth())
+	e.GET("/videos", h.GetAllVideos)
+	e.PUT("/videos/:id", h.UpdateVideo, middleware.BodyLimit("1M"), customMiddleware.Auth())
 	e.GET("/videos/:id", h.GetVideo)
-	e.DELETE("/videos/:id", h.DeleteVideo)
+	e.DELETE("/videos/:id", h.DeleteVideo, customMiddleware.Auth())
 
 	//Users Endpoints
 	e.POST("/users", u.SignUp)
