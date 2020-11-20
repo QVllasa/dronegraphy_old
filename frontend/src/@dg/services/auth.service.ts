@@ -20,7 +20,6 @@ const helper = new JwtHelperService();
 export class AuthenticationService {
 
     user$: BehaviorSubject<IUser> = new BehaviorSubject<IUser>(null)
-    token: string = "";
 
     constructor(public afAuth: AngularFireAuth,
                 private http: HttpClient,
@@ -36,9 +35,11 @@ export class AuthenticationService {
         const lastName = name.substr(name.indexOf(' ') + 1);
         return this.afAuth.createUserWithEmailAndPassword(email, password)
             .then(res => {
+                console.log("Firebase meldet sich nach Registrierung zurück")
                 return this.registerUser(res.user, firstName, lastName)
             })
             .then(res => {
+                console.log("Backend meldet sich zurück mit registriertem Nutzer")
                 this.user$.next(res)
             })
     }
@@ -56,7 +57,6 @@ export class AuthenticationService {
         return this.http.post<IUser>(environment.apiUrl + '/users', userData).toPromise();
     }
 
-
     login(email: string, password: string) {
         return this.afAuth.signInWithEmailAndPassword(email, password)
             .then(res => {
@@ -67,7 +67,6 @@ export class AuthenticationService {
             });
     }
 
-
     signOut() {
         console.log("click on sign out")
         this.afAuth.signOut()
@@ -77,15 +76,16 @@ export class AuthenticationService {
             .catch(err => {
                 console.log(err);
             });
-
     }
-
 
     autoLogin() {
        return this.afAuth.authState.pipe(
             switchMap(user => {
                 if (user) {
-                    console.log(user)
+                    user.getIdToken().then( token => {
+                        console.log(token)
+                    })
+
                     return this.userService.getUser(user.uid)
                 } else {
                     this.user$.next(null)
@@ -95,7 +95,7 @@ export class AuthenticationService {
         )
     }
 
-//
+
 //     logout() {
 //         this.user.next(null);
 //         this.router.navigate(['/login']);

@@ -19,6 +19,7 @@ import {PopoverService} from '../../components/popover/popover.service';
 import {MegaMenuComponent} from '../../components/mega-menu/mega-menu.component';
 import icSearch from '@iconify/icons-ic/twotone-search';
 import {AuthenticationService} from "../../services/auth.service";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'dg-toolbar',
@@ -58,6 +59,7 @@ export class ToolbarComponent implements OnInit {
     constructor(private layoutService: LayoutService,
                 private configService: ConfigService,
                 private navigationService: NavigationService,
+                public router: Router,
                 private popoverService: PopoverService,
                 public authService: AuthenticationService) {
     }

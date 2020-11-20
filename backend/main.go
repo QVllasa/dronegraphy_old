@@ -16,11 +16,10 @@ import (
 )
 
 var (
-	c         *mongo.Client
+	//c         *mongo.Client
 	db        *mongo.Database
 	videoColl *mongo.Collection
 	usersColl *mongo.Collection
-	rolesColl *mongo.Collection
 	cfg       config.Properties
 )
 
@@ -41,7 +40,6 @@ func init() {
 	db = c.Database(cfg.DBName)
 	videoColl = db.Collection(cfg.VideoCollection)
 	usersColl = db.Collection(cfg.UsersCollection)
-	rolesColl = db.Collection(cfg.RolesCollection)
 
 	//Example of indexing email and make it unique
 	isUserIndexUnique := true
@@ -72,17 +70,22 @@ func main() {
 	h := handler.VideoHandler{Coll: videoColl}
 	u := handler.UsersHandler{Coll: usersColl}
 
-	//Video Endpoints
+	// Admin Endpoints
+	e.GET("/users", u.GetAllUser, customMiddleware.Auth())
+
+	// Creator Endpoints
+	// e.GET("/creators")
 	e.POST("/videos", h.CreateVideos, middleware.BodyLimit("1M"), customMiddleware.Auth())
-	e.GET("/videos", h.GetAllVideos)
 	e.PUT("/videos/:id", h.UpdateVideo, middleware.BodyLimit("1M"), customMiddleware.Auth())
-	e.GET("/videos/:id", h.GetVideo)
 	e.DELETE("/videos/:id", h.DeleteVideo, customMiddleware.Auth())
 
-	//Users Endpoints
+	// Member Endpoints
 	e.POST("/users", u.SignUp)
 	e.GET("/users/:id", u.GetUser, customMiddleware.Auth())
-	e.GET("/users", u.GetAllUser, customMiddleware.Auth())
+
+	// Public Endpoints
+	e.GET("/videos", h.GetAllVideos)
+	e.GET("/videos/:id", h.GetVideo)
 
 	e.Logger.Printf("Listening on %v:%v", cfg.Host, cfg.Port)
 	e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%s", cfg.Host, cfg.Port)))

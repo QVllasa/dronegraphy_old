@@ -1,19 +1,21 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {VideoGridComponent} from "./video-grid.component";
-import {VideoItemComponent} from "../video-item/video-item.component";
-import {VideoPlayerComponent} from "../video-player/video-player.component";
+import {FlexLayoutModule} from "@angular/flex-layout";
+import {VideoItemModule} from "../video-item/video-item.module";
 
 
 @NgModule({
     imports: [
-        CommonModule
+        CommonModule,
+        FlexLayoutModule,
+        VideoItemModule
 
     ],
     exports: [
         VideoGridComponent
     ],
-    declarations: [VideoGridComponent, VideoItemComponent, VideoPlayerComponent]
+    declarations: [VideoGridComponent]
 })
 export class VideoGridModule {
 }

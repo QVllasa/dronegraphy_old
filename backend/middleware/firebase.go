@@ -12,45 +12,87 @@ import (
 	"strings"
 )
 
-func Auth() echo.MiddlewareFunc {
-	return auth
+func InitFirebase() (*firebase.App, error) {
+
+	//Check if serviceAccountKey file exists
+	serviceAccountKeyFilePath, err := filepath.Abs("./serviceAccountKey.json")
+	if err != nil {
+		panic("Unable to load serviceAccountKeys.json file")
+	}
+	opt := option.WithCredentialsFile(serviceAccountKeyFilePath)
+
+	// Create new Firebase Connection
+	app, err := firebase.NewApp(context.Background(), nil, opt)
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+
+	return app, nil
 }
 
-func auth(next echo.HandlerFunc) echo.HandlerFunc {
+func Auth() echo.MiddlewareFunc {
+	return authorize
+}
+
+//func UpdateClaims() echo.MiddlewareFunc {
+//	return updateClaims
+//}
+
+func authorize(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 
-		//Check if serviceAccountKey file exists
-		serviceAccountKeyFilePath, err := filepath.Abs("./serviceAccountKey.json")
+		app, err := InitFirebase()
 		if err != nil {
-			panic("Unable to load serviceAccountKeys.json file")
-		}
-		opt := option.WithCredentialsFile(serviceAccountKeyFilePath)
-
-		app, err := firebase.NewApp(context.Background(), nil, opt)
-		if err != nil {
+			log.Fatal(err)
 			return err
 		}
 
+		// Instantiate Client for using Firebase API
 		client, err := app.Auth(context.Background())
 		if err != nil {
 			return err
 		}
 
-		authApp := c.Request().Header.Get("Authorization")
-		idToken := strings.Replace(authApp, "Bearer ", "", 1)
+		idToken, err := GetTokenFromRequest(c)
+		if err != nil {
+			log.Error(err)
+			return c.JSON(http.StatusBadRequest, handler.ErrorMessage{Message: "no token found"})
+		}
+
+		// Verify bearer token
 		token, err := client.VerifyIDToken(context.Background(), idToken)
 		if err != nil {
 			log.Error(err)
 			return c.JSON(http.StatusBadRequest, handler.ErrorMessage{Message: "invalid token"})
 		}
 
-		log.Printf("Verified ID token: %v\n", token)
-
 		c.Set("token", token)
-
-		//fmt.Println(token)
-		//fmt.Println("Token verified!")
 
 		return next(c)
 	}
+}
+
+func UpdateClaims(app *firebase.App, uid string, claims map[string]interface{}) error {
+
+	client, err := app.Auth(context.Background())
+	if err != nil {
+		return err
+	}
+
+	if err := client.SetCustomUserClaims(context.Background(), uid, claims); err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	return nil
+}
+
+func GetTokenFromRequest(ctx echo.Context) (string, error) {
+
+	// Get Bearer JWT Token from Header which comes from frontend
+	authApp := ctx.Request().Header.Get("Authorization")
+	idToken := strings.Replace(authApp, "Bearer ", "", 1)
+
+	return idToken, nil
 }

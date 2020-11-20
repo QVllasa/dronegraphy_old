@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"dronegraphy/backend/middleware"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
@@ -47,8 +48,6 @@ func (this *UsersHandler) SignUp(c echo.Context) error {
 	var newUser User
 	c.Echo().Validator = &UserValidator{Validator: validator.New()}
 
-
-
 	if err := c.Bind(&newUser); err != nil {
 		log.Errorf("Unable to bind : %v", err)
 		return c.JSON(http.StatusUnprocessableEntity, ErrorMessage{Message: "Binding Error: unable to parse request payload"})
@@ -59,9 +58,22 @@ func (this *UsersHandler) SignUp(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, ErrorMessage{Message: "Validation Error: unable to parse request payload"})
 	}
 
-
-
 	newUser, err := insertUser(context.Background(), newUser, this.Coll)
+	if err != nil {
+		return err
+	}
+
+	app, err := middleware.InitFirebase()
+	if err != nil {
+		return err
+	}
+
+	//TODO: update roles in JWT claim
+	idToken, err := middleware.GetTokenFromRequest(c)
+
+	claims := map[string]interface{}{"admin": true}
+
+	err = middleware.UpdateClaims(app, idToken, claims)
 	if err != nil {
 		return err
 	}
