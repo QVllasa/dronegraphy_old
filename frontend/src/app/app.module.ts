@@ -36,7 +36,7 @@ import {AuthInterceptorService} from "../@vex/services/auth-interceptor.service"
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptorService,
             multi: true
-        },
+        }
     ],
     exports: [],
     bootstrap: [AppComponent]

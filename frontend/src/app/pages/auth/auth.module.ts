@@ -12,6 +12,8 @@ import {RouterModule} from "@angular/router";
 import {AuthRoutingModule} from "./auth-routing.module";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import { HttpClientModule} from "@angular/common/http";
+
 
 
 
@@ -29,7 +31,11 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
         MatCheckboxModule,
         RouterModule,
         MatSnackBarModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        HttpClientModule
+    ],
+    providers: [
+
     ]
 })
 export class AuthModule { }

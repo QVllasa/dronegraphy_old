@@ -24,7 +24,7 @@
                 <mat-checkbox class="caption" color="primary">Angemeldet bleiben</mat-checkbox>
             </div>
 
-            <button (click)="send()" [color]="!isLoading ? 'primary' : null" mat-flat-button type="button" [disabled]="!form.valid" >
+            <button (click)="send()" [color]="!isLoading ? 'primary' : null" mat-flat-button type="submit" [disabled]="!form.valid" >
                 <div  *ngIf="isLoading" class="h-10 w-full" fxLayout="row" fxLayoutAlign="center center">
                     <mat-spinner color="primary" diameter="25" ></mat-spinner>
                 </div>

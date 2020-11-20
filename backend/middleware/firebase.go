@@ -42,7 +42,7 @@ func auth(next echo.HandlerFunc) echo.HandlerFunc {
 		token, err := client.VerifyIDToken(context.Background(), idToken)
 		if err != nil {
 			log.Error(err)
-			return c.JSON(http.StatusUnprocessableEntity, handler.ErrorMessage{Message: "invalid token"})
+			return c.JSON(http.StatusBadRequest, handler.ErrorMessage{Message: "invalid token"})
 		}
 
 		log.Printf("Verified ID token: %v\n", token)
