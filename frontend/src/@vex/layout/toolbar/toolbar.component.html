@@ -1,18 +1,24 @@
 <div class="toolbar w-full px-gutter shadow-md" fxLayout="row" fxLayoutAlign="space-between center">
-    <div>
+    <div fxFlex>
         <button class="absolute top-8" (click)="openSidenav()" mat-fab color="primary" type="button">
             <mat-icon class="text-white">menu</mat-icon>
         </button>
     </div>
+
+
     <vex-toolbar-search></vex-toolbar-search>
+
+
     <ng-container>
-        <div class="-mx-1 flex items-center" fxLayoutGap="8px">
+        <div fxFlex fxLayoutAlign="end" class="-mx-1 " fxLayoutGap="8px">
             <button *ngIf="(authService.user$ | async)" mat-icon-button>
                 <div class="rounded-full flex items-center justify-center text-primary bg-primary-light cursor-pointer h-9 w-9">
                     <mat-icon>shopping_cart</mat-icon>
                 </div>
             </button>
-            <button *ngIf="!(authService.user$ | async)" mat-flat-button color="primary" routerLink="/register">Starten</button>
+            <button *ngIf="!(authService.user$ | async)" mat-flat-button color="primary" routerLink="/register">
+                Starten
+            </button>
             <button mat-flat-button class="text-primary" routerLink="/pricing">Preise</button>
             <vex-toolbar-user></vex-toolbar-user>
         </div>
