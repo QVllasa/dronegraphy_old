@@ -90,35 +90,6 @@ func (this *UsersHandler) GetUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, user)
 }
 
-func VerifyEmail(user User) error {
-	actionCodeSettings := &auth.ActionCodeSettings{
-		URL:                   "https://www.example.com/checkout?cartId=1234",
-		HandleCodeInApp:       true,
-		IOSBundleID:           "com.example.ios",
-		AndroidPackageName:    "com.example.android",
-		AndroidInstallApp:     true,
-		AndroidMinimumVersion: "12",
-		DynamicLinkDomain:     "coolapp.page.link",
-	}
-
-	client, err := customMiddleware.InitAuthClient()
-	if err != nil {
-		log.Fatal(err)
-		return err
-	}
-
-	email := user.Email
-	link, err := client.EmailVerificationLinkWithSettings(context.Background(), email, actionCodeSettings)
-	if err != nil {
-		log.Fatalf("error generating email link: %v\n", err)
-	}
-
-	// Construct email verification template, embed the link and send
-	// using custom SMTP server.
-	//sendCustomEmail(email, displayName, link)
-
-}
-
 // Get Roles from Database and updates the JWT Token Claims
 func UpdateRoles(client *auth.Client, user User) error {
 
