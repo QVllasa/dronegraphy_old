@@ -2,17 +2,20 @@ package middleware
 
 import (
 	"context"
-	"dronegraphy/backend/handler"
 	firebase "firebase.google.com/go/v4"
+	"firebase.google.com/go/v4/auth"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"google.golang.org/api/option"
-	"net/http"
 	"path/filepath"
 	"strings"
 )
 
-func InitFirebase() (*firebase.App, error) {
+func Auth() echo.MiddlewareFunc {
+	return authenticate
+}
+
+func InitAuthClient() (*auth.Client, error) {
 
 	//Check if serviceAccountKey file exists
 	serviceAccountKeyFilePath, err := filepath.Abs("./serviceAccountKey.json")
@@ -28,64 +31,52 @@ func InitFirebase() (*firebase.App, error) {
 		return nil, err
 	}
 
-	return app, nil
+	// Instantiate Client for using Firebase API
+	client, err := app.Auth(context.Background())
+	if err != nil {
+		return nil, err
+	}
+
+	return client, nil
 }
 
-func Auth() echo.MiddlewareFunc {
-	return authorize
-}
-
-//func UpdateClaims() echo.MiddlewareFunc {
-//	return updateClaims
-//}
-
-func authorize(next echo.HandlerFunc) echo.HandlerFunc {
+func authenticate(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 
-		app, err := InitFirebase()
+		client, err := InitAuthClient()
 		if err != nil {
 			log.Fatal(err)
 			return err
 		}
 
-		// Instantiate Client for using Firebase API
-		client, err := app.Auth(context.Background())
-		if err != nil {
+		if _, err := VerifyToken(c, client); err != nil {
+			log.Error(err)
 			return err
 		}
-
-		idToken, err := GetTokenFromRequest(c)
-		if err != nil {
-			log.Error(err)
-			return c.JSON(http.StatusBadRequest, handler.ErrorMessage{Message: "no token found"})
-		}
-
-		// Verify bearer token
-		token, err := client.VerifyIDToken(context.Background(), idToken)
-		if err != nil {
-			log.Error(err)
-			return c.JSON(http.StatusBadRequest, handler.ErrorMessage{Message: "invalid token"})
-		}
-
-		c.Set("token", token)
 
 		return next(c)
 	}
 }
 
-func UpdateClaims(app *firebase.App, uid string, claims map[string]interface{}) error {
+func VerifyToken(c echo.Context, client *auth.Client) (*auth.Token, error) {
 
-	client, err := app.Auth(context.Background())
+	// Get token
+	idToken, err := GetTokenFromRequest(c)
 	if err != nil {
-		return err
+		log.Error(err)
+		return nil, err
 	}
 
-	if err := client.SetCustomUserClaims(context.Background(), uid, claims); err != nil {
-		log.Fatal(err)
-		return err
+	// Verify bearer token
+	token, err := client.VerifyIDToken(context.Background(), idToken)
+	if err != nil {
+		log.Error(err)
+		return nil, err
 	}
 
-	return nil
+	c.Set("token", token)
+
+	return token, nil
 }
 
 func GetTokenFromRequest(ctx echo.Context) (string, error) {

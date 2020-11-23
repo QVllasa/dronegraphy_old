@@ -2,7 +2,8 @@ package handler
 
 import (
 	"context"
-	"dronegraphy/backend/middleware"
+	customMiddleware "dronegraphy/backend/middleware"
+	"firebase.google.com/go/v4/auth"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
@@ -18,20 +19,21 @@ type UsersHandler struct {
 
 type (
 	Roles struct {
-		Admin   bool `json:"admin"`
-		Creator bool `json:"creator"`
-		Member  bool `json:"member"`
+		Admin   bool `json:"admin" bson:"admin"`
+		Creator bool `json:"creator" bson:"creator"`
+		Member  bool `json:"member" bson:"member"`
 	}
 )
 
 type (
 	User struct {
-		ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-		Email     string             `json:"email" validate:"required,email"`
-		FirstName string             `json:"firstName" validate:"required"`
-		LastName  string             `json:"lastName" validate:"required"`
-		UID       string             `json:"uid" validate:"required"`
-		Roles     Roles              `json:"roles" validate:"required"`
+		ID            primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+		Email         string             `json:"email" validate:"required,email"`
+		FirstName     string             `json:"firstName" validate:"required"`
+		LastName      string             `json:"lastName" validate:"required"`
+		UID           string             `json:"uid" validate:"required"`
+		VerifiedEmail bool
+		Roles         Roles `json:"roles" validate:"required"`
 	}
 
 	UserValidator struct {
@@ -63,35 +65,74 @@ func (this *UsersHandler) SignUp(c echo.Context) error {
 		return err
 	}
 
-	app, err := middleware.InitFirebase()
-	if err != nil {
-		return err
-	}
-
-	//TODO: update roles in JWT claim
-	idToken, err := middleware.GetTokenFromRequest(c)
-
-	claims := map[string]interface{}{"admin": true}
-
-	err = middleware.UpdateClaims(app, idToken, claims)
-	if err != nil {
-		return err
-	}
-
 	return c.JSON(http.StatusOK, newUser)
 }
 
 func (this *UsersHandler) GetUser(c echo.Context) error {
 	var user User
-	user, err := findUser(context.Background(), c.Param("id"), this.Coll)
+	user, err := FindUser(context.Background(), c.Param("id"), this.Coll)
 	if err != nil {
 		log.Errorf("Unable to find User: %v", err)
 		return err
 	}
 
-	//fmt.Println(c.Get("token"))
+	client, err := customMiddleware.InitAuthClient()
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	if err = UpdateRoles(client, user); err != nil {
+		log.Error(err)
+		return err
+	}
 
 	return c.JSON(http.StatusOK, user)
+}
+
+func VerifyEmail(user User) error {
+	actionCodeSettings := &auth.ActionCodeSettings{
+		URL:                   "https://www.example.com/checkout?cartId=1234",
+		HandleCodeInApp:       true,
+		IOSBundleID:           "com.example.ios",
+		AndroidPackageName:    "com.example.android",
+		AndroidInstallApp:     true,
+		AndroidMinimumVersion: "12",
+		DynamicLinkDomain:     "coolapp.page.link",
+	}
+
+	client, err := customMiddleware.InitAuthClient()
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	email := user.Email
+	link, err := client.EmailVerificationLinkWithSettings(context.Background(), email, actionCodeSettings)
+	if err != nil {
+		log.Fatalf("error generating email link: %v\n", err)
+	}
+
+	// Construct email verification template, embed the link and send
+	// using custom SMTP server.
+	//sendCustomEmail(email, displayName, link)
+
+}
+
+// Get Roles from Database and updates the JWT Token Claims
+func UpdateRoles(client *auth.Client, user User) error {
+
+	claims := map[string]interface{}{
+		"admin":   user.Roles.Admin,
+		"creator": user.Roles.Creator,
+		"member":  user.Roles.Member}
+
+	if err := client.SetCustomUserClaims(context.Background(), user.UID, claims); err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	return nil
 }
 
 func (this *UsersHandler) GetAllUser(c echo.Context) error {
@@ -102,7 +143,7 @@ func (this *UsersHandler) GetAllUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, users)
 }
 
-func findUser(ctx context.Context, id string, collection *mongo.Collection) (User, error) {
+func FindUser(ctx context.Context, id string, collection *mongo.Collection) (User, error) {
 	var user User
 	filter := bson.M{"uid": id}
 	res := collection.FindOne(ctx, filter)

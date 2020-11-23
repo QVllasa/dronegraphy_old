@@ -80,7 +80,7 @@ func main() {
 	e.DELETE("/videos/:id", h.DeleteVideo, customMiddleware.Auth())
 
 	// Member Endpoints
-	e.POST("/users", u.SignUp)
+	e.POST("/users", u.SignUp, customMiddleware.Auth())
 	e.GET("/users/:id", u.GetUser, customMiddleware.Auth())
 
 	// Public Endpoints
