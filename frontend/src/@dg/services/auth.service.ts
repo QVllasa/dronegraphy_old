@@ -35,7 +35,9 @@ export class AuthenticationService {
         const lastName = name.substr(name.indexOf(' ') + 1);
         return this.afAuth.createUserWithEmailAndPassword(email, password)
             .then(res => {
+
                 console.log("Firebase meldet sich nach Registrierung zurück")
+                res.user.sendEmailVerification();
                 return this.registerUser(res.user, firstName, lastName)
             })
             .then(res => {
