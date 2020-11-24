@@ -27,14 +27,14 @@
 
 <mat-menu #menu="matMenu">
   <ng-container *ngIf="auth.user$ | async as user">
-    <button *ngIf="user.roles.member"  mat-menu-item>
+    <button *ngIf="user.roles.member" [routerLink]="['account']" mat-menu-item>
       <span> Account </span>
     </button>
-    <button *ngIf="user.roles.creator"  mat-menu-item>
+    <button *ngIf="user.roles.creator" [routerLink]="['account']" mat-menu-item>
       <span> Creator Account </span>
     </button>
   </ng-container>
-  <button mat-menu-item>
+  <button mat-menu-item [routerLink]="['/cockpit']">
     <span> Cockpit </span>
   </button>
   <button mat-menu-item (click)="auth.signOut()">

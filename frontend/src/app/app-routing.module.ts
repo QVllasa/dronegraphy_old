@@ -17,6 +17,11 @@ const routes: Routes = [
         component: HomeComponent,
       },
       {
+        path: 'account',
+        loadChildren: () => import('./pages/account/account.module').then(m => m.AccountModule),
+        canActivate:[]
+      },
+      {
         path: 'pricing',
         loadChildren: () => import('./pages/pricing/pricing.module').then(m => m.PricingModule),
         canActivate:[]
