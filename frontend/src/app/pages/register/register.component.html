@@ -1,8 +1,8 @@
 <div class="w-full h-screen bg-pattern" fxLayout="column" fxLayoutAlign="center center">
     <h1 fxLayoutAlign="center" class="mat-display-2">Jetzt kostenlos abheben.</h1>
 
-    <div fxLayout="row" class="w-full" fxLayoutGap="12px" fxLayoutAlign="center start">
-        <div class="card overflow-hidden w-full h-full max-w-lg z-10" >
+    <div *ngIf="!registerSuccess" fxLayout="row" class="w-full" fxLayoutGap="12px" fxLayoutAlign="center start">
+        <div class="card overflow-hidden w-full h-full max-w-lg z-10">
             <div class="text-center mt-4">
                 <h2 class="mat-h2">Deine Vorteile</h2>
             </div>
@@ -33,11 +33,11 @@
                 </mat-list-item>
             </mat-list>
             <div class="mt-8" fxLayoutAlign="center center" fxLayout="column">
-                <button routerLink="/login"  mat-button color="primary" type="button">
+                <button routerLink="/login" mat-button color="primary" type="button">
                     <span>Bereits ein Konto?</span>
                     <mat-icon inline>keyboard_arrow_right</mat-icon>
                 </button>
-                <button routerLink="/forgot-password"  mat-button color="primary" type="button">
+                <button routerLink="/forgot-password" mat-button color="primary" type="button">
                     <span>Passwort vergessen?</span>
                     <mat-icon inline>keyboard_arrow_right</mat-icon>
                 </button>
@@ -50,9 +50,11 @@
                     <mat-form-field fxFlex="grow" appearance="outline">
                         <mat-label>Dein Name</mat-label>
                         <input formControlName="name" matInput required>
-                        <mat-error *ngIf="!form.get('name').valid && form.get('name').hasError('required')">Erzähl uns von wer du bist.
+                        <mat-error *ngIf="!form.get('name').valid && form.get('name').hasError('required')">Erzähl uns
+                            von wer du bist.
                         </mat-error>
-                        <mat-error *ngIf="!form.get('name').valid && form.get('name').hasError('pattern')">Oops, dein Name darf
+                        <mat-error *ngIf="!form.get('name').valid && form.get('name').hasError('pattern')">Oops, dein
+                            Name darf
                             keine Sonderzeichen enthalten.
                         </mat-error>
                     </mat-form-field>
@@ -84,14 +86,29 @@
                         </mat-hint>
                     </mat-form-field>
                 </div>
-                <button (click)="send()" color="primary" mat-raised-button type="button">
-                    KOSTENLOS ANMELDEN
+                <button (click)="send()" [color]="!isLoading ? 'primary' : null" mat-flat-button type="submit" [disabled]="!form.valid" >
+                    <div  *ngIf="isLoading" class="h-10 w-full" fxLayout="row" fxLayoutAlign="center center">
+                        <mat-spinner color="primary" diameter="25" ></mat-spinner>
+                    </div>
+                    <span *ngIf="!isLoading">KOSTENLOS ANMELDEN</span>
                 </button>
                 <div fxLayout="row" fxLayoutAlign="center center">
                     <div class="caption">Mit der Registierung akzeptierst du unsere <a>AGB</a> und <a>
                         Datenschutzbestimmungen</a>.
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="registerSuccess" fxLayout="row" class="w-full" fxLayoutGap="12px" fxLayoutAlign="center start">
+        <div class="card overflow-hidden w-full h-full max-w-lg z-10 p-gutter">
+            <div class="rounded-full flex mx-auto h-24 w-24 items-center justify-center text-green bg-green-light">
+                <mat-icon class="transform scale-150">check</mat-icon>
+            </div>
+            <div class="text-center mt-4">
+                <h2 class="mat-h2">Ab gehts!</h2>
+                <h4 class="mat-h4">Wir haben dir soeben eine E-Mail mit Bestätigungslink an dich versendet. Bestätige
+                    deine E-Mail und hebe mit uns ab!</h4>
             </div>
         </div>
     </div>

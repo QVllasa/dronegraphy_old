@@ -19,6 +19,7 @@ export class RegisterComponent implements OnInit {
     isLoading: boolean;
     inputType = 'password';
     visible = false;
+    registerSuccess: boolean = false;
 
 
     constructor(private router: Router,
@@ -46,7 +47,8 @@ export class RegisterComponent implements OnInit {
         this.authService.signUp(email, password, name)
             .then(() => {
                 this.isLoading = false;
-                this.router.navigate(['/']);
+                this.registerSuccess = true;
+                // this.router.navigate(['/']);
             })
             .catch(err => {
                 this.isLoading = false;

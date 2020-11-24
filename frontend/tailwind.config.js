@@ -2,7 +2,7 @@ module.exports = {
   purge: [],
   target: 'relaxed',
   prefix: '',
-  important: ':root',
+  important: true,
   separator: ':',
   future: {
     removeDeprecatedGapUtilities: true,
@@ -13,7 +13,8 @@ module.exports = {
       sm: '600px',
       md: '960px',
       lg: '1280px',
-      xl: '1440px'
+      xl: '1440px',
+      xxl: '2160px'
     },
     colors: {
       current: 'currentColor',

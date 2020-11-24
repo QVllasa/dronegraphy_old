@@ -14,6 +14,7 @@ import {RegisterRoutingModule} from "./register-routing.module";
 import {NgParticlesModule} from "ng-particles";
 import {MatListModule} from "@angular/material/list";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 
 
@@ -33,7 +34,8 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
         MatIconModule,
         NgParticlesModule,
         MatListModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        MatProgressSpinnerModule
     ]
 })
 export class RegisterModule { }

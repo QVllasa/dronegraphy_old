@@ -24,12 +24,12 @@ const routes: Routes = [
       {
         path: 'login',
         loadChildren: () => import('./pages/auth/auth.module').then(m => m.AuthModule),
-        canActivate:[AnonymousGuard]
+        canActivate:[]
       },
       {
         path: 'register',
         loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterModule),
-        canActivate:[AnonymousGuard]
+        canActivate:[]
       }
     ]
   }

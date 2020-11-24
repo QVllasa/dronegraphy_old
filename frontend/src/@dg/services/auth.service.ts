@@ -21,12 +21,13 @@ export class AuthenticationService {
 
     user$: BehaviorSubject<IUser> = new BehaviorSubject<IUser>(null)
 
+
     constructor(public afAuth: AngularFireAuth,
                 private http: HttpClient,
                 private userService: UserService,
                 private router: Router,
                 private fns: AngularFireFunctions) {
-        this.autoLogin();
+        this.autoLogin().subscribe();
     }
 
     // Sign Up User on Firebase
@@ -35,7 +36,6 @@ export class AuthenticationService {
         const lastName = name.substr(name.indexOf(' ') + 1);
         return this.afAuth.createUserWithEmailAndPassword(email, password)
             .then(res => {
-
                 console.log("Firebase meldet sich nach Registrierung zurück")
                 res.user.sendEmailVerification();
                 return this.registerUser(res.user, firstName, lastName)
@@ -53,7 +53,8 @@ export class AuthenticationService {
             email: user.email,
             firstName: firstName,
             lastName: lastName,
-            roles: defaultRoles
+            roles: defaultRoles,
+            emailVerified: false,
         }
         console.log(userData)
         return this.http.post<IUser>(environment.apiUrl + '/users', userData).toPromise();
@@ -81,13 +82,12 @@ export class AuthenticationService {
     }
 
     autoLogin() {
-       return this.afAuth.authState.pipe(
+        return this.afAuth.authState.pipe(
             switchMap(user => {
                 if (user) {
-                    user.getIdToken().then( token => {
+                    user.getIdToken().then(token => {
                         console.log(token)
                     })
-
                     return this.userService.getUser(user.uid)
                 } else {
                     this.user$.next(null)

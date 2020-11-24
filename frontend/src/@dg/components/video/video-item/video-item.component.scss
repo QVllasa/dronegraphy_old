@@ -15,26 +15,11 @@
   color: white;
 }
 
-
-
-mat-chip-list{
-  padding: 4px;
-}
-
-mat-chip{
-  font-size: 12px !important;
-}
-
-.video-item-title{
-  padding: 4px 8px;
-  color: white;
-  cursor: pointer;
+.fade-in {
+  animation: fade-in 0.3s linear both;
 }
 
 
-.mat-standard-chip{
-  min-height: 24px !important;
-}
 
 
 app-vjs-player{
@@ -46,11 +31,6 @@ app-vjs-player{
   text-align: center;
 }
 
-
-.fade-in {
-  //background-color: #8e1454;
-  animation: fade-in 0.3s linear both;
-}
 
 @keyframes fade-in {
   0% {

@@ -5,8 +5,6 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {AuthenticationService} from "../../../@dg/services/auth.service";
 
 
-
-
 @Component({
     selector: 'dg-auth',
     templateUrl: './auth.component.html',
