@@ -32,8 +32,8 @@ type (
 		FirstName     string             `json:"firstName" validate:"required"`
 		LastName      string             `json:"lastName" validate:"required"`
 		UID           string             `json:"uid" validate:"required"`
-		VerifiedEmail bool
-		Roles         Roles `json:"roles" validate:"required"`
+		EmailVerified bool               `json:"emailVerified"`
+		Roles         Roles              `json:"roles" validate:"required"`
 	}
 
 	UserValidator struct {
