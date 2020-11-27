@@ -8,8 +8,8 @@ import {AngularFireAuth} from "@angular/fire/auth";
 @Component({
     selector: 'dg-account',
     templateUrl: './account.component.html',
-    styleUrls: ['./account.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./account.component.scss']
+    // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountComponent implements OnInit, OnDestroy {
 
@@ -40,13 +40,12 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     constructor(private fb: FormBuilder,
                 private afAuth: AngularFireAuth,
-                public authService: AuthenticationService,
-                private cd: ChangeDetectorRef) {
+                public authService: AuthenticationService) {
     }
 
     ngOnInit(): void {
         this.authService.user$.subscribe(user => {
-            if (!user){
+            if (!user) {
                 return
             }
             this.currentUser = user;
@@ -55,7 +54,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     }
 
-    initForm (){
+    initForm() {
         this.form = new FormGroup({
             firstName: new FormControl({
                 value: this.currentUser.firstName,
@@ -77,28 +76,40 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     send() {
-        this.isLoading = true;
+        //Change Firebase Email
+        if (this.currentUser.email !== this.form.get('email').value) {
+            this.isLoading = true;
+            console.log("changing email: ", this.form.get('email').value)
+            let emailChange = this.afAuth.currentUser;
+            emailChange.then(res => {
+                return res.updateEmail(this.form.get('email').value)
+            }).then(() => {
+                this.isLoading = false;
+            }).catch(err => {
+                console.log(err);
+            })
+        }
+
+        //Change Firebase Password
+        if ((this.form.get('password').value !== '') && this.form.get('password').valid) {
+            this.isLoading = true;
+            console.log("changing password: ",  this.form.get('password').value);
+            let passwordChange = this.afAuth.currentUser;
+            passwordChange.then(res => {
+                return res.updatePassword(this.form.get('password').value);
+            }).then(() => {
+                this.isLoading = false;
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+
+
+
+        //Change other things in backend
         this.currentUser.email = this.form.get('email').value;
         this.currentUser.lastName = this.form.get('lastName').value;
         this.currentUser.firstName = this.form.get('firstName').value;
-        setTimeout(() => {
-            console.log(this.form.get('password').value);
-            this.isLoading = false;
-        }, 2000)
-
-        if ((this.form.get('password').value !== '') && this.form.get('password').valid){
-
-            // let user = this.afAuth.currentUser;
-            // user.then(res => {
-            //     return res.updatePassword(this.form.get('password').value);
-            // }).then(res => {
-            //     console.log(res);
-            //     this.isLoading = false;
-            // })
-            //     .catch(err => {
-            //     console.log(err)
-            // })
-        }
         console.log(this.currentUser);
 
     }
@@ -107,21 +118,19 @@ export class AccountComponent implements OnInit, OnDestroy {
         if (this.visible) {
             this.inputType = 'password';
             this.visible = false;
-            this.cd.markForCheck();
+            // this.cd.markForCheck();
         } else {
             this.inputType = 'text';
             this.visible = true;
-            this.cd.markForCheck();
+            // this.cd.markForCheck();
         }
     }
 
     onActivateForm(type) {
-        // this.editMode = true;
         this.form.controls[type].enable();
     }
 
-    onDectivateForm(type) {
-        // this.editMode = false;
+    onDeactivateForm(type) {
         this.form.controls[type].disable();
     }
 

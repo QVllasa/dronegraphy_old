@@ -14,44 +14,95 @@
                                     <mat-form-field fxFlex="auto" appearance="standard">
                                         <mat-label>Vorname</mat-label>
                                         <input matInput formControlName="firstName">
-                                        <button (click)="form.controls['firstName'].disabled ?  onActivateForm('firstName') : onDectivateForm('firstName') "
-                                                class="font-xs" mat-button matSuffix
-                                                type="button">
-                                            {{form.controls['firstName'].disabled ? 'Ändern' : 'Fertig' }}
-                                        </button>
+                                        <div fxLayout matSuffix>
+                                            <button (click)="form.controls['firstName'].disabled ?  onActivateForm('firstName') : onDeactivateForm('firstName') "
+                                                    [matTooltip]="form.controls['firstName'].disabled ? 'Bearbeiten' : 'Speichern'"
+                                                    class="font-xs" mat-icon-button matSuffix
+                                                    type="button">
+                                                <mat-icon>
+                                                    {{form.controls['firstName'].disabled ? 'edit' : 'save' }}
+                                                </mat-icon>
+                                            </button>
+                                            <button [color]="!isLoading ? 'primary' : null" mat-flat-button
+                                                    type="submit">
+                                                <div *ngIf="isLoading" class="h-10 w-full" fxLayout="row"
+                                                     fxLayoutAlign="center center">
+                                                    <mat-spinner color="accent" diameter="25"></mat-spinner>
+                                                </div>
+                                                <span *ngIf="!isLoading">SPEICHERN</span>
+                                            </button>
+                                        </div>
                                     </mat-form-field>
                                     <mat-form-field fxFlex="auto" appearance="standard">
                                         <mat-label>Nachname</mat-label>
                                         <input matInput required formControlName="lastName">
-                                        <button
-                                                (click)="form.controls['lastName'].disabled ?  onActivateForm('lastName') : onDectivateForm('lastName') "
-                                                class="font-xs" mat-button
-                                                matSuffix type="button">
-                                            {{form.controls['lastName'].disabled ? 'Ändern' : 'Fertig'}}
-                                        </button>
+                                        <div fxLayout matSuffix>
+                                            <button
+                                                    (click)="form.controls['lastName'].disabled ?  onActivateForm('lastName') : onDeactivateForm('lastName') "
+                                                    [matTooltip]="form.controls['lastName'].disabled ? 'Bearbeiten' : 'Speichern'"
+                                                    class="font-xs" mat-icon-button
+                                                    matSuffix type="button">
+                                                <mat-icon>
+                                                    {{form.controls['lastName'].disabled ? 'edit' : 'save'}}
+                                                </mat-icon>
+
+                                            </button>
+                                            <button [color]="!isLoading ? 'primary' : null" mat-flat-button
+                                                    type="submit">
+                                                <div *ngIf="isLoading" class="h-10 w-full" fxLayout="row"
+                                                     fxLayoutAlign="center center">
+                                                    <mat-spinner color="accent" diameter="25"></mat-spinner>
+                                                </div>
+                                                <span *ngIf="!isLoading">SPEICHERN</span>
+                                            </button>
+                                        </div>
                                     </mat-form-field>
                                     <mat-form-field fxFlex="auto" appearance="standard">
                                         <mat-label>E-Mail</mat-label>
                                         <input matInput required formControlName="email">
-                                        <button
-                                                (click)="form.controls['email'].disabled ?  onActivateForm('email') : onDectivateForm('email') "
-                                                class="font-xs" mat-button
-                                                matSuffix type="button">
-                                            {{form.controls['email'].disabled ? 'Ändern' : 'Fertig'}}
-                                        </button>
+                                        <div fxLayout matSuffix>
+                                            <button
+                                                    (click)="form.controls['email'].disabled ?  onActivateForm('email') : onDeactivateForm('email')"
+                                                    [matTooltip]="form.controls['email'].disabled ? 'Bearbeiten' : 'Speichern'"
+                                                    class="font-xs" mat-icon-button
+                                                    matSuffix type="button">
+                                                <mat-icon>
+                                                    {{form.controls['email'].disabled ? 'edit' : 'save'}}
+                                                </mat-icon>
+
+                                            </button>
+                                            <button [color]="!isLoading ? 'primary' : null" mat-icon-button
+                                                    type="submit">
+                                                <div *ngIf="isLoading" class="h-10 w-full" fxLayout="row"
+                                                     fxLayoutAlign="center center">
+                                                    <mat-spinner color="accent" diameter="25"></mat-spinner>
+                                                </div>
+                                                <mat-icon *ngIf="!isLoading">{{form.controls['email'].disabled ? 'edit' : 'save'}}</mat-icon>
+                                            </button>
+                                        </div>
                                     </mat-form-field>
-                                    <mat-form-field fxFlex="auto" appearance="standard">
-                                        <mat-label>Passwort ändern</mat-label>
-                                        <input [type]="inputType" matInput formControlName="password">
-                                        <button (click)="togglePassword()" mat-icon-button matSuffix type="button">
-                                            <mat-icon *ngIf="visible">visibility</mat-icon>
-                                            <mat-icon *ngIf="!visible">visibility_off</mat-icon>
-                                        </button>
-                                        <mat-error *ngIf="form.get('password').value && form.get('password').hasError('required')">Oops, das Password erfüllt nicht unsere Anforderungen.</mat-error>
-                                    </mat-form-field>
+
+                                        <mat-form-field  fxFlex="auto" appearance="standard">
+                                            <mat-label>Passwort ändern</mat-label>
+                                            <input [type]="inputType" matInput formControlName="password">
+                                            <div matSuffix fxLayout="row">
+                                                <button (click)="togglePassword()" mat-icon-button  type="button">
+                                                    <mat-icon *ngIf="visible">visibility</mat-icon>
+                                                    <mat-icon *ngIf="!visible">visibility_off</mat-icon>
+                                                </button>
+                                                <button *ngIf="form.get('password').value !== ''" mat-icon-button  type="button">
+                                                    <mat-icon>save</mat-icon>
+                                                </button>
+                                            </div>
+
+<!--                                            <mat-error *ngIf="form.get('password').value && !form.get('password').valid">Oops, das Password erfüllt nicht unsere Anforderungen.</mat-error>-->
+                                        </mat-form-field>
+
+
+
                                     <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
                                         <button mat-button type="button">ABBRECHEN</button>
-                                        <button (click)="send()" [color]="!isLoading ? 'primary' : null" mat-flat-button type="submit" >
+                                        <button [color]="!isLoading ? 'primary' : null" mat-flat-button type="submit" >
                                             <div  *ngIf="isLoading" class="h-10 w-full" fxLayout="row" fxLayoutAlign="center center">
                                                 <mat-spinner color="accent" diameter="25" ></mat-spinner>
                                             </div>

@@ -17,6 +17,7 @@ import {MatDividerModule} from "@angular/material/divider";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
         MatDividerModule,
         MatPaginatorModule,
         ReactiveFormsModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatTooltipModule
     ]
 })
 export class AccountModule {
