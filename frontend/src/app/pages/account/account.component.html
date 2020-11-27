@@ -1,7 +1,105 @@
-<div class="w-full h-screen" fxLayout="column" fxLayoutAlign="center center">
+<dg-page-layout mode="card" class="h-screen w-auto" fxLayout="column" fxLayoutAlign="center center">
     <h1 fxLayoutAlign="center" class="mat-display-2">Account</h1>
-    <div class="card overflow-hidden w-full max-w-xs">
-    </div>
-</div>
+    <dg-page-layout-content fxLayoutAlign="center center" dgContainer>
+        <div class="card w-full max-w-2xl min-h-lg">
+            <mat-tab-group mat-align-tabs="center" class="h-full">
+                <mat-tab label="Persönliche Infos">
+                    <div class="p-6">
+                        <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+                            <div fxFlex="auto">
+                                <mat-spinner *ngIf="!(authService.user$ | async)" color="primary"
+                                             diameter="25"></mat-spinner>
+                                <form *ngIf="authService.user$ | async as user" (ngSubmit)="send()" [formGroup]="form"
+                                      class="px-6 py-4" fxLayout="column">
+                                    <mat-form-field fxFlex="auto" appearance="standard">
+                                        <mat-label>Vorname</mat-label>
+                                        <input matInput formControlName="firstName">
+                                        <button (click)="form.controls['firstName'].disabled ?  onActivateForm('firstName') : onDectivateForm('firstName') "
+                                                class="font-xs" mat-button matSuffix
+                                                type="button">
+                                            {{form.controls['firstName'].disabled ? 'Ändern' : 'Fertig' }}
+                                        </button>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="auto" appearance="standard">
+                                        <mat-label>Nachname</mat-label>
+                                        <input matInput required formControlName="lastName">
+                                        <button
+                                                (click)="form.controls['lastName'].disabled ?  onActivateForm('lastName') : onDectivateForm('lastName') "
+                                                class="font-xs" mat-button
+                                                matSuffix type="button">
+                                            {{form.controls['lastName'].disabled ? 'Ändern' : 'Fertig'}}
+                                        </button>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="auto" appearance="standard">
+                                        <mat-label>E-Mail</mat-label>
+                                        <input matInput required formControlName="email">
+                                        <button
+                                                (click)="form.controls['email'].disabled ?  onActivateForm('email') : onDectivateForm('email') "
+                                                class="font-xs" mat-button
+                                                matSuffix type="button">
+                                            {{form.controls['email'].disabled ? 'Ändern' : 'Fertig'}}
+                                        </button>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="auto" appearance="standard">
+                                        <mat-label>Passwort ändern</mat-label>
+                                        <input [type]="inputType" matInput formControlName="password">
+                                        <button (click)="togglePassword()" mat-icon-button matSuffix type="button">
+                                            <mat-icon *ngIf="visible">visibility</mat-icon>
+                                            <mat-icon *ngIf="!visible">visibility_off</mat-icon>
+                                        </button>
+                                        <mat-error *ngIf="form.get('password').value && form.get('password').hasError('required')">Oops, das Password erfüllt nicht unsere Anforderungen.</mat-error>
+                                    </mat-form-field>
+                                    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
+                                        <button mat-button type="button">ABBRECHEN</button>
+                                        <button (click)="send()" [color]="!isLoading ? 'primary' : null" mat-flat-button type="submit" >
+                                            <div  *ngIf="isLoading" class="h-10 w-full" fxLayout="row" fxLayoutAlign="center center">
+                                                <mat-spinner color="accent" diameter="25" ></mat-spinner>
+                                            </div>
+                                            <span *ngIf="!isLoading">SPEICHERN</span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Meine Käufe">
+                    <div class="p-6">
+                        <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+                            <div fxFlex="auto">
+                                <div class="px-6 py-4 h-full" fxLayout="column" fxLayoutAlign="space-between none">
+                                    <mat-accordion hideToggle>
+                                        <mat-expansion-panel class="mat-elevation-z0" *ngFor="let order of orders">
+                                            <mat-expansion-panel-header>
+                                                <mat-panel-title class="text-primary">
+                                                    Konto aufgeladen: {{order.date}}
+                                                </mat-panel-title>
+                                            </mat-expansion-panel-header>
+                                            <ng-template matExpansionPanelContent>
+                                                <div class="mat-body">
+                                                    Anzahl: 5 Pro Downloads
+                                                </div>
+                                                <mat-divider class="my-3"></mat-divider>
+                                                <div class="mat-body">
+                                                    Bezahlt mit: PayPal
+                                                </div>
+                                            </ng-template>
+                                        </mat-expansion-panel>
+                                    </mat-accordion>
+                                    <mat-paginator hidePageSize class="mat-elevation-z0" [length]="100">
+                                    </mat-paginator>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Meine Lizenzen">
+                    <div class="p-6">
+                        Coming soon.
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </dg-page-layout-content>
 
-
+</dg-page-layout>

@@ -20,9 +20,6 @@ export class ToolbarUserComponent implements OnInit {
               private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.auth.user$.subscribe(user => {
-      console.log('current user: ', user);
-    })
   }
 
   showPopover(originRef: HTMLElement) {

@@ -15,14 +15,14 @@
                         <mat-icon *ngIf="visible">visibility</mat-icon>
                         <mat-icon *ngIf="!visible">visibility_off</mat-icon>
                     </button>
-                    <mat-hint>Click the eye to toggle visibility</mat-hint>
+<!--                    <mat-hint>Click the eye to toggle visibility</mat-hint>-->
                     <mat-error *ngIf="form.get('password').hasError('required')">Oops, das Password fehlt.</mat-error>
                 </mat-form-field>
             </div>
 
-            <div fxLayout="row" fxLayoutAlign="space-between center">
-                <mat-checkbox class="caption" color="primary">Angemeldet bleiben</mat-checkbox>
-            </div>
+<!--            <div fxLayout="row" fxLayoutAlign="space-between center">-->
+<!--                <mat-checkbox class="caption" color="primary">Angemeldet bleiben</mat-checkbox>-->
+<!--            </div>-->
 
             <button (click)="send()" [color]="!isLoading ? 'primary' : null" mat-flat-button type="submit" [disabled]="!form.valid" >
                 <div  *ngIf="isLoading" class="h-10 w-full" fxLayout="row" fxLayoutAlign="center center">

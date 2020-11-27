@@ -15,4 +15,8 @@ export class UserService {
   getUser(uid){
     return this.http.get<IUser>(environment.apiUrl+'/users/'+uid);
   }
+
+  updateUser(user: IUser){
+    return this.http.put<IUser>(environment.apiUrl+'/users/'+user.uid, user).toPromise();
+  }
 }

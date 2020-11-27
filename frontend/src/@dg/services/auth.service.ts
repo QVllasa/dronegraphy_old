@@ -36,12 +36,12 @@ export class AuthenticationService {
         const lastName = name.substr(name.indexOf(' ') + 1);
         return this.afAuth.createUserWithEmailAndPassword(email, password)
             .then(res => {
-                console.log("Firebase meldet sich nach Registrierung zurück")
+                // console.log("Firebase meldet sich nach Registrierung zurück")
                 res.user.sendEmailVerification();
                 return this.registerUser(res.user, firstName, lastName)
             })
             .then(res => {
-                console.log("Backend meldet sich zurück mit registriertem Nutzer")
+                // console.log("Backend meldet sich zurück mit registriertem Nutzer")
                 this.user$.next(res)
             })
     }
@@ -56,7 +56,7 @@ export class AuthenticationService {
             roles: defaultRoles,
             emailVerified: false,
         }
-        console.log(userData)
+        // console.log(userData)
         return this.http.post<IUser>(environment.apiUrl + '/users', userData).toPromise();
     }
 
@@ -71,7 +71,7 @@ export class AuthenticationService {
     }
 
     signOut() {
-        console.log("click on sign out")
+        // console.log("click on sign out")
         this.afAuth.signOut()
             .then(() => {
                 this.router.navigate(['/']);
@@ -85,9 +85,6 @@ export class AuthenticationService {
         return this.afAuth.authState.pipe(
             switchMap(user => {
                 if (user) {
-                    user.getIdToken().then(token => {
-                        console.log(token)
-                    })
                     return this.userService.getUser(user.uid)
                 } else {
                     this.user$.next(null)
