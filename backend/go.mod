@@ -24,13 +24,14 @@ require (
 	golang.org/x/exp v0.0.0-20201008143054-e3b2a7f2fdc7 // indirect
 	golang.org/x/oauth2 v0.0.0-20201109201403-9fd604954f58 // indirect
 	golang.org/x/sys v0.0.0-20201119102817-f84b799fce68 // indirect
-	golang.org/x/tools v0.0.0-20201120155355-20be4ac4bd6e // indirect
+	golang.org/x/tools v0.0.0-20201120155355-20be4ac4bd6e
 	google.golang.org/api v0.35.0
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20201119123407-9b1e624d6bc4 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0
 	gopkg.in/yaml.v2 v2.3.0 // indirect
+	gorm.io/gorm v1.20.7
 	honnef.co/go/tools v0.0.1-2020.1.6 // indirect
 	olympos.io/encoding/edn v0.0.0-20201019073823-d3554ca0b0a3 // indirect
 )

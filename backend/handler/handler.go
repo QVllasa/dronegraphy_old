@@ -4,6 +4,7 @@ import (
 	"dronegraphy/backend/repository"
 	"dronegraphy/backend/service"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/log"
 )
 
 type Handler struct {
@@ -12,13 +13,19 @@ type Handler struct {
 	service    *service.Service
 }
 
-func NewHandler(echo *echo.Echo) (this *Handler) {
+func NewHandler(echo *echo.Echo) (this *Handler, err error) {
 	this = new(Handler)
 	this.echo = echo
 
 	//TODO Warum muss ich "NewDatabase()" ausführen, wo ich es doch schon in main.go gemacht habe?
 
-	this.repository = repository.NewRepository(repository.NewDatabase().Client)
+	this.repository, err = repository.NewRepository(repository.NewDatabase().Client)
+	if err != nil {
+		log.Error("repository creating failed")
+		return nil, err
+	}
+	//
+	//this.service = service.NewService(this.repository, this.repository.FirebaseApp.Client)
 
-	return this
+	return this, nil
 }

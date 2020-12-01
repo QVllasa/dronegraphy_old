@@ -3,7 +3,6 @@ package handler
 import (
 	"context"
 	"dronegraphy/backend/repository/model"
-	"dronegraphy/backend/router/middleware"
 	"firebase.google.com/go/v4/auth"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
@@ -12,19 +11,17 @@ import (
 
 func (this *Handler) GetUser(c echo.Context) error {
 
+	if err := this.repository.FirebaseApp.VerifyUser(c); err != nil {
+		return err
+	}
+
 	user, err := this.repository.GetUserById(c.Param("id"))
 	if err != nil {
 		log.Errorf("Unable to find User: %v", err)
 		return err
 	}
 
-	client, err := middleware.InitAuthClient()
-	if err != nil {
-		log.Fatal(err)
-		return err
-	}
-
-	if err = UpdateRoles(client, user); err != nil {
+	if err = UpdateRoles(this.repository.FirebaseApp.Client, user); err != nil {
 		log.Error(err)
 		return err
 	}
@@ -33,6 +30,10 @@ func (this *Handler) GetUser(c echo.Context) error {
 }
 
 func (this *Handler) UpdateUser(c echo.Context) error {
+
+	if err := this.repository.FirebaseApp.VerifyUser(c); err != nil {
+		return err
+	}
 
 	user, err := this.repository.UpdateUser(c.Param("id"), c.Request().Body)
 	if err != nil {
@@ -68,7 +69,7 @@ func UpdateRoles(client *auth.Client, user *model.User) error {
 		"member":  user.Roles.Member,
 	}
 
-	if err := client.SetCustomUserClaims(context.Background(), user.UID, claims); err != nil {
+	if err := client.SetCustomUserClaims(context.Background(), user.ID.Hex(), claims); err != nil {
 		log.Fatal(err)
 		return err
 	}

@@ -3,9 +3,11 @@ package main
 import (
 	"dronegraphy/backend/handler"
 	"dronegraphy/backend/repository"
+	mw "dronegraphy/backend/router/middleware"
+	"github.com/labstack/echo/v4/middleware"
+
 	"fmt"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 )
 
@@ -25,10 +27,14 @@ func main() {
 	e.Use()
 	e.Pre(middleware.RemoveTrailingSlash())
 
-	controller := handler.NewHandler(e)
+	controller, err := handler.NewHandler(e)
+	if err != nil {
+		log.Fatal("failed to create handler")
+		return
+	}
 
 	// Admin Endpoints
-	e.GET("/users", controller.GetUsers)
+	e.GET("/users", controller.GetUsers, mw.Auth())
 
 	// Creator Endpoints
 	// e.GET("/creators")
@@ -38,8 +44,8 @@ func main() {
 
 	// Member Endpoints
 	e.POST("/users", controller.Register)
-	e.GET("/users/:id", controller.GetUser)
-	e.PUT("/users/:id", controller.UpdateUser)
+	e.GET("/users/:id", controller.GetUser, mw.Auth())
+	e.PUT("/users/:id", controller.UpdateUser, mw.Auth())
 
 	//// Public Endpoints
 	//e.GET("/videos", h.GetAllVideos)

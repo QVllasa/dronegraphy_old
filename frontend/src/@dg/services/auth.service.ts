@@ -41,7 +41,6 @@ export class AuthenticationService {
                 return this.registerUser(res.user, firstName, lastName)
             })
             .then(res => {
-                // console.log("Backend meldet sich zurück mit registriertem Nutzer")
                 this.user$.next(res)
             })
     }

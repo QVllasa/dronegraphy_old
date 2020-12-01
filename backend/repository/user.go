@@ -4,6 +4,7 @@ import (
 	"context"
 	"dronegraphy/backend/repository/model"
 	"encoding/json"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"go.mongodb.org/mongo-driver/bson"
@@ -26,6 +27,8 @@ func (this *Repository) UpdateUser(id string, reqBody io.ReadCloser) (*model.Use
 	if err := json.NewDecoder(reqBody).Decode(&user); err != nil {
 		log.Errorf("Unable decode using request body: %v", err)
 		return nil, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Unable to decode JSON"})
+	} else {
+		fmt.Printf("user: %v", user)
 	}
 
 	//if err := handler.V.Struct(user); err != nil {
@@ -33,7 +36,7 @@ func (this *Repository) UpdateUser(id string, reqBody io.ReadCloser) (*model.Use
 	//	return user, err
 	//}
 
-	filter := bson.M{"uid": user.UID}
+	filter := bson.M{"uid": user.ID}
 
 	_, err = this.UserColl.UpdateOne(context.Background(), filter, bson.M{"$set": user})
 	if err != nil {
