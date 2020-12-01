@@ -5,6 +5,7 @@ import {particleConfig} from "../../../../particle";
 import {AuthenticationService} from "../../../@dg/services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Info} from "luxon";
+import {UserService} from "../../../@dg/services/user.service";
 
 @Component({
     selector: 'dg-register',
@@ -23,6 +24,7 @@ export class RegisterComponent implements OnInit {
 
 
     constructor(private router: Router,
+                private userService: UserService,
                 private fb: FormBuilder,
                 private cd: ChangeDetectorRef,
                 private authService: AuthenticationService,
@@ -51,13 +53,18 @@ export class RegisterComponent implements OnInit {
                 // this.router.navigate(['/']);
             })
             .catch(err => {
+
                 this.isLoading = false;
                 if (err.code === 'auth/email-already-in-use') {
                     this._snackBar.open('Pilot existiert bereits.', 'SCHLIESSEN');
                 } else {
                     this._snackBar.open('Unbekannter Fehler', 'SCHLIESSEN');
                 }
-            })
+
+
+            }).then(() => {
+            this.userService.deleteUser()
+        })
 
     }
 
