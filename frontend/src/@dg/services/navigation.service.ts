@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NavigationDropdown, NavigationItem, NavigationLink, NavigationSubheading } from '../interfaces/navigation-item.interface';
+import { NavigationDropdown, NavigationItem, NavigationLink, NavigationSubheading } from '../models/navigation-item.interface';
 import { Subject } from 'rxjs';
 
 @Injectable({

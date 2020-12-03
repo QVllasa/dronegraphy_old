@@ -9,7 +9,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import { ActivatedRoute } from '@angular/router';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Style, StyleService } from '../../services/style.service';
-import { ConfigName } from '../../interfaces/config-name.model';
+import { ConfigName } from '../../models/config-name.model';
 import { ColorVariable, colorVariables } from './color-variables';
 import { DOCUMENT } from '@angular/common';
 import icClose from '@iconify/icons-ic/twotone-close';

@@ -2,7 +2,7 @@ import {Injectable, OnInit} from '@angular/core';
 
 import {DomSanitizer} from '@angular/platform-browser';
 
-import {Video} from "../interfaces/video.interface";
+import {Video} from "../models/video.interface";
 import {Videos} from "../../static-data/video-data";
 
 @Injectable({

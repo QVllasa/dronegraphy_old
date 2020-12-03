@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
-import { DeepPartial } from '../interfaces/deep-partial.type';
+import { DeepPartial } from '../models/deep-partial.type';
 import { mergeDeep } from '../utils/merge-deep';
 import { LayoutService } from './layout.service';
 import { configs } from './configs';
-import { ConfigName } from '../interfaces/config-name.model';
-import { Config } from '../interfaces/config.model';
+import { ConfigName } from '../models/config-name.model';
+import { Config } from '../models/config.model';
 
 @Injectable({
   providedIn: 'root'

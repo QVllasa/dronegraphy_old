@@ -1,15 +1,17 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthenticationService} from "../../../@dg/services/auth.service";
-import {IUser} from "../../../@dg/interfaces/user.interface";
+import {IUser, User} from "../../../@dg/models/user.model";
 import {tap} from "rxjs/operators";
 import {AngularFireAuth} from "@angular/fire/auth";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import set = Reflect.set;
+import {UserService} from "../../../@dg/services/user.service";
 
 @Component({
     selector: 'dg-account',
     templateUrl: './account.component.html',
     styleUrls: ['./account.component.scss']
-    // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountComponent implements OnInit, OnDestroy {
 
@@ -32,7 +34,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     ];
 
     form: FormGroup;
-    currentUser: IUser = null;
+    currentUser: User = null;
     isLoading: boolean;
 
     inputType = 'password';
@@ -40,6 +42,8 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     constructor(private fb: FormBuilder,
                 private afAuth: AngularFireAuth,
+                private _snackBar: MatSnackBar,
+                private userService: UserService,
                 public authService: AuthenticationService) {
     }
 
@@ -75,43 +79,60 @@ export class AccountComponent implements OnInit, OnDestroy {
         })
     }
 
-    send() {
-        //Change Firebase Email
-        if (this.currentUser.email !== this.form.get('email').value) {
-            this.isLoading = true;
-            console.log("changing email: ", this.form.get('email').value)
-            let emailChange = this.afAuth.currentUser;
-            emailChange.then(res => {
-                return res.updateEmail(this.form.get('email').value)
-            }).then(() => {
-                this.isLoading = false;
-            }).catch(err => {
-                console.log(err);
-            })
-        }
-
-        //Change Firebase Password
-        if ((this.form.get('password').value !== '') && this.form.get('password').valid) {
-            this.isLoading = true;
-            console.log("changing password: ",  this.form.get('password').value);
-            let passwordChange = this.afAuth.currentUser;
-            passwordChange.then(res => {
-                return res.updatePassword(this.form.get('password').value);
-            }).then(() => {
-                this.isLoading = false;
-            }).catch(err => {
-                console.log(err)
-            })
-        }
-
-
-
+    changeUserInfo(){
         //Change other things in backend
         this.currentUser.email = this.form.get('email').value;
         this.currentUser.lastName = this.form.get('lastName').value;
         this.currentUser.firstName = this.form.get('firstName').value;
-        console.log(this.currentUser);
 
+        // return this.userService.updateUser(this.currentUser)
+
+        return this.currentUser;
+    }
+
+    changeUserEmail() {
+        //Change Firebase Email
+        if (this.currentUser.email !== this.form.get('email').value) {
+            console.log("changing email: ", this.form.get('email').value)
+            this.afAuth.currentUser.then(res => {
+                return res.updateEmail(this.form.get('email').value)
+            })
+        }
+    }
+
+    changePassword() {
+        //Change Firebase Password
+        if ((this.form.get('password').value !== '') && this.form.get('password').valid) {
+            console.log("changing password: ", this.form.get('password').value);
+            return this.afAuth.currentUser.then(res => {
+                return res.updatePassword(this.form.get('password').value);
+            })
+        }
+    }
+
+    send() {
+        this.isLoading = true;
+
+        //Disable every field before sending
+        Object.entries(this.form.controls).forEach(
+            ([key, value]) => {
+                value.disable();
+            }
+        )
+
+        Promise.all([
+            this.changePassword(),
+            this.changeUserEmail(),
+            this.changeUserInfo()
+        ]).then((res)=>{
+            console.log(res)
+            this.isLoading = false;
+        })
+
+
+        // setTimeout(() => {
+        //     this.isLoading = false;
+        // }, 3000)
     }
 
     togglePassword() {
@@ -131,7 +152,13 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     onDeactivateForm(type) {
+        // this.isLoading[type] = true;
         this.form.controls[type].disable();
+        // setTimeout(()=>{
+        //     this.isLoading[type] = false;
+        // }, 5000)
+
+
     }
 
     ngOnDestroy() {

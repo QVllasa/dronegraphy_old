@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {DomSanitizer} from "@angular/platform-browser";
 import {VideoService} from "../../../services/video.service";
-import {Video} from "../../../interfaces/video.interface";
+import {Video} from "../../../models/video.interface";
 
 
 

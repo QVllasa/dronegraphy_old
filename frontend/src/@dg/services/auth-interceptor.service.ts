@@ -8,11 +8,13 @@ import {
 import {Observable} from 'rxjs';
 import {exhaustMap, map, take} from "rxjs/operators";
 import {AngularFireAuth} from "@angular/fire/auth";
+import {AuthenticationService} from "./auth.service";
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
 
-    constructor(private afAuth: AngularFireAuth) {}
+    constructor(private afAuth: AngularFireAuth,
+                private authService: AuthenticationService) {}
 
     //Get Token from Firebase if any and add it to every request sent from httpClient
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {

@@ -7,8 +7,10 @@
                     <div class="p-6">
                         <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
                             <div fxFlex="auto">
-                                <mat-spinner *ngIf="!(authService.user$ | async)" color="primary"
-                                             diameter="25"></mat-spinner>
+                                <div *ngIf="!(authService.user$ | async)" fxLayoutAlign="center center">
+                                    <mat-spinner  color="primary"
+                                                 diameter="25"></mat-spinner>
+                                </div>
                                 <form *ngIf="authService.user$ | async as user" (ngSubmit)="send()" [formGroup]="form"
                                       class="px-6 py-4" fxLayout="column">
                                     <mat-form-field fxFlex="auto" appearance="standard">
@@ -22,14 +24,6 @@
                                                 <mat-icon>
                                                     {{form.controls['firstName'].disabled ? 'edit' : 'save' }}
                                                 </mat-icon>
-                                            </button>
-                                            <button [color]="!isLoading ? 'primary' : null" mat-flat-button
-                                                    type="submit">
-                                                <div *ngIf="isLoading" class="h-10 w-full" fxLayout="row"
-                                                     fxLayoutAlign="center center">
-                                                    <mat-spinner color="accent" diameter="25"></mat-spinner>
-                                                </div>
-                                                <span *ngIf="!isLoading">SPEICHERN</span>
                                             </button>
                                         </div>
                                     </mat-form-field>
@@ -45,15 +39,6 @@
                                                 <mat-icon>
                                                     {{form.controls['lastName'].disabled ? 'edit' : 'save'}}
                                                 </mat-icon>
-
-                                            </button>
-                                            <button [color]="!isLoading ? 'primary' : null" mat-flat-button
-                                                    type="submit">
-                                                <div *ngIf="isLoading" class="h-10 w-full" fxLayout="row"
-                                                     fxLayoutAlign="center center">
-                                                    <mat-spinner color="accent" diameter="25"></mat-spinner>
-                                                </div>
-                                                <span *ngIf="!isLoading">SPEICHERN</span>
                                             </button>
                                         </div>
                                     </mat-form-field>
@@ -70,14 +55,6 @@
                                                     {{form.controls['email'].disabled ? 'edit' : 'save'}}
                                                 </mat-icon>
 
-                                            </button>
-                                            <button [color]="!isLoading ? 'primary' : null" mat-icon-button
-                                                    type="submit">
-                                                <div *ngIf="isLoading" class="h-10 w-full" fxLayout="row"
-                                                     fxLayoutAlign="center center">
-                                                    <mat-spinner color="accent" diameter="25"></mat-spinner>
-                                                </div>
-                                                <mat-icon *ngIf="!isLoading">{{form.controls['email'].disabled ? 'edit' : 'save'}}</mat-icon>
                                             </button>
                                         </div>
                                     </mat-form-field>

@@ -1,4 +1,7 @@
 export interface JWTTokenDecoded {
+    admin: boolean,
+    creator: boolean,
+    member: boolean,
     iss: string;
     aud: string;
     auth_time: number;
@@ -9,3 +12,4 @@ export interface JWTTokenDecoded {
     email: string;
     email_verified: boolean;
 }
+

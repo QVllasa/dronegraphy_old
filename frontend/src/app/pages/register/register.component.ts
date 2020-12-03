@@ -50,21 +50,18 @@ export class RegisterComponent implements OnInit {
             .then(() => {
                 this.isLoading = false;
                 this.registerSuccess = true;
+
                 // this.router.navigate(['/']);
             })
             .catch(err => {
-
                 this.isLoading = false;
                 if (err.code === 'auth/email-already-in-use') {
                     this._snackBar.open('Pilot existiert bereits.', 'SCHLIESSEN');
                 } else {
+                    this.userService.deleteUser()
                     this._snackBar.open('Unbekannter Fehler', 'SCHLIESSEN');
                 }
-
-
-            }).then(() => {
-            this.userService.deleteUser()
-        })
+            })
 
     }
 

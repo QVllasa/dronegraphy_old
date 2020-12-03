@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NavigationItem, NavigationLink } from '../../interfaces/navigation-item.interface';
+import { NavigationItem, NavigationLink } from '../../models/navigation-item.interface';
 import { filter, map, startWith } from 'rxjs/operators';
 import { NavigationEnd, Router } from '@angular/router';
 import { NavigationService } from '../../services/navigation.service';

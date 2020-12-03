@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {Router} from '@angular/router';
-import {Video} from "../../../interfaces/video.interface";
+import {Video} from "../../../models/video.interface";
 
 
 //

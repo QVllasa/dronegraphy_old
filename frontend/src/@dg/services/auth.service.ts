@@ -1,47 +1,57 @@
 import {Injectable} from "@angular/core";
 import {BehaviorSubject, of} from "rxjs";
-import {IUser} from "../interfaces/user.interface";
+import {IUser, User} from "../models/user.model";
 import {AngularFireAuth} from "@angular/fire/auth";
 
-import {switchMap} from 'rxjs/operators';
+import {first, switchMap, take} from 'rxjs/operators';
 import {Router} from "@angular/router";
 import {AngularFireFunctions} from "@angular/fire/functions";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {UserService} from "./user.service";
 import {JwtHelperService} from "@auth0/angular-jwt";
-import {defaultRoles} from "../interfaces/role.interface";
+import {defaultRoles} from "../models/role.interface";
 
-const helper = new JwtHelperService();
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthenticationService {
 
-    user$: BehaviorSubject<IUser> = new BehaviorSubject<IUser>(null)
+    user$: BehaviorSubject<User> = new BehaviorSubject<User>(null)
 
 
     constructor(public afAuth: AngularFireAuth,
                 private http: HttpClient,
                 private userService: UserService,
-                private router: Router,
-                private fns: AngularFireFunctions) {
-        this.autoLogin().subscribe();
+                private router: Router) {
+
     }
 
     // Sign Up User on Firebase
     signUp(email, password, name) {
-        const firstName = name.substr(0, name.indexOf(' '));
-        const lastName = name.substr(name.indexOf(' ') + 1);
+        let firstName: string, lastName: string;
+        if (name.indexOf(' ') >= 0) {
+            firstName = name.substr(0, name.indexOf(' '));
+            lastName = name.substr(name.indexOf(' ') + 1);
+        } else {
+            firstName = name;
+            lastName = '';
+        }
+
         return this.afAuth.createUserWithEmailAndPassword(email, password)
             .then(res => {
-                // console.log("Firebase meldet sich nach Registrierung zurück")
-                res.user.sendEmailVerification();
+
+                //TODO An anderer stelle E-Mail verschicken.
+                res.user.sendEmailVerification().;
+
                 return this.registerUser(res.user, firstName, lastName)
             })
-            .then(res => {
-                this.user$.next(res)
+            .then(user => {
+                this.user$.next(new User(user.uid, user.email, user.firstName, user.lastName))
+                return this.afAuth.idToken.pipe(first()).toPromise();
+            }).then(token => {
+                this.user$.value.setToken(token)
             })
     }
 
@@ -52,27 +62,29 @@ export class AuthenticationService {
             email: user.email,
             firstName: firstName,
             lastName: lastName,
-            roles: defaultRoles,
-            emailVerified: false,
         }
-        // console.log(userData)
-        return this.http.post<IUser>(environment.apiUrl + '/users', userData).toPromise();
+        return this.userService.createUser(userData);
     }
 
     login(email: string, password: string) {
         return this.afAuth.signInWithEmailAndPassword(email, password)
             .then(res => {
-                return this.userService.getUser(res.user.uid).toPromise()
+                return this.userService.getUser(res.user.uid)
             })
             .then(user => {
-                this.user$.next(user)
-            });
+                this.user$.next(new User(user.uid, user.email, user.firstName, user.lastName))
+                return this.afAuth.idToken.pipe(first()).toPromise();
+            }).then(token => {
+                console.log("setting token")
+                this.user$.value.setToken(token)
+                console.log(this.user$.value.getClaims())
+            })
     }
 
     signOut() {
-        // console.log("click on sign out")
         this.afAuth.signOut()
             .then(() => {
+                this.user$.next(null);
                 this.router.navigate(['/']);
             })
             .catch(err => {
@@ -80,35 +92,14 @@ export class AuthenticationService {
             });
     }
 
-    autoLogin() {
-        return this.afAuth.authState.pipe(
-            switchMap(user => {
-                if (user) {
-                    return this.userService.getUser(user.uid)
-                } else {
-                    this.user$.next(null)
-                    return of(null)
-                }
-            })
-        )
+    autoLogin(): Promise<IUser | null> {
+        return this.afAuth.authState.pipe(first()).toPromise().then(user => {
+            if (user) {
+                return this.userService.getUser(user.uid);
+            } else {
+                this.user$.next(null)
+                return of(null).toPromise()
+            }
+        })
     }
-
-
-//     logout() {
-//         this.user.next(null);
-//         this.router.navigate(['/login']);
-//         localStorage.removeItem('userData');
-//         if (this.tokenExpirationTimer) {
-//             clearTimeout(this.tokenExpirationTimer);
-//         }
-//         this.tokenExpirationTimer = null;
-//     }
-//
-//     autoLogout(expirationDuration: number) {
-//         this.tokenExpirationTimer = setTimeout(() => {
-//             this.logout();
-//         }, expirationDuration);
-//     }
-
-
 }
