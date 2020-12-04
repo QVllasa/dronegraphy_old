@@ -1,4 +1,4 @@
-import {Roles} from "./role.interface";
+import {defaultRoles, Roles} from "./role.interface";
 import {AuthenticationService} from "../services/auth.service";
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {JWTTokenDecoded} from "./JWTTokenDecoded.interface";
@@ -24,18 +24,17 @@ export class User implements IUser {
     // public email: string;
     // public firstName: string;
     // public lastName: string;
-    private roles: Roles;
-    private token: string;
-    private claims: JWTTokenDecoded;
+    private roles: Roles = null
+    private token: string = null;
+    private claims: JWTTokenDecoded = null;
     emailVerified: boolean;
 
     constructor(
         public uid: string,
         public email: string,
         public firstName: string,
-        public lastName: string,
+        public lastName: string
     ) {
-
     }
 
     getToken() {
@@ -44,27 +43,22 @@ export class User implements IUser {
 
     setToken(token) {
         this.token = token;
+        console.log(token)
     }
 
-    getClaims(): JWTTokenDecoded | null {
-        this.claims = helper.decodeToken<JWTTokenDecoded>(this.token);
-        return this.token ? this.claims : null;
+    setClaims(claims: JWTTokenDecoded) {
+        console.log("claims setted")
+        console.log(this.claims)
+        this.claims = claims;
+    }
+
+    setRoles(roles) {
+        console.log(roles)
+        this.roles = roles;
     }
 
     getRoles(): Roles | null {
-        console.log('getting roles....')
-        if (!this.getClaims()) {
-            return null
-        }
-
-        this.roles = {
-            admin: this.getClaims().admin,
-            creator: this.getClaims().creator,
-            member: this.getClaims().member
-        }
-        return this.roles;
-
-
+        return this.roles ? this.roles : null;
     }
 
 }

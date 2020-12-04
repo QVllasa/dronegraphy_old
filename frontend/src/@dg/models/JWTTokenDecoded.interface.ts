@@ -1,3 +1,5 @@
+import {Roles} from "./role.interface";
+
 export interface JWTTokenDecoded {
     admin: boolean,
     creator: boolean,
@@ -11,5 +13,6 @@ export interface JWTTokenDecoded {
     exp: number;
     email: string;
     email_verified: boolean;
+    roles: Roles
 }
 

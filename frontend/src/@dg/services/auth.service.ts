@@ -1,16 +1,13 @@
 import {Injectable} from "@angular/core";
-import {BehaviorSubject, of} from "rxjs";
+import {BehaviorSubject, from, of, Subscription} from "rxjs";
 import {IUser, User} from "../models/user.model";
 import {AngularFireAuth} from "@angular/fire/auth";
-
-import {first, switchMap, take} from 'rxjs/operators';
 import {Router} from "@angular/router";
-import {AngularFireFunctions} from "@angular/fire/functions";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {environment} from "../../environments/environment";
+import {HttpClient} from "@angular/common/http";
 import {UserService} from "./user.service";
-import {JwtHelperService} from "@auth0/angular-jwt";
-import {defaultRoles} from "../models/role.interface";
+import {map, switchMap, take, tap} from "rxjs/operators";
+import firebase from "firebase";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 
 @Injectable({
@@ -19,87 +16,146 @@ import {defaultRoles} from "../models/role.interface";
 export class AuthenticationService {
 
     user$: BehaviorSubject<User> = new BehaviorSubject<User>(null)
+    token: firebase.auth.IdTokenResult;
 
 
     constructor(public afAuth: AngularFireAuth,
                 private http: HttpClient,
                 private userService: UserService,
+                private _snackBar: MatSnackBar,
                 private router: Router) {
+
+        this.autoLogin()
+            .subscribe(
+                () => {
+                },
+                err => {
+                    if (err) {
+                        console.log(err)
+                        this._snackBar.open('Server nicht erreichbar.', 'SCHLIESSEN', {
+                            horizontalPosition: 'end',
+                            verticalPosition: 'top',
+                        });
+                        indexedDB.deleteDatabase('firebaseLocalStorageDb')
+                    }
+                })
 
     }
 
     // Sign Up User on Firebase
     signUp(email, password, name) {
-        let firstName: string, lastName: string;
-        if (name.indexOf(' ') >= 0) {
-            firstName = name.substr(0, name.indexOf(' '));
-            lastName = name.substr(name.indexOf(' ') + 1);
-        } else {
-            firstName = name;
-            lastName = '';
-        }
-
-        return this.afAuth.createUserWithEmailAndPassword(email, password)
-            .then(res => {
-
-                //TODO An anderer stelle E-Mail verschicken.
-                res.user.sendEmailVerification().;
-
-                return this.registerUser(res.user, firstName, lastName)
-            })
-            .then(user => {
+        return from(this.afAuth.createUserWithEmailAndPassword(email, password)).pipe(
+            switchMap(res => {
+                const userData: IUser = {
+                    uid: res.user.uid,
+                    email: res.user.email,
+                    firstName: this.getFirstName(name),
+                    lastName: this.getLastName(name),
+                }
+                return this.userService.createUser(userData)
+            }),
+            switchMap(user => {
                 this.user$.next(new User(user.uid, user.email, user.firstName, user.lastName))
-                return this.afAuth.idToken.pipe(first()).toPromise();
-            }).then(token => {
-                this.user$.value.setToken(token)
+                return this.afAuth.authState
+            }),
+            switchMap(state => {
+                return from(state.getIdTokenResult(true))
+            }),
+            switchMap(token => {
+                return this.getRolesFromToken(token)
             })
+        )
     }
 
-    // Store User Data in Backend
-    registerUser(user, firstName, lastName) {
-        const userData: IUser = {
-            uid: user.uid,
-            email: user.email,
-            firstName: firstName,
-            lastName: lastName,
-        }
-        return this.userService.createUser(userData);
-    }
 
     login(email: string, password: string) {
-        return this.afAuth.signInWithEmailAndPassword(email, password)
-            .then(res => {
+        return from(this.afAuth.signInWithEmailAndPassword(email, password)).pipe(
+            switchMap(res => {
                 return this.userService.getUser(res.user.uid)
-            })
-            .then(user => {
+            }),
+            switchMap(user => {
                 this.user$.next(new User(user.uid, user.email, user.firstName, user.lastName))
-                return this.afAuth.idToken.pipe(first()).toPromise();
-            }).then(token => {
-                console.log("setting token")
-                this.user$.value.setToken(token)
-                console.log(this.user$.value.getClaims())
+                return this.afAuth.idTokenResult
+            }),
+            switchMap(token => {
+                return this.getRolesFromToken(token)
             })
+        )
+
+    }
+
+    autoLogin() {
+        return this.afAuth.authState.pipe(
+            take(1),
+            switchMap(user => {
+                if (user) {
+                    return this.userService.getUser(user.uid);
+                } else {
+                    this.user$.next(null)
+                    return of(null)
+                }
+            }),
+            switchMap(user => {
+                if (!user) {
+                    return of(null)
+                }
+                this.user$.next(new User(user.uid, user.email, user.firstName, user.lastName))
+                return this.afAuth.idTokenResult;
+
+            }),
+            switchMap(token => {
+                if (!token) {
+                    return of(null)
+                }
+                return this.getRolesFromToken(token)
+            })
+        )
     }
 
     signOut() {
-        this.afAuth.signOut()
-            .then(() => {
-                this.user$.next(null);
-                this.router.navigate(['/']);
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        const logOut$ = from(this.afAuth.signOut()).pipe(
+            tap(
+                () => {
+                    this.user$.next(null);
+                    this.router.navigate(['/']);
+                },
+                error => console.log(error)
+            )
+        )
+        logOut$.subscribe()
     }
 
-    autoLogin(): Promise<IUser | null> {
-        return this.afAuth.authState.pipe(first()).toPromise().then(user => {
-            if (user) {
-                return this.userService.getUser(user.uid);
-            } else {
-                this.user$.next(null)
-                return of(null).toPromise()
-            }
-        })
+    getFirstName(name) {
+        let firstName: string;
+        if (name.indexOf(' ') >= 0) {
+            firstName = name.substr(0, name.indexOf(' '));
+        } else {
+            firstName = name;
+        }
+        return firstName
     }
+
+    getLastName(name) {
+        let lastName: string;
+        if (name.indexOf(' ') >= 0) {
+            lastName = name.substr(name.indexOf(' ') + 1);
+        } else {
+            lastName = '';
+        }
+        return lastName
+    }
+
+
+    getRolesFromToken(token: firebase.auth.IdTokenResult) {
+        console.log("tap claims")
+        console.log(token.token)
+        console.log(token.claims)
+        return this.user$.pipe(
+            map(user => {
+                user.setRoles(token.claims["roles"])
+            })
+        )
+    }
+
+
 }

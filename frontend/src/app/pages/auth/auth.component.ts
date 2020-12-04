@@ -1,8 +1,9 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AuthenticationService} from "../../../@dg/services/auth.service";
+import {Observable, Subscription} from "rxjs";
 
 
 @Component({
@@ -10,12 +11,13 @@ import {AuthenticationService} from "../../../@dg/services/auth.service";
     templateUrl: './auth.component.html',
     styleUrls: ['./auth.component.scss']
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit, OnDestroy {
 
     form: FormGroup;
     isLoading: boolean;
     inputType = 'password';
     visible = false;
+    loginProcess$: Subscription;
 
 
     constructor(private router: Router,
@@ -39,15 +41,14 @@ export class AuthComponent implements OnInit {
         this.isLoading = true;
         const email = this.form.get('email').value;
         const password = this.form.get('password').value;
-        this.authService.login(email, password)
-            .then(() => {
+        this.loginProcess$ = this.authService.login(email, password).subscribe(
+            () => {
                 this.isLoading = false;
                 this.router.navigate(['/']);
-            })
-            .catch(err => {
+            }, error => {
                 this.isLoading = false;
-                console.log(err);
-                switch (err.code) {
+                console.log(error);
+                switch (error.code) {
                     case 'auth/user-not-found': {
                         this._snackBar.open('Pilot nicht gefunden.', 'SCHLIESSEN');
                         break;
@@ -59,9 +60,8 @@ export class AuthComponent implements OnInit {
                     default: {
                         this._snackBar.open('Unbekannter Fehler', 'SCHLIESSEN');
                     }
-
                 }
-            });
+            })
     }
 
     toggleVisibility() {
@@ -74,6 +74,10 @@ export class AuthComponent implements OnInit {
             this.visible = true;
             this.cd.markForCheck();
         }
+    }
+
+    ngOnDestroy() {
+        this.loginProcess$.unsubscribe();
     }
 
 }

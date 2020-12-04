@@ -17,14 +17,16 @@
     <ng-container>
         <div fxFlex fxLayoutAlign="end" class="-mx-1 " fxLayoutGap="8px">
             <button *ngIf="authService.user$ | async as user" mat-icon-button>
-                <div *ngIf="user.getRoles().member"
-                     class="rounded-full flex items-center justify-center text-primary bg-primary-light cursor-pointer h-9 w-9">
-                    <mat-icon>shopping_cart</mat-icon>
-                </div>
-                <div *ngIf="user.getRoles().creator"
-                     class="rounded-full flex items-center justify-center text-primary bg-primary-light cursor-pointer h-9 w-9">
-                    <mat-icon>account_balance</mat-icon>
-                </div>
+                <ng-container *ngIf="user.getRoles()">
+                    <div *ngIf="user.getRoles().member"
+                         class="rounded-full flex items-center justify-center text-primary bg-primary-light cursor-pointer h-9 w-9">
+                        <mat-icon>shopping_cart</mat-icon>
+                    </div>
+                    <div *ngIf="user.getRoles().creator"
+                         class="rounded-full flex items-center justify-center text-primary bg-primary-light cursor-pointer h-9 w-9">
+                        <mat-icon>account_balance</mat-icon>
+                    </div>
+                </ng-container>
             </button>
             <button *ngIf="!(authService.user$ | async)" mat-flat-button color="primary" routerLink="/register">
                 Starten

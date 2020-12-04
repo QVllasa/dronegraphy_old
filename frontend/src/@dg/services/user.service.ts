@@ -25,15 +25,15 @@ export class UserService {
 
 
     createUser(user: IUser) {
-        return this.http.post<IUser>(environment.apiUrl + '/users', user).toPromise();
+        return this.http.post<IUser>(environment.apiUrl + '/users', user);
     }
 
-    getUser(uid): Promise<IUser> {
-        return this.http.get<IUser>(environment.apiUrl + '/users/' + uid).toPromise<IUser>();
+    getUser(uid) {
+        return this.http.get<IUser>(environment.apiUrl + '/users/' + uid);
     }
 
     updateUser(user: User) {
-        return this.http.put<IUser>(environment.apiUrl + '/users/' + user.uid, user).toPromise();
+        return this.http.put<IUser>(environment.apiUrl + '/users/' + user.uid, user);
     }
 
     deleteUser() {

@@ -1,9 +1,9 @@
-import {Component, Inject, LOCALE_ID, OnInit, Renderer2} from '@angular/core';
+import {Component, Inject, LOCALE_ID, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {Settings} from 'luxon';
 import {DOCUMENT} from '@angular/common';
 import {Platform} from '@angular/cdk/platform';
 import {ActivatedRoute} from '@angular/router';
-import {filter, first, map} from 'rxjs/operators';
+import {filter, first, map, mergeMap} from 'rxjs/operators';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ConfigService} from "../@dg/services/config.service";
 import {Style, StyleService} from "../@dg/services/style.service";
@@ -14,6 +14,7 @@ import {AuthenticationService} from "../@dg/services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {User} from "../@dg/models/user.model";
 import {AngularFireAuth} from "@angular/fire/auth";
+import {Subscription} from "rxjs";
 
 
 @Component({
@@ -23,6 +24,8 @@ import {AngularFireAuth} from "@angular/fire/auth";
 })
 export class AppComponent {
     title = 'dg';
+
+    autoLogin$: Subscription;
 
     constructor(private configService: ConfigService,
                 private styleService: StyleService,
@@ -38,27 +41,7 @@ export class AppComponent {
                 private authService: AuthenticationService) {
 
 
-        this.authService.autoLogin().then(user => {
-            if (!user) {
-                return
-            }
-            this.authService.user$.next(new User(user.uid, user.email, user.firstName, user.lastName))
-            return this.afAuth.idToken.pipe(first()).toPromise();
-        }).then(token => {
-            if (!token) {
-                return
-            }
-            this.authService.user$.value.setToken(token)
-        }).catch(err => {
-            if (err) {
-                console.log(err)
-                this._snackBar.open('Server nicht erreichbar.', 'SCHLIESSEN', {
-                    horizontalPosition: 'end',
-                    verticalPosition: 'top',
-                });
-                indexedDB.deleteDatabase('firebaseLocalStorageDb')
-            }
-        })
+
 
 
         Settings.defaultLocale = this.localeId;
@@ -139,4 +122,6 @@ export class AppComponent {
             },
         ];
     }
+
+
 }

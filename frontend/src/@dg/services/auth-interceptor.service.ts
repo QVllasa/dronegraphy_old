@@ -27,7 +27,8 @@ export class AuthInterceptorService implements HttpInterceptor {
                 request = request.clone({
                     headers: new HttpHeaders({'Authorization': 'Bearer ' + token})
                 });
-                // console.log("Token wird allen Requests angehängt", token)
+
+                console.log("Token wird allen Requests angehängt", token)
                 return next.handle(request);
             })
         )
