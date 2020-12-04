@@ -1,9 +1,6 @@
 package handler
 
 import (
-	"context"
-	"dronegraphy/backend/repository/model"
-	"firebase.google.com/go/v4/auth"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"net/http"
@@ -18,10 +15,10 @@ func (this *Handler) GetUser(c echo.Context) error {
 	user, err := this.repository.GetUserById(c.Param("id"))
 	if err != nil {
 		log.Errorf("Unable to find User: %v", err)
-		return err
+		return echo.NewHTTPError(http.StatusInternalServerError, "user not found")
 	}
 
-	if err = UpdateRoles(this.repository.FirebaseApp.Client, user); err != nil {
+	if err = this.repository.FirebaseApp.UpdateRoleClaims(user); err != nil {
 		log.Error(err)
 		return err
 	}
@@ -57,27 +54,4 @@ func (this *Handler) GetUsers(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, users)
-
 }
-
-// Get Roles from Database and updates the JWT Token Claims
-func UpdateRoles(client *auth.Client, user *model.User) error {
-
-	claims := map[string]interface{}{
-		"admin":   user.Roles.Admin,
-		"creator": user.Roles.Creator,
-		"member":  user.Roles.Member,
-	}
-
-	if err := client.SetCustomUserClaims(context.Background(), user.ID.Hex(), claims); err != nil {
-		log.Fatal(err)
-		return err
-	}
-
-	return nil
-}
-
-//
-//func (this *Handler) DeleteUser(c echo.Context) error {
-//	return nil
-//}

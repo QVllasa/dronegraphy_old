@@ -3,7 +3,6 @@ package main
 import (
 	"dronegraphy/backend/handler"
 	"dronegraphy/backend/repository"
-	mw "dronegraphy/backend/router/middleware"
 	"github.com/labstack/echo/v4/middleware"
 
 	"fmt"
@@ -34,7 +33,7 @@ func main() {
 	}
 
 	// Admin Endpoints
-	e.GET("/users", controller.GetUsers, mw.Auth())
+	e.GET("/users", controller.GetUsers)
 
 	// Creator Endpoints
 	// e.GET("/creators")
@@ -44,8 +43,8 @@ func main() {
 
 	// Member Endpoints
 	e.POST("/users", controller.Register)
-	e.GET("/users/:id", controller.GetUser, mw.Auth())
-	e.PUT("/users/:id", controller.UpdateUser, mw.Auth())
+	e.GET("/users/:id", controller.GetUser)
+	e.PUT("/users/:id", controller.UpdateUser)
 
 	//// Public Endpoints
 	//e.GET("/videos", h.GetAllVideos)

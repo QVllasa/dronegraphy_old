@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"dronegraphy/backend/repository/model"
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/auth"
 	"github.com/labstack/echo/v4"
@@ -92,6 +93,41 @@ func (this *FirebaseClient) VerifyUser(c echo.Context) error {
 	if c.Param("id") != claims["user_id"] {
 		log.Errorf("cannot match ids: %v", err)
 		return echo.NewHTTPError(http.StatusForbidden, "action not allowed")
+	}
+
+	return nil
+}
+
+func (this *FirebaseClient) EmailVerified(c echo.Context) (bool, error) {
+
+	token, err := this.VerifyToken(c)
+	if err != nil {
+		log.Errorf("invalid token: %v", err)
+		return false, echo.NewHTTPError(http.StatusForbidden, "invalid token")
+	}
+
+	claims := token.Claims
+	if claims["email_verified"] == false {
+		log.Errorf("email is not verified: %v", err)
+		return false, echo.NewHTTPError(http.StatusForbidden, "email not verified")
+	}
+
+	return true, nil
+}
+
+func (this *FirebaseClient) UpdateRoleClaims(user *model.User) error {
+
+	claims := map[string]interface{}{
+		"roles": map[string]interface{}{
+			"admin":   user.Roles.Admin,
+			"creator": user.Roles.Creator,
+			"member":  user.Roles.Member,
+		},
+	}
+
+	if err := this.Client.SetCustomUserClaims(context.Background(), user.UID, claims); err != nil {
+		log.Fatal(err)
+		return err
 	}
 
 	return nil

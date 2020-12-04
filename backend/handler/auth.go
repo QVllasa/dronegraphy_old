@@ -11,6 +11,12 @@ import (
 
 func (this *Handler) Register(c echo.Context) error {
 	var newUser model.User
+
+	//Set Default Roles
+	newUser.Roles.Admin = false
+	newUser.Roles.Creator = false
+	newUser.Roles.Member = true
+
 	c.Echo().Validator = &UserValidator{Validator: v}
 
 	if err := c.Bind(&newUser); err != nil {

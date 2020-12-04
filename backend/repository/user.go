@@ -36,7 +36,7 @@ func (this *Repository) UpdateUser(id string, reqBody io.ReadCloser) (*model.Use
 	//	return user, err
 	//}
 
-	filter := bson.M{"uid": user.ID}
+	filter := bson.M{"uid": user.UID}
 
 	_, err = this.UserColl.UpdateOne(context.Background(), filter, bson.M{"$set": user})
 	if err != nil {
