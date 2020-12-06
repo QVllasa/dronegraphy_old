@@ -9,6 +9,8 @@ import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {IconModule} from '@visurel/iconify-angular';
 import {MatIconModule} from '@angular/material/icon';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 
 @NgModule({
@@ -19,9 +21,11 @@ import {MatIconModule} from '@angular/material/icon';
     FlexLayoutModule,
     ReactiveFormsModule,
     MatInputModule,
+    MatSnackBarModule,
     MatButtonModule,
     IconModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressSpinnerModule
   ]
 })
 export class ForgotPasswordModule {

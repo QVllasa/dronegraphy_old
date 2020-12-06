@@ -100,7 +100,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="registerSuccess" fxLayout="row" class="w-full" fxLayoutGap="12px" fxLayoutAlign="center start">
+    <div *ngIf="registerSuccess" fxLayout="column" class="w-full" fxLayoutGap="12px" fxLayoutAlign="center center">
         <div class="card overflow-hidden w-full h-full max-w-lg z-10 p-gutter">
             <div class="rounded-full flex mx-auto h-24 w-24 items-center justify-center text-green bg-green-light">
                 <mat-icon class="transform scale-150">check</mat-icon>
@@ -112,7 +112,7 @@
             </div>
         </div>
         <div class="mt-6" fxLayoutAlign="center center">
-            <button mat-raised-button color="primary" routerLink="/login" >Aufnahmen durchsuchen</button>
+            <button mat-raised-button color="primary" routerLink="/" >Aufnahmen durchsuchen</button>
         </div>
     </div>
 </div>
