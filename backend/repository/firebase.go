@@ -126,7 +126,7 @@ func (this *FirebaseClient) UpdateRoleClaims(user *model.User) error {
 	}
 
 	if err := this.Client.SetCustomUserClaims(context.Background(), user.UID, claims); err != nil {
-		log.Fatal(err)
+		log.Errorf("setting custom claims failed: %v", err)
 		return err
 	}
 

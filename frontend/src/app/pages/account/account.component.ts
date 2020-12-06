@@ -1,21 +1,21 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthenticationService} from "../../../@dg/services/auth.service";
 import {IUser, User} from "../../../@dg/models/user.model";
-import {concatAll, map, switchMap, take, takeWhile, tap} from "rxjs/operators";
+import { switchMap, take, takeWhile} from "rxjs/operators";
 import {AngularFireAuth} from "@angular/fire/auth";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import set = Reflect.set;
+
 import {UserService} from "../../../@dg/services/user.service";
-import {concat, forkJoin, from, Observable, of} from "rxjs";
-import firebase from "firebase";
+import {concat, from, Observable, of} from "rxjs";
+
 
 @Component({
     selector: 'dg-account',
     templateUrl: './account.component.html',
     styleUrls: ['./account.component.scss']
 })
-export class AccountComponent implements OnInit, OnDestroy {
+export class AccountComponent implements OnInit {
 
     orders: { amount: number, date: number, method: string }[] = [
         {
@@ -214,8 +214,6 @@ export class AccountComponent implements OnInit, OnDestroy {
         this.form.get('info.' + type).disable();
     }
 
-    ngOnDestroy() {
 
-    }
 
 }
