@@ -1,9 +1,7 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { CustomLayoutComponent } from './custom-layout/custom-layout.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {CustomLayoutComponent} from './custom-layout/custom-layout.component';
 import {HomeComponent} from "./pages/home/home.component";
-import {AnonymousGuard} from "../@dg/guards/anonymous.guard";
-
 
 
 const routes: Routes = [
@@ -28,12 +26,12 @@ const routes: Routes = [
       },
       {
         path: 'login',
-        loadChildren: () => import('./pages/auth/auth.module').then(m => m.AuthModule),
+        loadChildren: () => import('./pages/auth/login/login.module').then(m => m.LoginModule),
         canActivate:[]
       },
       {
         path: 'register',
-        loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterModule),
+        loadChildren: () => import('./pages/auth/register/register.module').then(m => m.RegisterModule),
         canActivate:[]
       }
     ]

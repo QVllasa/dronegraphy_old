@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {AuthComponent} from "./auth.component";
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {LoginComponent} from "./login.component";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {MatInputModule} from "@angular/material/input";
 import {ReactiveFormsModule} from "@angular/forms";
@@ -9,20 +9,18 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {RouterModule} from "@angular/router";
-import {AuthRoutingModule} from "./auth-routing.module";
+import {LoginRoutingModule} from "./login-routing.module";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
-import { HttpClientModule} from "@angular/common/http";
-import {CloseModule} from "../../../@dg/components/close/close.module";
-
-
+import {HttpClientModule} from "@angular/common/http";
+import {CloseModule} from "../../../../@dg/components/close/close.module";
 
 
 @NgModule({
-  declarations: [AuthComponent],
+  declarations: [LoginComponent],
     imports: [
         CommonModule,
-        AuthRoutingModule,
+        LoginRoutingModule,
         FlexLayoutModule,
         MatInputModule,
         ReactiveFormsModule,
@@ -40,4 +38,4 @@ import {CloseModule} from "../../../@dg/components/close/close.module";
 
     ]
 })
-export class AuthModule { }
+export class LoginModule { }
