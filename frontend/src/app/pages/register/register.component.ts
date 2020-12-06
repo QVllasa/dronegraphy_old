@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {particleConfig} from "../../../../particle";
@@ -6,15 +6,18 @@ import {AuthenticationService} from "../../../@dg/services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Info} from "luxon";
 import {UserService} from "../../../@dg/services/user.service";
+import {Subscription} from "rxjs";
+import {take} from "rxjs/operators";
 
 @Component({
     selector: 'dg-register',
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
 
     form: FormGroup;
+    signUp$: Subscription;
 
     particlesOptions = particleConfig;
     isLoading: boolean;
@@ -46,7 +49,7 @@ export class RegisterComponent implements OnInit {
         const email = this.form.get('email').value;
         const password = this.form.get('password').value.trim();
 
-        this.authService.signUp(email, password, name)
+        this.signUp$ = this.authService.signUp(email, password, name).pipe(take(1))
             .subscribe(() => {
                     this.isLoading = false;
                     this.registerSuccess = true;
@@ -57,7 +60,7 @@ export class RegisterComponent implements OnInit {
                         this._snackBar.open('Pilot existiert bereits.', 'SCHLIESSEN');
                     } else {
                         this.userService.deleteUser()
-                        this._snackBar.open('Unbekannter Fehler', 'SCHLIESSEN');
+                        this._snackBar.open('Register: Unbekannter Fehler', 'SCHLIESSEN');
                     }
                 })
     }
@@ -71,6 +74,12 @@ export class RegisterComponent implements OnInit {
             this.inputType = 'text';
             this.visible = true;
             this.cd.markForCheck();
+        }
+    }
+
+    ngOnDestroy() {
+        if(this.signUp$){
+            this.signUp$.unsubscribe();
         }
     }
 

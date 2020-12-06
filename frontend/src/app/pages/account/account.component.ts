@@ -2,11 +2,13 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthenticationService} from "../../../@dg/services/auth.service";
 import {IUser, User} from "../../../@dg/models/user.model";
-import {tap} from "rxjs/operators";
+import {concatAll, map, switchMap, take, takeWhile, tap} from "rxjs/operators";
 import {AngularFireAuth} from "@angular/fire/auth";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import set = Reflect.set;
 import {UserService} from "../../../@dg/services/user.service";
+import {concat, forkJoin, from, Observable, of} from "rxjs";
+import firebase from "firebase";
 
 @Component({
     selector: 'dg-account',
@@ -48,30 +50,50 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.authService.user$.subscribe(user => {
-            if (!user) {
-                return
-            }
-            this.currentUser = user;
-            this.initForm();
-        })
-
+        this.isLoading = false
+        this.initForm();
+        this.authService.user$
+            .pipe(
+                takeWhile(user => !user, true),
+                takeWhile(() => !this.currentUser, true)
+            )
+            .subscribe(user => {
+                console.log("get new user from stream", user)
+                if (!user) {
+                    return
+                } else if (!this.currentUser) {
+                    this.currentUser = user;
+                    console.log("patch form")
+                    console.log(this.currentUser)
+                    this.form.patchValue({
+                        info: {
+                            email: this.currentUser.email,
+                            firstName: this.currentUser.firstName,
+                            lastName: this.currentUser.lastName,
+                        },
+                    })
+                    return
+                }
+            })
     }
 
     initForm() {
+        console.log("init form")
         this.form = new FormGroup({
-            firstName: new FormControl({
-                value: this.currentUser.firstName,
-                disabled: true
-            }, [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-Z ]*')]),
-            lastName: new FormControl({
-                value: this.currentUser.lastName,
-                disabled: true
+            info: new FormGroup({
+                firstName: new FormControl({
+                    value: '',
+                    disabled: true
+                }, [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-Z ]*')]),
+                lastName: new FormControl({
+                    value: '',
+                    disabled: true
+                }),
+                email: new FormControl({
+                    value: '',
+                    disabled: true
+                }, [Validators.required, Validators.email]),
             }),
-            email: new FormControl({
-                value: this.currentUser.email,
-                disabled: true
-            }, [Validators.required, Validators.email]),
             password: new FormControl({
                 value: '',
                 disabled: false
@@ -79,60 +101,97 @@ export class AccountComponent implements OnInit, OnDestroy {
         })
     }
 
-    changeUserInfo(){
-        //Change other things in backend
-        this.currentUser.email = this.form.get('email').value;
-        this.currentUser.lastName = this.form.get('lastName').value;
-        this.currentUser.firstName = this.form.get('firstName').value;
-
-        // return this.userService.updateUser(this.currentUser)
-
-        return this.currentUser;
+    changeUserInfo(user: User): Observable<IUser | null> {
+        return this.userService.updateUser(user)
     }
 
-    changeUserEmail() {
-        //Change Firebase Email
-        if (this.currentUser.email !== this.form.get('email').value) {
-            console.log("changing email: ", this.form.get('email').value)
-            this.afAuth.currentUser.then(res => {
-                return res.updateEmail(this.form.get('email').value)
+    changeUserEmail(user: User): Observable<void> {
+        return this.afAuth.authState.pipe(
+            switchMap((res) => {
+                return from(res.updateEmail(user.email))
             })
-        }
+        )
     }
 
-    changePassword() {
-        //Change Firebase Password
-        if ((this.form.get('password').value !== '') && this.form.get('password').valid) {
-            console.log("changing password: ", this.form.get('password').value);
-            return this.afAuth.currentUser.then(res => {
-                return res.updatePassword(this.form.get('password').value);
-            })
+    changePassword(newPassword): Observable<void> {
+        console.log("new password")
+        if ((newPassword != '') && !this.form.get('password').invalid) {
+            return this.afAuth.authState.pipe(
+                switchMap(res => {
+                    console.log("changing password")
+                        return from(res.updatePassword(newPassword));
+                    }
+                )
+            )
         }
+        return of(null)
     }
 
     send() {
+        this.form.disable()
+        if (this.form.get('info').invalid) {
+            this.form.get('password').enable()
+            this._snackBar.open('Bitte korrekt ausfüllen.', 'SCHLIESSEN');
+            return
+        }
         this.isLoading = true;
+        const newEmail = this.form.get('info.email').value
+        const newPassword = this.form.get('password').value
+        const lastName = this.form.get('info.lastName').value;
+        const firstName = this.form.get('info.firstName').value;
 
-        //Disable every field before sending
-        Object.entries(this.form.controls).forEach(
-            ([key, value]) => {
-                value.disable();
-            }
+        this.currentUser.email = newEmail;
+        this.currentUser.firstName = firstName;
+        this.currentUser.lastName = lastName;
+
+        const changeUserInfo$ = this.changeUserInfo(this.currentUser).pipe(take(1));
+        const changeEmail$ = this.changeUserEmail(this.currentUser).pipe(take(1));
+        const changePw$ = this.changePassword(newPassword).pipe(take(1));
+
+        const combined$ = concat(
+            changeEmail$,
+            changeUserInfo$,
+            changePw$
         )
 
-        Promise.all([
-            this.changePassword(),
-            this.changeUserEmail(),
-            this.changeUserInfo()
-        ]).then((res)=>{
-            console.log(res)
-            this.isLoading = false;
-        })
+        combined$.subscribe(res => {
+                this.form.get('password').enable()
+                console.log("finish")
+                this.isLoading = false;
+                this.form.patchValue({
+                    info: {
+                        email: this.currentUser.email,
+                        firstName: this.currentUser.firstName,
+                        lastName: this.currentUser.lastName,
+                    },
+                    password: ''
+                })
+                this._snackBar.open('Benutzerdaten aktualisiert.', 'SCHLIESSEN')
+            },
+            err => {
+                if (err) {
+                    this.isLoading = false;
+                    console.log(err);
+                    switch (err.code) {
+                        case 'auth/requires-recent-login': {
+                            this._snackBar.open('Bitte melde dich erst kurz neu an.', 'SCHLIESSEN');
+                            break;
+                        }
+                        case 'auth/email-already-in-use': {
+                            this._snackBar.open('Diese E-Mail wird schon verwendet.', 'SCHLIESSEN');
+                            break;
+                        }
+                        case 'auth/invalid-email': {
+                            this._snackBar.open('E-Mail Adresse unzulässig.', 'SCHLIESSEN');
+                            break;
+                        }
+                        default: {
+                            this._snackBar.open('Unbekannter Fehler', 'SCHLIESSEN');
+                        }
+                    }
+                }
+            });
 
-
-        // setTimeout(() => {
-        //     this.isLoading = false;
-        // }, 3000)
     }
 
     togglePassword() {
@@ -148,21 +207,15 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     onActivateForm(type) {
-        this.form.controls[type].enable();
+        this.form.get('info.' + type).enable();
     }
 
     onDeactivateForm(type) {
-        // this.isLoading[type] = true;
-        this.form.controls[type].disable();
-        // setTimeout(()=>{
-        //     this.isLoading[type] = false;
-        // }, 5000)
-
-
+        this.form.get('info.' + type).disable();
     }
 
     ngOnDestroy() {
-        // this.authService.user$.unsubscribe();
+
     }
 
 }

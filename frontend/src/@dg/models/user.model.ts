@@ -1,9 +1,5 @@
-import {defaultRoles, Roles} from "./role.interface";
-import {AuthenticationService} from "../services/auth.service";
-import {JwtHelperService} from "@auth0/angular-jwt";
-import {JWTTokenDecoded} from "./JWTTokenDecoded.interface";
-
-const helper = new JwtHelperService();
+import {Roles} from "./role.interface";
+import {IClaims} from "./JWTTokenDecoded.interface";
 
 export interface IUser {
     uid: string;
@@ -24,9 +20,9 @@ export class User implements IUser {
     // public email: string;
     // public firstName: string;
     // public lastName: string;
-    private roles: Roles = null
-    private token: string = null;
-    private claims: JWTTokenDecoded = null;
+    #roles: Roles = null
+    #token: string = null;
+    #claims: IClaims = null;
     emailVerified: boolean;
 
     constructor(
@@ -35,30 +31,29 @@ export class User implements IUser {
         public firstName: string,
         public lastName: string
     ) {
+        // this.uid = uid;
+        // this.email = email;
+        // this.firstName = firstName;
+        // this.lastName = lastName;
     }
 
-    getToken() {
-        return this.token;
+    setFirstName(fname){
+        this.firstName = fname
     }
 
-    setToken(token) {
-        this.token = token;
-        console.log(token)
+    setLastName(lname){
+        this.lastName = lname
     }
 
-    setClaims(claims: JWTTokenDecoded) {
-        console.log("claims setted")
-        console.log(this.claims)
-        this.claims = claims;
-    }
-
-    setRoles(roles) {
-        console.log(roles)
-        this.roles = roles;
+    setClaims(claims: IClaims) {
+        this.#claims = claims;
     }
 
     getRoles(): Roles | null {
-        return this.roles ? this.roles : null;
+        if(this.#claims){
+            this.#roles = this.#claims["roles"]
+        }
+        return this.#roles ? this.#roles : null;
     }
 
 }

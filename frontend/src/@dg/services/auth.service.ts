@@ -1,22 +1,26 @@
-import {Injectable} from "@angular/core";
+import {Injectable, OnDestroy} from "@angular/core";
 import {BehaviorSubject, from, of, Subscription} from "rxjs";
 import {IUser, User} from "../models/user.model";
 import {AngularFireAuth} from "@angular/fire/auth";
 import {Router} from "@angular/router";
 import {HttpClient} from "@angular/common/http";
 import {UserService} from "./user.service";
-import {map, switchMap, take, tap} from "rxjs/operators";
+import {catchError, map, skip, switchMap, take, tap} from "rxjs/operators";
 import firebase from "firebase";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {getFirstName, getLastName} from "../utils/split-names";
 
 
 @Injectable({
     providedIn: 'root'
 })
-export class AuthenticationService {
+export class AuthenticationService implements OnDestroy {
 
     user$: BehaviorSubject<User> = new BehaviorSubject<User>(null)
     token: firebase.auth.IdTokenResult;
+    logout$: Subscription;
+    autoLogin$: Subscription;
+
 
 
     constructor(public afAuth: AngularFireAuth,
@@ -30,16 +34,16 @@ export class AuthenticationService {
                 () => {
                 },
                 err => {
+                    this.user$.next(null)
                     if (err) {
+                        console.log("autologin:")
                         console.log(err)
-                        this._snackBar.open('Server nicht erreichbar.', 'SCHLIESSEN', {
+                        this._snackBar.open('err.error.message', 'SCHLIESSEN', {
                             horizontalPosition: 'end',
                             verticalPosition: 'top',
                         });
-                        indexedDB.deleteDatabase('firebaseLocalStorageDb')
                     }
                 })
-
     }
 
     // Sign Up User on Firebase
@@ -49,21 +53,30 @@ export class AuthenticationService {
                 const userData: IUser = {
                     uid: res.user.uid,
                     email: res.user.email,
-                    firstName: this.getFirstName(name),
-                    lastName: this.getLastName(name),
+                    firstName: getFirstName(name),
+                    lastName: getLastName(name),
                 }
-                return this.userService.createUser(userData)
+                return this.userService.createUser(userData)  //POST
+            }),
+            switchMap(user => {
+                return this.userService.getUser(user.uid)  //GET
             }),
             switchMap(user => {
                 this.user$.next(new User(user.uid, user.email, user.firstName, user.lastName))
                 return this.afAuth.authState
             }),
             switchMap(state => {
+                state.sendEmailVerification();
                 return from(state.getIdTokenResult(true))
             }),
             switchMap(token => {
-                return this.getRolesFromToken(token)
-            })
+                return this.user$.pipe(
+                    map(user => {
+                        user.setClaims(Object.assign(token.claims))
+
+                    })
+                )
+            }),
         )
     }
 
@@ -78,83 +91,79 @@ export class AuthenticationService {
                 return this.afAuth.idTokenResult
             }),
             switchMap(token => {
-                return this.getRolesFromToken(token)
+                return this.user$.pipe(
+                    map(user => {
+                        user.setClaims(Object.assign(token.claims))
+
+                    })
+                )
             })
         )
-
     }
 
+    //TODO fix autologin after registration (works perfectly on login)
     autoLogin() {
         return this.afAuth.authState.pipe(
-            take(1),
             switchMap(user => {
-                if (user) {
-                    return this.userService.getUser(user.uid);
-                } else {
+                console.log("start autologin")
+                if (!user) {
                     this.user$.next(null)
                     return of(null)
                 }
+                return this.userService.getUser(user.uid).pipe(
+                    catchError(err => {
+                        console.log("no user found")
+                        console.log(err)
+                        return of(null)
+                    })
+                );
             }),
             switchMap(user => {
                 if (!user) {
+                    this.user$.next(null)
                     return of(null)
                 }
                 this.user$.next(new User(user.uid, user.email, user.firstName, user.lastName))
                 return this.afAuth.idTokenResult;
-
             }),
             switchMap(token => {
                 if (!token) {
+                    this.user$.next(null)
                     return of(null)
                 }
-                return this.getRolesFromToken(token)
+                return this.user$.pipe(
+                    tap(user => {
+                        if (!user) {
+                            return of(null)
+                        }
+                        user.setClaims(Object.assign(token.claims))
+                    })
+                )
             })
         )
     }
 
     signOut() {
-        const logOut$ = from(this.afAuth.signOut()).pipe(
-            tap(
+        this.logout$ = from(this.afAuth.signOut())
+            .subscribe(
                 () => {
                     this.user$.next(null);
                     this.router.navigate(['/']);
                 },
-                error => console.log(error)
+                error => {
+                    if (error) {
+                        console.log(error)
+                        return of(null)
+                    }
+                }
             )
-        )
-        logOut$.subscribe()
     }
 
-    getFirstName(name) {
-        let firstName: string;
-        if (name.indexOf(' ') >= 0) {
-            firstName = name.substr(0, name.indexOf(' '));
-        } else {
-            firstName = name;
+
+    ngOnDestroy() {
+        if (this.logout$) {
+            this.logout$.unsubscribe();
         }
-        return firstName
-    }
-
-    getLastName(name) {
-        let lastName: string;
-        if (name.indexOf(' ') >= 0) {
-            lastName = name.substr(name.indexOf(' ') + 1);
-        } else {
-            lastName = '';
-        }
-        return lastName
-    }
-
-
-    getRolesFromToken(token: firebase.auth.IdTokenResult) {
-        console.log("tap claims")
-        console.log(token.token)
-        console.log(token.claims)
-        return this.user$.pipe(
-            map(user => {
-                user.setRoles(token.claims["roles"])
-            })
-        )
     }
 
 

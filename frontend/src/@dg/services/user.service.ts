@@ -1,13 +1,10 @@
-import {Injectable, OnDestroy} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {Injectable} from '@angular/core';
+import {HttpClient} from "@angular/common/http";
 import {IUser, User} from "../models/user.model";
 import {environment} from "../../environments/environment";
-import {AuthenticationService} from "./auth.service";
 import {AngularFireAuth} from "@angular/fire/auth";
-import {switchMap, take, tap} from "rxjs/operators";
-import {Subscription} from "rxjs";
-import {JWTTokenDecoded} from "../models/JWTTokenDecoded.interface";
-import {JwtHelperService} from "@auth0/angular-jwt";
+import {take, tap} from "rxjs/operators";
+
 
 
 
@@ -16,7 +13,7 @@ import {JwtHelperService} from "@auth0/angular-jwt";
 })
 export class UserService {
 
-    claims: JWTTokenDecoded;
+
 
 
     constructor(private http: HttpClient,

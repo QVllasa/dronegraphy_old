@@ -7,57 +7,59 @@
                     <div class="p-6">
                         <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
                             <div fxFlex="auto">
-                                <div *ngIf="!(authService.user$ | async)" fxLayoutAlign="center center">
+                                <div *ngIf="!currentUser" fxLayoutAlign="center center">
                                     <mat-spinner  color="primary"
                                                  diameter="25"></mat-spinner>
                                 </div>
-                                <form *ngIf="authService.user$ | async as user" (ngSubmit)="send()" [formGroup]="form"
-                                      class="px-6 py-4" fxLayout="column">
-                                    <mat-form-field fxFlex="auto" appearance="standard">
-                                        <mat-label>Vorname</mat-label>
-                                        <input matInput formControlName="firstName">
-                                        <div fxLayout matSuffix>
-                                            <button (click)="form.controls['firstName'].disabled ?  onActivateForm('firstName') : onDeactivateForm('firstName') "
-                                                    [matTooltip]="form.controls['firstName'].disabled ? 'Bearbeiten' : 'Speichern'"
-                                                    class="font-xs" mat-icon-button matSuffix
-                                                    type="button">
-                                                <mat-icon>
-                                                    {{form.controls['firstName'].disabled ? 'edit' : 'save' }}
-                                                </mat-icon>
-                                            </button>
-                                        </div>
-                                    </mat-form-field>
-                                    <mat-form-field fxFlex="auto" appearance="standard">
-                                        <mat-label>Nachname</mat-label>
-                                        <input matInput required formControlName="lastName">
-                                        <div fxLayout matSuffix>
-                                            <button
-                                                    (click)="form.controls['lastName'].disabled ?  onActivateForm('lastName') : onDeactivateForm('lastName') "
-                                                    [matTooltip]="form.controls['lastName'].disabled ? 'Bearbeiten' : 'Speichern'"
-                                                    class="font-xs" mat-icon-button
-                                                    matSuffix type="button">
-                                                <mat-icon>
-                                                    {{form.controls['lastName'].disabled ? 'edit' : 'save'}}
-                                                </mat-icon>
-                                            </button>
-                                        </div>
-                                    </mat-form-field>
-                                    <mat-form-field fxFlex="auto" appearance="standard">
-                                        <mat-label>E-Mail</mat-label>
-                                        <input matInput required formControlName="email">
-                                        <div fxLayout matSuffix>
-                                            <button
-                                                    (click)="form.controls['email'].disabled ?  onActivateForm('email') : onDeactivateForm('email')"
-                                                    [matTooltip]="form.controls['email'].disabled ? 'Bearbeiten' : 'Speichern'"
-                                                    class="font-xs" mat-icon-button
-                                                    matSuffix type="button">
-                                                <mat-icon>
-                                                    {{form.controls['email'].disabled ? 'edit' : 'save'}}
-                                                </mat-icon>
+                                <form *ngIf="currentUser" (ngSubmit)="send()" class="px-6 py-4" fxLayout="column" [formGroup]="form">
+                                    <div  fxLayout="column" fxFlex formGroupName="info">
+                                        <mat-form-field fxFlex="auto" appearance="standard">
+                                            <mat-label>Vorname</mat-label>
+                                            <input matInput formControlName="firstName">
+                                            <div fxLayout matSuffix>
+                                                <button (click)="form.get('info.firstName').disabled ?  onActivateForm('firstName') : onDeactivateForm('firstName') "
+                                                        [matTooltip]="form.get('info.firstName').disabled ? 'Bearbeiten' : 'Speichern'"
+                                                        class="font-xs" mat-icon-button matSuffix
+                                                        type="button">
+                                                    <mat-icon>
+                                                        {{form.get('info.firstName').disabled ? 'edit' : 'save' }}
+                                                    </mat-icon>
+                                                </button>
+                                            </div>
+                                        </mat-form-field>
+                                        <mat-form-field fxFlex="auto" appearance="standard">
+                                            <mat-label>Nachname</mat-label>
+                                            <input matInput required formControlName="lastName">
+                                            <div fxLayout matSuffix>
+                                                <button
+                                                        (click)="form.get('info.lastName').disabled ?  onActivateForm('lastName') : onDeactivateForm('lastName') "
+                                                        [matTooltip]="form.get('info.lastName').disabled ? 'Bearbeiten' : 'Speichern'"
+                                                        class="font-xs" mat-icon-button
+                                                        matSuffix type="button">
+                                                    <mat-icon>
+                                                        {{form.get('info.lastName').disabled ? 'edit' : 'save'}}
+                                                    </mat-icon>
+                                                </button>
+                                            </div>
+                                        </mat-form-field>
+                                        <mat-form-field fxFlex="auto" appearance="standard">
+                                            <mat-label>E-Mail</mat-label>
+                                            <input matInput required formControlName="email">
+                                            <div fxLayout matSuffix>
+                                                <button
+                                                        (click)="form.get('info.email').disabled ?  onActivateForm('email') : onDeactivateForm('email')"
+                                                        [matTooltip]="form.get('info.email').disabled ? 'Bearbeiten' : 'Speichern'"
+                                                        class="font-xs" mat-icon-button
+                                                        matSuffix type="button">
+                                                    <mat-icon>
+                                                        {{form.get('info.email').disabled ? 'edit' : 'save'}}
+                                                    </mat-icon>
 
-                                            </button>
-                                        </div>
-                                    </mat-form-field>
+                                                </button>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+
 
                                         <mat-form-field  fxFlex="auto" appearance="standard">
                                             <mat-label>Passwort ändern</mat-label>
@@ -81,7 +83,7 @@
                                         <button mat-button type="button">ABBRECHEN</button>
                                         <button [color]="!isLoading ? 'primary' : null" mat-flat-button type="submit" >
                                             <div  *ngIf="isLoading" class="h-10 w-full" fxLayout="row" fxLayoutAlign="center center">
-                                                <mat-spinner color="accent" diameter="25" ></mat-spinner>
+                                                <mat-spinner color="accent" diameter="25"></mat-spinner>
                                             </div>
                                             <span *ngIf="!isLoading">SPEICHERN</span>
                                         </button>

@@ -11,7 +11,7 @@ type (
 		FirstName string             `json:"firstName" bson:"firstName"  validate:"required"`
 		LastName  string             `json:"lastName" bson:"lastName"`
 		UID       string             `json:"uid" bson:"uid" validate:"required"`
-		Roles     Roles              `json:"roles" bson:"roles"`
+		Roles     Roles              `json:"-" bson:"roles"`
 
 		//trait.Model
 		//trait.Timestampable

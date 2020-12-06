@@ -13,13 +13,12 @@ import {AuthenticationService} from "./auth.service";
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
 
-    constructor(private afAuth: AngularFireAuth,
-                private authService: AuthenticationService) {}
+    constructor(private afAuth: AngularFireAuth) {}
 
     //Get Token from Firebase if any and add it to every request sent from httpClient
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         return this.afAuth.idToken.pipe(
-            take(1),
+            take(5),
             exhaustMap(token => {
                 if (!token) {
                     return next.handle(request);
@@ -28,7 +27,7 @@ export class AuthInterceptorService implements HttpInterceptor {
                     headers: new HttpHeaders({'Authorization': 'Bearer ' + token})
                 });
 
-                console.log("Token wird allen Requests angehängt", token)
+                // console.log("Token wird allen Requests angehängt", token)
                 return next.handle(request);
             })
         )

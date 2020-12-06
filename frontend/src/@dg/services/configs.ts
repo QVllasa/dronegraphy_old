@@ -5,7 +5,7 @@ import { Config } from '../models/config.model';
 const defaultConfig: Config = {
   id: ConfigName.apollo,
   name: 'Apollo',
-  imgSrc: '//dg-landing.visurel.com/assets/img/layouts/apollo.png',
+  imgSrc: '',
   layout: 'horizontal',
   boxed: false,
   sidenav: {
@@ -31,7 +31,7 @@ export const configs: Config[] = [
   mergeDeep({ ...defaultConfig }, {
     id: ConfigName.hermes,
     name: 'Hermes',
-    imgSrc: '//dg-landing.visurel.com/assets/img/layouts/hermes.png',
+    imgSrc: '',
     layout: 'vertical',
     boxed: true,
     toolbar: {
@@ -44,7 +44,7 @@ export const configs: Config[] = [
   mergeDeep({ ...defaultConfig }, {
     id: ConfigName.ares,
     name: 'Ares',
-    imgSrc: '//dg-landing.visurel.com/assets/img/layouts/ares.png',
+    imgSrc: '',
     toolbar: {
       fixed: false
     },
@@ -58,7 +58,7 @@ export const configs: Config[] = [
   mergeDeep({ ...defaultConfig }, {
     id: ConfigName.zeus,
     name: 'Zeus',
-    imgSrc: '//dg-landing.visurel.com/assets/img/layouts/zeus.png',
+    imgSrc: '',
     sidenav: {
       state: 'collapsed'
     },
@@ -66,7 +66,7 @@ export const configs: Config[] = [
   mergeDeep({ ...defaultConfig }, {
     id: ConfigName.ikaros,
     name: 'Ikaros',
-    imgSrc: '//dg-landing.visurel.com/assets/img/layouts/ikaros.png',
+    imgSrc: '',
     layout: 'vertical',
     boxed: true,
     toolbar: {
