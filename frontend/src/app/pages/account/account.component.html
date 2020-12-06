@@ -80,7 +80,7 @@
 
 
                                     <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
-                                        <button mat-button type="button">ABBRECHEN</button>
+                                        <button routerLink="/" mat-button type="button">ABBRECHEN</button>
                                         <button [color]="!isLoading ? 'primary' : null" mat-flat-button type="submit" >
                                             <div  *ngIf="isLoading" class="h-10 w-full" fxLayout="row" fxLayoutAlign="center center">
                                                 <mat-spinner color="accent" diameter="25"></mat-spinner>

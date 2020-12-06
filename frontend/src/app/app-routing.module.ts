@@ -2,6 +2,8 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {CustomLayoutComponent} from './custom-layout/custom-layout.component';
 import {HomeComponent} from "./pages/home/home.component";
+import {AnonymousGuard} from "../@dg/guards/anonymous.guard";
+import {AuthGuard} from "../@dg/guards/auth.guard";
 
 
 const routes: Routes = [
@@ -17,7 +19,7 @@ const routes: Routes = [
       {
         path: 'account',
         loadChildren: () => import('./pages/account/account.module').then(m => m.AccountModule),
-        canActivate:[]
+        canActivate:[AuthGuard]
       },
       {
         path: 'pricing',
@@ -27,17 +29,21 @@ const routes: Routes = [
       {
         path: 'login',
         loadChildren: () => import('./pages/auth/login/login.module').then(m => m.LoginModule),
-        canActivate:[]
+        canActivate:[AnonymousGuard]
       },
       {
         path: 'register',
         loadChildren: () => import('./pages/auth/register/register.module').then(m => m.RegisterModule),
-        canActivate:[]
+        canActivate:[AnonymousGuard]
       },
       {
         path: 'forgot-password',
         loadChildren: () => import('./pages/auth/forgot-password/forgot-password.module').then(m => m.ForgotPasswordModule),
-        canActivate:[]
+        canActivate:[AnonymousGuard]
+      },
+      {
+        path: '**',
+        loadChildren: () => import('./pages/errors/error-404/error-404.module').then(m => m.Error404Module)
       }
     ]
   }
