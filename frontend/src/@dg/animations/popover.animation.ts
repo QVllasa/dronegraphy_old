@@ -1,4 +1,4 @@
-import { animate, group, style, transition, trigger } from '@angular/animations';
+import {animate, group, style, transition, trigger} from '@angular/animations';
 
 export const popoverAnimation = trigger('transformPopover', [
   transition(':enter', [

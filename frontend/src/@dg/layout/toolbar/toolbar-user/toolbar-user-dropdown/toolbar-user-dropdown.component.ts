@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 
-import { trackById } from '../../../../utils/track-by';
+import {trackById} from '../../../../utils/track-by';
 import icPerson from '@iconify/icons-ic/twotone-person';
 import icSettings from '@iconify/icons-ic/twotone-settings';
 import icAccountCircle from '@iconify/icons-ic/twotone-account-circle';
@@ -17,8 +17,7 @@ import icBusiness from '@iconify/icons-ic/twotone-business';
 import icVerifiedUser from '@iconify/icons-ic/twotone-verified-user';
 import icLock from '@iconify/icons-ic/twotone-lock';
 import icNotificationsOff from '@iconify/icons-ic/twotone-notifications-off';
-import { Icon } from '@visurel/iconify-angular';
-import { PopoverRef } from '../../../../components/popover/popover-ref';
+import {Icon} from '@visurel/iconify-angular';
 import {MenuItem} from "../interfaces/menu-item.interface";
 
 export interface OnlineStatus {
@@ -110,8 +109,7 @@ export class ToolbarUserDropdownComponent implements OnInit {
   icLock = icLock;
   icNotificationsOff = icNotificationsOff;
 
-  constructor(private cd: ChangeDetectorRef,
-              private popoverRef: PopoverRef<ToolbarUserDropdownComponent>) { }
+  constructor(private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
   }
@@ -122,6 +120,6 @@ export class ToolbarUserDropdownComponent implements OnInit {
   }
 
   close() {
-    this.popoverRef.close();
+
   }
 }

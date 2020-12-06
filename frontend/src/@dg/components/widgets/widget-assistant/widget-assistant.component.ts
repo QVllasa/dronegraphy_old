@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import icCheckCircle from '@iconify/icons-ic/twotone-check-circle';
 
 @Component({

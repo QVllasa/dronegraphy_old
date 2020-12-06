@@ -1,19 +1,16 @@
-import {Component, Inject, LOCALE_ID, OnDestroy, OnInit, Renderer2} from '@angular/core';
+import {Component, Inject, LOCALE_ID, Renderer2} from '@angular/core';
 import {Settings} from 'luxon';
 import {DOCUMENT} from '@angular/common';
 import {Platform} from '@angular/cdk/platform';
 import {ActivatedRoute} from '@angular/router';
-import {filter, first, map, mergeMap} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ConfigService} from "../@dg/services/config.service";
 import {Style, StyleService} from "../@dg/services/style.service";
 import {LayoutService} from "../@dg/services/layout.service";
 import {NavigationService} from "../@dg/services/navigation.service";
 import {ConfigName} from "../@dg/models/config-name.model";
-import {AuthenticationService} from "../@dg/services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {User} from "../@dg/models/user.model";
-import {AngularFireAuth} from "@angular/fire/auth";
 import {Subscription} from "rxjs";
 
 
@@ -25,8 +22,6 @@ import {Subscription} from "rxjs";
 export class AppComponent {
     title = 'dg';
 
-    autoLogin$: Subscription;
-
     constructor(private configService: ConfigService,
                 private styleService: StyleService,
                 private renderer: Renderer2,
@@ -36,9 +31,7 @@ export class AppComponent {
                 private layoutService: LayoutService,
                 private route: ActivatedRoute,
                 private _snackBar: MatSnackBar,
-                private navigationService: NavigationService,
-                private afAuth: AngularFireAuth,
-                private authService: AuthenticationService) {
+                private navigationService: NavigationService) {
 
 
 

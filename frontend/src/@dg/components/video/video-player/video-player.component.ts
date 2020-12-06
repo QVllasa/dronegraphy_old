@@ -1,18 +1,8 @@
-import {
-  Component,
-  ElementRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import videojs from 'video.js';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 import {ActivatedRoute, Params} from '@angular/router';
 import {VideoService} from "../../../services/video.service";
-
-
 
 
 // declare var require: any;

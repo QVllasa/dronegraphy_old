@@ -16,34 +16,17 @@ export interface IUser {
 }
 
 export class User implements IUser {
-    // public uid: string;
-    // public email: string;
-    // public firstName: string;
-    // public lastName: string;
     #roles: Roles = null
-    #token: string = null;
     #claims: IClaims = null;
-    emailVerified: boolean;
+
 
     constructor(
         public uid: string,
         public email: string,
         public firstName: string,
         public lastName: string
-    ) {
-        // this.uid = uid;
-        // this.email = email;
-        // this.firstName = firstName;
-        // this.lastName = lastName;
-    }
+    ) {}
 
-    setFirstName(fname){
-        this.firstName = fname
-    }
-
-    setLastName(lname){
-        this.lastName = lname
-    }
 
     setClaims(claims: IClaims) {
         this.#claims = claims;

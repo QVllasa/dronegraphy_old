@@ -5,7 +5,7 @@ import {AngularFireAuth} from "@angular/fire/auth";
 import {Router} from "@angular/router";
 import {HttpClient} from "@angular/common/http";
 import {UserService} from "./user.service";
-import {catchError, map, skip, switchMap, take, tap} from "rxjs/operators";
+import {catchError, map, switchMap, tap} from "rxjs/operators";
 import firebase from "firebase";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {getFirstName, getLastName} from "../utils/split-names";
@@ -17,9 +17,8 @@ import {getFirstName, getLastName} from "../utils/split-names";
 export class AuthenticationService implements OnDestroy {
 
     user$: BehaviorSubject<User> = new BehaviorSubject<User>(null)
-    token: firebase.auth.IdTokenResult;
     logout$: Subscription;
-    autoLogin$: Subscription;
+
 
 
 
@@ -144,11 +143,14 @@ export class AuthenticationService implements OnDestroy {
     }
 
     signOut() {
-        this.logout$ = from(this.afAuth.signOut())
+        this.logout$ = from(this.afAuth.signOut()).pipe(
+            switchMap(() => {
+                return this.router.navigate(['/'])
+            }))
             .subscribe(
                 () => {
                     this.user$.next(null);
-                    this.router.navigate(['/']);
+
                 },
                 error => {
                     if (error) {

@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { Icon } from '@visurel/iconify-angular';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {Icon} from '@visurel/iconify-angular';
 import faCaretUp from '@iconify/icons-fa-solid/caret-up';
 import faCaretDown from '@iconify/icons-fa-solid/caret-down';
 import icHelp from '@iconify/icons-ic/help-outline';
 import icShare from '@iconify/icons-ic/twotone-share';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { ShareBottomSheetComponent } from '../../share-bottom-sheet/share-bottom-sheet.component';
-import { scaleInOutAnimation } from '../../../animations/scale-in-out.animation';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import {ShareBottomSheetComponent} from '../../share-bottom-sheet/share-bottom-sheet.component';
+import {scaleInOutAnimation} from '../../../animations/scale-in-out.animation';
 
 @Component({
   selector: 'dg-widget-quick-value-center',

@@ -1,6 +1,6 @@
-import { mergeDeep } from '../utils/merge-deep';
-import { ConfigName } from '../models/config-name.model';
-import { Config } from '../models/config.model';
+import {mergeDeep} from '../utils/merge-deep';
+import {ConfigName} from '../models/config-name.model';
+import {Config} from '../models/config.model';
 
 const defaultConfig: Config = {
   id: ConfigName.apollo,

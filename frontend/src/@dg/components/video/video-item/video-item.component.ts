@@ -1,9 +1,4 @@
-import {
-    Component, ElementRef, HostListener,
-    Input,
-    OnInit, Renderer2, ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {Router} from '@angular/router';
 import {Video} from "../../../models/video.interface";
@@ -32,7 +27,7 @@ export class VideoItemComponent implements OnInit {
 
 
 
-    constructor(private domSanitizer: DomSanitizer, private router: Router, private renderer: Renderer2) {
+    constructor(private domSanitizer: DomSanitizer, private router: Router) {
     }
 
     ngOnInit(): void {
@@ -58,7 +53,7 @@ export class VideoItemComponent implements OnInit {
     }
 
     onLoadVideo() {
-        this.router.navigate(['/video', this.videoItem.id, this.hyphenateUrlParams(this.videoItem.title)]);
+        this.router.navigate(['/video', this.videoItem.id, this.hyphenateUrlParams(this.videoItem.title)]).then();
     }
 
 

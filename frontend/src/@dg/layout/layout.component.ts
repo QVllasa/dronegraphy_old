@@ -1,13 +1,22 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Inject, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { LayoutService } from '../services/layout.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { MatSidenav, MatSidenavContainer } from '@angular/material/sidenav';
-import { Event, NavigationEnd, Router, Scroll } from '@angular/router';
-import { filter, map, startWith, withLatestFrom } from 'rxjs/operators';
-import { checkRouterChildsData } from '../utils/check-router-childs-data';
-import { DOCUMENT } from '@angular/common';
-import { ConfigService } from '../services/config.service';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    Inject,
+    Input,
+    OnInit,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
+import {BreakpointObserver} from '@angular/cdk/layout';
+import {LayoutService} from '../services/layout.service';
+import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
+import {MatSidenav, MatSidenavContainer} from '@angular/material/sidenav';
+import {Event, NavigationEnd, Router, Scroll} from '@angular/router';
+import {filter, map, withLatestFrom} from 'rxjs/operators';
+import {checkRouterChildsData} from '../utils/check-router-childs-data';
+import {DOCUMENT} from '@angular/common';
+import {ConfigService} from '../services/config.service';
 
 @UntilDestroy()
 @Component({
@@ -32,13 +41,11 @@ export class LayoutComponent implements OnInit, AfterViewInit {
 
   scrollDisabled$ = this.router.events.pipe(
     filter(event => event instanceof NavigationEnd),
-    startWith(null),
     map(() => checkRouterChildsData(this.router.routerState.root.snapshot, data => data.scrollDisabled))
   );
 
   containerEnabled$ = this.router.events.pipe(
     filter(event => event instanceof NavigationEnd),
-    startWith(null),
     map(() => checkRouterChildsData(this.router.routerState.root.snapshot, data => data.containerEnabled))
   );
 
@@ -85,7 +92,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       withLatestFrom(this.isDesktop$),
-      filter(([event, matches]) => !matches),
+      filter(([matches]) => !matches),
       untilDestroyed(this)
     ).subscribe(() => this.sidenav.close());
   }

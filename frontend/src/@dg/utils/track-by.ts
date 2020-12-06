@@ -1,4 +1,4 @@
-import { KeyValue } from '@angular/common';
+import {KeyValue} from '@angular/common';
 
 export function trackByRoute<T extends { route: string | string[] }>(index: number, item: T) {
   return item.route;

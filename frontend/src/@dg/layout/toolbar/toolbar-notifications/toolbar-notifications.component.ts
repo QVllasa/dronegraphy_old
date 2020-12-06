@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { PopoverService } from '../../../components/popover/popover.service';
-import { ToolbarNotificationsDropdownComponent } from './toolbar-notifications-dropdown/toolbar-notifications-dropdown.component';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {ToolbarNotificationsDropdownComponent} from './toolbar-notifications-dropdown/toolbar-notifications-dropdown.component';
 import icNotificationsActive from '@iconify/icons-ic/twotone-notifications-active';
 
 @Component({
@@ -16,8 +15,7 @@ export class ToolbarNotificationsComponent implements OnInit {
   dropdownOpen: boolean;
   icNotificationsActive = icNotificationsActive;
 
-  constructor(private popover: PopoverService,
-              private cd: ChangeDetectorRef) {}
+  constructor(private cd: ChangeDetectorRef) {}
 
   ngOnInit() {}
 
@@ -25,29 +23,5 @@ export class ToolbarNotificationsComponent implements OnInit {
     this.dropdownOpen = true;
     this.cd.markForCheck();
 
-    const popoverRef = this.popover.open({
-      content: ToolbarNotificationsDropdownComponent,
-      origin: this.originRef,
-      offsetY: 12,
-      position: [
-        {
-          originX: 'center',
-          originY: 'top',
-          overlayX: 'center',
-          overlayY: 'bottom'
-        },
-        {
-          originX: 'end',
-          originY: 'bottom',
-          overlayX: 'end',
-          overlayY: 'top',
-        },
-      ]
-    });
-
-    popoverRef.afterClosed$.subscribe(() => {
-      this.dropdownOpen = false;
-      this.cd.markForCheck();
-    });
   }
 }

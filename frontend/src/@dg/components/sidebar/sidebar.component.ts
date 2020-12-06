@@ -1,5 +1,5 @@
-import { Component, Inject, Input, OnDestroy } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import {Component, Inject, Input, OnDestroy} from '@angular/core';
+import {DOCUMENT} from '@angular/common';
 
 @Component({
   selector: 'dg-sidebar',

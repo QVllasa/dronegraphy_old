@@ -1,17 +1,16 @@
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  Input,
-  NgZone,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  ViewChild
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Input,
+    NgZone,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+    ViewChild
 } from '@angular/core';
-import { asapScheduler } from 'rxjs';
-// @ts-ignore
+import {asapScheduler} from 'rxjs';
 import ApexCharts from 'apexcharts';
 
 export interface ApexOptions {
@@ -93,7 +92,7 @@ export class ChartComponent implements OnInit, OnChanges {
         this.options
       );
 
-      this.render();
+      this.render().then();
     });
   }
 }

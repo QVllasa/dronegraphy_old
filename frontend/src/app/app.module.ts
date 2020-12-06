@@ -15,8 +15,6 @@ import {AngularFireAuthModule} from "@angular/fire/auth";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {ToolbarModule} from "../@dg/layout/toolbar/toolbar.module";
 import {AuthInterceptorService} from "../@dg/services/auth-interceptor.service";
-import { AccountComponent } from './pages/account/account.component';
-
 
 
 @NgModule({

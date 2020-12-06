@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router} from '@angular/router';
-import { Observable } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
+import {Observable} from 'rxjs';
 import {AngularFireAuth} from "@angular/fire/auth";
 import {map, take, tap} from "rxjs/operators";
 
@@ -21,7 +21,7 @@ export class AnonymousGuard implements CanActivate {
           if (!isLoggedIn){
             console.log("not loggedIn")
             console.log('access denied!');
-            this.router.navigate(['/']);
+            this.router.navigate(['/']).then();
           }
         })
     );

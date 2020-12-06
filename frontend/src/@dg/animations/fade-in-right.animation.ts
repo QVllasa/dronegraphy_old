@@ -1,4 +1,4 @@
-import { animate, style, transition, trigger } from '@angular/animations';
+import {animate, style, transition, trigger} from '@angular/animations';
 
 export function fadeInRightAnimation(duration: number) {
   return trigger('fadeInRight', [

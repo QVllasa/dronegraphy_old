@@ -6,8 +6,6 @@ import {AngularFireAuth} from "@angular/fire/auth";
 import {take, tap} from "rxjs/operators";
 
 
-
-
 @Injectable({
     providedIn: 'root'
 })

@@ -1,6 +1,4 @@
-import {Injectable, OnInit} from '@angular/core';
-
-import {DomSanitizer} from '@angular/platform-browser';
+import {Injectable} from '@angular/core';
 
 import {Video} from "../models/video.interface";
 import {Videos} from "../../static-data/video-data";
@@ -11,7 +9,7 @@ import {Videos} from "../../static-data/video-data";
 export class VideoService {
 
 
-  private videos: Video[] = [];
+  private readonly videos: Video[] = [];
 
   constructor() {
 

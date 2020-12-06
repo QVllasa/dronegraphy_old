@@ -1,4 +1,4 @@
-import { Icon } from '@visurel/iconify-angular';
+import {Icon} from '@visurel/iconify-angular';
 
 export type NavigationItem = NavigationLink | NavigationDropdown | NavigationSubheading | NavigationItemButton | NavigationHeaderLink;
 

@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { Router } from '@angular/router';
-import { map } from 'rxjs/operators';
-import { BreakpointObserver } from '@angular/cdk/layout';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject} from 'rxjs';
+import {Router} from '@angular/router';
+import {map} from 'rxjs/operators';
+import {BreakpointObserver} from '@angular/cdk/layout';
 
 @Injectable({
   providedIn: 'root'
@@ -106,7 +106,7 @@ export class LayoutService {
       queryParams: {
         rtl: 'true'
       }
-    });
+    }).then();
   }
 
   disableRTL() {
@@ -114,6 +114,6 @@ export class LayoutService {
       queryParams: {
         rtl: 'false'
       }
-    });
+    }).then();
   }
 }

@@ -171,10 +171,9 @@ export class TreeCheckboxesComponent {
   /** Whether all the descendants of the node are selected. */
   descendantsAllSelected(node: TodoItemFlatNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
-    const descAllSelected = descendants.length > 0 && descendants.every(child => {
+    return descendants.length > 0 && descendants.every(child => {
       return this.checklistSelection.isSelected(child);
     });
-    return descAllSelected;
   }
 
   /** Whether part of the descendants are selected */

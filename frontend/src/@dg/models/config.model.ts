@@ -1,4 +1,4 @@
-import { ConfigName } from './config-name.model';
+import {ConfigName} from './config-name.model';
 
 export interface Config {
   id: ConfigName;

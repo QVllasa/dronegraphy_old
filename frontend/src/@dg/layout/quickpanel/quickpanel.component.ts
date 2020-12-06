@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { DateTime } from 'luxon';
+import {Component, OnInit} from '@angular/core';
+import {DateTime} from 'luxon';
 
 @Component({
   selector: 'dg-quickpanel',

@@ -15,7 +15,6 @@ import icReceipt from '@iconify/icons-ic/twotone-receipt';
 import icDoneAll from '@iconify/icons-ic/twotone-done-all';
 import {NavigationService} from '../../services/navigation.service';
 import icArrowDropDown from '@iconify/icons-ic/twotone-arrow-drop-down';
-import {PopoverService} from '../../components/popover/popover.service';
 import {MegaMenuComponent} from '../../components/mega-menu/mega-menu.component';
 import icSearch from '@iconify/icons-ic/twotone-search';
 import {AuthenticationService} from "../../services/auth.service";
@@ -60,7 +59,6 @@ export class ToolbarComponent implements OnInit {
                 private configService: ConfigService,
                 private navigationService: NavigationService,
                 public router: Router,
-                private popoverService: PopoverService,
                 public authService: AuthenticationService) {
     }
 
@@ -76,24 +74,6 @@ export class ToolbarComponent implements OnInit {
     }
 
     openMegaMenu(origin: ElementRef | HTMLElement) {
-        this.popoverService.open({
-            content: MegaMenuComponent,
-            origin,
-            position: [
-                {
-                    originX: 'start',
-                    originY: 'bottom',
-                    overlayX: 'start',
-                    overlayY: 'top'
-                },
-                {
-                    originX: 'end',
-                    originY: 'bottom',
-                    overlayX: 'end',
-                    overlayY: 'top',
-                },
-            ]
-        });
     }
 
     openSearch() {

@@ -25,9 +25,7 @@ export class ConfigPanelComponent implements OnInit {
   colorVariables = colorVariables;
 
   config$ = this.configService.config$;
-  activeConfig$ = this.configService.config$.pipe(
-    map(config => Object.keys(this.configService.configs).find(key => this.configService.configs[key] === config))
-  );
+
 
   isRTL$ = this.route.queryParamMap.pipe(
     map(paramMap => coerceBooleanProperty(paramMap.get('rtl'))),
@@ -39,7 +37,6 @@ export class ConfigPanelComponent implements OnInit {
   icSettings = icSettings;
   icCheck = icCheck;
   icClose = icClose;
-  ConfigName = ConfigName;
   Style = Style;
   selectedColor = colorVariables.blue;
 
@@ -77,9 +74,7 @@ export class ConfigPanelComponent implements OnInit {
     this.styleService.setStyle(Style.default);
   }
 
-  sidenavOpenChange(change: MatSlideToggleChange) {
-    change.checked ? this.layoutService.openSidenav() : this.layoutService.closeSidenav();
-  }
+
 
   layoutRTLChange(change: MatSlideToggleChange) {
     change.checked ? this.layoutService.enableRTL() : this.layoutService.disableRTL();

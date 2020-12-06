@@ -120,14 +120,13 @@
   </mat-menu>
 
   <ng-template #linkTemplate let-item="item">
-    <a *ngIf="isLink(item) && !isFunction(item.route)"
-       [routerLink]="item.route"
+    <a *ngIf="isLink(item) && !isFunction(item)"
+       [routerLink]="item"
        class="navigation-menu-item"
        [ngClass]="{ 'text-primary': (isActive$ | async)(item) }"
        mat-menu-item>{{ item.label }}</a>
 
-    <div (click)="item.route()"
-         *ngIf="isLink(item) && isFunction(item.route)"
+    <div *ngIf="isLink(item) && isFunction(item)"
          class="navigation-menu-item"
          [ngClass]="{ 'text-primary': (isActive$ | async)(item) }"
          mat-menu-item>{{ item.label }}</div>

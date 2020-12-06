@@ -1,4 +1,4 @@
-import { Route } from '@angular/router';
+import {Route} from '@angular/router';
 
 export interface dgRouteData {
   scrollDisabled?: boolean;
@@ -13,4 +13,3 @@ export interface dgRoute extends Route {
   children?: dgRoute[];
 }
 
-export type dgRoutes = dgRoute[];

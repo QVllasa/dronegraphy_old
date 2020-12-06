@@ -1,5 +1,5 @@
-import { ActivatedRouteSnapshot } from '@angular/router';
-import { dgRouteData } from '../models/dg-route.interface';
+import {ActivatedRouteSnapshot} from '@angular/router';
+import {dgRouteData} from '../models/dg-route.interface';
 
 export function checkRouterChildsData(route: ActivatedRouteSnapshot & { data?: dgRouteData }, compareWith: (data: dgRouteData) => boolean) {
   if (compareWith(route.data)) {

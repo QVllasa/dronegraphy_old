@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NavigationItem, NavigationLink } from '../../models/navigation-item.interface';
-import { filter, map, startWith } from 'rxjs/operators';
+import { filter, map} from 'rxjs/operators';
 import { NavigationEnd, Router } from '@angular/router';
 import { NavigationService } from '../../services/navigation.service';
 import { trackByRoute } from '../../utils/track-by';
@@ -16,7 +16,6 @@ export class NavigationItemComponent implements OnInit {
 
   isActive$ = this.router.events.pipe(
     filter(event => event instanceof NavigationEnd),
-    startWith(null),
     map(() => (item: NavigationItem) => this.hasActiveChilds(item))
   );
 

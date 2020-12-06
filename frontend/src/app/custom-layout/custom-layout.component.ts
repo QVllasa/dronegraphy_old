@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {filter, map, startWith} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 import {NavigationEnd, Router} from '@angular/router';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
@@ -19,14 +19,7 @@ import {ConfigService} from "../../@dg/services/config.service";
 export class CustomLayoutComponent implements OnInit {
 
     sidenavCollapsed$ = this.layoutService.sidenavCollapsed$;
-    isFooterVisible$ = this.configService.config$.pipe(map(config => config.footer.visible));
-    isDesktop$ = this.layoutService.isDesktop$;
 
-    toolbarShadowEnabled$ = this.router.events.pipe(
-        filter(event => event instanceof NavigationEnd),
-        startWith(null),
-        map(() => checkRouterChildsData(this.router.routerState.root.snapshot, data => data.toolbarShadowEnabled))
-    );
 
     @ViewChild('configpanel', {static: true}) configpanel: SidebarComponent;
 

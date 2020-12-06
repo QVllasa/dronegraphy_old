@@ -1,7 +1,7 @@
 <div [class.collapsed]="collapsed"
      [class.open]="collapsed && collapsedOpen$ | async"
      fxLayout="column" fxLayoutAlign="center start" class="sidenav">
-    <div class="sidenav-items pl-24" *ngFor="let item of items; trackBy: trackByRoute">
+    <div class="sidenav-items pl-24" *ngFor="let item of items">
         <ng-container *ngIf="item.type === 'header-link'">
             <a class="mat-display-1 font-black m-0">{{item.label}}</a>
         </ng-container>
@@ -11,7 +11,7 @@
 
     </div>
     <div class="sidenav-items pl-24" >
-        <ng-container *ngFor="let item of items; trackBy: trackByRoute">
+        <ng-container *ngFor="let item of items">
             <button class="mr-2" *ngIf="item.type === 'button'" mat-flat-button color="primary">{{item.label}}</button>
         </ng-container>
     </div>

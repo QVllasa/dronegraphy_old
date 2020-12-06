@@ -1,10 +1,10 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import icClose from '@iconify/icons-ic/twotone-close';
-import { LayoutService } from '../../services/layout.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { filter } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
-import { SearchService } from '../../services/search.service';
+import {LayoutService} from '../../services/layout.service';
+import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
+import {filter} from 'rxjs/operators';
+import {FormControl} from '@angular/forms';
+import {SearchService} from '../../services/search.service';
 
 @UntilDestroy()
 @Component({

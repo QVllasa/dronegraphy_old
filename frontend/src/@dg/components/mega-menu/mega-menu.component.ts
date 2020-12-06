@@ -6,7 +6,7 @@ import icContactSupport from '@iconify/icons-ic/twotone-contact-support';
 import icContacts from '@iconify/icons-ic/twotone-contacts';
 import icAssessment from '@iconify/icons-ic/twotone-assessment';
 import icBook from '@iconify/icons-ic/twotone-book';
-import { PopoverRef } from '../popover/popover-ref';
+
 
 export interface MegaMenuFeature {
   icon: Icon;
@@ -101,12 +101,11 @@ export class MegaMenuComponent implements OnInit {
     }
   ];
 
-  constructor(private popoverRef: PopoverRef<MegaMenuComponent>) { }
+  constructor() { }
 
   ngOnInit() {
   }
 
   close() {
-    this.popoverRef.close();
   }
 }

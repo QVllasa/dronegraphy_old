@@ -1,10 +1,10 @@
 import {NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import {Error500Component} from './error-500.component';
-import {VexRoutes} from '../../../../../@vex/interfaces/vex-route.interface';
 
 
-const routes: VexRoutes = [
+
+const routes: Routes = [
   {
     path: '',
     component: Error500Component,

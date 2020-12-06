@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthenticationService} from "../../../@dg/services/auth.service";
 import {IUser, User} from "../../../@dg/models/user.model";
@@ -154,7 +154,7 @@ export class AccountComponent implements OnInit {
             changePw$
         )
 
-        combined$.subscribe(res => {
+        combined$.subscribe(() => {
                 this.form.get('password').enable()
                 console.log("finish")
                 this.isLoading = false;

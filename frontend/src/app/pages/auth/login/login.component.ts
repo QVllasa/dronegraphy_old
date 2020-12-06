@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AuthenticationService} from "../../../../@dg/services/auth.service";
 import {Subscription} from "rxjs";
+import {switchMap} from "rxjs/operators";
 
 
 @Component({
@@ -42,30 +43,36 @@ export class LoginComponent implements OnInit, OnDestroy {
         const email = this.form.get('email').value;
         const password = this.form.get('password').value;
 
-        this.loginProcess$ = this.authService.login(email, password).subscribe(
-            () => {
-                this.isLoading = false;
-                this.router.navigate(['/']);
-            }, error => {
-                if (error){
+        this.loginProcess$ = this.authService.login(email, password)
+            .pipe(
+                switchMap(() => {
                     this.isLoading = false;
-                    console.log(error);
-                    switch (error.code) {
-                        case 'auth/user-not-found': {
-                            this._snackBar.open('Pilot nicht gefunden.', 'SCHLIESSEN');
-                            break;
-                        }
-                        case 'auth/wrong-password': {
-                            this._snackBar.open('Passwort falsch.', 'SCHLIESSEN');
-                            break;
-                        }
-                        default: {
-                            this._snackBar.open('Unbekannter Fehler', 'SCHLIESSEN');
+                    return this.router.navigate(['/'])
+                })
+            )
+            .subscribe(
+                () => {
+                },
+                error => {
+                    if (error) {
+                        this.isLoading = false;
+                        console.log(error);
+                        switch (error.code) {
+                            case 'auth/user-not-found': {
+                                this._snackBar.open('Pilot nicht gefunden.', 'SCHLIESSEN');
+                                break;
+                            }
+                            case 'auth/wrong-password': {
+                                this._snackBar.open('Passwort falsch.', 'SCHLIESSEN');
+                                break;
+                            }
+                            default: {
+                                this._snackBar.open('Unbekannter Fehler', 'SCHLIESSEN');
+                            }
                         }
                     }
-                }
 
-            })
+                })
     }
 
     toggleVisibility() {
@@ -81,7 +88,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        if (this.loginProcess$){
+        if (this.loginProcess$) {
             this.loginProcess$.unsubscribe();
         }
     }

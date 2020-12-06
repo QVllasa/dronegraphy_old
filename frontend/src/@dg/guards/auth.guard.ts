@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
-import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {Observable} from 'rxjs';
-import {AuthenticationService} from "../services/auth.service";
 import {map, take, tap} from "rxjs/operators";
 import {AngularFireAuth} from "@angular/fire/auth";
 
@@ -23,7 +22,7 @@ export class AuthGuard implements CanActivate {
                 if (!isLoggedIn){
                     console.log("loggedIn")
                     console.log('access denied!');
-                    this.router.navigate(['/login']);
+                    this.router.navigate(['/login']).then();
                 }
             })
         );

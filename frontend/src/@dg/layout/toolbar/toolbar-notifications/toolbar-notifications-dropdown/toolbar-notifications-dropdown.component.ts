@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Notification } from '../interfaces/notification.interface';
-import { DateTime } from 'luxon';
-import { trackById } from '../../../../utils/track-by';
+import {Component, OnInit} from '@angular/core';
+import {Notification} from '../interfaces/notification.interface';
+import {DateTime} from 'luxon';
+import {trackById} from '../../../../utils/track-by';
 import icSettings from '@iconify/icons-ic/twotone-settings';
 import icChevronRight from '@iconify/icons-ic/twotone-chevron-right';
 import icNotificationsOff from '@iconify/icons-ic/twotone-notifications-off';

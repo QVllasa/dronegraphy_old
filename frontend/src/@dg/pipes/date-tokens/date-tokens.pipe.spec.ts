@@ -1,4 +1,4 @@
-import { DateTokensPipe } from './date-tokens.pipe';
+import {DateTokensPipe} from './date-tokens.pipe';
 
 describe('DateTokensPipe', () => {
   it('create an instance', () => {
