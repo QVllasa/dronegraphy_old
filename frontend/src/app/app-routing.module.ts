@@ -33,6 +33,11 @@ const routes: Routes = [
         path: 'register',
         loadChildren: () => import('./pages/auth/register/register.module').then(m => m.RegisterModule),
         canActivate:[]
+      },
+      {
+        path: 'forgot-password',
+        loadChildren: () => import('./pages/auth/forgot-password/forgot-password.module').then(m => m.ForgotPasswordModule),
+        canActivate:[]
       }
     ]
   }
