@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import icMail from '@iconify/icons-ic/twotone-mail';
-import {AuthenticationService} from "../../../../@dg/services/auth.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {AuthenticationService} from '../../../../@dg/services/auth.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'vex-forgot-password',
@@ -11,7 +12,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     styleUrls: ['./forgot-password.component.scss'],
     animations: []
 })
-export class ForgotPasswordComponent implements OnInit {
+export class ForgotPasswordComponent implements OnInit, OnDestroy {
 
     form = this.fb.group({
         email: [null, Validators.required]
@@ -19,6 +20,7 @@ export class ForgotPasswordComponent implements OnInit {
 
     isLoading: boolean = false;
     resetSuccess: boolean = false;
+    checkUser$: Subscription;
 
     icMail = icMail;
 
@@ -31,24 +33,35 @@ export class ForgotPasswordComponent implements OnInit {
     }
 
     ngOnInit() {
+        // this.checkUser$ = this.authService.user$
+        //     .subscribe(user => {
+        //         if (user) {
+        //             this.router.navigate(['/']).then();
+        //         }
+        //     });
     }
 
     send() {
+        if (this.authService.user$.value) {
+            this._snackBar.open('Bitte erst abmelden.', 'SCHLIESSEN');
+            this.router.navigate(['/']).then();
+            return;
+        }
         this.isLoading = true;
-        this.form.disable()
+        this.form.disable();
         const email = this.form.get('email').value;
-        console.log(email)
+        console.log(email);
 
         this.authService.afAuth.sendPasswordResetEmail(email)
             .then(
                 () => {
-                    this.form.enable()
+                    this.form.enable();
                     this.resetSuccess = true;
                     this.isLoading = false;
                 })
             .catch(error => {
-                console.log(error.code)
-                this.form.enable()
+                console.log(error.code);
+                this.form.enable();
                 this.isLoading = false;
                 switch (error.code) {
                     case 'auth/user-not-found': {
@@ -59,7 +72,11 @@ export class ForgotPasswordComponent implements OnInit {
                         this._snackBar.open('Unbekannter Fehler', 'SCHLIESSEN');
                     }
                 }
-            })
+            });
+    }
+
+    ngOnDestroy() {
+        // this.checkUser$.unsubscribe();
     }
 }
 

@@ -1,6 +1,6 @@
 import {SelectionModel} from '@angular/cdk/collections';
 import {FlatTreeControl} from '@angular/cdk/tree';
-import {Component, Injectable} from '@angular/core';
+import {Component, Injectable, OnInit} from '@angular/core';
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
 import {BehaviorSubject} from 'rxjs';
 
@@ -109,7 +109,7 @@ export class ChecklistDatabase {
   styleUrls: ['tree-checkboxes.component.scss'],
   providers: [ChecklistDatabase]
 })
-export class TreeCheckboxesComponent {
+export class TreeCheckboxesComponent implements OnInit{
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */
   flatNodeMap = new Map<TodoItemFlatNode, TodoItemNode>();
 
@@ -140,6 +140,9 @@ export class TreeCheckboxesComponent {
     _database.dataChange.subscribe(data => {
       this.dataSource.data = data;
     });
+  }
+
+  ngOnInit() {
   }
 
   getLevel = (node: TodoItemFlatNode) => node.level;

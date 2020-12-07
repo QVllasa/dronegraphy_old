@@ -1,35 +1,32 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {HomeComponent} from "./home.component";
-import {FlexLayoutModule} from "@angular/flex-layout";
-import {RouterModule} from "@angular/router";
-import {MatButtonModule} from "@angular/material/button";
-import {MatInputModule} from "@angular/material/input";
-import {MatIconModule} from "@angular/material/icon";
-import {AppModule} from "../../app.module";
-import {MatChipsModule} from "@angular/material/chips";
-import {TreeCheckboxesModule} from "../../../@dg/components/tree-checkboxes/tree-checkboxes.module";
-import {VideoGridModule} from "../../../@dg/components/video/video-grid/video-grid.module";
-import {HeaderComponent} from "./header/header.component";
-
-
-
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {HeaderModule} from './header/header.module';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {HomeComponent} from './home.component';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
+import {MatIconModule} from '@angular/material/icon';
+import {MatChipsModule} from '@angular/material/chips';
+import {TreeCheckboxesModule} from '../../../@dg/components/tree-checkboxes/tree-checkboxes.module';
+import {VideoGridModule} from '../../../@dg/components/video/video-grid/video-grid.module';
+import {HomeRoutingModule} from './home-routing.module';
 
 
 @NgModule({
-    declarations: [HomeComponent, HeaderComponent],
+    declarations: [HomeComponent],
     imports: [
         CommonModule,
+        HeaderModule,
         FlexLayoutModule,
-        RouterModule,
         MatButtonModule,
         MatInputModule,
         MatIconModule,
-        AppModule,
+        HomeRoutingModule,
         MatChipsModule,
         TreeCheckboxesModule,
         VideoGridModule
     ],
-  exports: [HomeComponent]
+    exports: []
 })
-export class HomeModule { }
+export class HomeModule {
+}

@@ -1,10 +1,10 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Router} from "@angular/router";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {AuthenticationService} from "../../../../@dg/services/auth.service";
-import {Subscription} from "rxjs";
-import {switchMap} from "rxjs/operators";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {AuthenticationService} from '../../../../@dg/services/auth.service';
+import {Subscription} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
 
 
 @Component({
@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     inputType = 'password';
     visible = false;
     loginProcess$: Subscription;
+    checkUser$: Subscription;
 
 
     constructor(private router: Router,
@@ -27,6 +28,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 private authService: AuthenticationService,
                 private _snackBar: MatSnackBar
     ) {
+
     }
 
     ngOnInit() {
@@ -35,10 +37,22 @@ export class LoginComponent implements OnInit, OnDestroy {
             email: ['', [Validators.required, Validators.email]],
             password: ['', Validators.required]
         });
+
+        // this.checkUser$ = this.authService.user$
+        //     .subscribe(user => {
+        //     if (user) {
+        //         this.router.navigate(['/']).then();
+        //     }
+        // });
     }
 
 
     send() {
+        if (this.authService.user$.value) {
+            this._snackBar.open('Du bist bereits angemeldet.', 'SCHLIESSEN');
+            this.router.navigate(['/']).then();
+            return;
+        }
         this.isLoading = true;
         const email = this.form.get('email').value;
         const password = this.form.get('password').value;
@@ -47,7 +61,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             .pipe(
                 switchMap(() => {
                     this.isLoading = false;
-                    return this.router.navigate(['/'])
+                    return this.router.navigate(['/']);
                 })
             )
             .subscribe(
@@ -72,7 +86,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                         }
                     }
 
-                })
+                });
     }
 
     toggleVisibility() {
@@ -91,6 +105,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         if (this.loginProcess$) {
             this.loginProcess$.unsubscribe();
         }
+        // this.checkUser$.unsubscribe();
     }
 
 }

@@ -1,12 +1,11 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {particleConfig} from "../../../../../particle";
-import {AuthenticationService} from "../../../../@dg/services/auth.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {UserService} from "../../../../@dg/services/user.service";
-import {Subscription} from "rxjs";
-import {take} from "rxjs/operators";
+import {Router} from '@angular/router';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AuthenticationService} from '../../../../@dg/services/auth.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {UserService} from '../../../../@dg/services/user.service';
+import {Subscription} from 'rxjs';
+import {take} from 'rxjs/operators';
 
 @Component({
     selector: 'dg-register',
@@ -18,11 +17,12 @@ export class RegisterComponent implements OnInit, OnDestroy {
     form: FormGroup;
     signUp$: Subscription;
 
-    particlesOptions = particleConfig;
+    // particlesOptions = particleConfig;
     isLoading: boolean;
     inputType = 'password';
     visible = false;
-    registerSuccess: boolean = false;
+    registerSuccess = false;
+    checkUser$: Subscription;
 
 
     constructor(private router: Router,
@@ -40,9 +40,21 @@ export class RegisterComponent implements OnInit, OnDestroy {
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required, Validators.minLength(8)]]
         });
+
+        // this.checkUser$ = this.authService.user$
+        //     .subscribe(user => {
+        //         if (user) {
+        //             this.router.navigate(['/']).then();
+        //         }
+        //     });
     }
 
     send() {
+        if (this.authService.user$.value) {
+            this._snackBar.open('Du bist bereits angemeldet.', 'SCHLIESSEN');
+            this.router.navigate(['/']).then();
+            return;
+        }
         this.isLoading = true;
         const name = this.form.get('name').value.trim();
         const email = this.form.get('email').value;
@@ -58,10 +70,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
                     if (error.code === 'auth/email-already-in-use') {
                         this._snackBar.open('Pilot existiert bereits.', 'SCHLIESSEN');
                     } else {
-                        this.userService.deleteUser()
+                        this.userService.deleteUser();
                         this._snackBar.open('Register: Unbekannter Fehler', 'SCHLIESSEN');
                     }
-                })
+                });
     }
 
     toggleVisibility() {
@@ -77,9 +89,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        if(this.signUp$){
+        if (this.signUp$) {
             this.signUp$.unsubscribe();
         }
+
+        // this.checkUser$.unsubscribe();
     }
 
 

@@ -23,4 +23,5 @@ import {MatButtonModule} from "@angular/material/button";
     TreeCheckboxesComponent
   ]
 })
-export class TreeCheckboxesModule { }
+export class TreeCheckboxesModule {
+}

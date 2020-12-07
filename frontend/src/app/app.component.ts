@@ -5,13 +5,13 @@ import {Platform} from '@angular/cdk/platform';
 import {ActivatedRoute} from '@angular/router';
 import {filter, map} from 'rxjs/operators';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ConfigService} from "../@dg/services/config.service";
-import {Style, StyleService} from "../@dg/services/style.service";
-import {LayoutService} from "../@dg/services/layout.service";
-import {NavigationService} from "../@dg/services/navigation.service";
-import {ConfigName} from "../@dg/models/config-name.model";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {Subscription} from "rxjs";
+import {ConfigService} from '../@dg/services/config.service';
+import {Style, StyleService} from '../@dg/services/style.service';
+import {LayoutService} from '../@dg/services/layout.service';
+import {NavigationService} from '../@dg/services/navigation.service';
+import {ConfigName} from '../@dg/models/config-name.model';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {AuthenticationService} from '../@dg/services/auth.service';
 
 
 @Component({
@@ -31,8 +31,8 @@ export class AppComponent {
                 private layoutService: LayoutService,
                 private route: ActivatedRoute,
                 private _snackBar: MatSnackBar,
+                private authService: AuthenticationService,
                 private navigationService: NavigationService) {
-
 
 
 
