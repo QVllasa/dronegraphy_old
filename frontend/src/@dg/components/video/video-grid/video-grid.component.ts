@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {DomSanitizer} from "@angular/platform-browser";
 import {VideoService} from "../../../services/video.service";
 import {Video} from "../../../models/video.interface";
@@ -12,6 +12,7 @@ import {Video} from "../../../models/video.interface";
 export class VideoGridComponent implements OnInit {
 
   videos: Video[] = [];
+  @Input() gridLayout: string;
 
   finished = false;
   initialBatch = 27;

@@ -1,10 +1,10 @@
-<div (mouseenter)="showButton = true"
-     (mouseleave)="showButton = false"
-     class="card p-6 relative hover:shadow-16 trans-shadow"
+<div (mouseenter)="showButton"
+     (mouseleave)="showButton"
+     class="p-6 relative"
      fxLayout="column"
      fxLayoutAlign="start center">
   <div [ngClass]="iconClass" class="rounded-full w-12 h-12 flex items-center justify-center">
-    <mat-icon [icIcon]="icon"></mat-icon>
+    <mat-icon>{{icon}}</mat-icon>
   </div>
 
   <h2 class="display-2 font-bold mt-4 mb-2">{{ value }}</h2>
@@ -23,7 +23,7 @@
              [inline]="true"
              height="20px"
              width="20px"></ic-icon>
-    <span>{{ change }}%</span>
+    <span>{{ change ? change+'%' : ''}}</span>
   </h4>
 
   <button *ngIf="helpText"

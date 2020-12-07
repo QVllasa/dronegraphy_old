@@ -18,8 +18,12 @@ const routes: Routes = [
             {
                 path: 'account',
                 loadChildren: () => import('./pages/account/account.module').then(m => m.AccountModule),
-                resolve: {user: AuthResolver},
                 canLoad: [AuthGuard]
+            },
+            {
+                path: 'cockpit',
+                loadChildren: () => import('./pages/cockpit/cockpit.module').then(m => m.CockpitModule),
+                // canLoad: [AuthGuard]
             },
             {
                 path: 'pricing',

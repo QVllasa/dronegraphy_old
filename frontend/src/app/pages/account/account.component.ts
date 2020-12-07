@@ -17,20 +17,20 @@ import {concat, from, Observable, of} from "rxjs";
 })
 export class AccountComponent implements OnInit {
 
-    orders: { amount: number, date: number, method: string }[] = [
+    orders: { amount: number, date: Date, method: string }[] = [
         {
             amount: 5,
-            date: new Date().getDate(),
+            date: new Date(),
             method: 'PayPal'
         },
         {
             amount: 5,
-            date: new Date().getDate(),
+            date: new Date(),
             method: 'PayPal'
         },
         {
             amount: 5,
-            date: new Date().getDate(),
+            date: new Date(),
             method: 'PayPal'
         }
     ];

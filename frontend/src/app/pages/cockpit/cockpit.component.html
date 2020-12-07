@@ -1,0 +1,26 @@
+<dg-page-layout mode="card" class="h-screen w-auto" fxLayout="column" fxLayoutAlign="center center">
+    <h1 fxLayoutAlign="center" class="mat-display-2">Mein Cockpit</h1>
+    <dg-page-layout-content class="w-full" fxLayoutAlign="start center" dgContainer>
+        <div class="card w-full max-w-full ">
+            <mat-tab-group mat-align-tabs="center" class="h-full">
+                <mat-tab label="Meine Downloads">
+                    <div class="p-6 max-h-lg">
+                        <dg-video-grid [gridLayout]="classes" ></dg-video-grid>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Favoriten">
+                    <div class="p-6 max-h-lg">
+                        <dg-video-grid [gridLayout]="classes" ></dg-video-grid>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Gespeicherte Piloten">
+                    <div class="p-6 max-h-lg">
+                        <dg-video-grid [gridLayout]="classes" ></dg-video-grid>
+                    </div>
+                </mat-tab>
+
+            </mat-tab-group>
+        </div>
+    </dg-page-layout-content>
+
+</dg-page-layout>

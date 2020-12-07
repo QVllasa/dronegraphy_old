@@ -1,10 +1,10 @@
 <dg-page-layout mode="card" class="h-screen w-auto" fxLayout="column" fxLayoutAlign="center center">
     <h1 fxLayoutAlign="center" class="mat-display-2">Account</h1>
     <dg-page-layout-content fxLayoutAlign="center center" dgContainer>
-        <div class="card w-full max-w-2xl min-h-lg">
+        <div class="card w-full max-w-2xl">
             <mat-tab-group mat-align-tabs="center" class="h-full">
                 <mat-tab label="Persönliche Infos">
-                    <div class="p-6">
+                    <div class="p-6 h-lg">
                         <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
                             <div fxFlex="auto">
                                 <div *ngIf="!currentUser" fxLayoutAlign="center center">
@@ -94,15 +94,32 @@
                     </div>
                 </mat-tab>
                 <mat-tab label="Mein Konto">
-                    <div class="p-6">
-                        <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+                    <div class="p-6 h-lg">
+                        <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="20px">
+                            <div fxLayout="row" fxLayoutAlign="space-evenly center">
+                                <dg-widget-quick-value-center iconClass="text-primary bg-primary-light"
+                                                              [icon]="'account_balance'"
+                                                              [showButton]="false"
+                                                              gdColumn.lt-sm="1"
+                                                              label="Pro Downloads verfügbar"
+                                                              [value]="'67'"></dg-widget-quick-value-center>
+                                <div fxLayout="column"  fxLayoutAlign="space-evenly center">
+                                    <button mat-raised-button color="primary">Konto aufladen</button>
+                                    <button class="mt-8" mat-button color="primary">Support kontaktieren</button>
+                                </div>
+                            </div>
+
                             <div fxFlex="auto">
-                                <div class="px-6 py-4 h-full" fxLayout="column" fxLayoutAlign="space-between none">
+                                <div class="px-6 py-4 h-full" fxLayout="column" fxLayoutAlign="center">
+                                    <div fxLayout="column" class="w-full" fxLayoutAlign="start">
+                                        <h4>Vergangene Käufe</h4>
+                                        <mat-divider class="w-full"></mat-divider>
+                                    </div>
                                     <mat-accordion hideToggle>
                                         <mat-expansion-panel class="mat-elevation-z0" *ngFor="let order of orders">
-                                            <mat-expansion-panel-header>
+                                            <mat-expansion-panel-header class="mx-auto">
                                                 <mat-panel-title class="text-primary">
-                                                    Konto aufgeladen: {{order.date}}
+                                                    {{order.date | date: 'fullDate'}} | Anzahl: {{order.amount}} Pro Downloads
                                                 </mat-panel-title>
                                             </mat-expansion-panel-header>
                                             <ng-template matExpansionPanelContent>
@@ -121,11 +138,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </mat-tab>
-                <mat-tab label="Meine Lizenzen">
-                    <div class="p-6">
-                        Coming soon.
                     </div>
                 </mat-tab>
             </mat-tab-group>

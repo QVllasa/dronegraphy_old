@@ -16,19 +16,20 @@ import {scaleInOutAnimation} from '../../../animations/scale-in-out.animation';
 })
 export class WidgetQuickValueCenterComponent implements OnInit {
 
-  @Input() icon: Icon;
+  @Input() icon: string;
   @Input() value: string;
   @Input() label: string;
   @Input() change: number;
   @Input() helpText: string;
   @Input() iconClass: string;
+  @Input() showButton: boolean;
 
   faCaretUp = faCaretUp;
   faCaretDown = faCaretDown;
   icHelp = icHelp;
   icShare = icShare;
 
-  showButton: boolean;
+
 
   constructor(private _bottomSheet: MatBottomSheet) { }
 

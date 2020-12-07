@@ -19,6 +19,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {WidgetQuickValueCenterModule} from "../../../@dg/components/widgets/widget-quick-value-center/widget-quick-value-center.module";
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
         ReactiveFormsModule,
         MatProgressSpinnerModule,
         MatTooltipModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        WidgetQuickValueCenterModule
     ]
 })
 export class AccountModule {
