@@ -12,6 +12,7 @@ import {NavigationService} from '../@dg/services/navigation.service';
 import {ConfigName} from '../@dg/models/config-name.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {AuthenticationService} from '../@dg/services/auth.service';
+import {of} from "rxjs";
 
 
 @Component({
@@ -29,10 +30,12 @@ export class AppComponent {
                 @Inject(DOCUMENT) private document: Document,
                 @Inject(LOCALE_ID) private localeId: string,
                 private layoutService: LayoutService,
+                private activatedRoute: ActivatedRoute,
                 private route: ActivatedRoute,
                 private _snackBar: MatSnackBar,
                 private authService: AuthenticationService,
                 private navigationService: NavigationService) {
+
 
 
 

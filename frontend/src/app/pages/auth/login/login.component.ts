@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     constructor(private router: Router,
                 private fb: FormBuilder,
                 private cd: ChangeDetectorRef,
-                private authService: AuthenticationService,
+                public authService: AuthenticationService,
                 private _snackBar: MatSnackBar
     ) {
 
@@ -37,13 +37,6 @@ export class LoginComponent implements OnInit, OnDestroy {
             email: ['', [Validators.required, Validators.email]],
             password: ['', Validators.required]
         });
-
-        // this.checkUser$ = this.authService.user$
-        //     .subscribe(user => {
-        //     if (user) {
-        //         this.router.navigate(['/']).then();
-        //     }
-        // });
     }
 
 
@@ -70,7 +63,6 @@ export class LoginComponent implements OnInit, OnDestroy {
                 error => {
                     if (error) {
                         this.isLoading = false;
-                        console.log(error);
                         switch (error.code) {
                             case 'auth/user-not-found': {
                                 this._snackBar.open('Pilot nicht gefunden.', 'SCHLIESSEN');

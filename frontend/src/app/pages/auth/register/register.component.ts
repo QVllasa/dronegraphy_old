@@ -25,11 +25,12 @@ export class RegisterComponent implements OnInit, OnDestroy {
     checkUser$: Subscription;
 
 
+
     constructor(private router: Router,
                 private userService: UserService,
                 private fb: FormBuilder,
                 private cd: ChangeDetectorRef,
-                private authService: AuthenticationService,
+                public authService: AuthenticationService,
                 private _snackBar: MatSnackBar
     ) {
     }
@@ -40,13 +41,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required, Validators.minLength(8)]]
         });
-
-        // this.checkUser$ = this.authService.user$
-        //     .subscribe(user => {
-        //         if (user) {
-        //             this.router.navigate(['/']).then();
-        //         }
-        //     });
     }
 
     send() {

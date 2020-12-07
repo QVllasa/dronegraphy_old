@@ -18,6 +18,7 @@ export class AuthenticationService implements OnDestroy {
 
     user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
     logout$: Subscription;
+    stayLoggedIn = false;
 
 
     constructor(public afAuth: AngularFireAuth,
@@ -26,21 +27,21 @@ export class AuthenticationService implements OnDestroy {
                 private _snackBar: MatSnackBar,
                 private router: Router) {
 
-        this.autoLogin()
-            .subscribe(
-                () => {
-                },
-                err => {
-                    this.user$.next(null);
-                    if (err) {
-                        console.log('autologin:');
-                        console.log(err);
-                        this._snackBar.open('err.error.message', 'SCHLIESSEN', {
-                            horizontalPosition: 'end',
-                            verticalPosition: 'top',
-                        });
-                    }
-                });
+        // this.autoLogin()
+        //     .subscribe(
+        //         () => {
+        //         },
+        //         err => {
+        //             this.user$.next(null);
+        //             if (err) {
+        //                 console.log('autologin:');
+        //                 console.log(err);
+        //                 this._snackBar.open('err.error.message', 'SCHLIESSEN', {
+        //                     horizontalPosition: 'end',
+        //                     verticalPosition: 'top',
+        //                 });
+        //             }
+        //         });
     }
 
     // Sign Up User on Firebase
@@ -70,7 +71,6 @@ export class AuthenticationService implements OnDestroy {
                 return this.user$.pipe(
                     map(user => {
                         user.setClaims(Object.assign(token.claims));
-
                     })
                 );
             }),
@@ -85,13 +85,19 @@ export class AuthenticationService implements OnDestroy {
             }),
             switchMap(user => {
                 this.user$.next(new User(user.uid, user.email, user.firstName, user.lastName));
+                if (this.stayLoggedIn){
+                    localStorage.setItem("currentUser", JSON.stringify(user))
+                }
+
                 return this.afAuth.idTokenResult;
             }),
             switchMap(token => {
+                if (this.stayLoggedIn){
+                    localStorage.setItem("idToken", JSON.stringify(token.token))
+                }
                 return this.user$.pipe(
                     map(user => {
                         user.setClaims(Object.assign(token.claims));
-
                     })
                 );
             })
@@ -99,18 +105,15 @@ export class AuthenticationService implements OnDestroy {
     }
 
     // TODO fix autologin after registration (works perfectly on login)
-    autoLogin() {
+    /*autoLogin() {
         return this.afAuth.authState.pipe(
             switchMap(user => {
-                console.log('start autologin');
                 if (!user) {
                     this.user$.next(null);
                     return of(null);
                 }
                 return this.userService.getUser(user.uid).pipe(
                     catchError(err => {
-                        console.log('no user found');
-                        console.log(err);
                         return of(null);
                     })
                 );
@@ -138,11 +141,14 @@ export class AuthenticationService implements OnDestroy {
                 );
             })
         );
-    }
+    }*/
+
+
 
     signOut() {
         this.logout$ = from(this.afAuth.signOut()).pipe(
             switchMap(() => {
+                localStorage.removeItem('currentUser')
                 return this.router.navigate(['/']);
             }))
             .subscribe(
@@ -152,7 +158,6 @@ export class AuthenticationService implements OnDestroy {
                 },
                 error => {
                     if (error) {
-                        console.log(error);
                         return of(null);
                     }
                 }

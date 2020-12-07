@@ -11,6 +11,7 @@ import { QuickpanelModule } from '../../@dg/layout/quickpanel/quickpanel.module'
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {FlexLayoutModule} from "@angular/flex-layout";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
         CommonModule,
         LayoutModule,
         SidenavModule,
+        MatSnackBarModule,
         ToolbarModule,
         FooterModule,
         ConfigPanelModule,

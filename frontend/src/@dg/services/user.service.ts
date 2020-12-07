@@ -38,10 +38,7 @@ export class UserService {
                 if (!user) {
                     return
                 }
-                user.delete().then(res => {
-                    console.log(res);
-                    console.log("user deleted")
-                });
+                user.delete().then();
             })).subscribe()
 
 

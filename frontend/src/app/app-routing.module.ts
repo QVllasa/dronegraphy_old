@@ -1,24 +1,24 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {CustomLayoutComponent} from './custom-layout/custom-layout.component';
-import {HomeComponent} from './pages/home/home.component';
-import {AnonymousGuard} from '../@dg/guards/anonymous.guard';
 import {AuthGuard} from '../@dg/guards/auth.guard';
+import {AuthResolver} from "../@dg/resolver/auth.resolver";
 
 
 const routes: Routes = [
     {
         path: '',
         component: CustomLayoutComponent,
+        resolve: {user: AuthResolver},
         children: [
             {
                 path: '',
-                pathMatch: 'full',
                 loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule),
             },
             {
                 path: 'account',
                 loadChildren: () => import('./pages/account/account.module').then(m => m.AccountModule),
+                resolve: {user: AuthResolver},
                 canLoad: [AuthGuard]
             },
             {
@@ -29,18 +29,15 @@ const routes: Routes = [
             {
                 path: 'login',
                 loadChildren: () => import('./pages/auth/login/login.module').then(m => m.LoginModule),
-                canLoad: [AnonymousGuard]
 
             },
             {
                 path: 'register',
                 loadChildren: () => import('./pages/auth/register/register.module').then(m => m.RegisterModule),
-                canLoad: [AnonymousGuard]
             },
             {
                 path: 'forgot-password',
                 loadChildren: () => import('./pages/auth/forgot-password/forgot-password.module').then(m => m.ForgotPasswordModule),
-                canLoad: [AnonymousGuard]
             },
             {
                 path: '**',

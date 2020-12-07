@@ -10,6 +10,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import {TreeCheckboxesModule} from '../../../@dg/components/tree-checkboxes/tree-checkboxes.module';
 import {VideoGridModule} from '../../../@dg/components/video/video-grid/video-grid.module';
 import {HomeRoutingModule} from './home-routing.module';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import {HomeRoutingModule} from './home-routing.module';
         MatIconModule,
         HomeRoutingModule,
         MatChipsModule,
+        MatSnackBarModule,
         TreeCheckboxesModule,
         VideoGridModule
     ],

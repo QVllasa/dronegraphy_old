@@ -31,9 +31,6 @@
             <button *ngIf="!(authService.user$ | async)" mat-flat-button color="primary" routerLink="/register">
                 Starten
             </button>
-            <button  mat-flat-button color="primary" routerLink="/login">
-                Login
-            </button>
             <button mat-flat-button class="text-primary" routerLink="/pricing">Preise</button>
             <dg-toolbar-user></dg-toolbar-user>
         </div>

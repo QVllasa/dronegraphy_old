@@ -32,14 +32,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
     ) {
     }
 
-    ngOnInit() {
-        // this.checkUser$ = this.authService.user$
-        //     .subscribe(user => {
-        //         if (user) {
-        //             this.router.navigate(['/']).then();
-        //         }
-        //     });
-    }
+    ngOnInit() {}
 
     send() {
         if (this.authService.user$.value) {
@@ -50,7 +43,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         this.form.disable();
         const email = this.form.get('email').value;
-        console.log(email);
+
 
         this.authService.afAuth.sendPasswordResetEmail(email)
             .then(
@@ -60,7 +53,6 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
                     this.isLoading = false;
                 })
             .catch(error => {
-                console.log(error.code);
                 this.form.enable();
                 this.isLoading = false;
                 switch (error.code) {

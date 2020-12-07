@@ -58,13 +58,10 @@ export class AccountComponent implements OnInit {
                 takeWhile(() => !this.currentUser, true)
             )
             .subscribe(user => {
-                console.log("get new user from stream", user)
                 if (!user) {
                     return
                 } else if (!this.currentUser) {
                     this.currentUser = user;
-                    console.log("patch form")
-                    console.log(this.currentUser)
                     this.form.patchValue({
                         info: {
                             email: this.currentUser.email,
@@ -78,7 +75,6 @@ export class AccountComponent implements OnInit {
     }
 
     initForm() {
-        console.log("init form")
         this.form = new FormGroup({
             info: new FormGroup({
                 firstName: new FormControl({
@@ -114,11 +110,9 @@ export class AccountComponent implements OnInit {
     }
 
     changePassword(newPassword): Observable<void> {
-        console.log("new password")
         if ((newPassword != '') && !this.form.get('password').invalid) {
             return this.afAuth.authState.pipe(
                 switchMap(res => {
-                    console.log("changing password")
                         return from(res.updatePassword(newPassword));
                     }
                 )
@@ -156,7 +150,7 @@ export class AccountComponent implements OnInit {
 
         combined$.subscribe(() => {
                 this.form.get('password').enable()
-                console.log("finish")
+
                 this.isLoading = false;
                 this.form.patchValue({
                     info: {
@@ -171,7 +165,7 @@ export class AccountComponent implements OnInit {
             err => {
                 if (err) {
                     this.isLoading = false;
-                    console.log(err);
+
                     switch (err.code) {
                         case 'auth/requires-recent-login': {
                             this._snackBar.open('Bitte melde dich erst kurz neu an.', 'SCHLIESSEN');
