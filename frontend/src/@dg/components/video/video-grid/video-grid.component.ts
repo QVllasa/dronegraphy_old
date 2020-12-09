@@ -5,35 +5,36 @@ import {Video} from "../../../models/video.interface";
 
 
 @Component({
-  selector: 'dg-video-grid',
-  templateUrl: './video-grid.component.html',
-  styleUrls: ['./video-grid.component.scss']
+    selector: 'dg-video-grid',
+    templateUrl: './video-grid.component.html',
+    styleUrls: ['./video-grid.component.scss']
 })
 export class VideoGridComponent implements OnInit {
 
-  videos: Video[] = [];
-  @Input() gridLayout: string;
+    @Input() videos: Video[] = [];
+    @Input() gridLayout: string;
 
-  finished = false;
-  initialBatch = 27;
-  lastIndex;
+    finished = false;
 
-  constructor(private domSanitizer: DomSanitizer,
-              private videoService: VideoService) { }
+    lastIndex;
 
-  ngOnInit() {
-    this.videos = this.videoService.getVideos(0, this.initialBatch);
-  }
+    constructor(private domSanitizer: DomSanitizer,
+                private videoService: VideoService) {
+    }
 
-  // onScrollDown() {
-  //   const lastKey = this.videos.indexOf(this.videos[this.videos.length - 1]);
-  //   this.loadNewVideo(lastKey + 1, lastKey + 6);
-  // }
+    ngOnInit() {
+
+    }
+
+    // onScrollDown() {
+    //   const lastKey = this.videos.indexOf(this.videos[this.videos.length - 1]);
+    //   this.loadNewVideo(lastKey + 1, lastKey + 6);
+    // }
 
 
-  // loadNewVideo(from, to) {
-  //   const newVideos = this.videoService.getVideos(from, to);
-  //   this.videos.push(...newVideos);
-  // }
+    // loadNewVideo(from, to) {
+    //   const newVideos = this.videoService.getVideos(from, to);
+    //   this.videos.push(...newVideos);
+    // }
 
 }

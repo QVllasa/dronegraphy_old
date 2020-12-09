@@ -23,7 +23,9 @@ export class VideoItemComponent implements OnInit {
     loadStatus: boolean;
     timer: any;
     poster: any;
-    showControls: boolean;
+    showActions: boolean;
+    options: any;
+
 
 
 
@@ -32,6 +34,17 @@ export class VideoItemComponent implements OnInit {
 
     ngOnInit(): void {
         this.poster = this.domSanitizer.bypassSecurityTrustStyle(`url(${this.videoItem.poster})`);
+        this.options = {
+            poster: this.videoItem.poster,
+            fluid: false,
+            aspectRatio: '16:9',
+            autoplay: true,
+            controls: false,
+            inactivityTimeout: 0,
+            videopage: false,
+            sources: [{src: this.videoItem.itemPath, type: 'application/x-mpegURL'}]
+        }
+
     }
 
 
@@ -40,14 +53,17 @@ export class VideoItemComponent implements OnInit {
     }
 
     onShow() {
-        this.showControls = true;
+        this.showActions = true;
         this.timer = setTimeout(() => {
             this.loadStatus = true;
         }, 750);
     }
 
     onHide() {
-        this.showControls = false;
+        setTimeout(() => {
+            this.showActions = false;
+            }, 1000);
+
         clearTimeout(this.timer);
         this.loadStatus = false;
     }

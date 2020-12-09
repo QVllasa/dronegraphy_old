@@ -1,21 +1,23 @@
-<dg-page-layout mode="card" class="h-screen w-auto" fxLayout="column" fxLayoutAlign="center center">
-    <h1 fxLayoutAlign="center" class="mat-display-2">Mein Cockpit</h1>
-    <dg-page-layout-content class="w-full" fxLayoutAlign="start center" dgContainer>
-        <div class="card w-full max-w-full ">
-            <mat-tab-group mat-align-tabs="center" class="h-full">
+<dg-page-layout mode="card" class="h-full w-auto" fxLayout="column" fxLayoutAlign="start center">
+    <dg-page-layout-header class="h-64">
+        <h1 fxLayoutAlign="center" class="mat-display-2">Mein Cockpit</h1>
+    </dg-page-layout-header>
+    <dg-page-layout-content class="w-full" fxLayoutAlign="center center" dgContainer>
+        <div class="card min-h-md  w-full p-6 overflow-auto">
+            <mat-tab-group mat-align-tabs="center" >
                 <mat-tab label="Meine Downloads">
-                    <div class="p-6 max-h-lg">
-                        <dg-video-grid [gridLayout]="classes" ></dg-video-grid>
+                    <div class="p-6 max-h-3xl">
+                        <dg-video-grid [videos]="videos" ></dg-video-grid>
                     </div>
                 </mat-tab>
                 <mat-tab label="Favoriten">
-                    <div class="p-6 max-h-lg">
-                        <dg-video-grid [gridLayout]="classes" ></dg-video-grid>
+                    <div class="p-6 max-h-3xl">
+                        <dg-video-grid [videos]="videos" ></dg-video-grid>
                     </div>
                 </mat-tab>
                 <mat-tab label="Gespeicherte Piloten">
-                    <div class="p-6 max-h-lg">
-                        <dg-video-grid [gridLayout]="classes" ></dg-video-grid>
+                    <div class="p-6 max-h-3xl">
+                        <dg-video-grid [videos]="videos" ></dg-video-grid>
                     </div>
                 </mat-tab>
 

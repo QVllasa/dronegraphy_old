@@ -9,6 +9,21 @@ module.exports = {
     purgeLayersByDefault: true
   },
   theme: {
+    extend: {
+      gridTemplateColumns: {
+        'video-grid': 'repeat(auto-fit, minmax(420px, 1fr))',
+
+        // Complex site-specific column configuration
+        'footer': '200px minmax(900px, 1fr) 100px',
+      }
+    },
+    aspectRatio: { // defaults to {}
+      'none': 0,
+      'square': [1, 1], // or 1 / 1, or simply 1
+      '16/9': [16, 9],  // or 16 / 9
+      '4/3': [4, 3],    // or 4 / 3
+      '21/9': [21, 9],  // or 21 / 9
+    },
     screens: {
       sm: '600px',
       md: '960px',
@@ -367,7 +382,7 @@ module.exports = {
     minHeight: {
       '0': '0',
       unset: 'unset',
-      xxxs: '16rem',
+      '64': '16rem',
       xxs: '18rem',
       xs: '20rem',
       sm: '24rem',
@@ -489,6 +504,7 @@ module.exports = {
     },
   },
   variants: {
+    aspectRatio: ['responsive'],
     accessibility: ['responsive', 'focus'],
     alignContent: ['responsive'],
     alignItems: ['responsive'],
@@ -560,6 +576,7 @@ module.exports = {
     container: false
   },
   plugins: [
+    require('tailwindcss-aspect-ratio'),
     function ({addVariant, e}) {
       addVariant('ltr', ({separator, modifySelectors}) => {
         modifySelectors(({className}) => {

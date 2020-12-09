@@ -4,23 +4,21 @@
             <mat-icon class="text-white">menu</mat-icon>
         </button>
     </div>
-
     <div fxFlex fxLayoutAlign="center center">
         <dg-toolbar-search></dg-toolbar-search>
     </div>
-
-
     <div>
         <img class="h-8" src="assets/img/logo/dronegraphy_Logo_V2.4.svg" alt="dronegraphy">
     </div>
-
     <ng-container>
         <div fxFlex fxLayoutAlign="end" class="-mx-1 " fxLayoutGap="8px">
             <button *ngIf="authService.user$ | async as user" mat-icon-button>
                 <ng-container *ngIf="user.getRoles()">
                     <div *ngIf="user.getRoles().member"
+                         routerLink="/checkout"
                          class="rounded-full flex items-center justify-center text-primary bg-primary-light cursor-pointer h-9 w-9">
-                        <mat-icon>shopping_cart</mat-icon>
+                        <mat-icon *ngIf="!(orderService.cart$ | async)">shopping_cart</mat-icon>
+                        <mat-icon *ngIf="orderService.cart$ | async" [matBadge]="orderService.cart$.value.length" [matBadgeColor]="'warn'">shopping_cart</mat-icon>
                     </div>
                     <div *ngIf="user.getRoles().creator"
                          class="rounded-full flex items-center justify-center text-primary bg-primary-light cursor-pointer h-9 w-9">

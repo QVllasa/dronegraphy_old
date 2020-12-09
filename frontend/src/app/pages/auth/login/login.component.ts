@@ -41,9 +41,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
     send() {
+        this.form.disable()
         if (this.authService.user$.value) {
-            this._snackBar.open('Du bist bereits angemeldet.', 'SCHLIESSEN');
-            this.router.navigate(['/']).then();
+            this.form.enable()
+            this._snackBar.open('Bitte vorher abmelden.', 'SCHLIESSEN');
             return;
         }
         this.isLoading = true;
@@ -62,6 +63,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 },
                 error => {
                     if (error) {
+                        this.form.enable()
                         this.isLoading = false;
                         switch (error.code) {
                             case 'auth/user-not-found': {

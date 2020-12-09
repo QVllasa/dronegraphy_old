@@ -16,6 +16,7 @@ import {NavigationItemModule} from '../../components/navigation-item/navigation-
 import {MegaMenuModule} from '../../components/mega-menu/mega-menu.module';
 import {ContainerModule} from '../../directives/container/container.module';
 import {CloseModule} from "../../components/close/close.module";
+import {MatBadgeModule} from "@angular/material/badge";
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import {CloseModule} from "../../components/close/close.module";
         NavigationItemModule,
         MegaMenuModule,
         ContainerModule,
-        CloseModule
+        CloseModule,
+        MatBadgeModule
     ],
   exports: [ToolbarComponent]
 })

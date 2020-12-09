@@ -18,11 +18,16 @@ const routes: Routes = [
             {
                 path: 'account',
                 loadChildren: () => import('./pages/account/account.module').then(m => m.AccountModule),
-                canLoad: [AuthGuard]
+                // canLoad: [AuthGuard]
             },
             {
                 path: 'cockpit',
                 loadChildren: () => import('./pages/cockpit/cockpit.module').then(m => m.CockpitModule),
+                // canLoad: [AuthGuard]
+            },
+            {
+                path: 'checkout',
+                loadChildren: () => import('./pages/checkout/checkout.module').then(m => m.CheckoutModule),
                 // canLoad: [AuthGuard]
             },
             {

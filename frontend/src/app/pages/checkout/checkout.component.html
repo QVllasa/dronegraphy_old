@@ -1,0 +1,50 @@
+<dg-page-layout mode="card" class="h-full w-auto" fxLayout="column" fxLayoutAlign="start center">
+    <dg-page-layout-header class="h-64">
+        <h1 fxLayoutAlign="center" class="mat-display-2">Warenkorb</h1>
+    </dg-page-layout-header>
+    <dg-page-layout-content class="w-full" fxLayout="column" fxLayoutAlign="start center" dgContainer>
+        <div class="card min-h-md max-h-3xl w-full p-6 overflow-auto">
+            <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
+                <span fxLayoutAlign="center center"
+                      class="font-bold text-2xl bg-primary-light text-primary h-12 w-12 rounded-full"
+                      matTooltip="Das ist die Anzahl an Pro Aufnahmen, die du herunterladen kannst.">{{'5'}}</span>
+                <p matTooltip="Das ist die Anzahl an Pro Aufnahmen, die du herunterladen kannst.">Pro Aufnahmen
+                    verfügbar</p>
+                <button routerLink="/pricing" mat-raised-button color="primary">Konto aufladen</button>
+            </div>
+            <!--            <dg-video-grid [videos]="videos"></dg-video-grid>-->
+            <div *ngIf="!(orderService.cart$ | async)" fxLayout="column" class="h-full" fxLayoutAlign="start center">
+                <div class="mat-display-1">Dein Warenkorb ist leer.</div>
+                <img class="h-full w-auto max-h-xxxs" src="assets/img/illustrations/videographer.svg" alt="">
+            </div>
+            <mat-list class="list" *ngIf="orderService.cart$ | async as videos">
+                <h3 mat-subheader>Lizenzfrei</h3>
+                <ng-container *ngFor="let video of videos">
+                    <mat-list-item *ngIf="!video.sell">
+                        <img mat-list-avatar src="assets/img/avatars/1.jpg">
+                        <h3 matLine>John</h3>
+                        <p matLine>
+                            <span>Brunch?</span>
+                            <span class="subline">-- Did you want to go on Sunday? I was thinking</span>
+                        </p>
+                    </mat-list-item>
+                </ng-container>
+                <mat-divider></mat-divider>
+                <h3 mat-subheader>Pro Aufnahmen</h3>
+                <ng-container *ngFor="let video of videos">
+                    <mat-list-item *ngIf="video.sell">
+                        <img mat-list-avatar src="assets/img/avatars/4.jpg">
+                        <h3 matLine>Frank</h3>
+                        <p matLine>
+                            <span>Pretty decent!</span>
+                            <span class="subline">-- You look pretty... decent!</span>
+                        </p>
+                    </mat-list-item>
+                </ng-container>
+            </mat-list>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center center" class="mt-6">
+            <button mat-raised-button color="primary">Downloads starten</button>
+        </div>
+    </dg-page-layout-content>
+</dg-page-layout>

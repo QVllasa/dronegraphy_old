@@ -10,9 +10,9 @@ import {VideoService} from "../../../services/video.service";
 // require('videojs-hls-quality-selector');
 
 @Component({
-  selector: 'app-vjs-player',
+  selector: 'dg-vjs-player',
   template: `
-    <video #target class="video-js" [ngClass]="'bg-fit'" [style.backgroundImage]="loading" controls muted playsinline
+    <video #target class="video-js rounded" [ngClass]="'bg-fit'" [style.backgroundImage]="loading" controls muted playsinline
            preload="metadata"></video>
   `,
   styleUrls: [

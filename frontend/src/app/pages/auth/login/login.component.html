@@ -2,7 +2,7 @@
     <div fxLayout="column" fxLayoutAlign="center center">
         <h1 fxLayoutAlign="center" class="mat-display-2">Login</h1>
         <div class="card overflow-hidden w-full max-w-xs">
-            <div [formGroup]="form" class="p-6" fxLayout="column" fxLayoutGap="16px">
+            <form [formGroup]="form" class="p-6" fxLayout="column" fxLayoutGap="16px">
                 <div fxFlex="auto" fxLayout="column">
                     <mat-form-field fxFlex="grow" appearance="outline" >
                         <mat-label>E-Mail</mat-label>
@@ -19,13 +19,12 @@
                         <mat-error *ngIf="form.get('password').hasError('required')">Oops, das Password fehlt.</mat-error>
                     </mat-form-field>
                 </div>
-                <button (click)="send()" [color]="!isLoading ? 'primary' : null" mat-flat-button type="submit" [disabled]="!form.valid" >
+                <button (click)="send()"  [color]="!isLoading ? 'primary' : null" mat-flat-button type="submit" [disabled]="!form.valid" >
                     <div  *ngIf="isLoading" class="h-10 w-full" fxLayout="row" fxLayoutAlign="center center">
                         <mat-spinner color="primary" diameter="25" ></mat-spinner>
                     </div>
                     <span *ngIf="!isLoading">LOGIN</span>
                 </button>
-
                 <button color="primary" mat-button [routerLink]="['/register']">
                     <span>Noch kein Account?</span>
                     <mat-icon inline>keyboard_arrow_right</mat-icon>
@@ -34,7 +33,7 @@
                     <span>Passwort vergessen?</span>
                     <mat-icon inline>keyboard_arrow_right</mat-icon>
                 </button>
-            </div>
+            </form>
         </div>
     </div>
     <div>

@@ -8,10 +8,11 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {OnHoverModule} from "../../../directives/onHover.module";
+import {VideoActionsComponent} from "../video-actions/video-actions.component";
 
 
 @NgModule({
-  declarations: [VideoItemComponent, VideoPlayerComponent],
+  declarations: [VideoItemComponent, VideoPlayerComponent, VideoActionsComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,

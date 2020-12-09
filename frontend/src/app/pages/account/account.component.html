@@ -1,5 +1,7 @@
-<dg-page-layout mode="card" class="h-screen w-auto" fxLayout="column" fxLayoutAlign="center center">
-    <h1 fxLayoutAlign="center" class="mat-display-2">Account</h1>
+<dg-page-layout mode="card" class="h-full w-auto" fxLayout="column" fxLayoutAlign="start center">
+    <dg-page-layout-header class="h-64">
+        <h1 fxLayoutAlign="center" class="mat-display-2">Mein Account</h1>
+    </dg-page-layout-header>
     <dg-page-layout-content fxLayoutAlign="center center" dgContainer>
         <div class="card w-full max-w-2xl">
             <mat-tab-group mat-align-tabs="center" class="h-full">
@@ -108,13 +110,14 @@
                                     <button class="mt-8" mat-button color="primary">Support kontaktieren</button>
                                 </div>
                             </div>
-
+                        </div>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Letzte Käufe">
+                    <div class="p-6 h-lg">
+                        <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="20px">
                             <div fxFlex="auto">
                                 <div class="px-6 py-4 h-full" fxLayout="column" fxLayoutAlign="center">
-                                    <div fxLayout="column" class="w-full" fxLayoutAlign="start">
-                                        <h4>Vergangene Käufe</h4>
-                                        <mat-divider class="w-full"></mat-divider>
-                                    </div>
                                     <mat-accordion hideToggle>
                                         <mat-expansion-panel class="mat-elevation-z0" *ngFor="let order of orders">
                                             <mat-expansion-panel-header class="mx-auto">
