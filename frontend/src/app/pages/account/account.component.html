@@ -4,147 +4,334 @@
     </dg-page-layout-header>
     <dg-page-layout-content fxLayoutAlign="center center" dgContainer>
         <div class="card w-full max-w-2xl">
-            <mat-tab-group mat-align-tabs="center" class="h-full">
-                <mat-tab label="Persönliche Infos">
-                    <div class="p-6 h-lg">
-                        <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
-                            <div fxFlex="auto">
-                                <div *ngIf="!currentUser" fxLayoutAlign="center center">
-                                    <mat-spinner  color="primary"
-                                                 diameter="25"></mat-spinner>
-                                </div>
-                                <form *ngIf="currentUser" (ngSubmit)="send()" class="px-6 py-4" fxLayout="column" [formGroup]="form">
-                                    <div  fxLayout="column" fxFlex formGroupName="info">
-                                        <mat-form-field fxFlex="auto" appearance="standard">
-                                            <mat-label>Vorname</mat-label>
-                                            <input matInput formControlName="firstName">
-                                            <div fxLayout matSuffix>
-                                                <button (click)="form.get('info.firstName').disabled ?  onActivateForm('firstName') : onDeactivateForm('firstName') "
-                                                        [matTooltip]="form.get('info.firstName').disabled ? 'Bearbeiten' : 'Speichern'"
-                                                        class="font-xs" mat-icon-button matSuffix
-                                                        type="button">
-                                                    <mat-icon>
-                                                        {{form.get('info.firstName').disabled ? 'edit' : 'save' }}
-                                                    </mat-icon>
-                                                </button>
-                                            </div>
-                                        </mat-form-field>
-                                        <mat-form-field fxFlex="auto" appearance="standard">
-                                            <mat-label>Nachname</mat-label>
-                                            <input matInput required formControlName="lastName">
-                                            <div fxLayout matSuffix>
-                                                <button
-                                                        (click)="form.get('info.lastName').disabled ?  onActivateForm('lastName') : onDeactivateForm('lastName') "
-                                                        [matTooltip]="form.get('info.lastName').disabled ? 'Bearbeiten' : 'Speichern'"
-                                                        class="font-xs" mat-icon-button
-                                                        matSuffix type="button">
-                                                    <mat-icon>
-                                                        {{form.get('info.lastName').disabled ? 'edit' : 'save'}}
-                                                    </mat-icon>
-                                                </button>
-                                            </div>
-                                        </mat-form-field>
-                                        <mat-form-field fxFlex="auto" appearance="standard">
-                                            <mat-label>E-Mail</mat-label>
-                                            <input matInput required formControlName="email">
-                                            <div fxLayout matSuffix>
-                                                <button
-                                                        (click)="form.get('info.email').disabled ?  onActivateForm('email') : onDeactivateForm('email')"
-                                                        [matTooltip]="form.get('info.email').disabled ? 'Bearbeiten' : 'Speichern'"
-                                                        class="font-xs" mat-icon-button
-                                                        matSuffix type="button">
-                                                    <mat-icon>
-                                                        {{form.get('info.email').disabled ? 'edit' : 'save'}}
-                                                    </mat-icon>
-
-                                                </button>
-                                            </div>
-                                        </mat-form-field>
+            <mat-tab-group *ngIf="authService.user$ | async as user" mat-align-tabs="center" class="h-full">
+                <ng-container *ngIf="user.getRoles().member">
+                    <mat-tab label="Persönliche Infos">
+                        <div class="p-6 h-lg">
+                            <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+                                <div fxFlex="auto">
+                                    <div *ngIf="!currentUser" fxLayoutAlign="center center">
+                                        <mat-spinner color="primary"
+                                                     diameter="25"></mat-spinner>
                                     </div>
+                                    <form *ngIf="currentUser" (ngSubmit)="send()" class="px-6 py-4" fxLayout="column"
+                                          [formGroup]="form">
+                                        <div fxLayout="column" fxFlex formGroupName="info">
+                                            <mat-form-field fxFlex="auto" appearance="standard">
+                                                <mat-label>Vorname</mat-label>
+                                                <input matInput formControlName="firstName">
+                                                <div fxLayout matSuffix>
+                                                    <button (click)="form.get('info.firstName').disabled ?  onActivateForm('firstName') : onDeactivateForm('firstName') "
+                                                            [matTooltip]="form.get('info.firstName').disabled ? 'Bearbeiten' : 'Speichern'"
+                                                            class="font-xs" mat-icon-button matSuffix
+                                                            type="button">
+                                                        <mat-icon>
+                                                            {{form.get('info.firstName').disabled ? 'edit' : 'save' }}
+                                                        </mat-icon>
+                                                    </button>
+                                                </div>
+                                            </mat-form-field>
+                                            <mat-form-field fxFlex="auto" appearance="standard">
+                                                <mat-label>Nachname</mat-label>
+                                                <input matInput required formControlName="lastName">
+                                                <div fxLayout matSuffix>
+                                                    <button
+                                                            (click)="form.get('info.lastName').disabled ?  onActivateForm('lastName') : onDeactivateForm('lastName') "
+                                                            [matTooltip]="form.get('info.lastName').disabled ? 'Bearbeiten' : 'Speichern'"
+                                                            class="font-xs" mat-icon-button
+                                                            matSuffix type="button">
+                                                        <mat-icon>
+                                                            {{form.get('info.lastName').disabled ? 'edit' : 'save'}}
+                                                        </mat-icon>
+                                                    </button>
+                                                </div>
+                                            </mat-form-field>
+                                            <mat-form-field fxFlex="auto" appearance="standard">
+                                                <mat-label>E-Mail</mat-label>
+                                                <input matInput required formControlName="email">
+                                                <div fxLayout matSuffix>
+                                                    <button
+                                                            (click)="form.get('info.email').disabled ?  onActivateForm('email') : onDeactivateForm('email')"
+                                                            [matTooltip]="form.get('info.email').disabled ? 'Bearbeiten' : 'Speichern'"
+                                                            class="font-xs" mat-icon-button
+                                                            matSuffix type="button">
+                                                        <mat-icon>
+                                                            {{form.get('info.email').disabled ? 'edit' : 'save'}}
+                                                        </mat-icon>
+
+                                                    </button>
+                                                </div>
+                                            </mat-form-field>
+                                        </div>
 
 
-                                        <mat-form-field  fxFlex="auto" appearance="standard">
+                                        <mat-form-field fxFlex="auto" appearance="standard">
                                             <mat-label>Passwort ändern</mat-label>
                                             <input [type]="inputType" matInput formControlName="password">
                                             <div matSuffix fxLayout="row">
-                                                <button (click)="togglePassword()" mat-icon-button  type="button">
+                                                <button (click)="togglePassword()" mat-icon-button type="button">
                                                     <mat-icon *ngIf="visible">visibility</mat-icon>
                                                     <mat-icon *ngIf="!visible">visibility_off</mat-icon>
                                                 </button>
-                                                <button *ngIf="form.get('password').value !== ''" mat-icon-button  type="button">
+                                                <button *ngIf="form.get('password').value !== ''" mat-icon-button
+                                                        type="button">
                                                     <mat-icon>save</mat-icon>
                                                 </button>
                                             </div>
 
-<!--                                            <mat-error *ngIf="form.get('password').value && !form.get('password').valid">Oops, das Password erfüllt nicht unsere Anforderungen.</mat-error>-->
+                                            <!--                                            <mat-error *ngIf="form.get('password').value && !form.get('password').valid">Oops, das Password erfüllt nicht unsere Anforderungen.</mat-error>-->
                                         </mat-form-field>
 
 
-
-                                    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
-                                        <button routerLink="/" mat-button type="button">ABBRECHEN</button>
-                                        <button [color]="!isLoading ? 'primary' : null" mat-flat-button type="submit" >
-                                            <div  *ngIf="isLoading" class="h-10 w-full" fxLayout="row" fxLayoutAlign="center center">
-                                                <mat-spinner color="accent" diameter="25"></mat-spinner>
-                                            </div>
-                                            <span *ngIf="!isLoading">SPEICHERN</span>
-                                        </button>
+                                        <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
+                                            <button routerLink="/" mat-button type="button">ABBRECHEN</button>
+                                            <button [color]="!isLoading ? 'primary' : null" mat-flat-button
+                                                    type="submit">
+                                                <div *ngIf="isLoading" class="h-10 w-full" fxLayout="row"
+                                                     fxLayoutAlign="center center">
+                                                    <mat-spinner color="accent" diameter="25"></mat-spinner>
+                                                </div>
+                                                <span *ngIf="!isLoading">SPEICHERN</span>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="Mein Konto">
+                        <div class="p-6 h-lg">
+                            <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="20px">
+                                <div fxLayout="row" fxLayoutAlign="space-evenly center">
+                                    <dg-widget-quick-value-center iconClass="text-primary bg-primary-light"
+                                                                  [icon]="'account_balance'"
+                                                                  [showButton]="false"
+                                                                  gdColumn.lt-sm="1"
+                                                                  label="Pro Downloads verfügbar"
+                                                                  [value]="'67'"></dg-widget-quick-value-center>
+                                    <div fxLayout="column" fxLayoutAlign="space-evenly center">
+                                        <button mat-raised-button color="primary">Konto aufladen</button>
+                                        <button class="mt-8" mat-button color="primary">Support kontaktieren</button>
                                     </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </mat-tab>
-                <mat-tab label="Mein Konto">
-                    <div class="p-6 h-lg">
-                        <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="20px">
-                            <div fxLayout="row" fxLayoutAlign="space-evenly center">
-                                <dg-widget-quick-value-center iconClass="text-primary bg-primary-light"
-                                                              [icon]="'account_balance'"
-                                                              [showButton]="false"
-                                                              gdColumn.lt-sm="1"
-                                                              label="Pro Downloads verfügbar"
-                                                              [value]="'67'"></dg-widget-quick-value-center>
-                                <div fxLayout="column"  fxLayoutAlign="space-evenly center">
-                                    <button mat-raised-button color="primary">Konto aufladen</button>
-                                    <button class="mt-8" mat-button color="primary">Support kontaktieren</button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </mat-tab>
-                <mat-tab label="Letzte Käufe">
-                    <div class="p-6 h-lg">
-                        <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="20px">
-                            <div fxFlex="auto">
-                                <div class="px-6 py-4 h-full" fxLayout="column" fxLayoutAlign="center">
-                                    <mat-accordion hideToggle>
-                                        <mat-expansion-panel class="mat-elevation-z0" *ngFor="let order of orders">
-                                            <mat-expansion-panel-header class="mx-auto">
-                                                <mat-panel-title class="text-primary">
-                                                    {{order.date | date: 'fullDate'}} | Anzahl: {{order.amount}} Pro Downloads
-                                                </mat-panel-title>
-                                            </mat-expansion-panel-header>
-                                            <ng-template matExpansionPanelContent>
-                                                <div class="mat-body">
-                                                    Anzahl: 5 Pro Downloads
-                                                </div>
-                                                <mat-divider class="my-3"></mat-divider>
-                                                <div class="mat-body">
-                                                    Bezahlt mit: PayPal
-                                                </div>
-                                            </ng-template>
-                                        </mat-expansion-panel>
-                                    </mat-accordion>
-                                    <mat-paginator hidePageSize class="mat-elevation-z0" [length]="100">
-                                    </mat-paginator>
+                    </mat-tab>
+                    <mat-tab label="Letzte Käufe">
+                        <div class="p-6 h-lg">
+                            <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="20px">
+                                <div fxFlex="auto">
+                                    <div class="px-6 py-4 h-full" fxLayout="column" fxLayoutAlign="center">
+                                        <mat-accordion hideToggle>
+                                            <mat-expansion-panel class="mat-elevation-z0" *ngFor="let order of orders">
+                                                <mat-expansion-panel-header class="mx-auto">
+                                                    <mat-panel-title class="text-primary">
+                                                        {{order.date | date: 'fullDate'}} | Anzahl: {{order.amount}} Pro
+                                                        Downloads
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+                                                <ng-template matExpansionPanelContent>
+                                                    <div class="mat-body">
+                                                        Anzahl: 5 Pro Downloads
+                                                    </div>
+                                                    <mat-divider class="my-3"></mat-divider>
+                                                    <div class="mat-body">
+                                                        Bezahlt mit: PayPal
+                                                    </div>
+                                                </ng-template>
+                                            </mat-expansion-panel>
+                                        </mat-accordion>
+                                        <mat-paginator hidePageSize class="mat-elevation-z0" [length]="100">
+                                        </mat-paginator>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </mat-tab>
+                    </mat-tab>
+                </ng-container>
+                <ng-container *ngIf="user.getRoles().creator">
+                    <mat-tab label="Persönliche Infos">
+                        <div class="p-6 h-lg">
+                            <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px">
+                                <div fxLayout="row" class="w-full" fxLayoutAlign="space-evenly center">
+                                    <div class="p-4 text-center  trans-ease-out relative">
+                                        <img src="/assets/img/illustrations/idea.svg" class="avatar h-32 w-32 mx-auto"
+                                             matRipple>
+                                    </div>
+                                    <h2 class="mat-display-1 mb-1 mt-3">{{ user.firstName + '' + user.lastName }}</h2>
+                                </div>
+                                <div fxLayout="row" fxLayoutAlign="center center" class="w-full">
+                                    <h4 class="mat-subheading-2 mb-1 mt-3">Irgendein Spruch</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="Meine Aufnahmen">
+                        <div class="p-6 h-lg">
+                            <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="20px">
+                                <div fxLayout="row" fxLayoutAlign="space-evenly center">
+                                    <table [dataSource]="dataSource" class="w-full" mat-table matSort>
+
+                                        <!--- Note that these columns can be defined in any order.
+                                              The actual rendered columns are set as a property on the row definition" -->
+
+                                        <!-- Checkbox Column -->
+                                        <ng-container matColumnDef="checkbox">
+                                            <th *matHeaderCellDef mat-header-cell>
+                                                <mat-checkbox (change)="$event ? masterToggle() : null"
+                                                              [checked]="selection.hasValue() && isAllSelected()"
+                                                              [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                                              color="primary">
+                                                </mat-checkbox>
+                                            </th>
+                                            <td *matCellDef="let row" class="w-4" mat-cell>
+                                                <mat-checkbox (change)="$event ? selection.toggle(row) : null"
+                                                              (click)="$event.stopPropagation()"
+                                                              [checked]="selection.isSelected(row)"
+                                                              color="primary">
+                                                </mat-checkbox>
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Image Column -->
+                                        <ng-container matColumnDef="image">
+                                            <th *matHeaderCellDef mat-header-cell></th>
+                                            <td *matCellDef="let row" class="w-8 min-w-8 pr-0" mat-cell>
+                                                <img [src]="row['imageSrc']" class="avatar h-8 w-8 align-middle">
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Text Columns -->
+                                        <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
+                                            <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
+                                                <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> {{ column.label }}</th>
+                                                <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>{{ row[column.property] }}</td>
+                                            </ng-container>
+                                        </ng-container>
+
+                                        <!-- Contact Column -->
+                                        <ng-container matColumnDef="contact">
+                                            <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
+                                            <td *matCellDef="let row" mat-cell>
+                                                <div class="flex">
+                                                    <a (click)="$event.stopPropagation()"
+                                                       class="w-8 h-8 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary-light"
+                                                       mat-icon-button>
+                                                        <mat-icon>add</mat-icon>
+                                                    </a>
+
+                                                    <a (click)="$event.stopPropagation()"
+                                                       class="w-8 h-8 leading-none flex items-center justify-center ml-1 hover:bg-hover text-teal bg-teal-light"
+                                                       mat-icon-button>
+                                                        <mat-icon>add</mat-icon>
+                                                    </a>
+
+                                                    <a (click)="$event.stopPropagation()"
+                                                       class="w-8 h-8 leading-none flex items-center justify-center ml-1 hover:bg-hover text-green bg-green-light"
+                                                       mat-icon-button>
+                                                        <mat-icon>add</mat-icon>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Label Column -->
+                                        <ng-container matColumnDef="labels">
+                                            <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Labels</th>
+                                            <td *matCellDef="let row" mat-cell>
+                                                <div (click)="$event.stopPropagation()" fxLayoutAlign="start center" fxLayoutGap="4px">
+                                                    <div *ngFor="let label of row.labels"
+                                                         [ngClass]="[label.textClass, label.bgClass]"
+                                                         class="rounded px-2 py-1 font-medium text-xs"
+                                                         fxFlex="none">
+                                                        {{ label.text }}
+                                                    </div>
+                                                    <div (click)="labelSelect.open()"
+                                                         class="text-secondary bg-base text-hint cursor-pointer hover:bg-hover"
+                                                         fxFlex="none"
+                                                         fxLayout="row"
+                                                         fxLayoutAlign="center center">
+                                                        <mat-icon >add</mat-icon>
+                                                    </div>
+                                                    <mat-select #labelSelect="matSelect"
+                                                                (selectionChange)="onLabelChange($event, row)"
+                                                                [value]="row.labels"
+                                                                class="invisible w-0 h-0 text-sm"
+                                                                fxFlex="0 1 0px"
+                                                                multiple>
+                                                        <mat-option *ngFor="let label of labels" [value]="label">
+                                                            <div [ngClass]="label.previewClass"
+                                                                 class="h-6 w-6 align-middle ltr:mr-2 rtl:ml-2 rounded inline-block"></div>
+                                                            <span>{{ label.text }}</span>
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </div>
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Action Column -->
+                                        <ng-container matColumnDef="actions">
+                                            <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
+                                            <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>
+                                                <button (click)="$event.stopPropagation()"
+                                                        [matMenuTriggerData]="{ customer: row }"
+                                                        [matMenuTriggerFor]="actionsMenu"
+                                                        mat-icon-button
+                                                        type="button">
+                                                    <mat-icon>add</mat-icon>
+                                                </button>
+                                            </td>
+                                        </ng-container>
+
+                                        <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
+                                        <tr (click)="updateCustomer(row)"
+                                            *matRowDef="let row; columns: visibleColumns;"
+                                            class="hover:bg-hover trans-ease-out cursor-pointer"
+                                            mat-row></tr>
+                                    </table>
+
+                                    <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" class="sticky left-0"></mat-paginator>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="Meine Einnahmen">
+                        <div class="p-6 h-lg">
+                            <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="20px">
+                                <div fxFlex="auto">
+                                    <div class="px-6 py-4 h-full" fxLayout="column" fxLayoutAlign="center">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-tab>
+                </ng-container>
+
             </mat-tab-group>
         </div>
     </dg-page-layout-content>
 
 </dg-page-layout>
+
+
+<mat-menu #columnFilterMenu="matMenu" xPosition="before" yPosition="below">
+    <button (click)="toggleColumnVisibility(column, $event)" *ngFor="let column of columns"
+            class="checkbox-item mat-menu-item">
+        <mat-checkbox (click)="$event.stopPropagation()" [(ngModel)]="column.visible" color="primary">
+            {{ column.label }}
+        </mat-checkbox>
+    </button>
+</mat-menu>
+
+<mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
+    <ng-template let-customer="customer" matMenuContent>
+        <button (click)="updateCustomer(customer)" mat-menu-item>
+            <mat-icon >add</mat-icon>
+            <span>Modify</span>
+        </button>
+        <button (click)="deleteCustomer(customer)" mat-menu-item>
+            <mat-icon >add</mat-icon>
+            <span>Delete</span>
+        </button>
+    </ng-template>
+</mat-menu>

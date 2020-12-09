@@ -15,11 +15,16 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatPaginatorModule} from "@angular/material/paginator";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {WidgetQuickValueCenterModule} from "../../../@dg/components/widgets/widget-quick-value-center/widget-quick-value-center.module";
+import {MatRippleModule} from "@angular/material/core";
+import {MatTableModule} from "@angular/material/table";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatSortModule} from "@angular/material/sort";
+import {MatMenuModule} from "@angular/material/menu";
 
 
 @NgModule({
@@ -43,7 +48,13 @@ import {WidgetQuickValueCenterModule} from "../../../@dg/components/widgets/widg
         MatProgressSpinnerModule,
         MatTooltipModule,
         MatSnackBarModule,
-        WidgetQuickValueCenterModule
+        WidgetQuickValueCenterModule,
+        MatRippleModule,
+        MatTableModule,
+        MatCheckboxModule,
+        MatSortModule,
+        MatMenuModule,
+        FormsModule
     ]
 })
 export class AccountModule {

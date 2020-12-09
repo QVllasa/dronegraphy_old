@@ -1,23 +1,37 @@
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
 import {Video} from "../models/video.interface";
+import {map, take, takeUntil, takeWhile, tap} from "rxjs/operators";
+import {StorageMap} from "@ngx-pwa/local-storage";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
-export class OrderService{
+export class OrderService {
 
-  cart$: BehaviorSubject<Video[]> = new BehaviorSubject<Video[]>(null)
+    cart$: BehaviorSubject<Video[]> = new BehaviorSubject<Video[]>(null)
 
-  constructor() {
-    let storedCart = JSON.parse(localStorage.getItem("cart"))
-    this.cart$.next(storedCart);
-    this.cart$.subscribe(items => {
-      console.log(items)
-      if (items){
-        storedCart.put(items)
-        localStorage.setItem("cart", JSON.stringify(items))
-      }
-    })
-  }
+
+    constructor(private storage: StorageMap) {
+        // this.storage.get('cart')
+        //     .pipe(
+        //         takeWhile(cart => this.cart$.value !== null, true),
+        //         tap((items:Video[]) => {
+        //             if(items){
+        //                 console.log('get:', items)
+        //                 this.cart$.next(items)
+        //             }
+        //         })
+        //     ).subscribe()
+
+        this.cart$.subscribe(items => {
+            // if (items) {
+            //     console.log('add', items)
+            //     this.storage.set('cart', items).subscribe()
+            // }
+        })
+    }
+
+    ngOnInit() {
+    }
 }

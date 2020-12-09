@@ -3,6 +3,7 @@ import videojs from 'video.js';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 import {ActivatedRoute, Params} from '@angular/router';
 import {VideoService} from "../../../services/video.service";
+import videojsqualityselector from 'videojs-hls-quality-selector';
 
 
 // declare var require: any;
@@ -54,9 +55,10 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // instantiate Video.js
-    this.player = videojs(this.target.nativeElement, this.options, function onPlayerReady() {
-      this.hlsQualitySelector();
-    });
+    this.player = videojs(this.target.nativeElement, this.options, function onPlayerReady() {});
+
+    this.player.hlsQualitySelector = videojsqualityselector;
+    this.player.hlsQualitySelector();
 
     if (this.options.videopage) {
       this.route.params.subscribe((params: Params) => {

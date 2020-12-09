@@ -14,11 +14,11 @@
         <div fxFlex fxLayoutAlign="end" class="-mx-1 " fxLayoutGap="8px">
             <button *ngIf="authService.user$ | async as user" mat-icon-button>
                 <ng-container *ngIf="user.getRoles()">
-                    <div *ngIf="user.getRoles().member"
+                    <div  *ngIf="user.getRoles().member"
                          routerLink="/checkout"
-                         class="rounded-full flex items-center justify-center text-primary bg-primary-light cursor-pointer h-9 w-9">
-                        <mat-icon *ngIf="!(orderService.cart$ | async)">shopping_cart</mat-icon>
-                        <mat-icon *ngIf="orderService.cart$ | async" [matBadge]="orderService.cart$.value.length" [matBadgeColor]="'warn'">shopping_cart</mat-icon>
+                         class="focus:outline-none rounded-full flex items-center justify-center text-primary bg-primary-light cursor-pointer h-full w-full">
+                        <mat-icon  *ngIf="(!orderService.cart$.value) || (orderService.cart$.value.length === 0)" [matBadge]="0" class="material-icons-outlined">shopping_bag</mat-icon>
+                        <mat-icon *ngIf="orderService.cart$.value && (orderService.cart$.value.length > 0)" [matBadge]="orderService.cart$.value.length" [matBadgeColor]="'warn'">shopping_bag</mat-icon>
                     </div>
                     <div *ngIf="user.getRoles().creator"
                          class="rounded-full flex items-center justify-center text-primary bg-primary-light cursor-pointer h-9 w-9">
