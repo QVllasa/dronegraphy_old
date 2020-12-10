@@ -39,6 +39,18 @@
               "path": "./webpack.config.js"
             },
             "allowedCommonJsDependencies": [
+              "@angular/fire/firestore",
+              "@videojs/vhs-utils/dist/codecs.js",
+              "@videojs/vhs-utils/dist/resolve-url.js",
+              "@babel/runtime/helpers/inherits",
+              "@babel/runtime/helpers/construct",
+              "@babel/runtime/helpers/possibleConstructorReturn",
+              "@videojs/xhr",
+              "tsparticles",
+              "global",
+              "mux.js",
+              "videojs-vtt.js",
+              "@babel",
               "simplebar",
               "highlight.js",
               "faker",

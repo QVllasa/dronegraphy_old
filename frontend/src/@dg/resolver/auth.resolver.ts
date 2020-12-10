@@ -17,7 +17,6 @@ export class AuthResolver implements Resolve<User>   {
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<User> | Promise<User> | User {
         return this.authService.afAuth.authState.pipe(
-            take(1),
             switchMap(user => {
                 if (!user) {
                     this.authService.user$.next(null);
@@ -29,7 +28,6 @@ export class AuthResolver implements Resolve<User>   {
                     })
                 );
             }),
-            take(1),
             switchMap(user => {
 
                 if (!user) {
@@ -39,7 +37,6 @@ export class AuthResolver implements Resolve<User>   {
                 this.authService.user$.next(new User(user.uid, user.email, user.firstName, user.lastName));
                 return this.authService.afAuth.idTokenResult;
             }),
-            take(1),
             switchMap(token => {
                 if (!token) {
                     this.authService.user$.next(null);
