@@ -4,19 +4,20 @@ import {Observable} from 'rxjs';
 import {map, take, tap} from "rxjs/operators";
 import {AngularFireAuth} from "@angular/fire/auth";
 import {AuthenticationService} from "../services/auth.service";
+import {UserService} from "../services/user.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthGuard implements CanActivate, CanLoad {
 
-    constructor(private authService: AuthenticationService, private router: Router) {
+    constructor(private userService: UserService, private router: Router) {
     }
 
     canActivate(
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        return this.authService.user$.pipe(
+        return this.userService.user$.pipe(
             map(user => !!user),
             tap(isLoggedIn => {
                 if (!isLoggedIn){
@@ -27,7 +28,7 @@ export class AuthGuard implements CanActivate, CanLoad {
     }
 
     canLoad(route: Route, segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        return this.authService.user$.pipe(
+        return this.userService.user$.pipe(
             map(user => !!user),
             tap(isLoggedIn => {
                 if (!isLoggedIn){

@@ -7,8 +7,8 @@
             <div class="sticky top-12 text-center shadow-md bg-white pb-8">
                 <tree-checkboxes class="bg-green"></tree-checkboxes>
                 <div fxLayout="column" fxLayoutAlign="center center">
-                    <button *ngIf="!(authService.user$ | async)" mat-flat-button color="primary" class="mt-8">Starten</button>
-                    <button *ngIf="authService.user$ | async" mat-flat-button color="primary" class="mt-8">Preise</button>
+                    <button *ngIf="!(userService.user$ | async)" mat-flat-button color="primary" class="mt-8">Starten</button>
+                    <button *ngIf="userService.user$ | async" mat-flat-button color="primary" class="mt-8">Preise</button>
                     <button mat-button color="primary" class="mt-8">Alle Piloten</button>
                 </div>
             </div>

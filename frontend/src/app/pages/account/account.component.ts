@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from "../../../@dg/services/auth.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {Link} from "../../../@dg/models/link.interface";
 
 
 @Component({
@@ -10,9 +11,24 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 })
 export class AccountComponent implements OnInit {
 
+    links: Link[] = [
+        {
+            label: 'Profil',
+            route: './',
+            routerLinkActiveOptions: { exact: true }
+        },
+        {
+            label: 'Meine Aufnahmen',
+            route: './footage'
+        },
+        {
+            label: 'Einnahmen',
+            route: './income',
+            disabled: false
+        }
+    ];
 
-
-    constructor(public authService: AuthenticationService) {
+    constructor(public userService: AuthenticationService) {
     }
 
     ngOnInit() {

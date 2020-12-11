@@ -12,7 +12,7 @@
     </div>
     <ng-container>
         <div fxFlex fxLayoutAlign="end" class="-mx-1 " fxLayoutGap="8px">
-            <button *ngIf="authService.user$ | async as user" mat-icon-button>
+            <button *ngIf="userService.user$ | async as user" mat-icon-button>
                 <ng-container *ngIf="user.getRoles()">
                     <div  *ngIf="user.getRoles().member"
                          routerLink="/checkout"
@@ -26,7 +26,7 @@
                     </div>
                 </ng-container>
             </button>
-            <button *ngIf="!(authService.user$ | async)" mat-flat-button color="primary" routerLink="/register">
+            <button *ngIf="!(userService.user$ | async)" mat-flat-button color="primary" routerLink="/register">
                 Starten
             </button>
             <button mat-flat-button class="text-primary" routerLink="/pricing">Preise</button>

@@ -5,6 +5,7 @@ import icMail from '@iconify/icons-ic/twotone-mail';
 import {AuthenticationService} from '../../../../@dg/services/auth.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Subscription} from 'rxjs';
+import {UserService} from "../../../../@dg/services/user.service";
 
 @Component({
     selector: 'vex-forgot-password',
@@ -26,6 +27,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
 
     constructor(
         private authService: AuthenticationService,
+        private userService: UserService,
         private router: Router,
         private fb: FormBuilder,
         private _snackBar: MatSnackBar
@@ -35,7 +37,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
     ngOnInit() {}
 
     send() {
-        if (this.authService.user$.value) {
+        if (this.userService.user$.value) {
             this._snackBar.open('Bitte erst abmelden.', 'SCHLIESSEN');
             this.router.navigate(['/']).then();
             return;

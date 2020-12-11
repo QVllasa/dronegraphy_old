@@ -5,6 +5,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {AuthenticationService} from '../../../../@dg/services/auth.service';
 import {Subscription} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
+import {UserService} from "../../../../@dg/services/user.service";
 
 
 @Component({
@@ -26,6 +27,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 private fb: FormBuilder,
                 private cd: ChangeDetectorRef,
                 public authService: AuthenticationService,
+                private userService: UserService,
                 private _snackBar: MatSnackBar
     ) {
 
@@ -42,7 +44,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     send() {
         this.form.disable()
-        if (this.authService.user$.value) {
+        if (this.userService.user$.value) {
             this.form.enable()
             this._snackBar.open('Bitte vorher abmelden.', 'SCHLIESSEN');
             return;

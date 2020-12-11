@@ -44,7 +44,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     }
 
     send() {
-        if (this.authService.user$.value) {
+        if (this.userService.user$.value) {
             this._snackBar.open('Du bist bereits angemeldet.', 'SCHLIESSEN');
             this.router.navigate(['/']).then();
             return;

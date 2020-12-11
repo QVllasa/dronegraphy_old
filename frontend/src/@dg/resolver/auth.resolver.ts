@@ -20,7 +20,7 @@ export class AuthResolver implements Resolve<User> {
         return this.authService.afAuth.authState.pipe(
             switchMap(user => {
                 if (!user) {
-                    this.authService.user$.next(null);
+                    this.userService.user$.next(null);
                     return of(null);
                 }
                 return this.userService.getUser(user.uid).pipe(
@@ -32,18 +32,18 @@ export class AuthResolver implements Resolve<User> {
             switchMap((user: IUser) => {
 
                 if (!user) {
-                    this.authService.user$.next(null);
+                    this.userService.user$.next(null);
                     return of(null);
                 }
-                this.authService.user$.next(new User().deserialize(user));
+                this.userService.user$.next(new User().deserialize(user));
                 return this.authService.afAuth.idTokenResult;
             }),
             switchMap((token: firebase.auth.IdTokenResult) => {
                 if (!token) {
-                    this.authService.user$.next(null);
+                    this.userService.user$.next(null);
                     return of(null);
                 }
-                return this.authService.user$.pipe(
+                return this.userService.user$.pipe(
                     tap(user => {
                         if (!user) {
                             return of(null);

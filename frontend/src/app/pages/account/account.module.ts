@@ -25,7 +25,6 @@ import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatSortModule} from "@angular/material/sort";
 import {MatMenuModule} from "@angular/material/menu";
-import {CreatorModule} from "./creator/creator.module";
 import {MemberModule} from "./member/member.module";
 
 
@@ -57,7 +56,6 @@ import {MemberModule} from "./member/member.module";
         MatSortModule,
         MatMenuModule,
         FormsModule,
-        CreatorModule,
         MemberModule
     ]
 })

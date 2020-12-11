@@ -3,19 +3,29 @@
         <h1 fxLayoutAlign="center" class="mat-display-2">Mein Account</h1>
     </dg-page-layout-header>
     <dg-page-layout-content fxLayoutAlign="center center" dgContainer>
-        <ng-container *ngIf="authService.user$ | async as user">
-            <div class="card w-full">
-                <ng-container *ngIf="user.getRoles().member">
-                    <dg-member></dg-member>
-                </ng-container>
-                <ng-container *ngIf="user.getRoles().creator">
-                    <dg-creator></dg-creator>
-                </ng-container>
+        <div class="card w-full">
+            <div *ngIf="!(userService.user$ | async)" fxLayoutAlign="center center">
+                <mat-spinner color="primary"
+                             diameter="25"></mat-spinner>
             </div>
-        </ng-container>
-
+            <ng-container *ngIf="authService.user$ | async as user">
+                <nav class="vex-tabs vex-tabs-dense border-0" mat-tab-nav-bar mat-align-tabs="center">
+                    <a #rla="routerLinkActive"
+                       *ngFor="let link of links"
+                       [active]="rla.isActive"
+                       [disabled]="link.disabled"
+                       [routerLink]="link.route"
+                       mat-tab-link
+                       queryParamsHandling="preserve"
+                       [routerLinkActiveOptions]="link.routerLinkActiveOptions || { exact: false }"
+                       routerLinkActive>
+                        {{ link.label }}
+                    </a>
+                </nav>
+            </ng-container>
+            <router-outlet></router-outlet>
+        </div>
     </dg-page-layout-content>
-
 </dg-page-layout>
 
 

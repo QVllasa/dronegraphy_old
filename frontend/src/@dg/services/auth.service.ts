@@ -16,7 +16,7 @@ import {getFirstName, getLastName} from '../utils/split-names';
 })
 export class AuthenticationService implements OnDestroy {
 
-    user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
+
     logout$: Subscription;
     stayLoggedIn = false;
 
@@ -60,7 +60,7 @@ export class AuthenticationService implements OnDestroy {
                 return this.userService.getUser(user.uid);  // GET
             }),
             switchMap(user => {
-                this.user$.next(new User().deserialize(user));
+                this.userService.user$.next(new User().deserialize(user));
                 return this.afAuth.authState;
             }),
             switchMap(state => {
@@ -68,7 +68,7 @@ export class AuthenticationService implements OnDestroy {
                 return from(state.getIdTokenResult(true));
             }),
             switchMap(token => {
-                return this.user$.pipe(
+                return this.userService.user$.pipe(
                     map(user => {
                         user.setClaims(Object.assign(token.claims));
                     })
@@ -84,7 +84,7 @@ export class AuthenticationService implements OnDestroy {
                 return this.userService.getUser(res.user.uid);
             }),
             switchMap(user => {
-                this.user$.next(new User().deserialize(user));
+                this.userService.user$.next(new User().deserialize(user));
                 if (this.stayLoggedIn){
                     localStorage.setItem("currentUser", JSON.stringify(user))
                 }
@@ -95,7 +95,7 @@ export class AuthenticationService implements OnDestroy {
                 if (this.stayLoggedIn){
                     localStorage.setItem("idToken", JSON.stringify(token.token))
                 }
-                return this.user$.pipe(
+                return this.userService.user$.pipe(
                     map(user => {
                         user.setClaims(Object.assign(token.claims));
                     })
@@ -153,7 +153,7 @@ export class AuthenticationService implements OnDestroy {
             }))
             .subscribe(
                 () => {
-                    this.user$.next(null);
+                    this.userService.user$.next(null);
 
                 },
                 error => {

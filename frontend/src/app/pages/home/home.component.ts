@@ -6,6 +6,7 @@ import {ActivatedRoute} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Video} from "../../../@dg/models/video.model";
 import {VideoService} from "../../../@dg/services/video.service";
+import {UserService} from "../../../@dg/services/user.service";
 
 @Component({
   selector: 'dg-home',
@@ -17,7 +18,7 @@ export class HomeComponent implements OnInit {
   videos: Video[] = [];
   initialBatch = 27;
 
-  constructor(public authService: AuthenticationService,
+  constructor(public userService: UserService,
               private activatedRoute: ActivatedRoute,
               private videoService: VideoService,
               private _snackBar: MatSnackBar

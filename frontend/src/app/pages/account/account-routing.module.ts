@@ -8,7 +8,21 @@ const routes: Routes = [
   {
     path: '',
     component: AccountComponent,
-    canLoad: [AuthGuard]
+    canLoad: [AuthGuard],
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./creator/profile/profile.module').then(m => m.ProfileModule)
+      },
+      {
+        path: 'footage',
+        loadChildren: () => import('./creator/footage/footage.module').then(m => m.FootageModule)
+      },
+      {
+        path: 'income',
+        loadChildren: () => import('./creator/income/income.module').then(m => m.IncomeModule)
+      }
+    ]
   }
 ];
 
