@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {Router} from '@angular/router';
-import {Video} from "../../../models/video.interface";
+import {Video} from "../../../models/video.model";
 
 
 //
@@ -33,16 +33,16 @@ export class VideoItemComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.poster = this.domSanitizer.bypassSecurityTrustStyle(`url(${this.videoItem.poster})`);
+        this.poster = this.domSanitizer.bypassSecurityTrustStyle(`url(${this.videoItem.getPoster()})`);
         this.options = {
-            poster: this.videoItem.poster,
+            poster: this.videoItem.getPoster(),
             fluid: false,
             aspectRatio: '16:9',
             autoplay: true,
             controls: false,
             inactivityTimeout: 0,
             videopage: false,
-            sources: [{src: this.videoItem.itemPath, type: 'application/x-mpegURL'}]
+            sources: [{src: this.videoItem.getItemPath(), type: 'application/x-mpegURL'}]
         }
 
     }

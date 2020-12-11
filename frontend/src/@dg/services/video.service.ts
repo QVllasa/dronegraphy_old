@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 
-import {Video} from "../models/video.interface";
+import {Video} from "../models/video.model";
 import {Videos} from "../../static-data/video-data";
 
 @Injectable({

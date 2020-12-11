@@ -4,7 +4,7 @@ import {User} from "../../../@dg/models/user.model";
 import {of} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Video} from "../../../@dg/models/video.interface";
+import {Video} from "../../../@dg/models/video.model";
 import {VideoService} from "../../../@dg/services/video.service";
 
 @Component({
@@ -25,7 +25,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.videos = this.videoService.getVideos(0, this.initialBatch);
-
   }
 
 }

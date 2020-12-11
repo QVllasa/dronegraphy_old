@@ -1,5 +1,5 @@
 import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {Video} from "../../../models/video.interface";
+import {Video} from "../../../models/video.model";
 import {fadeIn400ms} from "../../../animations/fade-in.animation";
 import {OrderService} from "../../../services/order.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -16,20 +16,20 @@ import {Subscription} from "rxjs";
         <div @fadeIn class="rounded absolute top-0 right-0 left-0 h-full w-full">
             <div class="absolute top-0 right-0 p-1">
                 <mat-chip-list>
-                    <mat-chip *ngIf="videoItem.sell" color="primary" class="text-xxs min-h-full h-6" selected>pro
+                    <mat-chip *ngIf="videoItem.getLicense()" color="primary" class="text-xxs min-h-full h-6" selected>pro
                     </mat-chip>
-                    <mat-chip *ngIf="!videoItem.sell" color="accent" class="text-xxs min-h-full h-6">linzenzfrei
+                    <mat-chip *ngIf="!videoItem.getLicense()" color="accent" class="text-xxs min-h-full h-6">linzenzfrei
                     </mat-chip>
                 </mat-chip-list>
             </div>
             <div class="absolute bottom-0 left-0 text-white cursor-pointer p-1">
                 <mat-label class="text-sm  mat-body-strong">{{videoItem.title}}</mat-label>
                 <br>
-                <mat-label class=" text-sm mat-body-1 font-weight-lighter">Von {{videoItem.creator}}</mat-label>
+                <mat-label class=" text-sm mat-body-1 font-weight-lighter">Von {{videoItem.getCreator().getFullName()}}</mat-label>
             </div>
             <div class="absolute bottom-0 right-0 p-1 text-white">
                 <button (click)="updateCart()" mat-icon-button
-                        [color]="orderService.cart$.value?.includes(videoItem) ? 'warn' : 'primary'">
+                        [color]="orderService.cart$.value?.includes(videoItem) ? 'warn' : null">
                     <mat-icon class="material-icons-round text-xl">{{orderService.cart$.value?.includes(videoItem) ? 'shopping_cart' : 'add_shopping_cart' }}</mat-icon>
                 </button>
                 <button mat-icon-button>

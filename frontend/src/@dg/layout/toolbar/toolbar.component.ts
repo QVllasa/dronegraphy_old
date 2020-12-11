@@ -6,7 +6,7 @@ import {NavigationService} from '../../services/navigation.service';
 import {AuthenticationService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {OrderService} from "../../services/order.service";
-import {Video} from "../../models/video.interface";
+import {Video} from "../../models/video.model";
 
 @Component({
     selector: 'dg-toolbar',

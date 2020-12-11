@@ -1,16 +1,15 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {Observable, of, ReplaySubject} from "rxjs";
-import {Customer} from "../customer.model";
 import {TableColumn} from "../../../../@dg/models/table-column.interface";
 import {MatTableDataSource} from "@angular/material/table";
 import {SelectionModel} from "@angular/cdk/collections";
-import {FormControl} from "@angular/forms";
-import {aioTableData, aioTableLabels} from "../../../../static-data/aio-table-data";
-import {MatPaginator} from "@angular/material/paginator";
-import {MatSort} from "@angular/material/sort";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {aioTableLabels} from "../../../../static-data/aio-table-data";
 import {AuthenticationService} from "../../../../@dg/services/auth.service";
-import {filter} from "rxjs/operators";
+import {filter, takeWhile} from "rxjs/operators";
 import {MatSelectChange} from "@angular/material/select";
+import {Video} from "../../../../@dg/models/video.model";
+import {User} from "../../../../@dg/models/user.model";
 
 @Component({
   selector: 'dg-creator',
@@ -19,12 +18,21 @@ import {MatSelectChange} from "@angular/material/select";
 })
 export class CreatorComponent implements OnInit {
 
-  subject$: ReplaySubject<Customer[]> = new ReplaySubject<Customer[]>(1);
-  data$: Observable<Customer[]> = this.subject$.asObservable();
-  customers: Customer[];
+  @Input() form: FormGroup;
+  currentUser: User = null;
+  fileToUpload: File = null;
+
+  isLoading: boolean;
+
+  inputType = 'password';
+  visible = false;
+
+  subject$: ReplaySubject<Video[]> = new ReplaySubject<Video[]>(1);
+  data$: Observable<Video[]> = this.subject$.asObservable();
+  videos: Video[];
 
   @Input()
-  columns: TableColumn<Customer>[] = [
+  columns: TableColumn<Video>[] = [
     { label: 'Checkbox', property: 'checkbox', type: 'checkbox', visible: true },
     { label: 'Image', property: 'image', type: 'image', visible: true },
     { label: 'Name', property: 'name', type: 'text', visible: true, cssClasses: ['font-medium'] },
@@ -41,8 +49,8 @@ export class CreatorComponent implements OnInit {
   ];
   pageSize = 10;
   pageSizeOptions: number[] = [5, 10, 20, 50];
-  dataSource: MatTableDataSource<Customer> | null;
-  selection = new SelectionModel<Customer>(true, []);
+  dataSource: MatTableDataSource<Video> | null;
+  selection = new SelectionModel<Video>(true, []);
   searchCtrl = new FormControl();
 
   labels = aioTableLabels;
@@ -51,30 +59,56 @@ export class CreatorComponent implements OnInit {
   // @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   // @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  @ViewChild("fileUpload", {static: false}) fileUpload: ElementRef;files  = [];
+
 
 
   constructor(public authService: AuthenticationService) {
   }
 
   ngOnInit(): void {
+    this.isLoading = false
+    this.authService.user$
+        .pipe(
+            takeWhile(user => !user, true),
+            takeWhile(() => !this.currentUser, true)
+        )
+        .subscribe(user => {
+          if (!user) {
+            return
+          } else if (!this.currentUser) {
+            this.currentUser = user;
+            this.form.patchValue({
+              info: {
+                email: this.currentUser.email,
+                firstName: this.currentUser.firstName,
+                lastName: this.currentUser.lastName,
+              },
+            })
+            return
+          }
+        })
+
     //+++++++++++++++++++++++
 
-    this.getData().subscribe(customers => {
-      this.subject$.next(customers);
+    this.getData().subscribe(videos => {
+      this.subject$.next(videos);
     });
 
     this.dataSource = new MatTableDataSource();
 
     this.data$.pipe(
-        filter<Customer[]>(Boolean)
-    ).subscribe(customers => {
-      this.customers = customers;
-      this.dataSource.data = customers;
+        filter<Video[]>(Boolean)
+    ).subscribe(videos => {
+      this.videos = videos;
+      this.dataSource.data = videos;
     });
 
     this.searchCtrl.valueChanges.subscribe(value => this.onFilterChange(value));
 
   }
+
+
 
 
 
@@ -89,7 +123,9 @@ export class CreatorComponent implements OnInit {
    * We are simulating this request here.
    */
   getData() {
-    return of(aioTableData.map(customer => new Customer(customer)));
+    return of(null
+        // aioTableData.map(video => new Video(video))
+    );
   }
 
 
@@ -98,30 +134,30 @@ export class CreatorComponent implements OnInit {
     // this.dataSource.sort = this.sort;
   }
 
-  createCustomer() {
+  createVideo() {
 
   }
 
-  updateCustomer(customer: Customer) {
+  updateVideo(video: Video) {
 
   }
 
-  deleteCustomer(customer: Customer) {
+  deleteVideo(video: Video) {
     /**
      * Here we are updating our local array.
      * You would probably make an HTTP request here.
      */
-    this.customers.splice(this.customers.findIndex((existingCustomer) => existingCustomer.id === customer.id), 1);
-    this.selection.deselect(customer);
-    this.subject$.next(this.customers);
+    this.videos.splice(this.videos.findIndex((existingVideo) => existingVideo.id === video.id), 1);
+    this.selection.deselect(video);
+    this.subject$.next(this.videos);
   }
 
-  deleteCustomers(customers: Customer[]) {
+  deleteVideos(videos: Video[]) {
     /**
      * Here we are updating our local array.
      * You would probably make an HTTP request here.
      */
-    customers.forEach(c => this.deleteCustomer(c));
+    videos.forEach(c => this.deleteVideo(c));
   }
 
   onFilterChange(value: string) {
@@ -157,10 +193,46 @@ export class CreatorComponent implements OnInit {
     return column.property;
   }
 
-  onLabelChange(change: MatSelectChange, row: Customer) {
-    const index = this.customers.findIndex(c => c === row);
-    this.customers[index].labels = change.value;
-    this.subject$.next(this.customers);
+  onLabelChange(change: MatSelectChange, row: Video) {
+    const index = this.videos.findIndex(c => c === row);
+    // this.videos[index].labels = change.value;
+    this.subject$.next(this.videos);
   }
+
+  onActivateForm(type) {
+    this.form.get('info.' + type).enable();
+  }
+
+  onDeactivateForm(type) {
+    this.form.get('info.' + type).disable();
+  }
+
+  send(){
+
+  }
+
+  togglePassword() {
+    if (this.visible) {
+      this.inputType = 'password';
+      this.visible = false;
+      // this.cd.markForCheck();
+    } else {
+      this.inputType = 'text';
+      this.visible = true;
+      // this.cd.markForCheck();
+    }
+  }
+
+  onClick() {
+    const fileUpload = this.fileUpload.nativeElement;fileUpload.onchange = () => {
+      for (let index = 0; index < fileUpload.files.length; index++)
+      {
+        const file = fileUpload.files[index];
+        this.files.push({ data: file, inProgress: false, progress: 0});
+      }
+    };
+    fileUpload.click();
+  }
+
 
 }

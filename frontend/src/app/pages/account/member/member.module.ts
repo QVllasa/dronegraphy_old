@@ -15,6 +15,7 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {RouterModule} from "@angular/router";
 
 
 
@@ -38,7 +39,8 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
         MatExpansionModule,
         MatDividerModule,
         MatSnackBarModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        RouterModule
     ]
 })
 export class MemberModule { }

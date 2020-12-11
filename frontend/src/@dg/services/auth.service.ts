@@ -60,7 +60,7 @@ export class AuthenticationService implements OnDestroy {
                 return this.userService.getUser(user.uid);  // GET
             }),
             switchMap(user => {
-                this.user$.next(new User(user.uid, user.email, user.firstName, user.lastName));
+                this.user$.next(new User().deserialize(user));
                 return this.afAuth.authState;
             }),
             switchMap(state => {
@@ -84,7 +84,7 @@ export class AuthenticationService implements OnDestroy {
                 return this.userService.getUser(res.user.uid);
             }),
             switchMap(user => {
-                this.user$.next(new User(user.uid, user.email, user.firstName, user.lastName));
+                this.user$.next(new User().deserialize(user));
                 if (this.stayLoggedIn){
                     localStorage.setItem("currentUser", JSON.stringify(user))
                 }

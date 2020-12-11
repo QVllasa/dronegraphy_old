@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {IUser, User} from "../../../../@dg/models/user.model";
 import {concat, from, Observable, of} from "rxjs";
@@ -38,7 +38,7 @@ export class MemberComponent implements OnInit {
     }
   ];
 
-  form: FormGroup;
+  @Input() form: FormGroup;
   currentUser: User = null;
   isLoading: boolean;
 
@@ -53,7 +53,6 @@ export class MemberComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = false
-    this.initForm();
     this.authService.user$
         .pipe(
             takeWhile(user => !user, true),
@@ -79,28 +78,7 @@ export class MemberComponent implements OnInit {
 
   }
 
-  initForm() {
-    this.form = new FormGroup({
-      info: new FormGroup({
-        firstName: new FormControl({
-          value: '',
-          disabled: true
-        }, [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-Z ]*')]),
-        lastName: new FormControl({
-          value: '',
-          disabled: true
-        }),
-        email: new FormControl({
-          value: '',
-          disabled: true
-        }, [Validators.required, Validators.email]),
-      }),
-      password: new FormControl({
-        value: '',
-        disabled: false
-      }, [Validators.minLength(8)]),
-    })
-  }
+
 
   changeUserInfo(user: User): Observable<IUser | null> {
     return this.userService.updateUser(user)

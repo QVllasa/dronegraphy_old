@@ -4,12 +4,12 @@
     </dg-page-layout-header>
     <dg-page-layout-content fxLayoutAlign="center center" dgContainer>
         <ng-container *ngIf="authService.user$ | async as user">
-            <div class="card w-full max-w-2xl">
+            <div class="card w-full">
                 <ng-container *ngIf="user.getRoles().member">
-                    <dg-member></dg-member>
+                    <dg-member [form]="form"></dg-member>
                 </ng-container>
                 <ng-container *ngIf="user.getRoles().creator">
-                    <dg-creator></dg-creator>
+                    <dg-creator [form]="form"></dg-creator>
                 </ng-container>
             </div>
         </ng-container>

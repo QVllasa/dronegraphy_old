@@ -1,16 +1,6 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {FormControl} from "@angular/forms";
+import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from "../../../@dg/services/auth.service";
-import {filter} from "rxjs/operators";
-import {Observable, of, ReplaySubject} from "rxjs";
-import {Customer} from "./customer.model";
-import {TableColumn} from "../../../@dg/models/table-column.interface";
-import {MatTableDataSource} from "@angular/material/table";
-import {SelectionModel} from "@angular/cdk/collections";
-import {aioTableData, aioTableLabels} from "../../../static-data/aio-table-data";
-import {MatPaginator} from "@angular/material/paginator";
-import {MatSort} from "@angular/material/sort";
-import {MatSelectChange} from "@angular/material/select";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 
 @Component({
@@ -20,9 +10,39 @@ import {MatSelectChange} from "@angular/material/select";
 })
 export class AccountComponent implements OnInit {
 
+    form: FormGroup;
+
     constructor(public authService: AuthenticationService) {
     }
 
     ngOnInit() {
+        this.initForm();
+    }
+
+    initForm() {
+        this.form = new FormGroup({
+            info: new FormGroup({
+                firstName: new FormControl({
+                    value: '',
+                    disabled: true
+                }, [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-Z ]*')]),
+                lastName: new FormControl({
+                    value: '',
+                    disabled: true
+                }),
+                email: new FormControl({
+                    value: '',
+                    disabled: true
+                }, [Validators.required, Validators.email]),
+                slogan: new FormControl({
+                    value: '',
+                    disabled: true,
+                })
+            }),
+            password: new FormControl({
+                value: '',
+                disabled: false
+            }, [Validators.minLength(8)]),
+        })
     }
 }

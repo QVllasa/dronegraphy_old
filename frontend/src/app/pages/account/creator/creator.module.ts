@@ -12,7 +12,11 @@ import {MatRippleModule} from "@angular/material/core";
 import {MatButtonModule} from "@angular/material/button";
 import {MatSelectModule} from "@angular/material/select";
 import {MatPaginatorModule} from "@angular/material/paginator";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatInputModule} from "@angular/material/input";
+import {RouterModule} from "@angular/router";
 
 
 
@@ -34,7 +38,12 @@ import {FormsModule} from "@angular/forms";
     MatButtonModule,
     MatSelectModule,
     MatPaginatorModule,
-    FormsModule
+    FormsModule,
+    MatProgressSpinnerModule,
+    ReactiveFormsModule,
+    MatTooltipModule,
+    MatInputModule,
+    RouterModule
   ]
 })
 export class CreatorModule { }

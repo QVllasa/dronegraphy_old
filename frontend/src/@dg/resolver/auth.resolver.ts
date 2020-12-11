@@ -1,15 +1,16 @@
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from "@angular/router";
-import { User} from "../models/user.model";
+import {IUser, User} from "../models/user.model";
 import {Observable, of} from "rxjs";
 import {AuthenticationService} from "../services/auth.service";
 import {Injectable} from "@angular/core";
 import {catchError, switchMap, take, tap} from "rxjs/operators";
 import {UserService} from "../services/user.service";
+import firebase from "firebase";
 
 @Injectable({
     providedIn: 'root'
 })
-export class AuthResolver implements Resolve<User>   {
+export class AuthResolver implements Resolve<User> {
 
     constructor(private authService: AuthenticationService,
                 private userService: UserService) {
@@ -28,16 +29,16 @@ export class AuthResolver implements Resolve<User>   {
                     })
                 );
             }),
-            switchMap(user => {
+            switchMap((user: IUser) => {
 
                 if (!user) {
                     this.authService.user$.next(null);
                     return of(null);
                 }
-                this.authService.user$.next(new User(user.uid, user.email, user.firstName, user.lastName));
+                this.authService.user$.next(new User().deserialize(user));
                 return this.authService.afAuth.idTokenResult;
             }),
-            switchMap(token => {
+            switchMap((token: firebase.auth.IdTokenResult) => {
                 if (!token) {
                     this.authService.user$.next(null);
                     return of(null);

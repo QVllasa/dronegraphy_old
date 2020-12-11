@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {DomSanitizer} from "@angular/platform-browser";
 import {VideoService} from "../../../services/video.service";
-import {Video} from "../../../models/video.interface";
+import {Video} from "../../../models/video.model";
 
 
 @Component({
@@ -18,8 +18,7 @@ export class VideoGridComponent implements OnInit {
 
     lastIndex;
 
-    constructor(private domSanitizer: DomSanitizer,
-                private videoService: VideoService) {
+    constructor(private domSanitizer: DomSanitizer) {
     }
 
     ngOnInit() {
