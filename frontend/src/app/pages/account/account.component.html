@@ -6,10 +6,10 @@
         <ng-container *ngIf="authService.user$ | async as user">
             <div class="card w-full">
                 <ng-container *ngIf="user.getRoles().member">
-                    <dg-member [form]="form"></dg-member>
+                    <dg-member></dg-member>
                 </ng-container>
                 <ng-container *ngIf="user.getRoles().creator">
-                    <dg-creator [form]="form"></dg-creator>
+                    <dg-creator></dg-creator>
                 </ng-container>
             </div>
         </ng-container>

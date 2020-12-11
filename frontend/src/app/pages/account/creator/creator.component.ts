@@ -10,6 +10,7 @@ import {filter, takeWhile} from "rxjs/operators";
 import {MatSelectChange} from "@angular/material/select";
 import {Video} from "../../../../@dg/models/video.model";
 import {User} from "../../../../@dg/models/user.model";
+import {Link} from "../../../../@dg/models/link.interface";
 
 @Component({
   selector: 'dg-creator',
@@ -18,14 +19,27 @@ import {User} from "../../../../@dg/models/user.model";
 })
 export class CreatorComponent implements OnInit {
 
-  @Input() form: FormGroup;
-  currentUser: User = null;
-  fileToUpload: File = null;
 
-  isLoading: boolean;
 
-  inputType = 'password';
-  visible = false;
+
+  links: Link[] = [
+    {
+      label: 'Profil',
+      route: './',
+      routerLinkActiveOptions: { exact: true }
+    },
+    {
+      label: 'Meine Aufnahmen',
+      route: './timeline'
+    },
+    {
+      label: 'Einnahmen',
+      route: '',
+      disabled: true
+    }
+  ];
+
+
 
   subject$: ReplaySubject<Video[]> = new ReplaySubject<Video[]>(1);
   data$: Observable<Video[]> = this.subject$.asObservable();
@@ -59,7 +73,6 @@ export class CreatorComponent implements OnInit {
   // @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   // @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  @ViewChild("fileUpload", {static: false}) fileUpload: ElementRef;files  = [];
 
 
 
@@ -67,27 +80,8 @@ export class CreatorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isLoading = false
-    this.authService.user$
-        .pipe(
-            takeWhile(user => !user, true),
-            takeWhile(() => !this.currentUser, true)
-        )
-        .subscribe(user => {
-          if (!user) {
-            return
-          } else if (!this.currentUser) {
-            this.currentUser = user;
-            this.form.patchValue({
-              info: {
-                email: this.currentUser.email,
-                firstName: this.currentUser.firstName,
-                lastName: this.currentUser.lastName,
-              },
-            })
-            return
-          }
-        })
+
+
 
     //+++++++++++++++++++++++
 
@@ -199,40 +193,7 @@ export class CreatorComponent implements OnInit {
     this.subject$.next(this.videos);
   }
 
-  onActivateForm(type) {
-    this.form.get('info.' + type).enable();
-  }
 
-  onDeactivateForm(type) {
-    this.form.get('info.' + type).disable();
-  }
-
-  send(){
-
-  }
-
-  togglePassword() {
-    if (this.visible) {
-      this.inputType = 'password';
-      this.visible = false;
-      // this.cd.markForCheck();
-    } else {
-      this.inputType = 'text';
-      this.visible = true;
-      // this.cd.markForCheck();
-    }
-  }
-
-  onClick() {
-    const fileUpload = this.fileUpload.nativeElement;fileUpload.onchange = () => {
-      for (let index = 0; index < fileUpload.files.length; index++)
-      {
-        const file = fileUpload.files[index];
-        this.files.push({ data: file, inProgress: false, progress: 0});
-      }
-    };
-    fileUpload.click();
-  }
 
 
 }
