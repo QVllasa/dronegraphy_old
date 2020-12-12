@@ -3,7 +3,7 @@ import {IUser, User} from "../models/user.model";
 import {Observable, of} from "rxjs";
 import {AuthenticationService} from "../services/auth.service";
 import {Injectable} from "@angular/core";
-import {catchError, switchMap, take, tap} from "rxjs/operators";
+import {catchError, switchMap, take, takeLast, tap} from "rxjs/operators";
 import {UserService} from "../services/user.service";
 import firebase from "firebase";
 
@@ -52,7 +52,7 @@ export class AuthResolver implements Resolve<User> {
                     })
                 );
             }),
-            take(1),
+            take(1)
         );
     }
 

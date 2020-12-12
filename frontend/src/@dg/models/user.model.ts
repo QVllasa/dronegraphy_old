@@ -1,4 +1,3 @@
-import {Roles} from "./role.interface";
 import {IClaims} from "./JWTTokenDecoded.interface";
 import {Deserializable} from "./deserialize.interface";
 import {Video} from "./video.model";
@@ -26,7 +25,7 @@ export class User implements IUser, Deserializable {
     public favorite?: Video[];
     public slogan?: string;
 
-    #roles: Roles = null
+    #roles: string[] = null;
     #claims: IClaims = null;
 
     deserialize(input: IUser): this {
@@ -42,7 +41,7 @@ export class User implements IUser, Deserializable {
         this.#claims = claims;
     }
 
-    getRoles(): Roles | null {
+    get roles(): string[] | null{
         if (this.#claims) {
             this.#roles = this.#claims["roles"]
         }

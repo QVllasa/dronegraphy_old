@@ -1,0 +1,29 @@
+<div class="p-6 h-lg">
+    <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="20px">
+        <div fxFlex="auto">
+            <div class="px-6 py-4 h-full" fxLayout="column" fxLayoutAlign="center">
+                <mat-accordion hideToggle>
+                    <mat-expansion-panel class="mat-elevation-z0" *ngFor="let order of orders">
+                        <mat-expansion-panel-header class="mx-auto">
+                            <mat-panel-title class="text-primary">
+                                {{order.date | date: 'fullDate'}} | Anzahl: {{order.amount}} Pro
+                                Downloads
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <ng-template matExpansionPanelContent>
+                            <div class="mat-body">
+                                Anzahl: 5 Pro Downloads
+                            </div>
+                            <mat-divider class="my-3"></mat-divider>
+                            <div class="mat-body">
+                                Bezahlt mit: PayPal
+                            </div>
+                        </ng-template>
+                    </mat-expansion-panel>
+                </mat-accordion>
+                <mat-paginator hidePageSize class="mat-elevation-z0" [length]="100">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>

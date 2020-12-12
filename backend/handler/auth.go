@@ -13,9 +13,8 @@ func (this *Handler) Register(c echo.Context) error {
 	var newUser model.User
 
 	//Set Default Roles
-	newUser.Roles.Admin = false
-	newUser.Roles.Creator = false
-	newUser.Roles.Member = true
+	newUser.Roles = append(newUser.Roles, "ROLE_MEMBER")
+
 
 	c.Echo().Validator = &UserValidator{Validator: v}
 

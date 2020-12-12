@@ -1,12 +1,6 @@
-export interface Roles {
-    member: boolean;
-    creator: boolean;
-    admin: boolean;
-}
+// export interface Roles {
+//     roles: string[]
+// }
 
 
-export const defaultRoles: Roles = {
-    admin: false,
-    creator: false,
-    member: true,
-}
+

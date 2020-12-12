@@ -8,8 +8,8 @@
                 <mat-spinner color="primary"
                              diameter="25"></mat-spinner>
             </div>
-            <ng-container *ngIf="authService.user$ | async as user">
-                <nav class="vex-tabs vex-tabs-dense border-0" mat-tab-nav-bar mat-align-tabs="center">
+            <ng-container *ngIf="userService.user$ | async as user">
+                <nav class="dg-tabs dg-tabs-dense border-0" mat-tab-nav-bar mat-align-tabs="center">
                     <a #rla="routerLinkActive"
                        *ngFor="let link of links"
                        [active]="rla.isActive"

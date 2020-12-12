@@ -7,6 +7,7 @@ import {AuthenticationService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {OrderService} from "../../services/order.service";
 import {Video} from "../../models/video.model";
+import {UserService} from "../../services/user.service";
 
 @Component({
     selector: 'dg-toolbar',
@@ -37,6 +38,7 @@ export class ToolbarComponent implements OnInit {
                 private navigationService: NavigationService,
                 public orderService: OrderService,
                 public router: Router,
+                public userService: UserService,
                 public authService: AuthenticationService) {
     }
 

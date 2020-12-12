@@ -25,7 +25,6 @@ import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatSortModule} from "@angular/material/sort";
 import {MatMenuModule} from "@angular/material/menu";
-import {MemberModule} from "./member/member.module";
 
 
 @NgModule({
@@ -55,8 +54,7 @@ import {MemberModule} from "./member/member.module";
         MatCheckboxModule,
         MatSortModule,
         MatMenuModule,
-        FormsModule,
-        MemberModule
+        FormsModule
     ]
 })
 export class AccountModule {

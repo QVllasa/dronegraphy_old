@@ -3,10 +3,9 @@ import {HttpClient} from "@angular/common/http";
 import {IUser, User} from "../models/user.model";
 import {environment} from "../../environments/environment";
 import {AngularFireAuth} from "@angular/fire/auth";
-import {switchMap, take, takeWhile, tap} from "rxjs/operators";
+import {switchMap, take, tap} from "rxjs/operators";
 import {BehaviorSubject, concat, from, Observable, of} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {AuthenticationService} from "./auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 
@@ -16,35 +15,11 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class UserService {
 
     user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
-    form: FormGroup;
 
 
     constructor(private http: HttpClient,
-                private authService: AuthenticationService,
-                private userService: UserService,
                 private _snackBar: MatSnackBar,
                 private afAuth: AngularFireAuth) {
-        this.form = this.initForm();
-        this.userService.user$
-            .pipe(
-                takeWhile(user => !user, true),
-                takeWhile(() => !this.currentUser, true)
-            )
-            .subscribe(user => {
-                if (!user) {
-                    return
-                } else if (!this.currentUser) {
-                    this.currentUser = user;
-                    this.form.patchValue({
-                        info: {
-                            email: this.currentUser.email,
-                            firstName: this.currentUser.firstName,
-                            lastName: this.currentUser.lastName,
-                        },
-                    })
-                    return
-                }
-            })
     }
 
     initForm() {
@@ -112,81 +87,80 @@ export class UserService {
         )
     }
 
-    changePassword(newPassword): Observable<void> {
-        if ((newPassword != '') && !this.form.get('password').invalid) {
-            return this.afAuth.authState.pipe(
-                switchMap(res => {
-                        return from(res.updatePassword(newPassword));
-                    }
-                )
+    changePassword(newPassword, form): Observable<void> {
+        if ((newPassword != '') && !form.get('password').invalid) {
+        return this.afAuth.authState.pipe(
+            switchMap(res => {
+                    return from(res.updatePassword(newPassword));
+                }
             )
+        )
         }
         return of(null)
     }
 
 
-    sendChanges() {
-        this.form.disable()
-        if (this.form.get('info').invalid) {
-            this.form.get('password').enable()
+    sendChanges(form: FormGroup) {
+        form.disable()
+        if (form.get('info').invalid) {
+            form.get('password').enable()
             this._snackBar.open('Bitte korrekt ausfüllen.', 'SCHLIESSEN');
             return
         }
 
-        const newEmail = this.form.get('info.email').value
-        const newPassword = this.form.get('password').value
-        const lastName = this.form.get('info.lastName').value;
-        const firstName = this.form.get('info.firstName').value;
+        const newEmail = form.get('info.email').value
+        const newPassword = form.get('password').value
+        const lastName = form.get('info.lastName').value;
+        const firstName = form.get('info.firstName').value;
 
-        this.currentUser.email = newEmail;
-        this.currentUser.firstName = firstName;
-        this.currentUser.lastName = lastName;
+        this.user$.value.email = newEmail;
+        this.user$.value.firstName = firstName;
+        this.user$.value.lastName = lastName;
 
-        const changeUserInfo$ = this.changeUserInfo(this.currentUser).pipe(take(1));
-        const changeEmail$ = this.changeUserEmail(this.currentUser).pipe(take(1));
-        const changePw$ = this.changePassword(newPassword).pipe(take(1));
+        const changeUserInfo$ = this.changeUserInfo(this.user$.value).pipe(take(1));
+        const changeEmail$ = this.changeUserEmail(this.user$.value).pipe(take(1));
+        const changePw$ = this.changePassword(newPassword, form).pipe(take(1));
 
-        const combined$ = concat(
+        return concat(
             changeEmail$,
             changeUserInfo$,
             changePw$
         )
+    }
 
-        combined$.subscribe(() => {
-                this.form.get('password').enable()
-
-
-                this.form.patchValue({
-                    info: {
-                        email: this.currentUser.email,
-                        firstName: this.currentUser.firstName,
-                        lastName: this.currentUser.lastName,
-                    },
-                    password: ''
-                })
-                this._snackBar.open('Benutzerdaten aktualisiert.', 'SCHLIESSEN')
+    handleForm(form){
+        form.get('password').enable()
+        form.patchValue({
+            info: {
+                email: this.user$.value.email,
+                firstName: this.user$.value.firstName,
+                lastName: this.user$.value.lastName,
             },
-            err => {
-                if (err) {
-                    switch (err.code) {
-                        case 'auth/requires-recent-login': {
-                            this._snackBar.open('Bitte melde dich erst kurz neu an.', 'SCHLIESSEN');
-                            break;
-                        }
-                        case 'auth/email-already-in-use': {
-                            this._snackBar.open('Diese E-Mail wird schon verwendet.', 'SCHLIESSEN');
-                            break;
-                        }
-                        case 'auth/invalid-email': {
-                            this._snackBar.open('E-Mail Adresse unzulässig.', 'SCHLIESSEN');
-                            break;
-                        }
-                        default: {
-                            this._snackBar.open('Unbekannter Fehler', 'SCHLIESSEN');
-                        }
-                    }
+            password: ''
+        })
+        this._snackBar.open('Benutzerdaten aktualisiert.', 'SCHLIESSEN')
+    }
+
+    handleError(err){
+        if (err) {
+            switch (err.code) {
+                case 'auth/requires-recent-login': {
+                    this._snackBar.open('Bitte melde dich erst kurz neu an.', 'SCHLIESSEN');
+                    break;
                 }
-            });
+                case 'auth/email-already-in-use': {
+                    this._snackBar.open('Diese E-Mail wird schon verwendet.', 'SCHLIESSEN');
+                    break;
+                }
+                case 'auth/invalid-email': {
+                    this._snackBar.open('E-Mail Adresse unzulässig.', 'SCHLIESSEN');
+                    break;
+                }
+                default: {
+                    this._snackBar.open('Unbekannter Fehler', 'SCHLIESSEN');
+                }
+            }
+        }
     }
 
 

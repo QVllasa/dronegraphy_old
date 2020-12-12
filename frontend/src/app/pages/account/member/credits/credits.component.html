@@ -1,0 +1,16 @@
+<div class="p-6 h-lg">
+    <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="20px">
+        <div fxLayout="row" fxLayoutAlign="space-evenly center">
+            <dg-widget-quick-value-center iconClass="text-primary bg-primary-light"
+                                          [icon]="'account_balance'"
+                                          [showButton]="false"
+                                          gdColumn.lt-sm="1"
+                                          label="Pro Downloads verfügbar"
+                                          [value]="'67'"></dg-widget-quick-value-center>
+            <div fxLayout="column" fxLayoutAlign="space-evenly center">
+                <button mat-raised-button color="primary">Konto aufladen</button>
+                <button class="mt-8" mat-button color="primary">Support kontaktieren</button>
+            </div>
+        </div>
+    </div>
+</div>

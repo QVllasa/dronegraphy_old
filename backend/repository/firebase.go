@@ -117,12 +117,16 @@ func (this *FirebaseClient) EmailVerified(c echo.Context) (bool, error) {
 
 func (this *FirebaseClient) UpdateRoleClaims(user *model.User) error {
 
+	//claims := map[string]interface{}{
+	//	"roles": map[string]interface{}{
+	//		"admin":   user.Roles.Admin,
+	//		"creator": user.Roles.Creator,
+	//		"member":  user.Roles.Member,
+	//	},
+	//}
+
 	claims := map[string]interface{}{
-		"roles": map[string]interface{}{
-			"admin":   user.Roles.Admin,
-			"creator": user.Roles.Creator,
-			"member":  user.Roles.Member,
-		},
+		"roles": user.Roles,
 	}
 
 	if err := this.Client.SetCustomUserClaims(context.Background(), user.UID, claims); err != nil {

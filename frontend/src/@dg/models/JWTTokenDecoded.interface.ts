@@ -1,9 +1,6 @@
-import {Roles} from "./role.interface";
 
 export interface IClaims {
-    admin: boolean,
-    creator: boolean,
-    member: boolean,
+    roles: string[],
     iss: string;
     aud: string;
     auth_time: number;
@@ -13,6 +10,5 @@ export interface IClaims {
     exp: number;
     email: string;
     email_verified: boolean;
-    roles: Roles
 }
 

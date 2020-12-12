@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from "../../../@dg/services/auth.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Link} from "../../../@dg/models/link.interface";
+import {UserService} from "../../../@dg/services/user.service";
 
 
 @Component({
@@ -11,11 +12,27 @@ import {Link} from "../../../@dg/models/link.interface";
 })
 export class AccountComponent implements OnInit {
 
-    links: Link[] = [
+    memberLinks: Link[] = [
+
         {
             label: 'Profil',
-            route: './',
-            routerLinkActiveOptions: { exact: true }
+            route: './profile',
+        },
+        {
+            label: 'Mein Konto',
+            route: './credits',
+        },
+        {
+            label: 'Letzte Käufe',
+            route: './history',
+        }
+    ];
+
+    creatorLinks: Link[] = [
+        {
+            label: 'Profil',
+            route: './creator',
+            routerLinkActiveOptions: {exact: true}
         },
         {
             label: 'Meine Aufnahmen',
@@ -25,14 +42,41 @@ export class AccountComponent implements OnInit {
             label: 'Einnahmen',
             route: './income',
             disabled: false
-        }
-    ];
+        },
+    ]
 
-    constructor(public userService: AuthenticationService) {
+    adminLinks: Link[] = [
+        {
+            label: 'Admin',
+            route: './admin',
+        }
+        ];
+
+    constructor(public userService: UserService) {
     }
 
     ngOnInit() {
+        console.log(this.links)
+    }
 
+    get links() {
+        let links: Link[];
+         this.userService.user$.subscribe(user => {
+             if (!user){
+                 return
+             }
+             if(!user.roles){
+                 return
+             }
+            if (user.roles.includes('ROLE_MEMBER')) {
+                links = this.memberLinks
+            }else if (user.roles.includes('ROLE_CREATOR')){
+                links = this.creatorLinks
+            }else if(user.roles.includes('ROLE_ADMIN')){
+                links = this.adminLinks
+            }
+        })
+        return links
     }
 
 

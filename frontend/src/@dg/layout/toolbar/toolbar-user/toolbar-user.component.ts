@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@an
 import {ToolbarUserDropdownComponent} from './toolbar-user-dropdown/toolbar-user-dropdown.component';
 import icPerson from '@iconify/icons-ic/twotone-person';
 import {AuthenticationService} from "../../../services/auth.service";
+import {UserService} from "../../../services/user.service";
 
 @Component({
   selector: 'dg-toolbar-user',
@@ -14,7 +15,8 @@ export class ToolbarUserComponent implements OnInit {
   icPerson = icPerson;
 
 
-  constructor(public auth: AuthenticationService,
+  constructor(public userService: UserService,
+              public authService: AuthenticationService,
               private cd: ChangeDetectorRef) { }
 
   ngOnInit() {

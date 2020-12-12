@@ -1,4 +1,4 @@
-<ng-container *ngIf="auth.user$ | async as user; else login" >
+<ng-container *ngIf="userService.user$ | async as user; else login" >
   <div class="-mx-1 flex items-center " fxLayoutGap="8px">
     <div class="rounded-full flex items-center justify-center text-primary bg-primary-light cursor-pointer">
       <mat-icon>account_circle</mat-icon>
@@ -26,12 +26,12 @@
 
 
 <mat-menu #menu="matMenu">
-  <ng-container *ngIf="auth.user$ | async as user">
-    <ng-container *ngIf="user.getRoles()">
-      <button *ngIf="user.getRoles().member" [routerLink]="['account']" mat-menu-item>
+  <ng-container *ngIf="userService.user$ | async as user">
+    <ng-container *ngIf="user.roles">
+      <button *ngIf="user.roles.includes('ROLE_MEMBER')" [routerLink]="['account/profile']" mat-menu-item>
         <span> Account </span>
       </button>
-      <button *ngIf="user.getRoles().creator" [routerLink]="['account']" mat-menu-item>
+      <button *ngIf="user.roles.includes('ROLE_CREATOR')" [routerLink]="['account/creator']" mat-menu-item>
         <span> Creator Account </span>
       </button>
     </ng-container>
@@ -39,7 +39,7 @@
   <button mat-menu-item [routerLink]="['/cockpit']">
     <span> Cockpit </span>
   </button>
-  <button mat-menu-item (click)="auth.signOut()">
+  <button mat-menu-item (click)="authService.signOut()">
     <span> Ausloggen </span>
   </button>
 </mat-menu>

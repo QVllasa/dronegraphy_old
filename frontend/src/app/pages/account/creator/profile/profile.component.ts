@@ -1,9 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {switchMap, take, takeWhile} from "rxjs/operators";
+import {FormGroup} from "@angular/forms";
+import {takeWhile} from "rxjs/operators";
 import {AuthenticationService} from "../../../../../@dg/services/auth.service";
-import {IUser, User} from "../../../../../@dg/models/user.model";
-import {concat, from, Observable, of} from "rxjs";
 import {AngularFireAuth} from "@angular/fire/auth";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {UserService} from "../../../../../@dg/services/user.service";
@@ -16,7 +14,6 @@ import {UserService} from "../../../../../@dg/services/user.service";
 export class ProfileComponent implements OnInit {
 
     form: FormGroup;
-    currentUser: User = null;
     isLoading: boolean;
 
     inputType = 'password';
@@ -27,9 +24,6 @@ export class ProfileComponent implements OnInit {
     files = [];
 
 
-    // @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-    // @ViewChild(MatSort, { static: true }) sort: MatSort;
-
     constructor(public authService: AuthenticationService,
                 private userService: UserService,
                 private _snackBar: MatSnackBar,
@@ -39,7 +33,23 @@ export class ProfileComponent implements OnInit {
     ngOnInit(): void {
         this.isLoading = false
         this.form = this.userService.initForm()
-        // this.currentUser = this.userService;
+        this.userService.user$
+            .pipe(
+                takeWhile(user => !user, true),
+            )
+            .subscribe(user => {
+                console.log("userService: ", user)
+                if (!user) {
+                    return
+                }
+                this.form.patchValue({
+                    info: {
+                        email: user.email,
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                    },
+                })
+            })
     }
 
 
@@ -54,7 +64,17 @@ export class ProfileComponent implements OnInit {
 
 
     send() {
-        this.userService.sendChanges();
+        this.isLoading = true;
+        this.userService.sendChanges(this.form).subscribe(result => {
+                this.isLoading = false;
+                this.userService.handleForm(this.form)
+            },
+            error => {
+                this.isLoading = false;
+                if (error) {
+                    this.userService.handleError(error)
+                }
+            });
     }
 
     togglePassword() {
