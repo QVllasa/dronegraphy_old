@@ -37,9 +37,9 @@ func main() {
 
 	// Creator Endpoints
 	// e.GET("/creators")
-	//e.POST("/videos", h.CreateVideos, middleware.BodyLimit("1M"), customMiddleware.Auth())
-	//e.PUT("/videos/:id", h.UpdateVideo, middleware.BodyLimit("1M"), customMiddleware.Auth())
-	//e.DELETE("/videos/:id", h.DeleteVideo, customMiddleware.Auth())
+	//e.POST("/videos", controller.CreateVideos, middleware.BodyLimit("1M"), customMiddleware.Auth())
+	// e.PUT("/videos/:id", h.UpdateVideo, middleware.BodyLimit("1M"), customMiddleware.Auth())
+	// e.DELETE("/videos/:id", h.DeleteVideo, customMiddleware.Auth())
 
 	// Member Endpoints
 	e.POST("/users", controller.Register)
@@ -47,8 +47,8 @@ func main() {
 	e.PUT("/users/:id", controller.UpdateUser)
 
 	//// Public Endpoints
-	//e.GET("/videos", h.GetAllVideos)
-	//e.GET("/videos/:id", h.GetVideo)
+	e.GET("/videos", controller.GetVideos)
+	e.GET("/videos/:id", controller.GetVideo)
 
 	e.Logger.Printf("Listening on %v:%v", db.Cfg.Host, db.Cfg.Port)
 	e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%s", db.Cfg.Host, db.Cfg.Port)))

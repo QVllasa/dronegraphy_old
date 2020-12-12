@@ -20,8 +20,8 @@ export class ProfileComponent implements OnInit {
     visible = false;
     fileToUpload: File = null;
 
-    @ViewChild("fileUpload", {static: false}) fileUpload: ElementRef;
-    files = [];
+    // @ViewChild("fileUpload", {static: false}) fileUpload: ElementRef;
+    file: File = null
 
 
     constructor(public authService: AuthenticationService,
@@ -87,15 +87,17 @@ export class ProfileComponent implements OnInit {
         }
     }
 
-    onClick() {
-        const fileUpload = this.fileUpload.nativeElement;
-        fileUpload.onchange = () => {
-            for (let index = 0; index < fileUpload.files.length; index++) {
-                const file = fileUpload.files[index];
-                this.files.push({data: file, inProgress: false, progress: 0});
-            }
-        };
-        fileUpload.click();
+    onFileSelected(event) {
+        this.file = event.target.files[0];
+        console.log(this.file);
+        // const fileUpload = this.fileUpload.nativeElement;
+        // fileUpload.onchange = () => {
+        //     for (let index = 0; index < fileUpload.files.length; index++) {
+        //         const file = fileUpload.files[index];
+        //         this.files.push({data: file, inProgress: false, progress: 0});
+        //     }
+        // };
+        // fileUpload.click();
     }
 
 }
