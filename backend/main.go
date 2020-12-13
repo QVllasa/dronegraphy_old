@@ -49,7 +49,7 @@ func main() {
 	e.GET("/users/:id", controller.GetUser)
 	e.PUT("/users/:id", controller.UpdateUser)
 	e.POST("/users/:id", controller.UploadPhoto)
-	e.GET("/assets/:id", controller.GetPhoto)
+	e.GET("/assets/:id", controller.GetPhoto, middleware.Static("/assets"))
 
 	//// Public Endpoints
 	//e.GET("/videos", controller.GetVideos)
