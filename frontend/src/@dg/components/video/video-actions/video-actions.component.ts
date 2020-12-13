@@ -70,7 +70,6 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
         if (videos && !videos.includes(this.videoItem) ) {
             videos.push(this.videoItem)
             this._snackBar.open('Zum Warenkorb hinzugefügt.', 'SCHLIESSEN')
-            console.log("added to cart")
             return
         }else if(videos && videos.includes(this.videoItem)){
             videos.splice(videos.indexOf(this.videoItem), 1)

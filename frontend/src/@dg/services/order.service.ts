@@ -13,23 +13,6 @@ export class OrderService {
 
 
     constructor(private storage: StorageMap) {
-        // this.storage.get('cart')
-        //     .pipe(
-        //         takeWhile(cart => this.cart$.value !== null, true),
-        //         tap((items:Video[]) => {
-        //             if(items){
-        //                 console.log('get:', items)
-        //                 this.cart$.next(items)
-        //             }
-        //         })
-        //     ).subscribe()
-
-        this.cart$.subscribe(items => {
-            // if (items) {
-            //     console.log('add', items)
-            //     this.storage.set('cart', items).subscribe()
-            // }
-        })
     }
 
     ngOnInit() {

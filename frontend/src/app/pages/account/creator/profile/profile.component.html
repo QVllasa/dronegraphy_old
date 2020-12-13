@@ -10,7 +10,8 @@
                                 class="bg-primary-light absolute top-0 right-20" color="accent">
                             <mat-icon class="material-icons-round text-primary">edit</mat-icon>
                         </button>
-                        <input [hidden]="true" type="file" (change)="onFileSelected($event)" #fileUpload/>
+                        <input [hidden]="true" type="file" (change)="onFileSelected($event)" #fileUpload id="fileUpload" name="fileUpload"
+                               multiple="multiple" accept="image/*"/>
                     </div>
                     <form (ngSubmit)="send()" class="px-6 py-4 max-w-lg" fxLayout="column" fxFlex="70"
                           [formGroup]="form">

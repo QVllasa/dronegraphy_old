@@ -56,7 +56,7 @@ export class AccountComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.links)
+
     }
 
     get links() {

@@ -3,7 +3,15 @@ package handler
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
+	"io"
 	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
+)
+
+var (
+	assetRoot = "backend/assets/"
 )
 
 func (this *Handler) GetUser(c echo.Context) error {
@@ -54,4 +62,66 @@ func (this *Handler) GetUsers(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, users)
+}
+
+func (this *Handler) UploadPhoto(c echo.Context) error {
+
+	file, err := c.FormFile("file")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	id := c.Param("id")
+
+	src, err := file.Open()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer src.Close()
+
+	runes := []rune(id)
+	// ... Convert back into a string from rune slice.
+	dirID := string(runes[0:10])
+
+	baseDir := assetRoot + dirID + "/"
+	//Destination
+	_ = os.MkdirAll(baseDir, 0777)
+
+	dst, err := os.Create(baseDir + id + "_" + file.Filename)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer dst.Close()
+
+	// Copy
+	if _, err = io.Copy(dst, src); err != nil {
+		log.Fatal(err)
+	}
+
+	return c.JSON(http.StatusOK, dst.Name())
+}
+
+func (this *Handler) GetPhoto(c echo.Context) error {
+
+	var allFiles []string
+
+	id := c.Param("id")
+
+	runes := []rune(id)
+	dirID := string(runes[0:10])
+
+	root := assetRoot + dirID
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		allFiles = append(allFiles, path)
+		return nil
+	})
+	if err != nil {
+		panic(err)
+	}
+	for _, file := range allFiles {
+		if strings.Contains(file, id) {
+			return c.File(file)
+		}
+	}
+	return c.JSON(http.StatusNotFound, "not found")
 }

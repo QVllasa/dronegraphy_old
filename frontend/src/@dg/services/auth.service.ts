@@ -26,22 +26,6 @@ export class AuthenticationService implements OnDestroy {
                 private userService: UserService,
                 private _snackBar: MatSnackBar,
                 private router: Router) {
-
-        // this.autoLogin()
-        //     .subscribe(
-        //         () => {
-        //         },
-        //         err => {
-        //             this.user$.next(null);
-        //             if (err) {
-        //                 console.log('autologin:');
-        //                 console.log(err);
-        //                 this._snackBar.open('err.error.message', 'SCHLIESSEN', {
-        //                     horizontalPosition: 'end',
-        //                     verticalPosition: 'top',
-        //                 });
-        //             }
-        //         });
     }
 
     // Sign Up User on Firebase

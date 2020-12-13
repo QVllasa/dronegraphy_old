@@ -25,7 +25,6 @@ export class ProfileComponent implements OnInit {
             takeWhile(user => !user, true),
         )
         .subscribe(user => {
-          console.log("member userService: ", user)
           if (!user) {
             return
           }

@@ -5,6 +5,8 @@ import {AuthenticationService} from "../../../../../@dg/services/auth.service";
 import {AngularFireAuth} from "@angular/fire/auth";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {UserService} from "../../../../../@dg/services/user.service";
+import {UploadService} from "../../../../../@dg/services/upload.service";
+import {HttpEventType} from "@angular/common/http";
 
 @Component({
     selector: 'dg-profile',
@@ -20,12 +22,13 @@ export class ProfileComponent implements OnInit {
     visible = false;
     fileToUpload: File = null;
 
-    // @ViewChild("fileUpload", {static: false}) fileUpload: ElementRef;
+    @ViewChild("fileUpload", {static: false}) fileUpload: ElementRef;
     file: File = null
 
 
     constructor(public authService: AuthenticationService,
                 private userService: UserService,
+                private uploadService: UploadService,
                 private _snackBar: MatSnackBar,
                 private afAuth: AngularFireAuth) {
     }
@@ -38,7 +41,7 @@ export class ProfileComponent implements OnInit {
                 takeWhile(user => !user, true),
             )
             .subscribe(user => {
-                console.log("userService: ", user)
+
                 if (!user) {
                     return
                 }
@@ -88,8 +91,22 @@ export class ProfileComponent implements OnInit {
     }
 
     onFileSelected(event) {
+        console.log("onFileSelected")
         this.file = event.target.files[0];
         console.log(this.file);
+        const fd = new FormData()
+        fd.append("file", this.file, this.file.name)
+
+
+
+        this.uploadService.uploadImage(this.userService.user$.value.uid, fd)
+            .subscribe(event => {
+                if(event.type === HttpEventType.UploadProgress){
+                    console.log('Upload Progress', event)
+                }
+                // Reset FileInput
+                this.fileUpload.nativeElement.value = "";
+        })
         // const fileUpload = this.fileUpload.nativeElement;
         // fileUpload.onchange = () => {
         //     for (let index = 0; index < fileUpload.files.length; index++) {

@@ -15,7 +15,6 @@ export class RoleGuard implements CanLoad {
 
   canLoad(route: Route, segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       const expectedRole = route.data.expectedRole;
-      console.log(expectedRole);
       return this.afAuth.idTokenResult.pipe(
           map(token => {
               const roles = token.claims["roles"] as Array<string>
@@ -28,21 +27,5 @@ export class RoleGuard implements CanLoad {
           })
       )
   }
-
-
-    // canActivate(
-  //   route: ActivatedRouteSnapshot,
-  //   state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-  //   return this.authService.user$.pipe(
-  //       take(1),
-  //       map(user => !!(user && user.roles.admin && user.roles.creator)),
-  //       tap(isAllowed => {
-  //         if (!isAllowed){
-  //           console.log('Access denied');
-  //           this.router.navigate(['/']);
-  //         }
-  //       })
-  //   );
-  // }
 
 }
