@@ -58,6 +58,10 @@ export class UserService {
         return this.http.get<IUser>(environment.apiUrl + '/users/' + uid);
     }
 
+    // getProfileImage(id){
+    //     return this.http.get<File>(environment.apiUrl + '/photo/' + id)
+    // }
+
     updateUser(user: User) {
         return this.http.put<IUser>(environment.apiUrl + '/users/' + user.uid, user);
     }

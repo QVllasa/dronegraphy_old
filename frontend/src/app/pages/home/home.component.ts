@@ -25,7 +25,9 @@ export class HomeComponent implements OnInit {
               ) { }
 
   ngOnInit(): void {
-    this.videos = this.videoService.getVideos(0, this.initialBatch);
+    this.videoService.getVideos(27).subscribe(videos => {
+      this.videos = videos;
+    });
   }
 
 }

@@ -1,18 +1,19 @@
 <div class="p-6 max-h-3xl">
     <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px">
                 <div class="w-full" fxLayout="row" fxLayoutAlign="space-evenly center">
+                    <ng-container *ngIf="userService.user$ | async as user">
                     <div fxLayout="column" fxLayoutGap="12px" fxLayoutAlign="center center" fxFlex="30"
                          class="p-4 trans-ease-out relative">
                         <img class="avatar h-40 w-40 mx-auto" matRipple
-                             src="/assets/img/illustrations/idea.svg">
+                             [src]="user.getProfileImage()">
                         <button mat-mini-fab
                                 (click)="fileUpload.click()"
                                 class="bg-primary-light absolute top-0 right-20" color="accent">
                             <mat-icon class="material-icons-round text-primary">edit</mat-icon>
                         </button>
-                        <input [hidden]="true" type="file" (change)="onFileSelected($event)" #fileUpload id="fileUpload" name="fileUpload"
-                               multiple="multiple" accept="image/*"/>
+                        <input [hidden]="true" type="file" (change)="onFileUpload($event)" #fileUpload id="fileUpload" name="fileUpload" accept="image/*"/>
                     </div>
+                    </ng-container>
                     <form (ngSubmit)="send()" class="px-6 py-4 max-w-lg" fxLayout="column" fxFlex="70"
                           [formGroup]="form">
                         <div fxLayout="column" fxFlex formGroupName="info">

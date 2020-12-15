@@ -24,17 +24,15 @@ const videoData = (): IVideo => {
     };
 };
 
-export const Videos = (): Video[] => {
+export const Videos = (amount): Video[] => {
     const videos = [];
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < amount; i++) {
         const video = new Video().deserialize(videoData())
         video.setLicense(faker.random.boolean())
         video.setItemPath(faker.random.arrayElement(['https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8']))
-        video.setPoster(faker.image.image())
+        video.setThumbnail(faker.image.image())
         video.setCreator(new User().deserialize(userData()))
         videos.push(video);
-
-
     }
     return videos;
 };

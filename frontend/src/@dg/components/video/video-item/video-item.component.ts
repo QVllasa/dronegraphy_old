@@ -33,9 +33,9 @@ export class VideoItemComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.poster = this.domSanitizer.bypassSecurityTrustStyle(`url(${this.videoItem.getPoster()})`);
+        this.poster = this.domSanitizer.bypassSecurityTrustStyle(`url(${this.videoItem.getThumbnail()})`);
         this.options = {
-            poster: this.videoItem.getPoster(),
+            poster: this.videoItem.getThumbnail(),
             fluid: false,
             aspectRatio: '16:9',
             autoplay: true,

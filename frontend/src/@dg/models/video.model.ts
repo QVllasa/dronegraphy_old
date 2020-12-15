@@ -30,11 +30,12 @@ export class Video implements IVideo, Deserializable {
     public category: string[];
     public downloads: number;
     public views: number;
+    public thumbnail?: string;
 
     #sell: boolean;
     #onBanner: boolean;
     #itemPath: string;
-    #poster: string;
+
     #creator: User;
     #favoriteBy: any;
 
@@ -60,19 +61,19 @@ export class Video implements IVideo, Deserializable {
         return this.#itemPath;
     }
 
-    setPoster(path) {
-        this.#poster = path;
+    setThumbnail(path) {
+        this.thumbnail = path;
     }
 
-    getPoster(): string| null{
-        return this.#poster
+    getThumbnail(): string | null {
+        return this.thumbnail
     }
 
-    setCreator(creator: User){
+    setCreator(creator: User) {
         this.#creator = creator
     }
 
-    getCreator(): User{
+    getCreator(): User {
         return this.#creator
     }
 

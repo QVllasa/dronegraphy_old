@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 
 import {Video} from "../models/video.model";
 import {Videos} from "../../static-data/video-data";
+import {of} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +14,12 @@ export class VideoService {
 
   constructor() {
 
-    this.videos = Videos();
+    this.videos = Videos(200);
   }
 
 
-  getVideos(batch?, lastKey?) {
-    return this.videos.slice(batch, lastKey);
+  getVideos(amount) {
+    return of(Videos(amount))
   }
 
   getVideo(id) {

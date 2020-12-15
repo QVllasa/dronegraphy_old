@@ -12,24 +12,29 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatSelectModule} from "@angular/material/select";
 import {MatPaginatorModule} from "@angular/material/paginator";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {VideoCreateUpdateModule} from "./video-create-update/video-create-update.module";
 
 
 @NgModule({
   declarations: [FootageComponent],
-  imports: [
-    CommonModule,
-    FootageRoutingModule,
-    MatMenuModule,
-    MatCheckboxModule,
-    FlexLayoutModule,
-    MatTableModule,
-    MatSortModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSelectModule,
-    MatPaginatorModule,
-    FormsModule
-  ]
+    imports: [
+        CommonModule,
+        FootageRoutingModule,
+        MatMenuModule,
+        MatCheckboxModule,
+        FlexLayoutModule,
+        MatTableModule,
+        MatSortModule,
+        MatButtonModule,
+        MatIconModule,
+        MatSelectModule,
+        MatPaginatorModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatTooltipModule,
+        VideoCreateUpdateModule
+    ]
 })
 export class FootageModule { }

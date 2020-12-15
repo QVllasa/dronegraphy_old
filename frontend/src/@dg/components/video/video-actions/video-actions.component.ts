@@ -4,6 +4,8 @@ import {fadeIn400ms} from "../../../animations/fade-in.animation";
 import {OrderService} from "../../../services/order.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Subscription} from "rxjs";
+import {UserService} from "../../../services/user.service";
+import {Router} from "@angular/router";
 
 
 // declare var require: any;
@@ -57,6 +59,8 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
 
     constructor(
         public orderService: OrderService,
+        public router: Router,
+        public userSerivce: UserService,
         private _snackBar: MatSnackBar
     ) {
     }
@@ -66,6 +70,10 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
     }
 
     updateCart() {
+        if (!this.userSerivce.user$.value){
+            this.router.navigate(['/login']).then()
+            return
+        }
         let videos = this.orderService.cart$.value;
         if (videos && !videos.includes(this.videoItem) ) {
             videos.push(this.videoItem)

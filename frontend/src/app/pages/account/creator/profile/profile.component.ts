@@ -1,12 +1,13 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormGroup} from "@angular/forms";
-import {takeWhile} from "rxjs/operators";
+import {map, takeWhile} from "rxjs/operators";
 import {AuthenticationService} from "../../../../../@dg/services/auth.service";
 import {AngularFireAuth} from "@angular/fire/auth";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {UserService} from "../../../../../@dg/services/user.service";
 import {UploadService} from "../../../../../@dg/services/upload.service";
 import {HttpEventType} from "@angular/common/http";
+import {of} from "rxjs";
 
 @Component({
     selector: 'dg-profile',
@@ -27,7 +28,7 @@ export class ProfileComponent implements OnInit {
 
 
     constructor(public authService: AuthenticationService,
-                private userService: UserService,
+                public userService: UserService,
                 private uploadService: UploadService,
                 private _snackBar: MatSnackBar,
                 private afAuth: AngularFireAuth) {
@@ -90,7 +91,7 @@ export class ProfileComponent implements OnInit {
         }
     }
 
-    onFileSelected(event) {
+    onFileUpload(event) {
         console.log("onFileSelected")
         this.file = event.target.files[0];
         console.log(this.file);
@@ -98,23 +99,26 @@ export class ProfileComponent implements OnInit {
         fd.append("file", this.file, this.file.name)
 
 
-
         this.uploadService.uploadImage(this.userService.user$.value.uid, fd)
-            .subscribe(event => {
-                if(event.type === HttpEventType.UploadProgress){
-                    console.log('Upload Progress', event)
+            .pipe(
+                map(event => {
+                    if (event.type === HttpEventType.UploadProgress) {
+                        console.log('Upload Progress', event)
+                    } else if (event.type === HttpEventType.Response) {
+                        console.log(event.body)
+                        return event.body
+                    }
+                }),
+            )
+            .subscribe(res => {
+                if (res){
+                    this.userService.user$.value.setProfileImage(res)
+                    this._snackBar.open("Profilbild aktualisiert", "SCHLIESSEN")
+                    console.log("inside subscribe:", res)
+                    this.fileUpload.nativeElement.value = "";
                 }
-                // Reset FileInput
-                this.fileUpload.nativeElement.value = "";
-        })
-        // const fileUpload = this.fileUpload.nativeElement;
-        // fileUpload.onchange = () => {
-        //     for (let index = 0; index < fileUpload.files.length; index++) {
-        //         const file = fileUpload.files[index];
-        //         this.files.push({data: file, inProgress: false, progress: 0});
-        //     }
-        // };
-        // fileUpload.click();
+            })
+
     }
 
 }

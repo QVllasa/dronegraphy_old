@@ -1,131 +1,188 @@
-<div class="p-6 max-h-3xl">
+<div class="p-6 ">
     <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="20px">
-        <div fxLayout="row" fxLayoutAlign="space-evenly center">
-            <table [dataSource]="dataSource" class="w-full" mat-table matSort>
 
-                <!--- Note that these columns can be defined in any order.
-                      The actual rendered columns are set as a property on the row definition" -->
+        <div class="px-6 h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+            <h2 class="title my-0" fxFlex="none" fxHide.xs>
+                <span *ngIf="selection.hasValue()">{{ selection.selected.length }}
+                    Aufnahmen<span *ngIf="selection.selected.length > 1">s</span> ausgewählt</span>
+            </h2>
 
-                <!-- Checkbox Column -->
-                <ng-container matColumnDef="checkbox">
-                    <th *matHeaderCellDef mat-header-cell>
-                        <mat-checkbox (change)="$event ? masterToggle() : null"
-                                      [checked]="selection.hasValue() && isAllSelected()"
-                                      [indeterminate]="selection.hasValue() && !isAllSelected()"
-                                      color="primary">
-                        </mat-checkbox>
-                    </th>
-                    <td *matCellDef="let row" class="w-4" mat-cell>
-                        <mat-checkbox (change)="$event ? selection.toggle(row) : null"
-                                      (click)="$event.stopPropagation()"
-                                      [checked]="selection.isSelected(row)"
-                                      color="primary">
-                        </mat-checkbox>
-                    </td>
-                </ng-container>
+            <div *ngIf="selection.hasValue()" class="mr-4 pr-4 border-r" fxFlex="none">
+                <button (click)="deleteVideos(selection.selected)"
+                        color="warn"
+                        mat-icon-button
+                        matTooltip="Auswahl löschen"
+                        type="button">
+                    <mat-icon>delete</mat-icon>
+                </button>
 
-                <!-- Image Column -->
-                <ng-container matColumnDef="image">
-                    <th *matHeaderCellDef mat-header-cell></th>
-                    <td *matCellDef="let row" class="w-8 min-w-8 pr-0" mat-cell>
-                        <img [src]="row['imageSrc']" class="avatar h-8 w-8 align-middle" alt="">
-                    </td>
-                </ng-container>
+<!--                <button color="primary" mat-icon-button matTooltip="Another action" type="button">-->
+<!--                    <mat-icon>add</mat-icon>-->
+<!--                </button>-->
+            </div>
 
-                <!-- Text Columns -->
-                <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
-                    <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
-                        <th *matHeaderCellDef class="uppercase" mat-header-cell
-                            mat-sort-header> {{ column.label }}</th>
-                        <td *matCellDef="let row" [ngClass]="column.cssClasses"
-                            mat-cell>{{ row[column.property] }}</td>
-                    </ng-container>
-                </ng-container>
+            <div class="bg-card rounded-full border px-4"
+                 fxFlex="400px"
+                 fxFlex.lt-md="auto"
+                 fxHide.xs
+                 fxLayout="row"
+                 fxLayoutAlign="start center">
+                <mat-icon>search</mat-icon>
+                <input [formControl]="searchCtrl"
+                       class="px-4 py-3 border-0 outline-none w-full bg-transparent"
+                       placeholder="Suche..."
+                       type="search">
+            </div>
 
-                <!-- Contact Column -->
-                <ng-container matColumnDef="contact">
-                    <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
-                    <td *matCellDef="let row" mat-cell>
-                        <div class="flex">
-                            <a (click)="$event.stopPropagation()"
-                               class="w-8 h-8 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary-light"
-                               mat-icon-button>
-                                <mat-icon>add</mat-icon>
-                            </a>
+            <span fxFlex></span>
 
-                            <a (click)="$event.stopPropagation()"
-                               class="w-8 h-8 leading-none flex items-center justify-center ml-1 hover:bg-hover text-teal bg-teal-light"
-                               mat-icon-button>
-                                <mat-icon>add</mat-icon>
-                            </a>
+            <button [matMenuTriggerFor]="columnFilterMenu"
+                    class="ml-4"
+                    fxFlex="none"
+                    mat-icon-button
+                    matTooltip="Spalten filtern"
+                    type="button">
+                <mat-icon>filter_list</mat-icon>
+            </button>
 
-                            <a (click)="$event.stopPropagation()"
-                               class="w-8 h-8 leading-none flex items-center justify-center ml-1 hover:bg-hover text-green bg-green-light"
-                               mat-icon-button>
-                                <mat-icon>add</mat-icon>
-                            </a>
-                        </div>
-                    </td>
-                </ng-container>
-
-                <!-- Label Column -->
-                <ng-container matColumnDef="labels">
-                    <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Labels</th>
-                    <td *matCellDef="let row" mat-cell>
-                        <div (click)="$event.stopPropagation()" fxLayoutAlign="start center" fxLayoutGap="4px">
-                            <div *ngFor="let label of row.labels"
-                                 [ngClass]="[label.textClass, label.bgClass]"
-                                 class="rounded px-2 py-1 font-medium text-xs"
-                                 fxFlex="none">
-                                {{ label.text }}
-                            </div>
-                            <div (click)="labelSelect.open()"
-                                 class="text-secondary bg-base text-hint cursor-pointer hover:bg-hover"
-                                 fxFlex="none"
-                                 fxLayout="row"
-                                 fxLayoutAlign="center center">
-                                <mat-icon>add</mat-icon>
-                            </div>
-                            <mat-select #labelSelect="matSelect"
-                                        (selectionChange)="onLabelChange($event, row)"
-                                        [value]="row.labels"
-                                        class="invisible w-0 h-0 text-sm"
-                                        fxFlex="0 1 0px"
-                                        multiple>
-                                <mat-option *ngFor="let label of labels" [value]="label">
-                                    <div [ngClass]="label.previewClass"
-                                         class="h-6 w-6 align-middle ltr:mr-2 rtl:ml-2 rounded inline-block"></div>
-                                    <span>{{ label.text }}</span>
-                                </mat-option>
-                            </mat-select>
-                        </div>
-                    </td>
-                </ng-container>
-
-                <!-- Action Column -->
-                <ng-container matColumnDef="actions">
-                    <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
-                    <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>
-                        <button (click)="$event.stopPropagation()"
-                                [matMenuTriggerData]="{ customer: row }"
-                                [matMenuTriggerFor]="actionsMenu"
-                                mat-icon-button
-                                type="button">
-                            <mat-icon>add</mat-icon>
-                        </button>
-                    </td>
-                </ng-container>
-
-                <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
-                <tr (click)="updateVideo(row)"
-                    *matRowDef="let row; columns: visibleColumns;"
-                    class="hover:bg-hover trans-ease-out cursor-pointer"
-                    mat-row></tr>
-            </table>
-
-            <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize"
-                           class="sticky left-0"></mat-paginator>
+            <button (click)="createVideo()"
+                    class="ml-4"
+                    color="primary"
+                    fxFlex="none"
+                    mat-mini-fab
+                    matTooltip="Aufnahme hochladen"
+                    type="button">
+                <mat-icon>add</mat-icon>
+            </button>
         </div>
+
+        <table [dataSource]="dataSource" class="w-full" mat-table matSort>
+
+            <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="checkbox">
+                <th *matHeaderCellDef mat-header-cell>
+                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                                  [checked]="selection.hasValue() && isAllSelected()"
+                                  [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                  color="primary">
+                    </mat-checkbox>
+                </th>
+                <td *matCellDef="let row" class="w-4" mat-cell>
+                    <mat-checkbox (change)="$event ? selection.toggle(row) : null"
+                                  (click)="$event.stopPropagation()"
+                                  [checked]="selection.isSelected(row)"
+                                  color="primary">
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+
+            <!-- Image Column -->
+            <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
+                <ng-container *ngIf="column.type === 'image'" [matColumnDef]="column.property">
+                    <th *matHeaderCellDef mat-header-cell></th>
+                    <td *matCellDef="let row" class="w-8 min-w-8 pr-0 object-cover" mat-cell>
+                        <img [src]="row['thumbnail']" class="h-8 w-8 align-middle" alt="">
+                    </td>
+                </ng-container>
+            </ng-container>
+
+            <!-- Text Columns -->
+            <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
+                <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
+                    <th *matHeaderCellDef class="uppercase" mat-header-cell
+                        mat-sort-header> {{ column.label }}</th>
+                    <td *matCellDef="let row" [ngClass]="column.cssClasses"
+                        mat-cell>{{ row[column.property] }}</td>
+                </ng-container>
+            </ng-container>
+
+            <!-- Contact Column -->
+            <ng-container matColumnDef="contact">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
+                <td *matCellDef="let row" mat-cell>
+                    <div class="flex">
+                        <a (click)="$event.stopPropagation()"
+                           class="w-8 h-8 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary-light"
+                           mat-icon-button>
+                            <mat-icon>add</mat-icon>
+                        </a>
+
+                        <a (click)="$event.stopPropagation()"
+                           class="w-8 h-8 leading-none flex items-center justify-center ml-1 hover:bg-hover text-teal bg-teal-light"
+                           mat-icon-button>
+                            <mat-icon>add</mat-icon>
+                        </a>
+
+                        <a (click)="$event.stopPropagation()"
+                           class="w-8 h-8 leading-none flex items-center justify-center ml-1 hover:bg-hover text-green bg-green-light"
+                           mat-icon-button>
+                            <mat-icon>add</mat-icon>
+                        </a>
+                    </div>
+                </td>
+            </ng-container>
+
+            <!-- Label Column -->
+            <ng-container matColumnDef="labels">
+                <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Labels</th>
+                <td *matCellDef="let row" mat-cell>
+                    <div (click)="$event.stopPropagation()" fxLayoutAlign="start center" fxLayoutGap="4px">
+                        <div *ngFor="let label of row.labels"
+                             [ngClass]="[label.textClass, label.bgClass]"
+                             class="rounded px-2 py-1 font-medium text-xs"
+                             fxFlex="none">
+                            {{ label.text }}
+                        </div>
+                        <div (click)="labelSelect.open()"
+                             class="text-secondary bg-base text-hint cursor-pointer hover:bg-hover"
+                             fxFlex="none"
+                             fxLayout="row"
+                             fxLayoutAlign="center center">
+                            <mat-icon>add</mat-icon>
+                        </div>
+                        <mat-select #labelSelect="matSelect"
+                                    (selectionChange)="onLabelChange($event, row)"
+                                    [value]="row.labels"
+                                    class="invisible w-0 h-0 text-sm"
+                                    fxFlex="0 1 0px"
+                                    multiple>
+                            <mat-option *ngFor="let label of labels" [value]="label">
+                                <div [ngClass]="label.previewClass"
+                                     class="h-6 w-6 align-middle ltr:mr-2 rtl:ml-2 rounded inline-block"></div>
+                                <span>{{ label.text }}</span>
+                            </mat-option>
+                        </mat-select>
+                    </div>
+                </td>
+            </ng-container>
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="actions">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
+                <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>
+                    <button (click)="$event.stopPropagation()"
+                            [matMenuTriggerData]="{ customer: row }"
+                            [matMenuTriggerFor]="actionsMenu"
+                            mat-icon-button
+                            type="button">
+                        <mat-icon>more_horiz</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
+            <tr (click)="updateVideo(row)"
+                *matRowDef="let row; columns: visibleColumns;"
+                class="hover:bg-hover trans-ease-out cursor-pointer"
+                mat-row></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize"
+                       class="sticky left-0"></mat-paginator>
+
     </div>
 </div>
 
@@ -141,11 +198,11 @@
 <mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
     <ng-template let-customer="customer" matMenuContent>
         <button (click)="updateVideo(customer)" mat-menu-item>
-            <mat-icon>add</mat-icon>
+            <mat-icon>create</mat-icon>
             <span>Modify</span>
         </button>
         <button (click)="deleteVideo(customer)" mat-menu-item>
-            <mat-icon>add</mat-icon>
+            <mat-icon>delete</mat-icon>
             <span>Delete</span>
         </button>
     </ng-template>

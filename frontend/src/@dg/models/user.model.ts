@@ -1,12 +1,14 @@
 import {IClaims} from "./JWTTokenDecoded.interface";
 import {Deserializable} from "./deserialize.interface";
 import {Video} from "./video.model";
+import {environment} from "../../environments/environment";
 
 export interface IUser {
     uid: string;
     email: string;
     firstName: string;
     lastName: string;
+    profileImage?: string;
     // imgPath?: string;
     // activated?: boolean;
     // [videos: number]: Video[];
@@ -18,12 +20,13 @@ export interface IUser {
 
 export class User implements IUser, Deserializable {
 
-    public uid: string;
-    public email: string;
-    public firstName: string;
-    public lastName: string;
-    public favorite?: Video[];
-    public slogan?: string;
+    uid: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    favorite?: Video[];
+    slogan?: string;
+    profileImage?: string;
 
     #roles: string[] = null;
     #claims: IClaims = null;
@@ -37,26 +40,27 @@ export class User implements IUser, Deserializable {
         return this.firstName + ' ' + this.lastName
     }
 
+    setProfileImage(id){
+        this.profileImage = id;
+    }
+
+    getProfileImage(){
+        return environment.apiUrl+'/photo/'+this.profileImage
+    }
+
     setClaims(claims: IClaims) {
         this.#claims = claims;
     }
 
-    get roles(): string[] | null{
+    get roles(): string[] | null {
         if (this.#claims) {
             this.#roles = this.#claims["roles"]
         }
         return this.#roles ? this.#roles : null;
     }
 
-    setPhotoUri(){
 
-    }
-
-    getPhotoUri(){
-
-    }
-
-    removePhoto(){
+    removePhoto() {
 
     }
 
