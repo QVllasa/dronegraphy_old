@@ -1,9 +1,9 @@
 <div fxLayout="row" fxLayoutAlign="start center">
-  <button (click)="open()" mat-icon-button>
-    <mat-icon [icIcon]="icSearch"></mat-icon>
-  </button>
   <mat-form-field [class.search-open]="isOpen" appearance="outline" class="search" fxFlex="100">
     <mat-label>Suche&hellip;</mat-label>
     <input #input (blur)="close()" matInput>
   </mat-form-field>
+  <button (click)="open()" mat-icon-button>
+    <mat-icon [icIcon]="icSearch"></mat-icon>
+  </button>
 </div>
