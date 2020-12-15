@@ -101,7 +101,7 @@ export class FootageComponent implements OnInit {
 
   createVideo() {
     this.dialog.open(VideoCreateUpdateComponent, {
-      width: '700px'
+      width: 'auto'
     }).afterClosed().subscribe((video: Video) => {
       if (video) {
         /**

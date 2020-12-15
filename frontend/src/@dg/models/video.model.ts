@@ -6,7 +6,8 @@ export interface IVideo {
     title: string;
     location: string;
     formats: string[];
-    res: string;
+    height: number,
+    width: number,
     length: string;
     fps: number;
     camera: string;
@@ -22,7 +23,8 @@ export class Video implements IVideo, Deserializable {
     public title: string;
     public location: string;
     public formats: string[];
-    public res: string;
+    public height: number;
+    public width: number;
     public length: string;
     public fps: number;
     public camera: string;
@@ -79,6 +81,10 @@ export class Video implements IVideo, Deserializable {
 
     getDownloadsCount() {
         return
+    }
+
+    getResolution(){
+        return this.width+'x'+this.height
     }
 
 }

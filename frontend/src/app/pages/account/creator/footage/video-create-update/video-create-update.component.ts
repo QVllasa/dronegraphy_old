@@ -1,26 +1,23 @@
 import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
-import icClose from '@iconify/icons-ic/twotone-close';
-import icPrint from '@iconify/icons-ic/twotone-print';
-import icDownload from '@iconify/icons-ic/twotone-cloud-download';
-import icDelete from '@iconify/icons-ic/twotone-delete';
-import icPhone from '@iconify/icons-ic/twotone-phone';
-import icPerson from '@iconify/icons-ic/twotone-person';
-import icMyLocation from '@iconify/icons-ic/twotone-my-location';
-import icLocationCity from '@iconify/icons-ic/twotone-location-city';
-import icEditLocation from '@iconify/icons-ic/twotone-edit-location';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Video} from "../../../../../../@dg/models/video.model";
 import {map, startWith} from "rxjs/operators";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {Observable} from "rxjs";
 import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent} from "@angular/material/chips";
+import {NgxDropzoneChangeEvent} from "ngx-dropzone";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import * as uuid from 'uuid';
+
+
 
 interface CountryState {
   name: string;
 }
+
+
 
 @Component({
   selector: 'dg-video-create-update',
@@ -29,30 +26,46 @@ interface CountryState {
 })
 export class VideoCreateUpdateComponent implements OnInit {
 
-  static id = 100;
+  //
+  // dummyContent = [''];
+  // placeholderFile =  new File(this.dummyContent, "dummy", { type: 'video/quicktime' });
+
 
   form: FormGroup;
   mode: 'create' | 'update' = 'create';
+
+  files: File[] = [];
+  thumbnail: File = null;
 
   visible = true;
   selectable = true;
   removable = true;
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  fruitCtrl = new FormControl();
-  filteredFruits: Observable<string[]>;
-  fruits: string[] = ['Lemon'];
-  allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
 
-  @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto') matAutocomplete: MatAutocomplete;
+  filteredFormats: Observable<string[]>;
+  filteredTags: Observable<string[]>;
+
+  formatCtrl = new FormControl();
+  tagCtrl = new FormControl();
+
+  allFormats: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
+  allTags: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
+
+  categoryList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
+
+  @ViewChild('formatInput') formatInput: ElementRef<HTMLInputElement>;
+  @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
+  @ViewChild('autoFormat') matAutocompleteFormat: MatAutocomplete;
+  @ViewChild('autoTag') matAutocompleteTag: MatAutocomplete;
 
 
   constructor(@Inject(MAT_DIALOG_DATA) public defaults: any,
+              private _snackBar: MatSnackBar,
               private dialogRef: MatDialogRef<VideoCreateUpdateComponent>,
               private fb: FormBuilder) {
-    this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
-        startWith(null),
-        map((fruit: string | null) => fruit ? this._filter(fruit) : this.allFruits.slice()));
+
+
+
   }
 
   ngOnInit() {
@@ -63,25 +76,51 @@ export class VideoCreateUpdateComponent implements OnInit {
     }
 
     this.form = this.fb.group({
-      id: this.defaults.id,
-      // imageSrc: this.defaults.imageSrc,
-      title: [this.defaults.title || ''],
-      location: [this.defaults.location || ''],
-      formats: [this.defaults.formats || ['']]
-      // street: this.defaults.street || '',
-      // city: this.defaults.city || '',
-      // zipcode: this.defaults.zipcode || '',
-      // phoneNumber: this.defaults.phoneNumber || '',
-      // notes: this.defaults.notes || ''
+      id: [this.defaults.id || uuid.v4()],
+      title: [this.defaults.title || '',[Validators.required]],
+      categories: [this.defaults.categories || '',[Validators.required]],
+      location: [this.defaults.location || '',[Validators.required]],
+      length: [this.defaults.length || '',[Validators.pattern("^[0-9]*$"), Validators.required]],
+      fps: [this.defaults.fps || '', [Validators.pattern("^[0-9]*$"), Validators.required]],
+      height: [this.defaults.height || '',[Validators.pattern("^[0-9]*$"), Validators.required]],
+      width: [this.defaults.width || '', [Validators.pattern("^[0-9]*$"), Validators.required]],
+      camera: [this.defaults.camera || '',[Validators.required]],
+      formats: [this.defaults.formats || []],
+      tags: [this.defaults.tags || []],
     });
+
+    // Get Formats
+    //
+    this.filteredFormats = this.formatCtrl.valueChanges.pipe(
+        startWith(null),
+        map((format: string | null) => format ? this._filterFormat(format) : this.allFormats.slice()));
+
+    this.filteredTags = this.tagCtrl.valueChanges.pipe(
+        startWith(null),
+        map((tag: string | null) => tag ? this._filterTag(tag) : this.allFormats.slice()));
   }
 
-  files: File[] = [];
 
-  onSelect(event) {
-    console.log(event);
-    this.files.push(...event.addedFiles);
+
+  onSelectVideo(vid: NgxDropzoneChangeEvent) {
+    console.log(vid);
+    this.files.push(...vid.addedFiles);
   }
+
+  onSelectThumbnail(img: NgxDropzoneChangeEvent) {
+    console.log(img);
+    if (img.rejectedFiles.length > 0){
+      this._snackBar.open("Datei ist zu groß!", "SCHLIESSEN")
+      return
+    }
+
+    this.thumbnail = img.addedFiles[0];
+  }
+
+  onRemoveThumbnail(){
+    this.thumbnail = null;
+  }
+
 
   onRemove(event) {
     console.log(event);
@@ -90,28 +129,36 @@ export class VideoCreateUpdateComponent implements OnInit {
 
 
   save() {
-    if (this.mode === 'create') {
-      this.createVideo();
-    } else if (this.mode === 'update') {
-      this.updateVideo();
+    if(!this.thumbnail){
+      this._snackBar.open("Dein Thumbnail fehlt!", "SCHLIESSEN")
+      return
     }
+    console.log(this.form.value)
+    console.log(this.thumbnail);
+    // if (this.mode === 'create') {
+    //   this.createVideo();
+    // } else if (this.mode === 'update') {
+    //   this.updateVideo();
+    // }
   }
 
   createVideo() {
-    const video = this.form.value;
-
-    if (!video.imageSrc) {
-      video.imageSrc = 'assets/img/avatars/1.jpg';
-    }
-
-    this.dialogRef.close(video);
+    console.log("onCreateVideo...")
+    // const video = this.form.value;
+    //
+    // if (!video.imageSrc) {
+    //   video.imageSrc = 'assets/img/avatars/1.jpg';
+    // }
+    //
+    // this.dialogRef.close(video);
   }
 
   updateVideo() {
-    const video = this.form.value;
-    video.id = this.defaults.id;
-
-    this.dialogRef.close(video);
+    console.log("onUpdateVideo...")
+    // const video = this.form.value;
+    // video.id = this.defaults.id;
+    //
+    // this.dialogRef.close(video);
   }
 
   isCreateMode() {
@@ -122,13 +169,13 @@ export class VideoCreateUpdateComponent implements OnInit {
     return this.mode === 'update';
   }
 
-  add(event: MatChipInputEvent): void {
+  addFormat(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
 
     // Add our fruit
     if ((value || '').trim()) {
-      this.fruits.push(value.trim());
+      this.updateFormats(value)
     }
 
     // Reset the input value
@@ -136,27 +183,83 @@ export class VideoCreateUpdateComponent implements OnInit {
       input.value = '';
     }
 
-    this.fruitCtrl.setValue(null);
+    this.updateFormats(null)
   }
 
-  remove(fruit: string): void {
-    const index = this.fruits.indexOf(fruit);
+  addTag(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+
+    // Add our fruit
+    if ((value || '').trim()) {
+      this.updateTags(value)
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+
+    this.updateTags(null)
+  }
+
+  removeFormat(format: string): void {
+    const index = this.form.get('formats').value.indexOf(format);
 
     if (index >= 0) {
-      this.fruits.splice(index, 1);
+      this.form.get('formats').value.splice(index, 1);
     }
   }
 
-  selected(event: MatAutocompleteSelectedEvent): void {
-    this.fruits.push(event.option.viewValue);
-    this.fruitInput.nativeElement.value = '';
-    this.fruitCtrl.setValue(null);
+  removeTag(tag: string): void {
+    const index = this.form.get('tags').value.indexOf(tag);
+
+    if (index >= 0) {
+      this.form.get('tags').value.splice(index, 1);
+    }
   }
 
-  private _filter(value: string): string[] {
+  private _filterTag(value: string): string[] {
     const filterValue = value.toLowerCase();
+    return this.allTags.filter(tag => tag.toLowerCase().indexOf(filterValue) === 0);
+  }
 
-    return this.allFruits.filter(fruit => fruit.toLowerCase().indexOf(filterValue) === 0);
+  private _filterFormat(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.allFormats.filter(format => format.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  selectedFormat(event: MatAutocompleteSelectedEvent): void {
+    this.form.get('formats').value.push(event.option.viewValue)
+    this.formatInput.nativeElement.value = '';
+    this.formatCtrl.setValue(null);
+  }
+
+
+  selectedTag(event: MatAutocompleteSelectedEvent): void {
+    this.form.get('tags').value.push(event.option.viewValue)
+    this.tagInput.nativeElement.value = '';
+    this.tagCtrl.setValue(null);
+  }
+
+
+
+  updateFormats(value){
+    if (!value){
+      return
+    }
+    let formatList =  this.form.get('formats').value;
+    formatList.push(value.trim())
+    this.form.get('formats').setValue(formatList)
+  }
+
+  updateTags(value){
+    if (!value){
+      return
+    }
+    let tagList =  this.form.get('tags').value;
+    tagList.push(value.trim())
+    this.form.get('tags').setValue(tagList)
   }
 
 }

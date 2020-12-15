@@ -15,6 +15,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {NgxDropzoneModule} from "ngx-dropzone";
 import {MatChipsModule} from "@angular/material/chips";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {NgBytesPipeModule} from "angular-pipes";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {SecondsToMinutesPipe} from "../../../../../../@dg/pipes/seconds/seconds-to-minutes.pipe";
 
 @NgModule({
   imports: [
@@ -32,9 +36,12 @@ import {MatChipsModule} from "@angular/material/chips";
     IconModule,
     MatDividerModule,
     MatAutocompleteModule,
-    MatChipsModule
+    MatSnackBarModule,
+    MatChipsModule,
+    NgBytesPipeModule,
+    MatSlideToggleModule
   ],
-  declarations: [VideoCreateUpdateComponent],
+  declarations: [VideoCreateUpdateComponent, SecondsToMinutesPipe],
   entryComponents: [VideoCreateUpdateComponent],
   exports: [VideoCreateUpdateComponent]
 })

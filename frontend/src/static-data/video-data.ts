@@ -10,10 +10,17 @@ const videoData = (): IVideo => {
         title: faker.name.title(),
         location: faker.address.city() + ', ' + faker.address.country(),
         formats: ['4K', 'UHD', 'mp4'],
-        res: '1920x1080',
+        height: faker.random.number({
+            'min': 240,
+            'max': 4000
+        }),
+        width: faker.random.number({
+            'min': 240,
+            'max': 4000
+        }),
         length: faker.random.number({
-            'min': 0.1,
-            'max': 0.9
+            'min': 0,
+            'max': 400
         }).toString(),
         fps: 24,
         camera: 'DJI Mavic Pro',
