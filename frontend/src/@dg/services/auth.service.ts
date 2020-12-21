@@ -44,7 +44,6 @@ export class AuthenticationService implements OnDestroy {
                 return this.userService.getUser(user.uid);  // GET
             }),
             switchMap(user => {
-                console.log(user)
                 this.userService.user$.next(new User().deserialize(user));
                 return this.afAuth.authState;
             }),

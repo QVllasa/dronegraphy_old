@@ -1,14 +1,14 @@
-import {IUser, User} from './user.model';
+import {User} from './user.model';
 import {Deserializable} from "./deserialize.interface";
 
 export interface IVideo {
-    id: number;
+    id: string;
     title: string;
     location: string;
     formats: string[];
     height: number,
     width: number,
-    length: string;
+    length: number;
     fps: number;
     camera: string;
     tags: string[];
@@ -19,13 +19,13 @@ export interface IVideo {
 
 export class Video implements IVideo, Deserializable {
 
-    public id: number;
+    public id: string;
     public title: string;
     public location: string;
     public formats: string[];
     public height: number;
     public width: number;
-    public length: string;
+    public length: number;
     public fps: number;
     public camera: string;
     public tags: string[];
@@ -35,6 +35,7 @@ export class Video implements IVideo, Deserializable {
     public thumbnail?: string;
 
     #sell: boolean;
+    #published: boolean;
     #onBanner: boolean;
     #itemPath: string;
 
@@ -52,7 +53,8 @@ export class Video implements IVideo, Deserializable {
     }
 
     getLicense(): boolean | null {
-        return this.#sell
+        return this.#sell ? this.#sell : null
+
     }
 
     setItemPath(path: string) {
@@ -83,8 +85,12 @@ export class Video implements IVideo, Deserializable {
         return
     }
 
-    getResolution(){
-        return this.width+'x'+this.height
+    getResolution() {
+        return this.width + 'x' + this.height
+    }
+
+    published(): boolean {
+        return this.#published;
     }
 
 }

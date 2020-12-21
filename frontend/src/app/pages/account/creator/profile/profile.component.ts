@@ -92,9 +92,7 @@ export class ProfileComponent implements OnInit {
     }
 
     onFileUpload(event) {
-        console.log("onFileSelected")
         this.file = event.target.files[0];
-        console.log(this.file);
         const fd = new FormData()
         fd.append("file", this.file, this.file.name)
 
@@ -103,9 +101,7 @@ export class ProfileComponent implements OnInit {
             .pipe(
                 map(event => {
                     if (event.type === HttpEventType.UploadProgress) {
-                        console.log('Upload Progress', event)
                     } else if (event.type === HttpEventType.Response) {
-                        console.log(event.body)
                         return event.body
                     }
                 }),
@@ -114,7 +110,6 @@ export class ProfileComponent implements OnInit {
                 if (res){
                     this.userService.user$.value.setProfileImage(res)
                     this._snackBar.open("Profilbild aktualisiert", "SCHLIESSEN")
-                    console.log("inside subscribe:", res)
                     this.fileUpload.nativeElement.value = "";
                 }
             })

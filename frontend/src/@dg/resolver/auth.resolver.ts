@@ -35,7 +35,6 @@ export class AuthResolver implements Resolve<User> {
                     this.userService.user$.next(null);
                     return of(null);
                 }
-                console.log(user)
                 this.userService.user$.next(new User().deserialize(user));
                 return this.authService.afAuth.idTokenResult;
             }),

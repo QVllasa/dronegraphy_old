@@ -74,7 +74,7 @@ export class FootageComponent implements OnInit {
       this.dataSource.data = videos;
     });
 
-    console.log(this.columns)
+    // console.log(this.columns)
 
     this.searchCtrl.valueChanges.subscribe(value => this.onFilterChange(value));
   }
