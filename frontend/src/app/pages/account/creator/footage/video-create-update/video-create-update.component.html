@@ -7,11 +7,13 @@
             class="headline m-0"
             fxFlex="auto">Neues Video</h2>
 
-        <mat-slide-toggle class="mx-4" color="primary"><span class="font-light">Veröffentlichen</span></mat-slide-toggle>
+        <div fxLayoutAlign="center start" fxLayout="column">
+            <mat-slide-toggle class="" color="primary"><span class="font-light text-sm">Sofort Veröffentlichen</span></mat-slide-toggle>
+            <mat-slide-toggle class="mt-1" color="primary"><span class="font-light text-sm">Lizenzpflichtig</span></mat-slide-toggle>
+        </div>
 
-        <mat-slide-toggle class="mr-4" color="primary"><span class="font-light">Lizenzpflichtig</span></mat-slide-toggle>
 
-        <button mat-icon-button>
+        <button class="ml-4" mat-icon-button type="button">
             <mat-icon class="text-secondary">help_outline</mat-icon>
         </button>
     </div>
@@ -42,7 +44,7 @@
                 <!--            TITLE-->
                 <mat-form-field appearance="outline" class=" flex-auto">
                     <mat-label>Titel</mat-label>
-                    <input cdkFocusInitial formControlName="title" matInput>
+                    <input  formControlName="title" matInput>
                     <mat-error *ngIf="form.get('title').invalid">Bitte trage einen Titel ein, der dein Werk kurz und
                         prägnant beschreibt.
                     </mat-error>
@@ -89,20 +91,21 @@
                         <mat-label>Bildrate pro Sekunde</mat-label>
                         <input placeholder="24" formControlName="fps" matInput>
                         <mat-error *ngIf="form.get('fps').invalid">Nur ganze Zahlen</mat-error>
+                        <mat-hint *ngIf="form.get('fps').value">{{form.get('fps').value+' FPS'}}</mat-hint>
                     </mat-form-field>
 
                     <!--            RESOLUTION -->
                     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="12px">
                         <mat-form-field class="ml-6 w-24" appearance="outline">
-                            <mat-label class="text-secondary">Höhe</mat-label>
-                            <input placeholder="1080" formControlName="height" matInput>
-                            <mat-error *ngIf="form.get('height').invalid">Nur ganze Zahlen</mat-error>
-                            <mat-hint>in Pixel</mat-hint>
-                        </mat-form-field>
-                        <mat-form-field class="ml-6 w-24" appearance="outline">
                             <mat-label class="text-secondary">Breite</mat-label>
                             <input placeholder="1920" formControlName="width" matInput>
                             <mat-error *ngIf="form.get('width').invalid">Nur ganze Zahlen</mat-error>
+                            <mat-hint>in Pixel</mat-hint>
+                        </mat-form-field>
+                        <mat-form-field class="ml-6 w-24" appearance="outline">
+                            <mat-label class="text-secondary">Höhe</mat-label>
+                            <input placeholder="1080" formControlName="height" matInput>
+                            <mat-error *ngIf="form.get('height').invalid">Nur ganze Zahlen</mat-error>
                             <mat-hint>in Pixel</mat-hint>
                         </mat-form-field>
                     </div>
@@ -208,9 +211,13 @@
                 </ngx-dropzone-label>
             </ngx-dropzone-preview>
         </ngx-dropzone>
-        <mat-hint class="mt-4"><span class="font-bold">Hinweis:</span> Du kannst beliebig viele Aufnahmen in unterschiedlichen Auflösungen und Formaten der gleichen Aufnahme zur Verfügung stellen.
-            <br> RAW Aufnahmen musst du in einen ZIP-Ordner packen <br> Folgende Formate werden für den Upload unterstützt:
-            <br><span class="font-bold">MOV | MP4 | ZIP</span></mat-hint>
+        <div class="mt-4" fxLayout="row" fxFlex="100" fxLayoutAlign="end center">
+
+        </div>
+
+<!--        <mat-hint class="mt-4"><span class="font-bold">Hinweis:</span> Du kannst beliebig viele Aufnahmen in unterschiedlichen Auflösungen und Formaten der gleichen Aufnahme zur Verfügung stellen.-->
+<!--            <br> RAW Aufnahmen musst du in einen ZIP-Ordner packen <br> Folgende Formate werden für den Upload unterstützt:-->
+<!--            <br><span class="font-bold">MOV | MP4 | ZIP</span></mat-hint>-->
 
 
     </mat-dialog-content>
