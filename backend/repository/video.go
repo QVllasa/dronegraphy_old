@@ -1,15 +1,14 @@
 package repository
 
-//
-//import (
-//	"context"
-//	"dronegraphy/backend/repository/model"
-//	"github.com/labstack/gommon/log"
-//	"go.mongodb.org/mongo-driver/bson"
-//	"go.mongodb.org/mongo-driver/bson/primitive"
-//	"io"
-//)
-//
+import (
+	"context"
+	"dronegraphy/backend/repository/model"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/log"
+	"go.mongodb.org/mongo-driver/bson"
+	"net/http"
+)
+
 //func (this *Repository) UpdateVideo(id string, reqBody io.ReadCloser) (*model.Video, error) {
 //
 //	var video *model.Video
@@ -41,24 +40,24 @@ package repository
 //
 //	return video, nil
 //}
-//
-//func (this *Repository) CreateVideo(model *model.Video) error {
-//
-//	//ID, err := this.UserColl.InsertOne(context.Background(), model)
-//	//if err != nil {
-//	//	log.Errorf("Unable to store in database: %s", err)
-//	//	return echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Email already exists"})
-//	//}
-//	//
-//	//res := this.UserColl.FindOne(context.Background(), bson.M{"_id": ID.InsertedID})
-//	//if err := res.Decode(&model); err != nil {
-//	//	log.Errorf("Unable to fetch User ID: %v", err)
-//	//	return echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Unable to fetch User ID"})
-//	//}
-//
-//	return nil
-//}
-//
+
+func (this *Repository) CreateVideo(model *model.Video) error {
+
+	ID, err := this.VideoColl.InsertOne(context.Background(), model)
+	if err != nil {
+		log.Errorf("Unable to store in database: %s", err)
+		return echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Video already exists"})
+	}
+
+	res := this.VideoColl.FindOne(context.Background(), bson.M{"_id": ID.InsertedID})
+	if err := res.Decode(&model); err != nil {
+		log.Errorf("Unable to fetch Video ID: %v", err)
+		return echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Unable to fetch Video ID"})
+	}
+
+	return nil
+}
+
 //func (this *Repository) GetVideos() ([]model.Video, error) {
 //
 //	var videos []model.Video
@@ -100,64 +99,64 @@ package repository
 //	}
 //	return &video, nil
 //}
+
+//func deleteVideo(ctx context.Context, id string, collection *mongo.Collection) (int64, error) {
+//	docID, err := primitive.ObjectIDFromHex(id)
+//	if err != nil {
+//		return 0, err
+//	}
+//	res, err := collection.DeleteOne(ctx, bson.M{"_id": docID})
+//	if err != nil {
+//		return 0, err
+//	}
+//	return res.DeletedCount, nil
+//}
 //
-////func deleteVideo(ctx context.Context, id string, collection *mongo.Collection) (int64, error) {
-////	docID, err := primitive.ObjectIDFromHex(id)
-////	if err != nil {
-////		return 0, err
-////	}
-////	res, err := collection.DeleteOne(ctx, bson.M{"_id": docID})
-////	if err != nil {
-////		return 0, err
-////	}
-////	return res.DeletedCount, nil
-////}
-////
-////func modifyVideo(ctx context.Context, id string, reqBody io.ReadCloser, collection *mongo.Collection) (Video, error) {
-////	var video Video
-////	docID, err := primitive.ObjectIDFromHex(id)
-////	if err != nil {
-////		log.Errorf("Cannot convert to objectID: %v", err)
-////		return video, err
-////	}
-////	filter := bson.M{"_id": docID}
-////	res := collection.FindOne(ctx, filter)
-////
-////	if err := res.Decode(&video); err != nil {
-////		log.Errorf("Unable to decode to video: %v", err)
-////		return video, err
-////	}
-////
-////	if err := json.NewDecoder(reqBody).Decode(&video); err != nil {
-////		log.Errorf("Unable decode using request body: %v", err)
-////		return video, err
-////	}
-////
-////	if err := v.Struct(video); err != nil {
-////		log.Errorf("Unable to validate the struct: %v", err)
-////		return video, err
-////	}
-////
-////	_, err = collection.UpdateOne(ctx, filter, bson.M{"$set": video})
-////	if err != nil {
-////		log.Errorf("Unable to update the video: %v", err)
-////		return video, err
-////	}
-////
-////	return video, nil
-////}
-////
-////func insertVideo(ctx context.Context, videos []Video, collection *mongo.Collection) ([]interface{}, *echo.HTTPError) {
-////	var insertedIds []interface{}
-////	for _, video := range videos {
-////		id, err := collection.InsertOne(ctx, video)
-////		if err != nil {
-////			log.Errorf("Unable to store in database: %s", err)
-////			return nil, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "unable to insert to database"})
-////		}
-////		insertedIds = append(insertedIds, id.InsertedID)
-////	}
-////	return insertedIds, nil
-////}
-////
-////
+//func modifyVideo(ctx context.Context, id string, reqBody io.ReadCloser, collection *mongo.Collection) (Video, error) {
+//	var video Video
+//	docID, err := primitive.ObjectIDFromHex(id)
+//	if err != nil {
+//		log.Errorf("Cannot convert to objectID: %v", err)
+//		return video, err
+//	}
+//	filter := bson.M{"_id": docID}
+//	res := collection.FindOne(ctx, filter)
+//
+//	if err := res.Decode(&video); err != nil {
+//		log.Errorf("Unable to decode to video: %v", err)
+//		return video, err
+//	}
+//
+//	if err := json.NewDecoder(reqBody).Decode(&video); err != nil {
+//		log.Errorf("Unable decode using request body: %v", err)
+//		return video, err
+//	}
+//
+//	if err := v.Struct(video); err != nil {
+//		log.Errorf("Unable to validate the struct: %v", err)
+//		return video, err
+//	}
+//
+//	_, err = collection.UpdateOne(ctx, filter, bson.M{"$set": video})
+//	if err != nil {
+//		log.Errorf("Unable to update the video: %v", err)
+//		return video, err
+//	}
+//
+//	return video, nil
+//}
+//
+//func insertVideo(ctx context.Context, videos []Video, collection *mongo.Collection) ([]interface{}, *echo.HTTPError) {
+//	var insertedIds []interface{}
+//	for _, video := range videos {
+//		id, err := collection.InsertOne(ctx, video)
+//		if err != nil {
+//			log.Errorf("Unable to store in database: %s", err)
+//			return nil, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "unable to insert to database"})
+//		}
+//		insertedIds = append(insertedIds, id.InsertedID)
+//	}
+//	return insertedIds, nil
+//}
+//
+//

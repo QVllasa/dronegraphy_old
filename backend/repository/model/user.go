@@ -1,6 +1,7 @@
 package model
 
 import (
+	"dronegraphy/backend/repository/model/trait"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -11,10 +12,11 @@ type (
 		FirstName    string             `json:"firstName" bson:"firstName"  validate:"required"`
 		LastName     string             `json:"lastName" bson:"lastName"`
 		UID          string             `json:"uid" bson:"uid" validate:"required"`
-		Roles        []string           `json:"-" bson:"roles"`
+		Role         string             `json:"-" bson:"role"`
 		ProfileImage string             `json:"profileImage,omitempty" bson:"profileImage,omitempty"`
+		Videos       []string           `json:"videos,omitempty" bson:"videos,omitempty"`
 
 		//trait.Model
-		//trait.Timestampable
+		trait.Timestampable
 	}
 )

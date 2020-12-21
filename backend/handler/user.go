@@ -16,7 +16,7 @@ import (
 )
 
 var (
-	assetRoot    = "backend/assets/"
+	assetRoot    = "backend/storage/"
 	profileImage = "/profileImage/"
 )
 
@@ -79,7 +79,7 @@ func (this *Handler) UploadPhoto(c echo.Context) error {
 
 	//Validate File of type image
 	if !strings.Contains(file.Header["Content-Type"][0], "image") {
-		return c.JSON(http.StatusBadRequest, "unsupported content")
+		return c.JSON(http.StatusBadRequest, "Content-Type not supported")
 	}
 
 	id := c.Param("id")
@@ -107,7 +107,9 @@ func (this *Handler) UploadPhoto(c echo.Context) error {
 		fullPath := baseDir + nameHere
 
 		// Remove the file.
-		os.Remove(fullPath)
+		if err := os.Remove(fullPath); err != nil {
+			return nil
+		}
 	}
 
 	fileID := xid.New().String()

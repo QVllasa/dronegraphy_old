@@ -74,8 +74,8 @@ func (this *FirebaseClient) VerifyToken(c echo.Context) (*auth.Token, error) {
 func (this *FirebaseClient) GetTokenFromRequest(c echo.Context) (string, error) {
 
 	// Get Bearer JWT Token from Header which comes from frontend
-	authApp := c.Request().Header.Get("Authorization")
-	idToken := strings.Replace(authApp, "Bearer ", "", 1)
+	token := c.Request().Header.Get("Authorization")
+	idToken := strings.Replace(token, "Bearer ", "", 1)
 
 	return idToken, nil
 }
@@ -88,8 +88,6 @@ func (this *FirebaseClient) VerifyUser(c echo.Context) error {
 	}
 
 	claims := token.Claims
-	//fmt.Println(claims["uid"].(string))
-	//fmt.Println(c.Param("id"))
 	if c.Param("id") != claims["user_id"] {
 		log.Errorf("cannot match ids: %v", err)
 		return echo.NewHTTPError(http.StatusForbidden, "action not allowed")
@@ -117,16 +115,8 @@ func (this *FirebaseClient) EmailVerified(c echo.Context) (bool, error) {
 
 func (this *FirebaseClient) UpdateRoleClaims(user *model.User) error {
 
-	//claims := map[string]interface{}{
-	//	"roles": map[string]interface{}{
-	//		"admin":   user.Roles.Admin,
-	//		"creator": user.Roles.Creator,
-	//		"member":  user.Roles.Member,
-	//	},
-	//}
-
 	claims := map[string]interface{}{
-		"roles": user.Roles,
+		"role": user.Role,
 	}
 
 	if err := this.Client.SetCustomUserClaims(context.Background(), user.UID, claims); err != nil {

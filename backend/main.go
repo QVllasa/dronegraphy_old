@@ -3,6 +3,7 @@ package main
 import (
 	"dronegraphy/backend/handler"
 	"dronegraphy/backend/repository"
+	cm "dronegraphy/backend/router/middleware"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -35,16 +36,15 @@ func main() {
 	e.GET("/users", controller.GetUsers)
 
 	// Creator Endpoints
-	// e.GET("/creators")
-	//e.POST("/videos", controller.CreateVideos, middleware.BodyLimit("1M"), customMiddleware.Auth())
-	// e.PUT("/videos/:id", h.UpdateVideo, middleware.BodyLimit("1M"), customMiddleware.Auth())
-	// e.DELETE("/videos/:id", h.DeleteVideo, customMiddleware.Auth())
+	e.POST("/videos", controller.UploadVideo, cm.Auth())
+	//e.PUT("/videos/:id", h.UpdateVideo, middleware.BodyLimit("1M"), customMiddleware.Auth())
+	//e.DELETE("/videos/:id", h.DeleteVideo, customMiddleware.Auth())
 
 	// Member Endpoints
 	e.POST("/users", controller.Register)
-	e.GET("/users/:id", controller.GetUser)
-	e.PUT("/users/:id", controller.UpdateUser)
-	e.POST("/users/:id", controller.UploadPhoto)
+	e.GET("/users/:id", controller.GetUser, cm.Auth())
+	e.PUT("/users/:id", controller.UpdateUser, cm.Auth())
+	e.POST("/users/:id", controller.UploadPhoto, cm.Auth())
 	e.GET("/photo/:id", controller.GetPhoto)
 
 	//// Public Endpoints
