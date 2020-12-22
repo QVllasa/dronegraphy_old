@@ -41,13 +41,15 @@ import (
 //	return video, nil
 //}
 
-func (this *Repository) CreateVideo(model *model.Video) error {
+func (this *Repository) CreateVideo(model *model.Video, id string) error {
 
 	ID, err := this.VideoColl.InsertOne(context.Background(), model)
 	if err != nil {
 		log.Errorf("Unable to store in database: %s", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Video already exists"})
 	}
+
+	//TODO Hier ein Video einem Nutzer zuordnen
 
 	res := this.VideoColl.FindOne(context.Background(), bson.M{"_id": ID.InsertedID})
 	if err := res.Decode(&model); err != nil {

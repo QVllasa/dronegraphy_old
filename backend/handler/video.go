@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"dronegraphy/backend/repository/model"
 	"fmt"
 	"github.com/labstack/echo/v4"
@@ -12,8 +13,14 @@ func (this *Handler) UploadVideo(c echo.Context) error {
 
 	var video *model.Video
 
-	token, _ := this.service.FirebaseApp.GetTokenFromRequest(c)
-	fmt.Println(token)
+	idToken, _ := this.service.FirebaseApp.GetTokenFromRequest(c)
+
+	// Verify bearer token
+	token, err := this.service.FirebaseApp.Client.VerifyIDToken(context.Background(), idToken)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
 
 	c.Echo().Validator = &VideoValidator{Validator: v}
 
@@ -27,7 +34,7 @@ func (this *Handler) UploadVideo(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, ErrorMessage{Message: "Validation Error: unable to parse request payload"})
 	}
 
-	if err := this.repository.CreateVideo(video); err != nil {
+	if err := this.repository.CreateVideo(video, token.UID); err != nil {
 		log.Error(err)
 		return c.JSON(http.StatusInternalServerError, "Unable to store video")
 	}
