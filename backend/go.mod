@@ -10,7 +10,7 @@ require (
 	github.com/aws/aws-sdk-go v1.36.13 // indirect
 	github.com/casbin/casbin v1.9.1
 	github.com/casbin/casbin/v2 v2.19.4
-	github.com/casbin/mongodb-adapter/v3 v3.0.0 // indirect
+	github.com/casbin/mongodb-adapter/v3 v3.0.0
 	github.com/disintegration/imaging v1.6.2
 	github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8 // indirect
 	github.com/go-playground/validator/v10 v10.4.1

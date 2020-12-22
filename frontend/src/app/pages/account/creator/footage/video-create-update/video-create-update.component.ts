@@ -134,7 +134,9 @@ export class VideoCreateUpdateComponent implements OnInit {
         console.log(JSON.stringify(this.form.value))
         console.log(this.thumbnail);
 
-        // this.videoService.createVideo()
+        this.videoService.createVideo(this.form.value).subscribe(res => {
+            alert(JSON.stringify(res))
+        })
 
         // if (this.mode === 'create') {
         //   this.createVideo();

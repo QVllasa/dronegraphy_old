@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"dronegraphy/backend/repository"
+	"dronegraphy/backend/service"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"net/http"
@@ -14,7 +14,7 @@ func Auth() echo.MiddlewareFunc {
 func authenticate(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 
-		client, err := repository.NewFirebaseClient()
+		client, err := service.NewFirebaseClient()
 
 		if err != nil {
 			log.Error(err)

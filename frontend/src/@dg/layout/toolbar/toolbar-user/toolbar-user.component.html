@@ -27,11 +27,11 @@
 
 <mat-menu #menu="matMenu">
   <ng-container *ngIf="userService.user$ | async as user">
-    <ng-container *ngIf="user.roles">
-      <button *ngIf="user.roles.includes('ROLE_MEMBER')" [routerLink]="['account/profile']" mat-menu-item>
+    <ng-container *ngIf="user.role">
+      <button *ngIf="user.role.includes('ROLE_MEMBER')" [routerLink]="['account/profile']" mat-menu-item>
         <span> Account </span>
       </button>
-      <button *ngIf="user.roles.includes('ROLE_CREATOR')" [routerLink]="['account/creator']" mat-menu-item>
+      <button *ngIf="user.role.includes('ROLE_CREATOR')" [routerLink]="['account/creator']" mat-menu-item>
         <span> Creator Account </span>
       </button>
     </ng-container>

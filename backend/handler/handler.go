@@ -3,29 +3,27 @@ package handler
 import (
 	"dronegraphy/backend/repository"
 	"dronegraphy/backend/service"
+	"github.com/casbin/casbin/v2"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/gommon/log"
 )
 
 type Handler struct {
 	echo       *echo.Echo
+	enforcer   *casbin.Enforcer
 	repository *repository.Repository
 	service    *service.Service
 }
 
-func NewHandler(echo *echo.Echo) (this *Handler, err error) {
+func NewHandler(echo *echo.Echo, enforcer *casbin.Enforcer) (this *Handler, err error) {
 	this = new(Handler)
 	this.echo = echo
 
-	//TODO Warum muss ich "NewDatabase()" ausführen, wo ich es doch schon in main.go gemacht habe?
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//TODO Warum muss ich hier "NewDatabase()" ausführen, wo ich es doch in main.go machen muss?
+	this.repository = repository.NewRepository(repository.NewDatabase().Client)
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-	this.repository, err = repository.NewRepository(repository.NewDatabase().Client)
-	if err != nil {
-		log.Error("repository creating failed")
-		return nil, err
-	}
-	//
-	//this.service = service.NewService(this.repository, this.repository.FirebaseApp.Client)
+	this.service = service.NewService(this.repository, enforcer)
 
 	return this, nil
 }

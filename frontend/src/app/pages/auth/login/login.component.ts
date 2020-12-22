@@ -64,6 +64,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 () => {
                 },
                 error => {
+                    console.log(error)
                     if (error) {
                         this.form.enable()
                         this.isLoading = false;

@@ -65,14 +65,14 @@ export class AccountComponent implements OnInit {
              if (!user){
                  return
              }
-             if(!user.roles){
+             if(!user.role){
                  return
              }
-            if (user.roles.includes('ROLE_MEMBER')) {
+            if (user.role.includes('ROLE_MEMBER')) {
                 links = this.memberLinks
-            }else if (user.roles.includes('ROLE_CREATOR')){
+            }else if (user.role.includes('ROLE_CREATOR')){
                 links = this.creatorLinks
-            }else if(user.roles.includes('ROLE_ADMIN')){
+            }else if(user.role.includes('ROLE_ADMIN')){
                 links = this.adminLinks
             }
         })

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"dronegraphy/backend/repository/model"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"net/http"
@@ -10,6 +11,9 @@ import (
 func (this *Handler) UploadVideo(c echo.Context) error {
 
 	var video *model.Video
+
+	token, _ := this.service.FirebaseApp.GetTokenFromRequest(c)
+	fmt.Println(token)
 
 	c.Echo().Validator = &VideoValidator{Validator: v}
 

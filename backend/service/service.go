@@ -2,17 +2,22 @@ package service
 
 import (
 	"dronegraphy/backend/repository"
-	"firebase.google.com/go/v4/auth"
+	"github.com/casbin/casbin/v2"
 )
 
 type Service struct {
-	repository   *repository.Repository
-	firebaseAuth *auth.Client
+	repository  *repository.Repository
+	FirebaseApp *FirebaseClient
+	enforcer    *casbin.Enforcer
 }
 
-func NewService(repo *repository.Repository, fbClient *auth.Client) (this *Service) {
+func NewService(repo *repository.Repository, enforcer *casbin.Enforcer) (this *Service) {
 	this = new(Service)
-	this.repository = repo
-	this.firebaseAuth = fbClient
+	if repo == nil {
+		this.repository = repository.NewRepository(repository.DB.Client)
+	} else {
+		this.repository = repo
+	}
+	this.FirebaseApp, _ = NewFirebaseClient()
 	return this
 }

@@ -17,8 +17,7 @@ export class RoleGuard implements CanLoad {
       const expectedRole = route.data.expectedRole;
       return this.afAuth.idTokenResult.pipe(
           map(token => {
-              const roles = token.claims["roles"] as Array<string>
-             return roles.includes(expectedRole)
+             return token.claims["role"] === expectedRole
           }),
           tap(isAllowed => {
               if (!isAllowed){

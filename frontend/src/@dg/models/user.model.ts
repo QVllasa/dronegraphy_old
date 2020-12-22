@@ -28,7 +28,7 @@ export class User implements IUser, Deserializable {
     slogan?: string;
     profileImage?: string;
 
-    #roles: string[] = null;
+    #role: string = null;
     #claims: IClaims = null;
 
     deserialize(input: IUser): this {
@@ -52,11 +52,11 @@ export class User implements IUser, Deserializable {
         this.#claims = claims;
     }
 
-    get roles(): string[] | null {
+    get role(): string | null {
         if (this.#claims) {
-            this.#roles = this.#claims["roles"]
+            this.#role = this.#claims["role"]
         }
-        return this.#roles ? this.#roles : null;
+        return this.#role ? this.#role : null;
     }
 
 

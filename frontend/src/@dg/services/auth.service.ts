@@ -88,47 +88,6 @@ export class AuthenticationService implements OnDestroy {
         );
     }
 
-    // TODO fix autologin after registration (works perfectly on login)
-    /*autoLogin() {
-        return this.afAuth.authState.pipe(
-            switchMap(user => {
-                if (!user) {
-                    this.user$.next(null);
-                    return of(null);
-                }
-                return this.userService.getUser(user.uid).pipe(
-                    catchError(err => {
-                        return of(null);
-                    })
-                );
-            }),
-            switchMap(user => {
-                if (!user) {
-                    this.user$.next(null);
-                    return of(null);
-                }
-                this.user$.next(new User(user.uid, user.email, user.firstName, user.lastName));
-                return this.afAuth.idTokenResult;
-            }),
-            switchMap(token => {
-                if (!token) {
-                    this.user$.next(null);
-                    return of(null);
-                }
-                return this.user$.pipe(
-                    tap(user => {
-                        if (!user) {
-                            return of(null);
-                        }
-                        user.setClaims(Object.assign(token.claims));
-                    })
-                );
-            })
-        );
-    }*/
-
-
-
     signOut() {
         this.logout$ = from(this.afAuth.signOut()).pipe(
             switchMap(() => {

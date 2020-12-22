@@ -13,8 +13,9 @@ import (
 )
 
 type Database struct {
-	Client *mongo.Client
-	Cfg    config.Properties
+	Client     *mongo.Client
+	Cfg        config.Properties
+	ConnectURI string
 }
 
 // A global reference to this database instance for later defer.close
@@ -29,7 +30,7 @@ func NewDatabase() (this *Database) {
 		log.Fatalf("Configuration cannot be read: %v", err)
 	}
 
-	connectURI := fmt.Sprintf("mongodb://%s:%s", this.Cfg.DBHost, this.Cfg.DBPort)
+	this.ConnectURI = fmt.Sprintf("mongodb://%s:%s", "localhost", "27017")
 
 	////Example of indexing email and make it unique
 	isUserIndexUnique := true
@@ -42,8 +43,8 @@ func NewDatabase() (this *Database) {
 
 	// MongoDB Connection (if any)
 
-	log.Print("[Database] Connecting to MongoDB: ", connectURI)
-	client, err := mongo.NewClient(options.Client().ApplyURI(connectURI))
+	log.Print("[Database] Connecting to MongoDB: ", this.ConnectURI)
+	client, err := mongo.NewClient(options.Client().ApplyURI(this.ConnectURI))
 	if err != nil {
 		log.Println("[Database] Error while creating a MongoDB client: ", err)
 	}

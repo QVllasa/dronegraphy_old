@@ -22,7 +22,7 @@ var (
 
 func (this *Handler) GetUser(c echo.Context) error {
 
-	if err := this.repository.FirebaseApp.VerifyUser(c); err != nil {
+	if err := this.service.FirebaseApp.VerifyUser(c); err != nil {
 		return err
 	}
 
@@ -32,7 +32,7 @@ func (this *Handler) GetUser(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "user not found")
 	}
 
-	if err = this.repository.FirebaseApp.UpdateRoleClaims(user); err != nil {
+	if err = this.service.FirebaseApp.UpdateRoleClaims(user); err != nil {
 		log.Error(err)
 		return err
 	}
@@ -42,7 +42,7 @@ func (this *Handler) GetUser(c echo.Context) error {
 
 func (this *Handler) UpdateUser(c echo.Context) error {
 
-	if err := this.repository.FirebaseApp.VerifyUser(c); err != nil {
+	if err := this.service.FirebaseApp.VerifyUser(c); err != nil {
 		return err
 	}
 

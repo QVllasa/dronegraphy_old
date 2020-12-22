@@ -81,7 +81,7 @@
                     <!--            LENGTH-->
                     <mat-form-field appearance="outline" class="w-40">
                         <mat-label>Länge in Sekunden</mat-label>
-                        <input placeholder="120" formControlName="length" matInput>
+                        <input type="number" placeholder="120" formControlName="length" matInput>
                         <mat-error *ngIf="form.get('length').invalid">Nur ganze Zahlen</mat-error>
                         <mat-hint *ngIf="form.get('length').value">{{form.get('length').value | secondsToMinutes}} Minuten</mat-hint>
                     </mat-form-field>
@@ -89,7 +89,7 @@
                     <!--            FPS -->
                     <mat-form-field class="ml-6 w-40" appearance="outline">
                         <mat-label>Bildrate pro Sekunde</mat-label>
-                        <input placeholder="24" formControlName="fps" matInput>
+                        <input type="number" placeholder="24" formControlName="fps" matInput>
                         <mat-error *ngIf="form.get('fps').invalid">Nur ganze Zahlen</mat-error>
                         <mat-hint *ngIf="form.get('fps').value">{{form.get('fps').value+' FPS'}}</mat-hint>
                     </mat-form-field>
@@ -98,13 +98,13 @@
                     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="12px">
                         <mat-form-field class="ml-6 w-24" appearance="outline">
                             <mat-label class="text-secondary">Breite</mat-label>
-                            <input placeholder="1920" formControlName="width" matInput>
+                            <input type="number" placeholder="1920" formControlName="width" matInput>
                             <mat-error *ngIf="form.get('width').invalid">Nur ganze Zahlen</mat-error>
                             <mat-hint>in Pixel</mat-hint>
                         </mat-form-field>
                         <mat-form-field class="ml-6 w-24" appearance="outline">
                             <mat-label class="text-secondary">Höhe</mat-label>
-                            <input placeholder="1080" formControlName="height" matInput>
+                            <input type="number" placeholder="1080" formControlName="height" matInput>
                             <mat-error *ngIf="form.get('height').invalid">Nur ganze Zahlen</mat-error>
                             <mat-hint>in Pixel</mat-hint>
                         </mat-form-field>

@@ -64,7 +64,7 @@ func CasbinMiddlewareWithConfig(config Config) echo.MiddlewareFunc {
 }
 
 //
-//func (this *Config) getUserFromJwtToken(c echo.Context) string {
+//func (this *Config) getUserIdFromToken(c echo.Context) string {
 //	tokenUser, ok := c.Get("user").(*jwt.Token)
 //	if !ok {
 //		return ""
