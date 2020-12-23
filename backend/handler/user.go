@@ -22,7 +22,8 @@ var (
 
 func (this *Handler) GetUser(c echo.Context) error {
 
-	if err := this.service.FirebaseApp.VerifyUser(c); err != nil {
+	// TODO: use casbin instead
+	if err := this.service.FirebaseApp.CheckPermission(c); err != nil {
 		return err
 	}
 
@@ -42,7 +43,8 @@ func (this *Handler) GetUser(c echo.Context) error {
 
 func (this *Handler) UpdateUser(c echo.Context) error {
 
-	if err := this.service.FirebaseApp.VerifyUser(c); err != nil {
+	// TODO: use casbin instead
+	if err := this.service.FirebaseApp.CheckPermission(c); err != nil {
 		return err
 	}
 
@@ -57,20 +59,25 @@ func (this *Handler) UpdateUser(c echo.Context) error {
 
 func (this *Handler) GetUsers(c echo.Context) error {
 
-	users, err := this.repository.GetUsers()
+	users, err := this.repository.GetAllUsers()
 	if err != nil {
 		log.Error(err)
 		return err
 	}
 
 	if len(users) == 0 {
-		return echo.NewHTTPError(http.StatusOK, ErrorMessage{Message: "No Users found"})
+		return echo.NewHTTPError(http.StatusOK, "No Users found")
 	}
 
 	return c.JSON(http.StatusOK, users)
 }
 
 func (this *Handler) UploadPhoto(c echo.Context) error {
+
+	// TODO: use casbin instead
+	if err := this.service.FirebaseApp.CheckPermission(c); err != nil {
+		return err
+	}
 
 	file, err := c.FormFile("file")
 	if err != nil {

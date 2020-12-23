@@ -1,9 +1,15 @@
 package service
 
-func authenticate() {
+import (
+	"dronegraphy/backend/repository/model"
+)
 
-}
+func (this *Service) Register(user *model.User) error {
 
-func updateRoles() {
+	// Create
+	if err := this.repository.CreateUser(user); err != nil {
+		return err
+	}
 
+	return nil
 }

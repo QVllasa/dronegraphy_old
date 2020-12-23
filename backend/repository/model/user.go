@@ -3,6 +3,7 @@ package model
 import (
 	"dronegraphy/backend/repository/model/trait"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
 )
 
 type (
@@ -15,6 +16,9 @@ type (
 		Role         string             `json:"-" bson:"role"`
 		ProfileImage string             `json:"profileImage,omitempty" bson:"profileImage,omitempty"`
 		Videos       []string           `json:"videos,omitempty" bson:"videos,omitempty"`
+
+		CreatedAt time.Time `json:"created_at,omitempty" bson:"created_at,omitempty"`
+		UpdatedAt time.Time `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
 
 		//trait.Model
 		trait.Timestampable

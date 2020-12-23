@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"dronegraphy/backend/repository/model"
+	"dronegraphy/backend/util"
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/auth"
 	"github.com/labstack/echo/v4"
@@ -10,7 +11,6 @@ import (
 	"google.golang.org/api/option"
 	"net/http"
 	"path/filepath"
-	"strings"
 )
 
 type FirebaseClient struct {
@@ -18,8 +18,12 @@ type FirebaseClient struct {
 	Client *auth.Client
 }
 
+var FbClient *FirebaseClient
+
 func NewFirebaseClient() (this *FirebaseClient, err error) {
 	this = new(FirebaseClient)
+
+	log.Info("New FirebaseClient")
 
 	//Check if serviceAccountKey file exists
 	serviceAccountKeyFilePath, err := filepath.Abs("./backend/serviceAccountKey.json")
@@ -45,13 +49,16 @@ func NewFirebaseClient() (this *FirebaseClient, err error) {
 
 	this.Client = client
 
+	FbClient = this
+
 	return this, nil
 }
 
-func (this *FirebaseClient) VerifyToken(c echo.Context) (*auth.Token, error) {
+// Get token as struct to read claims
+func (this *FirebaseClient) GetToken(c echo.Context) (*auth.Token, error) {
 
 	// Get token
-	idToken, err := this.GetTokenFromRequest(c)
+	idToken, err := util.GetTokenFromRequest(c)
 	if err != nil {
 		log.Error(err)
 		return nil, err
@@ -69,17 +76,9 @@ func (this *FirebaseClient) VerifyToken(c echo.Context) (*auth.Token, error) {
 	return token, nil
 }
 
-func (this *FirebaseClient) GetTokenFromRequest(c echo.Context) (string, error) {
+func (this *FirebaseClient) CheckPermission(c echo.Context) error {
 
-	// Get Bearer JWT Token from Header which comes from frontend
-	token := c.Request().Header.Get("Authorization")
-	idToken := strings.Replace(token, "Bearer ", "", 1)
-
-	return idToken, nil
-}
-
-func (this *FirebaseClient) VerifyUser(c echo.Context) error {
-	token, err := this.VerifyToken(c)
+	token, err := this.GetToken(c)
 	if err != nil {
 		log.Errorf("invalid token: %v", err)
 		return echo.NewHTTPError(http.StatusForbidden, "invalid token")
@@ -94,9 +93,9 @@ func (this *FirebaseClient) VerifyUser(c echo.Context) error {
 	return nil
 }
 
-func (this *FirebaseClient) EmailVerified(c echo.Context) (bool, error) {
+func (this *FirebaseClient) isEmailVerified(c echo.Context) (bool, error) {
 
-	token, err := this.VerifyToken(c)
+	token, err := this.GetToken(c)
 	if err != nil {
 		log.Errorf("invalid token: %v", err)
 		return false, echo.NewHTTPError(http.StatusForbidden, "invalid token")

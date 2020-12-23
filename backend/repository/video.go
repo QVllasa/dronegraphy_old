@@ -3,10 +3,13 @@ package repository
 import (
 	"context"
 	"dronegraphy/backend/repository/model"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
+	"time"
 )
 
 //func (this *Repository) UpdateVideo(id string, reqBody io.ReadCloser) (*model.Video, error) {
@@ -43,10 +46,28 @@ import (
 
 func (this *Repository) CreateVideo(model *model.Video, id string) error {
 
+	// Set CreatedAt
+	model.CreatedAt = time.Now()
+
+	fmt.Println(id)
+
 	ID, err := this.VideoColl.InsertOne(context.Background(), model)
 	if err != nil {
 		log.Errorf("Unable to store in database: %s", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Video already exists"})
+	}
+
+	filter := bson.M{"uid": id}
+	//user.UpdatedAt = time.Now()
+
+	_, err = this.UserColl.UpdateOne(
+		context.Background(),
+		filter,
+		bson.M{"$addToSet": bson.M{"videos": ID.InsertedID}})
+
+	if err != nil {
+		log.Errorf("Unable to update the user: %v", err)
+		return echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Unable to update the User"})
 	}
 
 	//TODO Hier ein Video einem Nutzer zuordnen
@@ -88,19 +109,21 @@ func (this *Repository) CreateVideo(model *model.Video, id string) error {
 //	return videos, nil
 //}
 //
-//func (this *Repository) GetVideoById(id string) (*model.Video, error) {
-//
-//	var video model.Video
-//	docID, err := primitive.ObjectIDFromHex(id)
-//	if err != nil {
-//		return &video, err
-//	}
-//	res := this.VideoColl.FindOne(context.Background(), bson.M{"_id": docID})
-//	if err := res.Decode(&video); err != nil {
-//		return &video, err
-//	}
-//	return &video, nil
-//}
+
+func (this *Repository) GetVideoById(id string) (*model.Video, error) {
+
+	var video *model.Video
+
+	docID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return video, err
+	}
+	res := this.VideoColl.FindOne(context.Background(), bson.M{"_id": docID})
+	if err := res.Decode(&video); err != nil {
+		return video, err
+	}
+	return video, nil
+}
 
 //func deleteVideo(ctx context.Context, id string, collection *mongo.Collection) (int64, error) {
 //	docID, err := primitive.ObjectIDFromHex(id)

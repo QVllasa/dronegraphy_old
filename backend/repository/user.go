@@ -10,6 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"io"
 	"net/http"
+	"time"
 )
 
 type ErrorMessage struct {
@@ -37,6 +38,7 @@ func (this *Repository) UpdateUser(id string, reqBody io.ReadCloser) (*model.Use
 	//}
 
 	filter := bson.M{"uid": user.UID}
+	user.UpdatedAt = time.Now()
 
 	_, err = this.UserColl.UpdateOne(context.Background(), filter, bson.M{"$set": user})
 	if err != nil {
@@ -48,6 +50,8 @@ func (this *Repository) UpdateUser(id string, reqBody io.ReadCloser) (*model.Use
 }
 
 func (this *Repository) CreateUser(model *model.User) error {
+
+	model.CreatedAt = time.Now()
 
 	ID, err := this.UserColl.InsertOne(context.Background(), model)
 	if err != nil {
@@ -64,7 +68,7 @@ func (this *Repository) CreateUser(model *model.User) error {
 	return nil
 }
 
-func (this *Repository) GetUsers() ([]model.User, error) {
+func (this *Repository) GetAllUsers() ([]model.User, error) {
 
 	var users []model.User
 

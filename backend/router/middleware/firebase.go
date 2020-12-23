@@ -21,7 +21,7 @@ func authenticate(next echo.HandlerFunc) echo.HandlerFunc {
 			return echo.NewHTTPError(http.StatusBadRequest, "no connection to firebase")
 		}
 
-		_, err = client.VerifyToken(c)
+		_, err = client.GetToken(c)
 		if err != nil {
 			log.Error(err)
 			return echo.NewHTTPError(http.StatusBadRequest, "invalid token")

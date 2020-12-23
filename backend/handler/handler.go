@@ -27,3 +27,30 @@ func NewHandler(echo *echo.Echo, enforcer *casbin.Enforcer) (this *Handler, err 
 
 	return this, nil
 }
+
+// Generic binding of requests to models and validating against go.validate
+func (this *Handler) bindAndValidateRequest(c echo.Context, model interface{}) error {
+	if err := this.bindRequest(c, model); err != nil {
+		return err
+	}
+	if err := this.validateRequest(c, model); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Generic binding of requests to models
+func (this *Handler) bindRequest(c echo.Context, model interface{}) error {
+	if err := c.Bind(model); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Generic validation of requests against go.validate
+func (this *Handler) validateRequest(c echo.Context, dto interface{}) error {
+	if err := c.Validate(dto); err != nil {
+		return err
+	}
+	return nil
+}

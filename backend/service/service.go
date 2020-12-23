@@ -18,6 +18,6 @@ func NewService(repo *repository.Repository, enforcer *casbin.Enforcer) (this *S
 	} else {
 		this.repository = repo
 	}
-	this.FirebaseApp, _ = NewFirebaseClient()
+	this.FirebaseApp = FbClient
 	return this
 }
