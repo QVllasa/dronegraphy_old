@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"dronegraphy/backend/repository/model"
+	"dronegraphy/backend/service"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"net/http"
@@ -8,43 +10,33 @@ import (
 
 func (this *Handler) UploadVideo(c echo.Context) error {
 
-	//var video *model.Video
-	//
-	//idToken, _ := util.GetTokenFromRequest(c)
-	//
-	//// Verify bearer token
-	//token, err := this.service.FirebaseApp.Client.VerifyIDToken(context.Background(), idToken)
-	//if err != nil {
-	//	log.Error(err)
-	//	return err
-	//}
-	//
-	//
-	//if err := c.Bind(&video); err != nil {
-	//	log.Errorf("Unable to bind : %v", err)
-	//	return echo.NewHTTPError(http.StatusUnprocessableEntity,  "Binding Error: unable to parse request payload")
-	//}
-	//
-	//if err := c.Validate(video); err != nil {
-	//	log.Errorf("Unable to validate the product %+v %v", video, err)
-	//	return c.JSON(http.StatusUnprocessableEntity,  "Validation Error: unable to parse request payload")
-	//}
-	//
-	//
-	//
-	//if err := this.repository.CreateVideo(video, token.UID); err != nil {
-	//	log.Error(err)
-	//	return c.JSON(http.StatusInternalServerError, "Unable to store video")
-	//}
+	var video *model.Video
+
+	token, _ := service.FbClient.GetAndVerifyToken(c)
+
+	if err := c.Bind(&video); err != nil {
+		log.Errorf("Unable to bind : %v", err)
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, "Binding Error: unable to parse request payload")
+	}
+
+	if err := c.Validate(video); err != nil {
+		log.Errorf("Unable to validate the product %+v %v", video, err)
+		return c.JSON(http.StatusUnprocessableEntity, "Validation Error: unable to parse request payload")
+	}
+
+	if err := this.repository.CreateVideo(video, token.UID); err != nil {
+		log.Error(err)
+		return c.JSON(http.StatusInternalServerError, "Unable to store video")
+	}
 
 	//file, err := c.FormFile("thumbnail")
 	//if err != nil {
 	//	log.Fatal(err)
 	//}
 
-	//return c.JSON(http.StatusOK, video)
+	return c.JSON(http.StatusOK, video)
 
-	return c.JSON(http.StatusOK, "allowed")
+	//return c.JSON(http.StatusOK, "allowed")
 }
 
 func (this *Handler) GetVideo(c echo.Context) error {

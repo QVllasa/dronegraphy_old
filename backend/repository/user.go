@@ -91,6 +91,7 @@ func (this *Repository) GetUserById(id string) (*model.User, error) {
 	filter := bson.M{"uid": id}
 	err := this.UserColl.FindOne(context.Background(), filter).Decode(&user)
 	if err != nil {
+		log.Error(err)
 		return &user, err
 	}
 	return &user, nil

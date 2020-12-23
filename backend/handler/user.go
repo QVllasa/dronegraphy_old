@@ -23,9 +23,9 @@ var (
 func (this *Handler) GetUser(c echo.Context) error {
 
 	// TODO: use casbin instead
-	if err := this.service.FirebaseApp.CheckPermission(c); err != nil {
-		return err
-	}
+	//if err := this.service.FirebaseApp.CheckPermission(c); err != nil {
+	//	return err
+	//}
 
 	user, err := this.repository.GetUserById(c.Param("id"))
 	if err != nil {

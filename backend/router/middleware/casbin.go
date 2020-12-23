@@ -3,6 +3,7 @@
 package middleware
 
 import (
+	"dronegraphy/backend/repository"
 	"dronegraphy/backend/service"
 	"fmt"
 	"github.com/casbin/casbin/v2"
@@ -68,35 +69,33 @@ func CasbinMiddlewareWithConfig(config Config) echo.MiddlewareFunc {
 }
 
 //
-func (this *Config) getUserDataFromToken(c echo.Context) (token string, id string, error error) {
+func (this *Config) getUserIdFromToken(c echo.Context) (id string, error error) {
 
-	idToken, err := service.FbClient.GetToken(c)
+	idToken, err := service.FbClient.GetAndVerifyToken(c)
 	if err != nil {
-		return "ROLE_ANONYMOUS", "nil", err
+		return "", err
 	}
 
-	fmt.Println("firebase token")
-
-	return idToken.Claims["role"].(string), idToken.UID, nil
+	return idToken.UID, nil
 }
 
 // CheckPermission checks the role/method/path combination from the request.
 // Returns true (permission granted) or false (permission forbidden)
 func (this *Config) CheckPermission(c echo.Context) (bool, error) {
 
-	role, id, err := this.getUserDataFromToken(c)
-	if err != nil {
-		return false, err
-	}
+	id, _ := this.getUserIdFromToken(c)
 
-	fmt.Println(role, id)
+	user, _ := repository.Repo.GetUserById(id)
+
+	if user.Role == "" {
+		user.Role = "ROLE_ANONYMOUS"
+	}
 
 	method := c.Request().Method
 	path := c.Request().URL.Path
+	fmt.Println(user.Role, path, method)
 
-	fmt.Println(this.Enforcer.Enforce(role, path, method))
-
-	return this.Enforcer.Enforce(role, path, method)
+	return this.Enforcer.Enforce(user.Role, path, method)
 }
 
 // Custom Matcher Function

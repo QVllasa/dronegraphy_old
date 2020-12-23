@@ -20,7 +20,8 @@ func NewHandler(echo *echo.Echo, enforcer *casbin.Enforcer) (this *Handler, err 
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//TODO Warum muss ich hier "NewDatabase()" ausführen, wo ich es doch in main.go machen muss?
-	this.repository = repository.NewRepository(repository.NewDatabase().Client)
+	db := repository.NewDatabase()
+	this.repository = repository.NewRepository(db.Client)
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	this.service = service.NewService(this.repository, enforcer)

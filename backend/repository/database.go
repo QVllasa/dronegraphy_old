@@ -24,6 +24,8 @@ var DB *Database
 //Init database and .env
 func NewDatabase() (this *Database) {
 
+	fmt.Println("New Database")
+
 	this = new(Database)
 
 	if err := cleanenv.ReadEnv(&this.Cfg); err != nil {
@@ -59,6 +61,8 @@ func NewDatabase() (this *Database) {
 	if err != nil {
 		log.Fatalf("Unable to create an index: %v", err)
 	}
+
+	DB = this
 
 	return this
 

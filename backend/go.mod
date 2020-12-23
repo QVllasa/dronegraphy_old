@@ -9,7 +9,7 @@ require (
 	firebase.google.com/go/v4 v4.1.0
 	github.com/aws/aws-sdk-go v1.36.13 // indirect
 	github.com/casbin/casbin/v2 v2.19.4
-	github.com/casbin/mongodb-adapter/v3 v3.0.0
+	github.com/casbin/mongodb-adapter/v3 v3.1.0
 	github.com/disintegration/imaging v1.6.2
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/golang/snappy v0.0.2 // indirect

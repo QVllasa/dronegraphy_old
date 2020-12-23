@@ -6,6 +6,7 @@ import (
 	"dronegraphy/backend/util"
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/auth"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"google.golang.org/api/option"
@@ -23,7 +24,7 @@ var FbClient *FirebaseClient
 func NewFirebaseClient() (this *FirebaseClient, err error) {
 	this = new(FirebaseClient)
 
-	log.Info("New FirebaseClient")
+	fmt.Println("New FirebaseClient")
 
 	//Check if serviceAccountKey file exists
 	serviceAccountKeyFilePath, err := filepath.Abs("./backend/serviceAccountKey.json")
@@ -55,7 +56,7 @@ func NewFirebaseClient() (this *FirebaseClient, err error) {
 }
 
 // Get token as struct to read claims
-func (this *FirebaseClient) GetToken(c echo.Context) (*auth.Token, error) {
+func (this *FirebaseClient) GetAndVerifyToken(c echo.Context) (*auth.Token, error) {
 
 	// Get token
 	idToken, err := util.GetTokenFromRequest(c)
@@ -78,7 +79,7 @@ func (this *FirebaseClient) GetToken(c echo.Context) (*auth.Token, error) {
 
 func (this *FirebaseClient) CheckPermission(c echo.Context) error {
 
-	token, err := this.GetToken(c)
+	token, err := this.GetAndVerifyToken(c)
 	if err != nil {
 		log.Errorf("invalid token: %v", err)
 		return echo.NewHTTPError(http.StatusForbidden, "invalid token")
@@ -95,7 +96,7 @@ func (this *FirebaseClient) CheckPermission(c echo.Context) error {
 
 func (this *FirebaseClient) isEmailVerified(c echo.Context) (bool, error) {
 
-	token, err := this.GetToken(c)
+	token, err := this.GetAndVerifyToken(c)
 	if err != nil {
 		log.Errorf("invalid token: %v", err)
 		return false, echo.NewHTTPError(http.StatusForbidden, "invalid token")

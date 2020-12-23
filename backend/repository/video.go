@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"dronegraphy/backend/repository/model"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"go.mongodb.org/mongo-driver/bson"
@@ -48,29 +47,13 @@ func (this *Repository) CreateVideo(model *model.Video, id string) error {
 
 	// Set CreatedAt
 	model.CreatedAt = time.Now()
-
-	fmt.Println(id)
+	model.CreatorID = id
 
 	ID, err := this.VideoColl.InsertOne(context.Background(), model)
 	if err != nil {
 		log.Errorf("Unable to store in database: %s", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Video already exists"})
 	}
-
-	filter := bson.M{"uid": id}
-	//user.UpdatedAt = time.Now()
-
-	_, err = this.UserColl.UpdateOne(
-		context.Background(),
-		filter,
-		bson.M{"$addToSet": bson.M{"videos": ID.InsertedID}})
-
-	if err != nil {
-		log.Errorf("Unable to update the user: %v", err)
-		return echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Unable to update the User"})
-	}
-
-	//TODO Hier ein Video einem Nutzer zuordnen
 
 	res := this.VideoColl.FindOne(context.Background(), bson.M{"_id": ID.InsertedID})
 	if err := res.Decode(&model); err != nil {
