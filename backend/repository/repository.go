@@ -6,9 +6,10 @@ import (
 )
 
 type Repository struct {
-	Client    *mongo.Client
-	UserColl  *mongo.Collection
-	VideoColl *mongo.Collection
+	Client       *mongo.Client
+	UserColl     *mongo.Collection
+	VideoColl    *mongo.Collection
+	CategoryColl *mongo.Collection
 }
 
 var Repo *Repository
@@ -20,6 +21,7 @@ func NewRepository(client *mongo.Client) (this *Repository) {
 	this.Client = client
 	this.UserColl = this.Client.Database("dronegraphy_db").Collection("users")
 	this.VideoColl = this.Client.Database("dronegraphy_db").Collection("videos")
+	this.CategoryColl = this.Client.Database("dronegraphy_db").Collection("categories")
 
 	Repo = this
 
