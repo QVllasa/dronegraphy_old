@@ -22,11 +22,6 @@ var (
 
 func (this *Handler) GetUser(c echo.Context) error {
 
-	// TODO: use casbin instead
-	//if err := this.service.FirebaseApp.CheckPermission(c); err != nil {
-	//	return err
-	//}
-
 	user, err := this.repository.GetUserById(c.Param("id"))
 	if err != nil {
 		log.Errorf("Unable to find User: %v", err)
@@ -42,11 +37,6 @@ func (this *Handler) GetUser(c echo.Context) error {
 }
 
 func (this *Handler) UpdateUser(c echo.Context) error {
-
-	// TODO: use casbin instead
-	if err := this.service.FirebaseApp.CheckPermission(c); err != nil {
-		return err
-	}
 
 	user, err := this.repository.UpdateUser(c.Param("id"), c.Request().Body)
 	if err != nil {
@@ -73,11 +63,6 @@ func (this *Handler) GetUsers(c echo.Context) error {
 }
 
 func (this *Handler) UploadPhoto(c echo.Context) error {
-
-	// TODO: use casbin instead
-	if err := this.service.FirebaseApp.CheckPermission(c); err != nil {
-		return err
-	}
 
 	file, err := c.FormFile("file")
 	if err != nil {

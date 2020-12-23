@@ -2,7 +2,6 @@ package handler
 
 import (
 	"dronegraphy/backend/repository/model"
-	"dronegraphy/backend/service"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"net/http"
@@ -12,7 +11,7 @@ func (this *Handler) UploadVideo(c echo.Context) error {
 
 	var video *model.Video
 
-	token, _ := service.FbClient.GetAndVerifyToken(c)
+	token, _ := this.service.FirebaseApp.GetAndVerifyToken(c)
 
 	if err := c.Bind(&video); err != nil {
 		log.Errorf("Unable to bind : %v", err)

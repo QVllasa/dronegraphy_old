@@ -20,6 +20,7 @@ type (
 		Categories []string `json:"categories" bson:"categories" validate:"required"`
 		//Downloads  int                `json:"downloads" bson:"downloads"`
 		//Views      int                `json:"views" bson:"views"`
+		//Thumbnail
 
 		CreatedAt time.Time `json:"created_at,omitempty" bson:"created_at,omitempty"`
 		UpdatedAt time.Time `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
@@ -29,8 +30,3 @@ type (
 		//trait.Timestampable
 	}
 )
-
-//TODO:
-//public downloads: number;
-//public views: number;
-//public thumbnail?: string;
