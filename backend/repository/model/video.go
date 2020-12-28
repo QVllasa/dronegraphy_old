@@ -25,13 +25,9 @@ type (
 		Source     string             `json:"source" bson:"source"`
 		HLS        string             `json:"hls" bson:"hls"`
 		Thumbnail  string             `json:"thumbnail" bson:"thumbnail"`
-		//Thumbnail
 
 		CreatedAt time.Time `json:"created_at,omitempty" bson:"created_at,omitempty"`
 		UpdatedAt time.Time `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
 		CreatorID string    `json:"creator_id" bson:"creator_id"`
-
-		//trait.Model
-		//trait.Timestampable
 	}
 )

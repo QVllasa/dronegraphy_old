@@ -99,6 +99,8 @@ func TestLoadUserFixtures(t *testing.T) {
 			log.Errorf("setting custom claims failed: %v", err)
 		}
 
+		fbClient.Client.RevokeRefreshTokens(context.Background(), user.UID)
+
 		user.UID = u.UID
 
 		_, _ = users.InsertOne(context.Background(), user)
@@ -197,7 +199,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 		video.CreatedAt = gofakeit.Date()
 		video.UpdatedAt = gofakeit.Date()
 		video.HLS = "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-		video.Thumbnail = gofakeit.ImageJpeg(300, 300)
+		video.Thumbnail = gofakeit.ImageURL(300, 300)
 
 		_, _ = videos.InsertOne(context.Background(), video)
 	}

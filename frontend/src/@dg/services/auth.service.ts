@@ -30,6 +30,7 @@ export class AuthenticationService implements OnDestroy {
 
     // Sign Up User on Firebase
     signUp(email, password, name) {
+        //TODO register user via backend not frontend, and then login
         return from(this.afAuth.createUserWithEmailAndPassword(email, password)).pipe(
             switchMap(res => {
                 const userData: IUser = {
@@ -72,7 +73,6 @@ export class AuthenticationService implements OnDestroy {
                 if (this.stayLoggedIn){
                     localStorage.setItem("currentUser", JSON.stringify(user))
                 }
-
                 return this.afAuth.idTokenResult;
             }),
             switchMap(token => {
