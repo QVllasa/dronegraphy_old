@@ -1,8 +1,0 @@
-p, ROLE_MEMBER, /videos, GET
-p, ROLE_ANONYMOUS, /videos, GET
-p, ROLE_CREATOR, /videos, (POST)|(GET)
-p, ROLE_ADMIN, /videos, (POST)|(GET)|(PUT)|(DELETE)
-p, ROLE_MEMBER , /users/:id, (GET)|(PUT)
-p, ROLE_ANONYMOUS, /users, POST
-p, ROLE_ANONYMOUS, /photo/:id, GET
-p, ROLE_CREATOR, /users/:id, (GET)|(PUT)

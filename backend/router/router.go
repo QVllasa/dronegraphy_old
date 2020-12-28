@@ -6,7 +6,6 @@ import (
 	"dronegraphy/backend/util"
 	"fmt"
 	"github.com/casbin/casbin/v2"
-	"github.com/casbin/mongodb-adapter/v3"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
@@ -43,9 +42,9 @@ func NewRouter() (this *Router) {
 	}))
 
 	// Casbin enforcer (RBAC)
-	adapter, _ := mongodbadapter.NewAdapter("mongodb://localhost:27017")
-	enforcer, err := casbin.NewEnforcer("/Users/qendrimvllasa/Projects/dronegraphy/backend/config/rbac_model.conf", adapter)
-	//enforcer, err := casbin.NewEnforcer("/Users/qendrimvllasa/Projects/dronegraphy/backend/config/rbac_model.conf", "/Users/qendrimvllasa/Projects/dronegraphy/backend/config/policy.csv")
+	//adapter, _ := mongodbadapter.NewAdapter("mongodb://localhost:27017")
+	//enforcer, err := casbin.NewEnforcer("/Users/qendrimvllasa/Projects/dronegraphy/backend/config/rbac_model.conf", adapter)
+	enforcer, err := casbin.NewEnforcer("/Users/qendrimvllasa/Projects/dronegraphy/backend/config/rbac_model.conf", "/Users/qendrimvllasa/Projects/dronegraphy/backend/config/casbin_rule.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
