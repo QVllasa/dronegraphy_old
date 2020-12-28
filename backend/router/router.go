@@ -60,6 +60,8 @@ func NewRouter() (this *Router) {
 		[]string{"ROLE_ANONYMOUS", "/users", "POST"},
 		[]string{"ROLE_ANONYMOUS", "/photo/:id", "GET"},
 		[]string{"ROLE_CREATOR", "/users/:id", "(GET)|(PUT)"},
+		[]string{"ROLE_ANONYMOUS", "/categories", "POST"},
+		[]string{"ROLE_ANONYMOUS", "/categories", "GET"},
 	}
 
 	_, _ = enforcer.AddPolicies(rules)

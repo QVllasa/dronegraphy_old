@@ -56,8 +56,10 @@
                     <mat-form-field class="mr-6" fxFlex="auto" appearance="outline">
                         <mat-label>Kategorien</mat-label>
                         <mat-select formControlName="categories" multiple>
-                            <mat-option *ngFor="let category of categoryList"
-                                        [value]="category">{{category}}</mat-option>
+                            <ng-container *ngIf="categoryList.length > 0">
+                                <mat-option *ngFor="let category of categoryList"
+                                            [value]="category.id">{{category.value}}</mat-option>
+                            </ng-container>
                         </mat-select>
                         <mat-error *ngIf="form.get('categories').invalid">Bitte wähle mind. eine Kategorie aus. Wenn
                             deine

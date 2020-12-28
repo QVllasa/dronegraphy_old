@@ -16,21 +16,12 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 		return
 	}
 
-	// Casbin enforcer (RBAC)
-	//adapter, _ := mongodbadapter.NewAdapter("mongodb://localhost:27017")
-	//enforcer, err := casbin.NewEnforcer("/Users/qendrimvllasa/Projects/dronegraphy/backend/config/rbac_model.conf", adapter)
-	//enforcer, err := casbin.NewEnforcer("/Users/qendrimvllasa/Projects/dronegraphy/backend/config/rbac_model.conf", "/Users/qendrimvllasa/Projects/dronegraphy/backend/config/policy.csv")
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//_ = enforcer.LoadPolicy()
-	//this.Enforcer = enforcer
-
 	// Admin Endpoints
 	routeGroup.GET("/users", controller.GetUsers)
 
 	// Creator Endpoints
 	routeGroup.POST("/videos", controller.UploadVideo, mw.Auth())
+	routeGroup.POST("/categories", controller.CreateCategory)
 	//e.PUT("/videos/:id", h.UpdateVideo, middleware.BodyLimit("1M"), customMiddleware.Auth())
 	//e.DELETE("/videos/:id", h.DeleteVideo, customMiddleware.Auth())
 
@@ -44,5 +35,6 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	//// Public Endpoints
 	//e.GET("/videos", controller.GetVideos)
 	routeGroup.GET("/videos/:id", controller.GetVideo)
+	routeGroup.GET("/categories", controller.GetCategories)
 
 }

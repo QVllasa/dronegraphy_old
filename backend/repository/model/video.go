@@ -19,9 +19,12 @@ type (
 		Tags       []string           `json:"tags" bson:"tags"`
 		Sell       bool               `json:"sell" bson:"sell"`
 		Published  bool               `json:"published" bson:"published"`
-		Categories []Category         `json:"categories" bson:"categories" validate:"required"`
-		//Downloads  int                `json:"downloads" bson:"downloads"`
-		//Views      int                `json:"views" bson:"views"`
+		Categories []string           `json:"categories" bson:"categories" validate:"required"`
+		Downloads  int                `json:"downloads" bson:"downloads"`
+		Views      int                `json:"views" bson:"views"`
+		Source     string             `json:"source" bson:"source"`
+		HLS        string             `json:"hls" bson:"hls"`
+		Thumbnail  string             `json:"thumbnail" bson:"thumbnail"`
 		//Thumbnail
 
 		CreatedAt time.Time `json:"created_at,omitempty" bson:"created_at,omitempty"`

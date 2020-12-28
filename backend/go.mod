@@ -8,6 +8,8 @@ require (
 	cloud.google.com/go/storage v1.12.0 // indirect
 	firebase.google.com/go/v4 v4.1.0
 	github.com/aws/aws-sdk-go v1.36.13 // indirect
+	github.com/brianvoe/gofakeit/v5 v5.11.1
+	github.com/bxcodec/faker/v3 v3.5.0
 	github.com/casbin/casbin/v2 v2.19.4
 	github.com/casbin/mongodb-adapter/v3 v3.1.0
 	github.com/disintegration/imaging v1.6.2

@@ -3,12 +3,29 @@ package repository
 import (
 	"context"
 	"dronegraphy/backend/repository/model"
+	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"go.mongodb.org/mongo-driver/bson"
+	"net/http"
+	"time"
 )
 
-func CreateCategory() {
+func (this *Repository) CreateCategory(model *model.Category) error {
+	model.CreatedAt = time.Now()
 
+	ID, err := this.CategoryColl.InsertOne(context.Background(), model)
+	if err != nil {
+		log.Errorf("Unable to store in database: %s", err)
+		return echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Category already exists"})
+	}
+
+	res := this.CategoryColl.FindOne(context.Background(), bson.M{"_id": ID.InsertedID})
+	if err := res.Decode(&model); err != nil {
+		log.Errorf("Unable to fetch User ID: %v", err)
+		return echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Unable to fetch Category ID"})
+	}
+
+	return nil
 }
 
 func (this *Repository) GetAllCategories() ([]model.Category, error) {

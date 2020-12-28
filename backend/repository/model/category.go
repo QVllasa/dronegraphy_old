@@ -7,9 +7,9 @@ import (
 
 type (
 	Category struct {
-		ID        primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
-		Value     string             `json:"value" bson:"value" validate:"required"`
-		CreatedAt time.Time          `json:"created_at,omitempty" bson:"created_at,omitempty"`
-		UpdatedAt time.Time          `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
+		ID        primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+		Value     string             `json:"value" bson:"value" validate:"required" `
+		CreatedAt time.Time          `json:"createdAt,omitempty" bson:"created_at,omitempty" `
+		UpdatedAt time.Time          `json:"updatedAt,omitempty" bson:"updated_at,omitempty" `
 	}
 )

@@ -11,6 +11,8 @@ import {NgxDropzoneChangeEvent} from "ngx-dropzone";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import * as uuid from 'uuid';
 import {VideoService} from "../../../../../../@dg/services/video.service";
+import {CategoryService} from "../../../../../../@dg/services/category.service";
+import {ICategory} from "../../../../../../@dg/models/category.model";
 
 
 interface CountryState {
@@ -50,7 +52,7 @@ export class VideoCreateUpdateComponent implements OnInit {
     allFormats: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
     allTags: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
 
-    categoryList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
+    categoryList: ICategory[] = [];
 
     @ViewChild('formatInput') formatInput: ElementRef<HTMLInputElement>;
     @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
@@ -60,6 +62,7 @@ export class VideoCreateUpdateComponent implements OnInit {
 
     constructor(@Inject(MAT_DIALOG_DATA) public defaults: any,
                 private _snackBar: MatSnackBar,
+                private categoryService: CategoryService,
                 private videoService: VideoService,
                 private dialogRef: MatDialogRef<VideoCreateUpdateComponent>,
                 private fb: FormBuilder) {
@@ -68,6 +71,9 @@ export class VideoCreateUpdateComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.categoryService.getCategories().subscribe(categories => {
+            this.categoryList = categories
+        })
         if (this.defaults) {
             this.mode = 'update';
         } else {
