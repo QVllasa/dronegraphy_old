@@ -15,7 +15,6 @@ func (this *Handler) Register(c echo.Context) error {
 
 	if err := this.bindAndValidateRequest(c, &newUser); err != nil {
 		return echo.NewHTTPError(http.StatusUnprocessableEntity, err.Error())
-
 	}
 
 	if err := this.service.Register(&newUser); err != nil {

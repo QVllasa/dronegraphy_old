@@ -21,6 +21,7 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 
 	// Creator Endpoints
 	routeGroup.POST("/videos", controller.UploadVideo, mw.Auth())
+	routeGroup.POST("/photos", controller.UploadPhoto, mw.Auth())
 	routeGroup.POST("/categories", controller.CreateCategory)
 	//e.PUT("/videos/:id", h.UpdateVideo, middleware.BodyLimit("1M"), customMiddleware.Auth())
 	//e.DELETE("/videos/:id", h.DeleteVideo, customMiddleware.Auth())
@@ -30,7 +31,7 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	routeGroup.GET("/users/:id", controller.GetUser, mw.Auth())
 	routeGroup.PUT("/users/:id", controller.UpdateUser, mw.Auth())
 	routeGroup.POST("/users/:id", controller.UploadPhoto, mw.Auth())
-	routeGroup.GET("/photo/:id", controller.GetPhoto)
+	routeGroup.GET("/photos/:id", controller.GetPhoto)
 
 	//// Public Endpoints
 	//e.GET("/videos", controller.GetVideos)
