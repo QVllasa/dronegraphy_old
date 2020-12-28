@@ -30,7 +30,6 @@ export class AuthResolver implements Resolve<User> {
                 );
             }),
             switchMap((user: IUser) => {
-
                 if (!user) {
                     this.userService.user$.next(null);
                     return of(null);

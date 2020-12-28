@@ -45,7 +45,7 @@ export class User implements IUser, Deserializable {
     }
 
     getProfileImage(){
-        return environment.apiUrl+'/photo/'+this.profileImage
+        return environment.apiUrl+'/photos/'+this.profileImage
     }
 
     setClaims(claims: IClaims) {
