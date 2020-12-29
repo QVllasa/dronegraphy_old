@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/gommon/log"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"net/http"
 	"time"
 )
@@ -43,20 +44,24 @@ import (
 //	return video, nil
 //}
 
-func (this *Repository) CreateVideo(model *model.Video, id string) error {
+func (this *Repository) CreateVideo(video *model.Video, id string) error {
+
+	var creator model.User
+
+	creator, _ = this.GetUserById(id)
 
 	// Set CreatedAt
-	model.CreatedAt = time.Now()
-	model.CreatorID = id
+	video.CreatedAt = time.Now()
+	video.Creator = creator
 
-	ID, err := this.VideoColl.InsertOne(context.Background(), model)
+	ID, err := this.VideoColl.InsertOne(context.Background(), video)
 	if err != nil {
 		log.Errorf("Unable to store in database: %s", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Video already exists"})
 	}
 
 	res := this.VideoColl.FindOne(context.Background(), bson.M{"_id": ID.InsertedID})
-	if err := res.Decode(&model); err != nil {
+	if err := res.Decode(&video); err != nil {
 		log.Errorf("Unable to fetch Video ID: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Unable to fetch Video ID"})
 	}
@@ -64,34 +69,27 @@ func (this *Repository) CreateVideo(model *model.Video, id string) error {
 	return nil
 }
 
-//func (this *Repository) GetVideos() ([]model.Video, error) {
-//
-//	var videos []model.Video
-//	filter := make(map[string]interface{})
-//	//for k, v := range q {
-//	//	filter[k] = v[0]
-//	//}
-//	//if filter["_id"] != nil {
-//	//	docID, err := primitive.ObjectIDFromHex(filter["_id"].(string))
-//	//	if err != nil {
-//	//		return videos, nil
-//	//	}
-//	//	filter["_id"] = docID
-//	//}
-//	cursor, err := this.VideoColl.Find(context.Background(), bson.M(filter))
-//
-//	if err != nil {
-//		log.Errorf("Unable to fetch videos from database: %v", err)
-//		return videos, err
-//	}
-//
-//	if err := cursor.All(context.Background(), &videos); err != nil {
-//		log.Errorf("Unable to read the cursor: %v", err)
-//		return videos, err
-//	}
-//	return videos, nil
-//}
-//
+func (this *Repository) GetAllVideos(next int64, size int64) ([]model.Video, error) {
+
+	var videos []model.Video
+
+	opt := options.Find()
+	opt.SetSkip(next)
+	opt.SetLimit(size)
+
+	cursor, err := this.VideoColl.Find(context.Background(), bson.M{}, opt)
+
+	if err != nil {
+		log.Errorf("Unable to fetch videos from database: %v", err)
+		return videos, err
+	}
+
+	if err := cursor.All(context.Background(), &videos); err != nil {
+		log.Errorf("Unable to read the cursor: %v", err)
+		return videos, err
+	}
+	return videos, nil
+}
 
 func (this *Repository) GetVideoById(id string) (*model.Video, error) {
 

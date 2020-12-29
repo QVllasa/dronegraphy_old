@@ -2,9 +2,11 @@ package handler
 
 import (
 	"dronegraphy/backend/repository/model"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"net/http"
+	"strconv"
 )
 
 func (this *Handler) UploadVideo(c echo.Context) error {
@@ -48,13 +50,41 @@ func (this *Handler) GetVideo(c echo.Context) error {
 	return c.JSON(http.StatusOK, video)
 }
 
-//func (this *Handler) GetVideos(c echo.Context) error {
-//	videos, err := this.repository.GetVideos()
-//	if err != nil {
-//		return err
-//	}
-//	return c.JSON(http.StatusOK, videos)
-//}
+func (this *Handler) GetVideos(c echo.Context) error {
+
+	n := c.QueryParam("next")
+	s := c.QueryParam("size")
+
+	fmt.Println(n)
+	fmt.Println(s)
+
+	next, _ := strconv.ParseInt(n, 10, 64)
+	size, _ := strconv.ParseInt(s, 10, 64)
+
+	videos, err := this.repository.GetAllVideos(next, size)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, videos)
+}
+
+func (this *Handler) GetCreatorVideos(c echo.Context) error {
+
+	n := c.QueryParam("next")
+	s := c.QueryParam("size")
+
+	fmt.Println(n)
+	fmt.Println(s)
+
+	next, _ := strconv.ParseInt(n, 10, 64)
+	size, _ := strconv.ParseInt(s, 10, 64)
+
+	videos, err := this.repository.GetAllVideos(next, size)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, videos)
+}
 
 //func (this *Handler) DeleteVideo(c echo.Context) error {
 //	delCount, err := deleteVideo(context.Background(), c.Param("id"), this.Coll)

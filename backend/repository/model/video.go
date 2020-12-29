@@ -28,6 +28,6 @@ type (
 
 		CreatedAt time.Time `json:"created_at,omitempty" bson:"created_at,omitempty"`
 		UpdatedAt time.Time `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
-		CreatorID string    `json:"creator_id" bson:"creator_id"`
+		Creator   User      `json:"creator" bson:"creator"`
 	}
 )

@@ -12,3 +12,4 @@ p,ROLE_CREATOR,/categories,GET
 p,ROLE_CREATOR,/photos,(GET)|(POST)
 p,ROLE_CREATOR,/photos/:id,GET
 p,ROLE_CREATOR,/users/:id,POST
+p,ROLE_ANONYMOUS,/videos,GET

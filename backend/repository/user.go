@@ -46,7 +46,7 @@ func (this *Repository) UpdateUser(id string, reqBody io.ReadCloser) (*model.Use
 		return nil, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Unable to update the User"})
 	}
 
-	return user, nil
+	return &user, nil
 }
 
 func (this *Repository) CreateUser(model *model.User) error {
@@ -86,13 +86,13 @@ func (this *Repository) GetAllUsers() ([]model.User, error) {
 
 }
 
-func (this *Repository) GetUserById(id string) (*model.User, error) {
+func (this *Repository) GetUserById(id string) (model.User, error) {
 	var user model.User
 	filter := bson.M{"uid": id}
 	err := this.UserColl.FindOne(context.Background(), filter).Decode(&user)
 	if err != nil {
-		log.Error(err)
-		return &user, err
+		log.Info("No user found")
+		return user, err
 	}
-	return &user, nil
+	return user, nil
 }

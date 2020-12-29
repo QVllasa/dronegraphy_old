@@ -68,7 +68,7 @@ func (this *FirebaseClient) GetAndVerifyToken(c echo.Context) (*auth.Token, erro
 	// Verify bearer token
 	token, err := this.Client.VerifyIDToken(context.Background(), idToken)
 	if err != nil {
-		log.Error(err)
+		log.Info("no token found, continue as anonymous")
 		return nil, err
 	}
 

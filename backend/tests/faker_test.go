@@ -117,9 +117,8 @@ func TestLoadVideoFixtures(t *testing.T) {
 	}
 
 	var categories []string
-	var userIDs []string
 
-	projection := bson.D{
+	catProjection := bson.D{
 		{"_id", 1},
 		{"value", 0},
 		{"updated_at", 0},
@@ -127,7 +126,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 	}
 
 	catsColl := repository.DB.Client.Database("dronegraphy_db").Collection("categories")
-	catsCursor, err := catsColl.Find(context.Background(), bson.M{}, options.Find().SetProjection(projection))
+	catsCursor, err := catsColl.Find(context.Background(), bson.M{}, options.Find().SetProjection(catProjection))
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -142,25 +141,28 @@ func TestLoadVideoFixtures(t *testing.T) {
 		fmt.Println(categories)
 	}
 
+	var creators []model.User
+
 	usersColl := repository.DB.Client.Database("dronegraphy_db").Collection("users")
-	usersCursor, err := usersColl.Find(context.Background(), bson.M{}, options.Find().SetProjection(projection))
+	usersCursor, err := usersColl.Find(context.Background(), bson.M{"role": "ROLE_CREATOR"})
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer usersCursor.Close(context.Background())
 
-	for usersCursor.Next(context.Background()) {
-		var user model.User
-		if err = usersCursor.Decode(&user); err != nil {
-			log.Fatal(err)
-		}
-		if user.Role == "ROLE_CREATOR" {
-			userIDs = append(userIDs, user.UID)
-			fmt.Println(userIDs)
-		}
+	if err := usersCursor.All(context.Background(), &creators); err != nil {
+		fmt.Println(err)
 	}
 
-	fmt.Println(userIDs)
+	//for usersCursor.Next(context.Background()) {
+	//	var user model.User
+	//	if err = usersCursor.Decode(&user); err != nil {
+	//		log.Fatal(err)
+	//	}
+	//	if user.Role == "ROLE_CREATOR" {
+	//		creators = append(creators, user)
+	//	}
+	//}
 
 	video := model.Video{}
 	videos := repository.DB.Client.Database("dronegraphy_db").Collection("videos")
@@ -195,7 +197,11 @@ func TestLoadVideoFixtures(t *testing.T) {
 		video.Formats = []string{gofakeit.RandomString(tags)}
 		video.Views = gofakeit.Number(0, 99999)
 		video.Downloads = gofakeit.Number(0, 99999)
-		video.CreatorID = gofakeit.RandomString(userIDs)
+		video.Creator = model.User{
+			UID:       creators[gofakeit.Number(0, len(creators)-1)].UID,
+			FirstName: creators[gofakeit.Number(0, len(creators)-1)].FirstName,
+			LastName:  creators[gofakeit.Number(0, len(creators)-1)].LastName,
+		}
 		video.CreatedAt = gofakeit.Date()
 		video.UpdatedAt = gofakeit.Date()
 		video.HLS = "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"

@@ -28,7 +28,7 @@ func (this *Handler) GetUser(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "user not found")
 	}
 
-	if err = this.service.FirebaseApp.UpdateRoleClaims(user); err != nil {
+	if err = this.service.FirebaseApp.UpdateRoleClaims(&user); err != nil {
 		log.Error(err)
 		return err
 	}
