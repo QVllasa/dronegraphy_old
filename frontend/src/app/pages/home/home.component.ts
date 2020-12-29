@@ -4,7 +4,7 @@ import {User} from "../../../@dg/models/user.model";
 import {of} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Video} from "../../../@dg/models/video.model";
+import {IVideo, Video} from "../../../@dg/models/video.model";
 import {VideoService} from "../../../@dg/services/video.service";
 import {UserService} from "../../../@dg/services/user.service";
 
@@ -25,7 +25,8 @@ export class HomeComponent implements OnInit {
               ) { }
 
   ngOnInit(): void {
-    this.videoService.getVideos(27).subscribe(videos => {
+    this.videoService.getVideos(27, 0).subscribe(videos => {
+      console.log(videos)
       this.videos = videos;
     });
   }

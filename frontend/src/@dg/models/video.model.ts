@@ -15,6 +15,10 @@ export interface IVideo {
     category: string[];
     downloads: number;
     views: number;
+    creator?: User;
+    thumbnail?: string;
+    sell?: boolean;
+    hls?: string;
 }
 
 export class Video implements IVideo, Deserializable {
@@ -37,7 +41,7 @@ export class Video implements IVideo, Deserializable {
     #sell: boolean;
     #published: boolean;
     #onBanner: boolean;
-    #itemPath: string;
+    #hls: string;
 
     #creator: User;
     #favoriteBy: any;
@@ -58,11 +62,11 @@ export class Video implements IVideo, Deserializable {
     }
 
     setItemPath(path: string) {
-        this.#itemPath = path;
+        this.#hls = path;
     }
 
     getItemPath(): string | null {
-        return this.#itemPath;
+        return this.#hls;
     }
 
     setThumbnail(path) {

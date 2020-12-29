@@ -8,7 +8,6 @@ import {FormControl} from "@angular/forms";
 import {aioTableData, aioTableLabels} from "../../../../../static-data/aio-table-data";
 import {filter} from "rxjs/operators";
 import {MatSelectChange} from "@angular/material/select";
-import {Videos} from "../../../../../static-data/video-data";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {VideoService} from "../../../../../@dg/services/video.service";
@@ -90,7 +89,7 @@ export class FootageComponent implements OnInit {
    * We are simulating this request here.
    */
   getData() {
-    return this.videoService.getVideos(28)
+    return this.videoService.getVideos(28,0)
   }
 
 

@@ -5,9 +5,9 @@ import {environment} from "../../environments/environment";
 
 export interface IUser {
     uid: string;
-    email: string;
     firstName: string;
     lastName: string;
+    email?: string;
     profileImage?: string;
     // imgPath?: string;
     // activated?: boolean;
@@ -21,9 +21,9 @@ export interface IUser {
 export class User implements IUser, Deserializable {
 
     uid: string;
-    email: string;
     firstName: string;
     lastName: string;
+    email?: string;
     favorite?: Video[];
     slogan?: string;
     profileImage?: string;
