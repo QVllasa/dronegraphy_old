@@ -16,27 +16,33 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 		return
 	}
 
-	// Admin Endpoints
+	// ADMIN
 	routeGroup.GET("/users", controller.GetUsers)
 
-	// Creator Endpoints
-	routeGroup.POST("/videos", controller.UploadVideo, mw.Auth())
-	routeGroup.GET("/creator_videos/:id", controller.GetCreatorVideos, mw.Auth())
+	// CREATOR
+	routeGroup.POST("/videos", controller.CreateVideo, mw.Auth())
+	routeGroup.POST("/thumbnails/:id", controller.UploadThumbnail, mw.Auth())
 	routeGroup.POST("/photos", controller.UploadPhoto, mw.Auth())
 	routeGroup.POST("/categories", controller.CreateCategory)
 	//e.PUT("/videos/:id", h.UpdateVideo, middleware.BodyLimit("1M"), customMiddleware.Auth())
 	//e.DELETE("/videos/:id", h.DeleteVideo, customMiddleware.Auth())
 
-	// Member Endpoints
+	// MEMBER
 	routeGroup.POST("/users", controller.Register)
 	routeGroup.GET("/users/:id", controller.GetUser, mw.Auth())
 	routeGroup.PUT("/users/:id", controller.UpdateUser, mw.Auth())
-	routeGroup.POST("/users/:id", controller.UploadPhoto, mw.Auth())
+	//routeGroup.POST("/users/:id", controller.UploadPhoto, mw.Auth())
 
-	//// Public Endpoints
+	//// PUBLIC
 	routeGroup.GET("/videos", controller.GetVideos)
 	routeGroup.GET("/videos/:id", controller.GetVideo)
+	routeGroup.GET("/creators/:id", controller.GetVideos)
+	//routeGroup.GET("/creators", controller.GetVideos)
 	routeGroup.GET("/categories", controller.GetCategories)
 	routeGroup.GET("/photos/:id", controller.GetPhoto)
+	//routeGroup.GET("/thumbnails/:id", controller.GetThumbnail)
+
+	//// STATIC Endpoints
+	routeGroup.Static("/img", "/Users/qendrimvllasa/Projects/dronegraphy/backend/storage/thumbnails")
 
 }

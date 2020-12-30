@@ -26,8 +26,8 @@ type (
 		HLS        string             `json:"hls" bson:"hls"`
 		Thumbnail  string             `json:"thumbnail" bson:"thumbnail"`
 
-		CreatedAt time.Time `json:"created_at,omitempty" bson:"created_at,omitempty"`
-		UpdatedAt time.Time `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
-		Creator   User      `json:"creator" bson:"creator"`
+		CreatedAt time.Time `json:"createdAt,omitempty" bson:"createdAt,omitempty"`
+		UpdatedAt time.Time `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
+		Creator   Creator   `json:"creator" bson:"creator"`
 	}
 )

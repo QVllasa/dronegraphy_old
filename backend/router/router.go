@@ -2,7 +2,6 @@ package router
 
 import (
 	"context"
-	mw "dronegraphy/backend/router/middleware"
 	"dronegraphy/backend/util"
 	"fmt"
 	"github.com/casbin/casbin/v2"
@@ -67,7 +66,7 @@ func NewRouter() (this *Router) {
 
 	this.Enforcer = enforcer
 
-	this.Echo.Use(mw.CasbinMiddleware(enforcer))
+	//this.Echo.Use(mw.CasbinMiddleware(enforcer))
 
 	return this
 }

@@ -13,3 +13,9 @@ p,ROLE_CREATOR,/photos,(GET)|(POST)
 p,ROLE_CREATOR,/photos/:id,GET
 p,ROLE_CREATOR,/users/:id,POST
 p,ROLE_ANONYMOUS,/videos,GET
+p,ROLE_ANONYMOUS,/creators/:id,GET
+p,ROLE_CREATOR,/creators/:id,GET
+p,ROLE_CREATOR,/photos,POST
+p,ROLE_CREATOR,/thumbnails/:id,POST
+p,ROLE_CREATOR,/thumbnails/:id,GET
+p,ROLE_ANONYMOUS,/thumbnails/:id,GET

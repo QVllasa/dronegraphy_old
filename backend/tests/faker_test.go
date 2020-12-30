@@ -141,7 +141,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 		fmt.Println(categories)
 	}
 
-	var creators []model.User
+	var creators []model.Creator
 
 	usersColl := repository.DB.Client.Database("dronegraphy_db").Collection("users")
 	usersCursor, err := usersColl.Find(context.Background(), bson.M{"role": "ROLE_CREATOR"})
@@ -197,7 +197,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 		video.Formats = []string{gofakeit.RandomString(tags)}
 		video.Views = gofakeit.Number(0, 99999)
 		video.Downloads = gofakeit.Number(0, 99999)
-		video.Creator = model.User{
+		video.Creator = model.Creator{
 			UID:       creators[gofakeit.Number(0, len(creators)-1)].UID,
 			FirstName: creators[gofakeit.Number(0, len(creators)-1)].FirstName,
 			LastName:  creators[gofakeit.Number(0, len(creators)-1)].LastName,

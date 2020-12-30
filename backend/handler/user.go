@@ -3,21 +3,15 @@ package handler
 import (
 	"context"
 	"dronegraphy/backend/repository/model"
-	"github.com/disintegration/imaging"
+	"dronegraphy/backend/service"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"github.com/rs/xid"
 	"go.mongodb.org/mongo-driver/bson"
-	"io"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
-)
-
-var (
-	assetRoot    = "backend/storage/"
-	profileImage = "/profileImage/"
 )
 
 func (this *Handler) GetUser(c echo.Context) error {
@@ -64,6 +58,8 @@ func (this *Handler) GetUsers(c echo.Context) error {
 
 func (this *Handler) UploadPhoto(c echo.Context) error {
 
+	token, _ := this.service.FirebaseApp.GetAndVerifyToken(c)
+
 	file, err := c.FormFile("file")
 	if err != nil {
 		log.Fatal(err)
@@ -74,74 +70,24 @@ func (this *Handler) UploadPhoto(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Content-Type not supported")
 	}
 
-	id := c.Param("id")
-
-	src, err := file.Open()
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer src.Close()
-
-	baseDir := assetRoot + id + profileImage
-
-	_ = os.MkdirAll(baseDir, 0777)
-
-	// Open the directory and read all its files.
-	dirRead, _ := os.Open(baseDir)
-	dirFiles, _ := dirRead.Readdir(0)
-
-	// Loop over the directory's files.
-	for index := range dirFiles {
-		fileHere := dirFiles[index]
-
-		// Get name of file and its full path.
-		nameHere := fileHere.Name()
-		fullPath := baseDir + nameHere
-
-		// Remove the file.
-		if err := os.Remove(fullPath); err != nil {
-			return nil
-		}
-	}
-
 	fileID := xid.New().String()
+	target := service.StorageRoot + service.Creator + token.UID + service.ProfileImage
 
-	dst, err := os.Create(baseDir + fileID + "_" + file.Filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer dst.Close()
+	f, err := this.service.UploadImage(file, target, fileID, true)
 
-	// Copy
-	if _, err = io.Copy(dst, src); err != nil {
-		log.Fatal(err)
-		return c.JSON(http.StatusInternalServerError, "unable to save file")
-	}
+	fileName := filepath.Base(f.Name())
 
-	imgSrc, err := imaging.Open(dst.Name())
-	if err != nil {
-		log.Fatalf("failed to open image: %v", err)
-	}
-
-	// Resize the cropped image to width = 160px preserving the aspect ratio.
-	imgSrc = imaging.Resize(imgSrc, 0, 160, imaging.Lanczos)
-
-	if err := imaging.Save(imgSrc, dst.Name()); err != nil {
-		log.Error(err)
-		return c.JSON(http.StatusInternalServerError, "failed to crop image")
-	}
-
-	filter := bson.M{"uid": id}
-	update := bson.D{{"$set", bson.D{{"profileImage", fileID}}}}
+	filter := bson.M{"uid": token.UID}
+	update := bson.D{{"$set", bson.D{{"profileImage", fileName}}}}
 
 	_, err = this.repository.UserColl.UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		log.Error(err)
-		os.Remove(dst.Name())
+		os.Remove(f.Name())
 		return c.JSON(http.StatusInternalServerError, "unable to set fileID")
 	}
 
-	return c.JSON(http.StatusOK, fileID)
+	return c.JSON(http.StatusOK, fileName)
 }
 
 func (this *Handler) GetPhoto(c echo.Context) error {
@@ -157,8 +103,8 @@ func (this *Handler) GetPhoto(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, "image not found")
 	}
 
-	root := assetRoot + user.UID + profileImage
-	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+	src := service.StorageRoot + service.Creator + user.UID + service.ProfileImage
+	err := filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
 		allFiles = append(allFiles, path)
 		return nil
 	})

@@ -19,6 +19,8 @@ export interface IVideo {
     thumbnail?: string;
     sell?: boolean;
     hls?: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export class Video implements IVideo, Deserializable {
@@ -36,6 +38,8 @@ export class Video implements IVideo, Deserializable {
     public category: string[];
     public downloads: number;
     public views: number;
+    public createdAt: Date;
+    public updatedAt: Date;
     public thumbnail?: string;
 
     #sell: boolean;

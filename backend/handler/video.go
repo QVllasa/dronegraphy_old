@@ -1,19 +1,45 @@
 package handler
 
 import (
+	"context"
 	"dronegraphy/backend/repository/model"
+	"dronegraphy/backend/service"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
+	"github.com/rs/xid"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"math"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
+	"strings"
 )
 
-func (this *Handler) UploadVideo(c echo.Context) error {
+type VideoResponse struct {
+	TotalCount int64         `json:"totalcount"`
+	TotalPages int           `json:"totlapages"`
+	Page       int64         `json:"page"`
+	Limit      int64         `json:"limit"`
+	Count      int           `json:"count"`
+	Videos     []model.Video `json:"videos,omitempty"`
+}
 
-	var video *model.Video
+func (this *Handler) CreateVideo(c echo.Context) error {
 
 	token, _ := this.service.FirebaseApp.GetAndVerifyToken(c)
+
+	u, _ := this.repository.GetUserById(token.UID)
+
+	video := &model.Video{
+		Creator: model.Creator{
+			UID:       u.UID,
+			FirstName: u.FirstName,
+			LastName:  u.LastName,
+		},
+	}
 
 	if err := c.Bind(&video); err != nil {
 		log.Errorf("Unable to bind : %v", err)
@@ -21,7 +47,7 @@ func (this *Handler) UploadVideo(c echo.Context) error {
 	}
 
 	if err := c.Validate(video); err != nil {
-		log.Errorf("Unable to validate the product %+v %v", video, err)
+		log.Errorf("Unable to validate the payload %+v %v", video, err)
 		return c.JSON(http.StatusUnprocessableEntity, "Validation Error: unable to parse request payload")
 	}
 
@@ -30,14 +56,69 @@ func (this *Handler) UploadVideo(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, "Unable to store video")
 	}
 
-	//file, err := c.FormFile("thumbnail")
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-
 	return c.JSON(http.StatusOK, video)
 
-	//return c.JSON(http.StatusOK, "allowed")
+}
+
+func (this *Handler) UploadThumbnail(c echo.Context) error {
+
+	id := c.Param("id")
+
+	vID, _ := primitive.ObjectIDFromHex(id)
+
+	file, err := c.FormFile("thumbnail")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, "thumbnail is missing")
+	}
+
+	//Validate File of type image
+	if !strings.Contains(file.Header["Content-Type"][0], "image") {
+		return c.JSON(http.StatusBadRequest, "Content-Type not supported")
+	}
+
+	fileID := xid.New().String()
+	//target := service.StorageRoot + service.Videos + id + service.Thumbnail
+	target := "backend/storage/thumbnails/"
+
+	f, _ := this.service.UploadImage(file, target, fileID, false)
+
+	fileName := filepath.Base(f.Name())
+
+	filter := bson.M{"_id": vID}
+	update := bson.D{{"$set", bson.D{{"thumbnail", fileName}}}}
+
+	_, err = this.repository.VideoColl.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		log.Error(err)
+		os.Remove(f.Name())
+		return c.JSON(http.StatusInternalServerError, "unable to set fileID")
+	}
+
+	return c.JSON(http.StatusOK, fileName)
+}
+
+func (this *Handler) GetThumbnail(c echo.Context) error {
+
+	var video model.Video
+
+	id, _ := primitive.ObjectIDFromHex(c.Param("id"))
+
+	res := this.repository.VideoColl.FindOne(context.Background(), bson.M{"_id": id})
+	if err := res.Decode(&video); err != nil {
+		log.Error(err)
+		return c.JSON(http.StatusNotFound, "image not found")
+	}
+
+	src := service.StorageRoot + service.Videos + video.ID.Hex() + service.Thumbnail + video.Thumbnail
+	if _, err := os.Stat(src); err == nil {
+		log.Info("File exists")
+		return c.File(src)
+	} else if os.IsNotExist(err) {
+		log.Info("File does not exist")
+	} else {
+		return c.JSON(http.StatusNotFound, "not found")
+	}
+	return nil
 }
 
 func (this *Handler) GetVideo(c echo.Context) error {
@@ -52,38 +133,36 @@ func (this *Handler) GetVideo(c echo.Context) error {
 
 func (this *Handler) GetVideos(c echo.Context) error {
 
-	n := c.QueryParam("next")
-	s := c.QueryParam("size")
+	page, _ := strconv.ParseInt(c.QueryParam("page"), 10, 64)
+	limit, _ := strconv.ParseInt(c.QueryParam("limit"), 10, 64)
 
-	fmt.Println(n)
-	fmt.Println(s)
-
-	next, _ := strconv.ParseInt(n, 10, 64)
-	size, _ := strconv.ParseInt(s, 10, 64)
-
-	videos, err := this.repository.GetAllVideos(next, size)
-	if err != nil {
-		return err
+	// Defaults
+	if page == 0 {
+		page = 1
 	}
-	return c.JSON(http.StatusOK, videos)
-}
-
-func (this *Handler) GetCreatorVideos(c echo.Context) error {
-
-	n := c.QueryParam("next")
-	s := c.QueryParam("size")
-
-	fmt.Println(n)
-	fmt.Println(s)
-
-	next, _ := strconv.ParseInt(n, 10, 64)
-	size, _ := strconv.ParseInt(s, 10, 64)
-
-	videos, err := this.repository.GetAllVideos(next, size)
-	if err != nil {
-		return err
+	if limit == 0 {
+		limit = 30
 	}
-	return c.JSON(http.StatusOK, videos)
+
+	var response VideoResponse
+
+	filter := bson.M{}
+
+	if c.Param("id") != "" {
+		fmt.Println(c.Param("id"))
+		filter = bson.M{"creator.uid": c.Param("id")}
+	}
+
+	response.Videos, _ = this.repository.GetVideos(page, limit, filter)
+
+	response.TotalCount, _ = this.repository.VideoColl.CountDocuments(context.Background(), filter)
+
+	response.TotalPages = int(math.Round(float64(response.TotalCount) / float64(limit)))
+	response.Limit = limit
+	response.Page = page
+	response.Count = len(response.Videos)
+
+	return c.JSON(http.StatusOK, response)
 }
 
 //func (this *Handler) DeleteVideo(c echo.Context) error {

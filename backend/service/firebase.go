@@ -58,6 +58,8 @@ func NewFirebaseClient() (this *FirebaseClient, err error) {
 // Get token as struct to read claims
 func (this *FirebaseClient) GetAndVerifyToken(c echo.Context) (*auth.Token, error) {
 
+	fmt.Println("verfiying token")
+
 	// Get token
 	idToken, err := util.GetTokenFromRequest(c)
 	if err != nil {

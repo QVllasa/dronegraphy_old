@@ -46,9 +46,13 @@ import (
 
 func (this *Repository) CreateVideo(video *model.Video, id string) error {
 
-	var creator model.User
+	u, _ := this.GetUserById(id)
 
-	creator, _ = this.GetUserById(id)
+	creator := model.Creator{
+		UID:       u.UID,
+		FirstName: u.FirstName,
+		LastName:  u.LastName,
+	}
 
 	// Set CreatedAt
 	video.CreatedAt = time.Now()
@@ -69,15 +73,17 @@ func (this *Repository) CreateVideo(video *model.Video, id string) error {
 	return nil
 }
 
-func (this *Repository) GetAllVideos(next int64, size int64) ([]model.Video, error) {
+func (this *Repository) GetVideos(page int64, limit int64, filter bson.M) ([]model.Video, error) {
 
 	var videos []model.Video
 
 	opt := options.Find()
-	opt.SetSkip(next)
-	opt.SetLimit(size)
+	if limit != -1 {
+		opt.SetSkip((page - 1) * limit)
+		opt.SetLimit(limit)
+	}
 
-	cursor, err := this.VideoColl.Find(context.Background(), bson.M{}, opt)
+	cursor, err := this.VideoColl.Find(context.Background(), filter, opt)
 
 	if err != nil {
 		log.Errorf("Unable to fetch videos from database: %v", err)

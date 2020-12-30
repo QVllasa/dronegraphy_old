@@ -97,7 +97,7 @@ export class ProfileComponent implements OnInit {
         fd.append("file", this.file, this.file.name)
 
 
-        this.uploadService.uploadImage(this.userService.user$.value.uid, fd)
+        this.uploadService.uploadImage(fd)
             .pipe(
                 map(event => {
                     if (event.type === HttpEventType.UploadProgress) {

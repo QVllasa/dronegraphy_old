@@ -10,8 +10,8 @@ export class UploadService {
 
   constructor(private http: HttpClient) { }
 
-  uploadImage(id: string, file: FormData){
-    return this.http.post<File>(environment.apiUrl + '/users/'+id, file, {
+  uploadImage(file: FormData){
+    return this.http.post<File>(environment.apiUrl + '/photos', file, {
       reportProgress: true,
       observe: 'events'
     })
