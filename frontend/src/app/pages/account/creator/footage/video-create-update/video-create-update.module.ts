@@ -18,7 +18,8 @@ import {MatChipsModule} from "@angular/material/chips";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {NgBytesPipeModule} from "angular-pipes";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
-import {SecondsToMinutesPipe} from "../../../../../../@dg/pipes/seconds/seconds-to-minutes.pipe";
+import {SecondsToMinutesModule} from "../../../../../../@dg/pipes/seconds/seconds-to-minutes.module";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @NgModule({
   imports: [
@@ -39,9 +40,11 @@ import {SecondsToMinutesPipe} from "../../../../../../@dg/pipes/seconds/seconds-
     MatSnackBarModule,
     MatChipsModule,
     NgBytesPipeModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    SecondsToMinutesModule,
+    MatProgressSpinnerModule
   ],
-  declarations: [VideoCreateUpdateComponent, SecondsToMinutesPipe],
+  declarations: [VideoCreateUpdateComponent],
   entryComponents: [VideoCreateUpdateComponent],
   exports: [VideoCreateUpdateComponent]
 })

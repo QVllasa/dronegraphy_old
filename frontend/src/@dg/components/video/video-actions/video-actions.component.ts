@@ -18,7 +18,8 @@ import {Router} from "@angular/router";
         <div @fadeIn class="rounded absolute top-0 right-0 left-0 h-full w-full">
             <div class="absolute top-0 right-0 p-1">
                 <mat-chip-list>
-                    <mat-chip *ngIf="videoItem.getLicense()" color="primary" class="text-xxs min-h-full h-6" selected>pro
+                    <mat-chip *ngIf="videoItem.getLicense()" color="primary" class="text-xxs min-h-full h-6" selected>
+                        pro
                     </mat-chip>
                     <mat-chip *ngIf="!videoItem.getLicense()" color="accent" class="text-xxs min-h-full h-6">linzenzfrei
                     </mat-chip>
@@ -27,16 +28,20 @@ import {Router} from "@angular/router";
             <div class="absolute bottom-0 left-0 text-white cursor-pointer p-1">
                 <mat-label class="text-sm  mat-body-strong">{{videoItem.title}}</mat-label>
                 <br>
-                <mat-label class=" text-sm mat-body-1 font-weight-lighter">Von {{videoItem.getCreator().getFullName()}}</mat-label>
+                <mat-label class=" text-sm mat-body-1 font-weight-lighter">
+                    Von {{videoItem.getCreator().getFullName()}}</mat-label>
             </div>
             <div class="absolute bottom-0 right-0 p-1 text-white">
-                <button (click)="updateCart()" mat-icon-button
-                        [color]="orderService.cart$.value?.includes(videoItem) ? 'warn' : null">
-                    <mat-icon class="material-icons-round text-xl">{{orderService.cart$.value?.includes(videoItem) ? 'shopping_cart' : 'add_shopping_cart' }}</mat-icon>
-                </button>
-                <button mat-icon-button>
-                    <mat-icon class="material-icons-round text-xl">favorite_border</mat-icon>
-                </button>
+                <ng-container *ngIf="!userService.user$.value || userService.user$.value.role.includes('ROLE_MEMBER')">
+                    <button (click)="updateCart()" mat-icon-button
+                            [color]="orderService.cart$.value?.includes(videoItem) ? 'warn' : null">
+                        <mat-icon
+                                class="material-icons-round text-xl">{{orderService.cart$.value?.includes(videoItem) ? 'shopping_cart' : 'add_shopping_cart' }}</mat-icon>
+                    </button>
+                    <button mat-icon-button>
+                        <mat-icon class="material-icons-round text-xl">favorite_border</mat-icon>
+                    </button>
+                </ng-container>
                 <button mat-icon-button>
                     <mat-icon class="material-icons-round text-xl">share</mat-icon>
                 </button>
@@ -56,11 +61,10 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
     @Input() videoItem: Video;
 
 
-
     constructor(
         public orderService: OrderService,
         public router: Router,
-        public userSerivce: UserService,
+        public userService: UserService,
         private _snackBar: MatSnackBar
     ) {
     }
@@ -70,16 +74,16 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
     }
 
     updateCart() {
-        if (!this.userSerivce.user$.value){
+        if (!this.userService.user$.value) {
             this.router.navigate(['/login']).then()
             return
         }
         let videos = this.orderService.cart$.value;
-        if (videos && !videos.includes(this.videoItem) ) {
+        if (videos && !videos.includes(this.videoItem)) {
             videos.push(this.videoItem)
             this._snackBar.open('Zum Warenkorb hinzugefügt.', 'SCHLIESSEN')
             return
-        }else if(videos && videos.includes(this.videoItem)){
+        } else if (videos && videos.includes(this.videoItem)) {
             videos.splice(videos.indexOf(this.videoItem), 1)
             this._snackBar.open('Vom Warenkorb gelöscht.', 'SCHLIESSEN')
             return

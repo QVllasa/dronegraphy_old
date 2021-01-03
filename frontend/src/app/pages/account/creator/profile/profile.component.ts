@@ -96,7 +96,6 @@ export class ProfileComponent implements OnInit {
         const fd = new FormData()
         fd.append("file", this.file, this.file.name)
 
-
         this.uploadService.uploadImage(fd)
             .pipe(
                 map(event => {

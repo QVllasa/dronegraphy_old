@@ -21,6 +21,7 @@ export interface IVideo {
     hls?: string;
     createdAt: Date;
     updatedAt: Date;
+    published: boolean;
 }
 
 export class Video implements IVideo, Deserializable {
@@ -41,12 +42,11 @@ export class Video implements IVideo, Deserializable {
     public createdAt: Date;
     public updatedAt: Date;
     public thumbnail?: string;
+    public published: boolean;
 
     #sell: boolean;
-    #published: boolean;
     #onBanner: boolean;
     #hls: string;
-
     #creator: User;
     #favoriteBy: any;
 
@@ -73,12 +73,12 @@ export class Video implements IVideo, Deserializable {
         return this.#hls;
     }
 
-    setThumbnail(path) {
-        this.thumbnail = path;
+    setThumbnail(fileName) {
+        this.thumbnail = fileName;
     }
 
     getThumbnail(): string | null {
-        return this.thumbnail
+        return "http://localhost:8080/img/"+this.thumbnail
     }
 
     setCreator(creator: User) {
@@ -97,8 +97,8 @@ export class Video implements IVideo, Deserializable {
         return this.width + 'x' + this.height
     }
 
-    published(): boolean {
-        return this.#published;
-    }
+
+
+
 
 }

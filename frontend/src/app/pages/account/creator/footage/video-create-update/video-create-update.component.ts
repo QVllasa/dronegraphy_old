@@ -2,7 +2,7 @@ import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Video} from "../../../../../../@dg/models/video.model";
-import {map, startWith} from "rxjs/operators";
+import {map, mergeMap, startWith, switchMap} from "rxjs/operators";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {Observable} from "rxjs";
 import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
@@ -13,6 +13,8 @@ import * as uuid from 'uuid';
 import {VideoService} from "../../../../../../@dg/services/video.service";
 import {CategoryService} from "../../../../../../@dg/services/category.service";
 import {ICategory} from "../../../../../../@dg/models/category.model";
+import {HttpEventType} from "@angular/common/http";
+import {UploadService} from "../../../../../../@dg/services/upload.service";
 
 
 interface CountryState {
@@ -27,12 +29,12 @@ interface CountryState {
 })
 export class VideoCreateUpdateComponent implements OnInit {
 
-    //
-    // dummyContent = [''];
-    // placeholderFile =  new File(this.dummyContent, "dummy", { type: 'video/quicktime' });
 
-
+    onSucess = false;
+    isLoading = false;
     form: FormGroup;
+
+    //Default create
     mode: 'create' | 'update' = 'create';
 
     files: File[] = [];
@@ -63,10 +65,11 @@ export class VideoCreateUpdateComponent implements OnInit {
     constructor(@Inject(MAT_DIALOG_DATA) public defaults: any,
                 private _snackBar: MatSnackBar,
                 private categoryService: CategoryService,
+                private uploadService: UploadService,
                 private videoService: VideoService,
                 private dialogRef: MatDialogRef<VideoCreateUpdateComponent>,
                 private fb: FormBuilder) {
-
+        dialogRef.disableClose = true;
 
     }
 
@@ -92,57 +95,50 @@ export class VideoCreateUpdateComponent implements OnInit {
             formats: [this.defaults.formats || []],
             tags: [this.defaults.tags || []],
             sell: [this.defaults.getLicense || false, [Validators.required]],
-            published: [this.defaults.published ||false, [Validators.required]]
+            published: [this.defaults.published || false, [Validators.required]],
         });
+
+
+
+
 
 
         this.filteredFormats = this.formatCtrl.valueChanges.pipe(
             startWith(null),
-            map((format: string | null) => format ? this._filterFormat(format) : this.allFormats.slice()));
+            map((format: string | null) => format ? this._filter(format, this.allFormats) : this.allFormats.slice()));
 
         this.filteredTags = this.tagCtrl.valueChanges.pipe(
             startWith(null),
-            map((tag: string | null) => tag ? this._filterTag(tag) : this.allFormats.slice()));
+            map((tag: string | null) => tag ? this._filter(tag, this.allTags) : this.allTags.slice()));
     }
-
-
-    onSelectVideo(vid: NgxDropzoneChangeEvent) {
-        // console.log(vid);
-        this.files.push(...vid.addedFiles);
-    }
-
-    onSelectThumbnail(img: NgxDropzoneChangeEvent) {
-        // console.log(img);
-        if (img.rejectedFiles.length > 0) {
-            this._snackBar.open("Datei ist zu groß!", "SCHLIESSEN")
-            return
-        }
-
-        this.thumbnail = img.addedFiles[0];
-    }
-
-    onRemoveThumbnail() {
-        this.thumbnail = null;
-    }
-
-
-    onRemove(event) {
-        // console.log(event);
-        this.files.splice(this.files.indexOf(event), 1);
-    }
-
 
     save() {
-        // if(!this.thumbnail){
-        //   this._snackBar.open("Dein Thumbnail fehlt!", "SCHLIESSEN")
-        //   return
+        if (!this.thumbnail) {
+            this._snackBar.open("Dein Thumbnail fehlt!", "SCHLIESSEN")
+            return
+        }
+        // if (this.files.length === 0) {
+        //     this._snackBar.open("Deine Videodateien fehlen!", "SCHLIESSEN")
+        //     return
         // }
-        console.log(JSON.stringify(this.form.value))
-        console.log(this.thumbnail);
 
-        this.videoService.createVideo(this.form.value).subscribe(res => {
-            alert(JSON.stringify(res))
+        const videoFiles = new FormData();
+        for (let i = 0; i < this.files.length; i++) {
+            videoFiles.append("videoFiles[]", this.files[i], this.files[i]['name']);
+        }
+
+        const videoData = new Video().deserialize(this.form.value)
+
+        this.isLoading = true;
+        this.videoService.createVideo(videoData, this.thumbnail).subscribe(video => {
+            console.log("in footage")
+            console.log(video)
+            setTimeout(()=> {
+                this.isLoading = false;
+            }, 3000)
+            this.onSucess = true;
         })
+
 
         // if (this.mode === 'create') {
         //   this.createVideo();
@@ -151,24 +147,28 @@ export class VideoCreateUpdateComponent implements OnInit {
         // }
     }
 
-    createVideo() {
-        console.log("onCreateVideo...")
-        // const video = this.form.value;
-        //
-        // if (!video.imageSrc) {
-        //   video.imageSrc = 'assets/img/avatars/1.jpg';
-        // }
-        //
-        // this.dialogRef.close(video);
+
+    onSelectVideo(vid: NgxDropzoneChangeEvent) {
+        this.files.push(...vid.addedFiles);
     }
 
-    updateVideo() {
-        console.log("onUpdateVideo...")
-        // const video = this.form.value;
-        // video.id = this.defaults.id;
-        //
-        // this.dialogRef.close(video);
+    onSelectThumbnail(img: NgxDropzoneChangeEvent) {
+        if (img.rejectedFiles.length > 0) {
+            this._snackBar.open("Datei ist zu groß!", "SCHLIESSEN")
+            return
+        }
+        this.thumbnail = img.addedFiles[0];
     }
+
+    onRemoveThumbnail() {
+        this.thumbnail = null;
+    }
+
+
+    onRemoveFile(event) {
+        this.files.splice(this.files.indexOf(event), 1);
+    }
+
 
     isCreateMode() {
         return this.mode === 'create';
@@ -178,13 +178,14 @@ export class VideoCreateUpdateComponent implements OnInit {
         return this.mode === 'update';
     }
 
-    addFormat(event: MatChipInputEvent): void {
+
+    add(event: MatChipInputEvent, control: string): void {
         const input = event.input;
         const value = event.value;
 
         // Add our fruit
         if ((value || '').trim()) {
-            this.updateFormats(value)
+            this.update(value, control)
         }
 
         // Reset the input value
@@ -192,82 +193,43 @@ export class VideoCreateUpdateComponent implements OnInit {
             input.value = '';
         }
 
-        this.updateFormats(null)
+        this.update(null)
     }
 
-    addTag(event: MatChipInputEvent): void {
-        const input = event.input;
-        const value = event.value;
-
-        // Add our fruit
-        if ((value || '').trim()) {
-            this.updateTags(value)
-        }
-
-        // Reset the input value
-        if (input) {
-            input.value = '';
-        }
-
-        this.updateTags(null)
-    }
-
-    removeFormat(format: string): void {
-        const index = this.form.get('formats').value.indexOf(format);
+    remove(format: string, control: string): void {
+        const index = this.form.get(control).value.indexOf(format);
 
         if (index >= 0) {
-            this.form.get('formats').value.splice(index, 1);
+            this.form.get(control).value.splice(index, 1);
         }
     }
 
-    removeTag(tag: string): void {
-        const index = this.form.get('tags').value.indexOf(tag);
 
-        if (index >= 0) {
-            this.form.get('tags').value.splice(index, 1);
-        }
-    }
-
-    private _filterTag(value: string): string[] {
+    private _filter(value: string, list: string[]): string[] {
         const filterValue = value.toLowerCase();
-        return this.allTags.filter(tag => tag.toLowerCase().indexOf(filterValue) === 0);
+        return list.filter(tag => tag.toLowerCase().indexOf(filterValue) === 0);
     }
 
-    private _filterFormat(value: string): string[] {
-        const filterValue = value.toLowerCase();
-        return this.allFormats.filter(format => format.toLowerCase().indexOf(filterValue) === 0);
-    }
-
-    selectedFormat(event: MatAutocompleteSelectedEvent): void {
-        this.form.get('formats').value.push(event.option.viewValue)
+    selected(event: MatAutocompleteSelectedEvent, control: string): void {
+        this.form.get(control).value.push(event.option.viewValue)
         this.formatInput.nativeElement.value = '';
         this.formatCtrl.setValue(null);
     }
 
 
-    selectedTag(event: MatAutocompleteSelectedEvent): void {
-        this.form.get('tags').value.push(event.option.viewValue)
-        this.tagInput.nativeElement.value = '';
-        this.tagCtrl.setValue(null);
-    }
-
-
-    updateFormats(value) {
+    update(value, control?: string) {
         if (!value) {
             return
         }
-        let formatList = this.form.get('formats').value;
-        formatList.push(value.trim())
-        this.form.get('formats').setValue(formatList)
+        let list = this.form.get(control).value;
+        list.push(value.trim())
+        this.form.get(control).setValue(list)
     }
 
-    updateTags(value) {
-        if (!value) {
-            return
-        }
-        let tagList = this.form.get('tags').value;
-        tagList.push(value.trim())
-        this.form.get('tags').setValue(tagList)
+    onFileUpload(event) {
+        this.thumbnail = event.target.files[0];
+
     }
+
 
 }

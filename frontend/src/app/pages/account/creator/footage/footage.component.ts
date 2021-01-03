@@ -15,6 +15,9 @@ import {VideoCreateUpdateComponent} from "./video-create-update/video-create-upd
 import {MatDialog} from "@angular/material/dialog";
 import {UserService} from "../../../../../@dg/services/user.service";
 import {User} from "../../../../../@dg/models/user.model";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {HttpEventType} from "@angular/common/http";
+import {UploadService} from "../../../../../@dg/services/upload.service";
 
 @Component({
     selector: 'dg-footage',
@@ -32,8 +35,9 @@ export class FootageComponent implements OnInit {
         {label: 'Checkbox', property: 'checkbox', type: 'checkbox', visible: true},
         {label: 'Thumbnail', property: 'thumbnail', type: 'image', visible: true},
         {label: 'Titel', property: 'title', type: 'text', visible: true, cssClasses: ['font-medium']},
-        {label: 'Ort', property: 'location', type: 'text', visible: true},
-        {label: 'Länge', property: 'length', type: 'text', visible: true},
+        {label: 'Veröffentlicht', property: 'published', type: 'published', visible: true},
+        // {label: 'Ort', property: 'location', type: 'text', visible: true},
+        {label: 'Länge', property: 'length', type: 'length', visible: true},
         {label: 'Klicks', property: 'views', type: 'text', visible: true},
         {label: 'Downloads', property: 'downloads', type: 'text', visible: true},
         {label: 'Erstellt', property: 'createdAt', type: 'date', visible: true},
@@ -61,6 +65,7 @@ export class FootageComponent implements OnInit {
 
     constructor(private videoService: VideoService,
                 private userSevice: UserService,
+                private _snackBar: MatSnackBar,
                 private dialog: MatDialog) {
     }
 
@@ -97,6 +102,9 @@ export class FootageComponent implements OnInit {
             map(res => {
                 console.log(res)
                 this.totalCount = res.totalcount
+                if (!res.videos){
+                    return []
+                }
                 return this.videoService.mapVideos(res)
             })
         )
@@ -143,13 +151,12 @@ export class FootageComponent implements OnInit {
     }
 
     deleteVideo(video: Video) {
-        /**
-         * Here we are updating our local array.
-         * You would probably make an HTTP request here.
-         */
-        this.videos.splice(this.videos.findIndex((existingVideo) => existingVideo.id === video.id), 1);
-        this.selection.deselect(video);
-        this.subject$.next(this.videos);
+        this.videoService.removeVideo(video.id).subscribe(res => {
+            console.log(res)
+            this.videos.splice(this.videos.findIndex((existingVideo) => existingVideo.id === video.id), 1);
+            this.subject$.next(this.videos);
+        })
+
     }
 
     deleteVideos(videos: Video[]) {
@@ -198,6 +205,19 @@ export class FootageComponent implements OnInit {
         // this.videos[index].labels = change.value;
         this.subject$.next(this.videos);
     }
+
+
+    updatePublishState(video: Video){
+        video.published = !video.published
+        console.log(video)
+        this.videoService.changePublishState(video).subscribe(res => {
+            this.videos[this.videos.findIndex(el => el.id === res.id)] = res;
+            this._snackBar.open("Status geändert!", "SCHLIESSEN")
+        })
+
+    }
+
+
 
 
 }

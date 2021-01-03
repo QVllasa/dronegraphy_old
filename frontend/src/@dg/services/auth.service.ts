@@ -9,6 +9,7 @@ import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import firebase from 'firebase';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {getFirstName, getLastName} from '../utils/split-names';
+import {OrderService} from "./order.service";
 
 
 @Injectable({
@@ -24,6 +25,7 @@ export class AuthenticationService implements OnDestroy {
     constructor(public afAuth: AngularFireAuth,
                 private http: HttpClient,
                 private userService: UserService,
+                private orderSerivce: OrderService,
                 private _snackBar: MatSnackBar,
                 private router: Router) {
     }
@@ -89,6 +91,7 @@ export class AuthenticationService implements OnDestroy {
     }
 
     signOut() {
+        this.orderSerivce.cart$.next(null);
         this.logout$ = from(this.afAuth.signOut()).pipe(
             switchMap(() => {
                 localStorage.removeItem('currentUser')

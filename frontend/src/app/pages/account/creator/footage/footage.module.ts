@@ -15,6 +15,9 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {VideoCreateUpdateModule} from "./video-create-update/video-create-update.module";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {SecondsToMinutesModule} from "../../../../../@dg/pipes/seconds/seconds-to-minutes.module";
 
 
 @NgModule({
@@ -23,6 +26,7 @@ import {VideoCreateUpdateModule} from "./video-create-update/video-create-update
         CommonModule,
         FootageRoutingModule,
         MatMenuModule,
+        MatSnackBarModule,
         MatCheckboxModule,
         FlexLayoutModule,
         MatTableModule,
@@ -34,7 +38,9 @@ import {VideoCreateUpdateModule} from "./video-create-update/video-create-update
         FormsModule,
         ReactiveFormsModule,
         MatTooltipModule,
-        VideoCreateUpdateModule
+        VideoCreateUpdateModule,
+        MatSlideToggleModule,
+        SecondsToMinutesModule
     ]
 })
 export class FootageModule { }
