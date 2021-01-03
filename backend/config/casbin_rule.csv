@@ -19,3 +19,4 @@ p,ROLE_CREATOR,/photos,POST
 p,ROLE_CREATOR,/thumbnails/:id,POST
 p,ROLE_CREATOR,/thumbnails/:id,GET
 p,ROLE_ANONYMOUS,/thumbnails/:id,GET
+p,ROLE_CREATOR,/videos/:id,(POST)|(GET)

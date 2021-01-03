@@ -3,11 +3,13 @@ package repository
 import (
 	"context"
 	"dronegraphy/backend/repository/model"
+	"encoding/json"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"io"
 	"net/http"
 	"time"
 )
@@ -112,17 +114,47 @@ func (this *Repository) GetVideoById(id string) (*model.Video, error) {
 	return video, nil
 }
 
-//func deleteVideo(ctx context.Context, id string, collection *mongo.Collection) (int64, error) {
-//	docID, err := primitive.ObjectIDFromHex(id)
-//	if err != nil {
-//		return 0, err
-//	}
-//	res, err := collection.DeleteOne(ctx, bson.M{"_id": docID})
-//	if err != nil {
-//		return 0, err
-//	}
-//	return res.DeletedCount, nil
-//}
+func (this *Repository) UpdateVideo(id string, reqBody io.ReadCloser) (*model.Video, error) {
+
+	video, err := this.GetVideoById(id)
+	if err != nil {
+		log.Errorf("Video not found: %v", err)
+		return nil, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Video not found"})
+	}
+
+	if err := json.NewDecoder(reqBody).Decode(&video); err != nil {
+		log.Errorf("Unable decode using request body: %v", err)
+		return nil, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Unable to decode JSON"})
+	}
+
+	filter := bson.M{"_id": video.ID}
+	video.UpdatedAt = time.Now()
+
+	_, err = this.VideoColl.UpdateOne(context.Background(), filter, bson.M{"$set": video})
+	if err != nil {
+		log.Errorf("Unable to update the video: %v", err)
+		return nil, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Unable to update the Video"})
+	}
+
+	return video, nil
+}
+
+func (this *Repository) DeleteVideo(id string) error {
+	docID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	filter := bson.M{"_id": docID}
+
+	_, err = this.VideoColl.DeleteOne(context.Background(), filter)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 //
 //func modifyVideo(ctx context.Context, id string, reqBody io.ReadCloser, collection *mongo.Collection) (Video, error) {
 //	var video Video

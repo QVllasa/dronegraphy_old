@@ -1,7 +1,11 @@
 package util
 
 import (
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/log"
+	"io"
+	"net/http"
 	"os"
 	"strings"
 )
@@ -23,4 +27,37 @@ func GetTokenFromRequest(c echo.Context) (string, error) {
 	idToken := strings.Replace(token, "Bearer ", "", 1)
 
 	return idToken, nil
+}
+
+func DownloadFile(URL, fileName string) error {
+	//Get the response bytes from the url
+
+	fmt.Println(URL)
+	response, err := http.Get(URL)
+	if err != nil {
+		return err
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != 200 {
+		fmt.Println(response.StatusCode)
+	}
+	//Create a empty file
+	file, err := os.Create(fileName)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	defer file.Close()
+
+	//Write the bytes to the fiel
+	_, err = io.Copy(file, response.Body)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	fmt.Println(file.Name())
+
+	return nil
 }

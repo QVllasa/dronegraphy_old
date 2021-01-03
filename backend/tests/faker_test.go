@@ -5,14 +5,15 @@ import (
 	"dronegraphy/backend/repository"
 	"dronegraphy/backend/repository/model"
 	"dronegraphy/backend/service"
+	"dronegraphy/backend/util"
 	"firebase.google.com/go/v4/auth"
 	"fmt"
 	"github.com/brianvoe/gofakeit/v5"
 	"github.com/labstack/gommon/log"
+	"github.com/rs/xid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"google.golang.org/api/iterator"
-
 	"testing"
 )
 
@@ -205,8 +206,25 @@ func TestLoadVideoFixtures(t *testing.T) {
 		video.CreatedAt = gofakeit.Date()
 		video.UpdatedAt = gofakeit.Date()
 		video.HLS = "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-		video.Thumbnail = gofakeit.ImageURL(300, 300)
+		//video.Thumbnail =
 
-		_, _ = videos.InsertOne(context.Background(), video)
+		ID, _ := videos.InsertOne(context.Background(), video)
+
+		fileID := xid.New().String()
+		target := "../storage/thumbnails/"
+
+		if err = util.DownloadFile(gofakeit.ImageURL(300, 300)+".jpg", target+fileID+".jpg"); err != nil {
+			log.Error(err)
+		}
+
+		filter := bson.M{"_id": ID.InsertedID}
+		update := bson.D{{"$set", bson.D{{"thumbnail", fileID + ".jpg"}}}}
+
+		_, err = videos.UpdateOne(context.Background(), filter, update)
+		//if err != nil {
+		//	log.Error(err)
+		//	os.Remove(f.Name())
+		//}
+
 	}
 }

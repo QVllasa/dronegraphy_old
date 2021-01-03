@@ -60,6 +60,17 @@ func (this *Handler) CreateVideo(c echo.Context) error {
 
 }
 
+func (this *Handler) UpdateVideo(c echo.Context) error {
+
+	video, err := this.repository.UpdateVideo(c.Param("id"), c.Request().Body)
+	if err != nil {
+		log.Errorf("Unable to update Video: %v", err)
+		return err
+	}
+
+	return c.JSON(http.StatusOK, video)
+}
+
 func (this *Handler) UploadThumbnail(c echo.Context) error {
 
 	id := c.Param("id")
@@ -78,9 +89,9 @@ func (this *Handler) UploadThumbnail(c echo.Context) error {
 
 	fileID := xid.New().String()
 	//target := service.StorageRoot + service.Videos + id + service.Thumbnail
-	target := "backend/storage/thumbnails/"
+	target := service.StorageRoot + service.Thumbnails
 
-	f, _ := this.service.UploadImage(file, target, fileID, false)
+	f, _ := this.service.UploadImage(file, target, fileID, false, true)
 
 	fileName := filepath.Base(f.Name())
 
@@ -97,27 +108,7 @@ func (this *Handler) UploadThumbnail(c echo.Context) error {
 	return c.JSON(http.StatusOK, fileName)
 }
 
-func (this *Handler) GetThumbnail(c echo.Context) error {
-
-	var video model.Video
-
-	id, _ := primitive.ObjectIDFromHex(c.Param("id"))
-
-	res := this.repository.VideoColl.FindOne(context.Background(), bson.M{"_id": id})
-	if err := res.Decode(&video); err != nil {
-		log.Error(err)
-		return c.JSON(http.StatusNotFound, "image not found")
-	}
-
-	src := service.StorageRoot + service.Videos + video.ID.Hex() + service.Thumbnail + video.Thumbnail
-	if _, err := os.Stat(src); err == nil {
-		log.Info("File exists")
-		return c.File(src)
-	} else if os.IsNotExist(err) {
-		log.Info("File does not exist")
-	} else {
-		return c.JSON(http.StatusNotFound, "not found")
-	}
+func (this *Handler) UploadVideoFiles(c echo.Context) error {
 	return nil
 }
 
@@ -165,13 +156,21 @@ func (this *Handler) GetVideos(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-//func (this *Handler) DeleteVideo(c echo.Context) error {
-//	delCount, err := deleteVideo(context.Background(), c.Param("id"), this.Coll)
-//	if err != nil {
-//		return err
-//	}
-//	return c.JSON(http.StatusOK, delCount)
-//}
+func (this *Handler) DeleteVideo(c echo.Context) error {
+
+	video, _ := this.repository.GetVideoById(c.Param("id"))
+
+	err := this.repository.DeleteVideo(c.Param("id"))
+	if err != nil {
+		return err
+	}
+
+	if err = this.service.DeleteThumbnail(video.Thumbnail); err != nil {
+		return c.JSON(http.StatusInternalServerError, "cannot delete thumbnail")
+	}
+
+	return c.JSON(http.StatusOK, video.ID.Hex()+"deleted")
+}
 
 //func (this *Handler) UpdateVideo(c echo.Context) error {
 //	video, err := modifyVideo(context.Background(), c.Param("id"), c.Request().Body, this.Coll)

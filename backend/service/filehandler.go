@@ -13,12 +13,12 @@ var (
 	Creator      = "/creators/"
 	ProfileImage = "/profileImage/"
 	Videos       = "/videos/"
-	Thumbnail    = "/thumbnail/"
+	Thumbnails   = "/thumbnails/"
 	HLS          = "/hls/"
 	Container    = "/container/"
 )
 
-func (this *Service) UploadImage(file *multipart.FileHeader, target string, fileID string, resize bool) (*os.File, error) {
+func (this *Service) UploadImage(file *multipart.FileHeader, target string, fileID string, resize bool, isThumbnail bool) (*os.File, error) {
 
 	src, err := file.Open()
 	if err != nil {
@@ -26,23 +26,25 @@ func (this *Service) UploadImage(file *multipart.FileHeader, target string, file
 	}
 	defer src.Close()
 
-	_ = os.MkdirAll(target, 0777)
+	if !isThumbnail {
+		_ = os.MkdirAll(target, 0777)
 
-	// Open the directory and read all its files.
-	dirRead, _ := os.Open(target)
-	dirFiles, _ := dirRead.Readdir(0)
+		// Open the directory and read all its files.
+		dirRead, _ := os.Open(target)
+		dirFiles, _ := dirRead.Readdir(0)
 
-	// Loop over the directory's files.
-	for index := range dirFiles {
-		fileHere := dirFiles[index]
+		// Loop over the directory's files.
+		for index := range dirFiles {
+			fileHere := dirFiles[index]
 
-		// Get name of file and its full path.
-		nameHere := fileHere.Name()
-		fullPath := target + nameHere
+			// Get name of file and its full path.
+			nameHere := fileHere.Name()
+			fullPath := target + nameHere
 
-		// Remove the file.
-		if err := os.Remove(fullPath); err != nil {
-			return nil, err
+			// Remove the file.
+			if err := os.Remove(fullPath); err != nil {
+				return nil, err
+			}
 		}
 	}
 
@@ -86,5 +88,18 @@ func ResizeImage(file *os.File) error {
 		return err
 	}
 
+	return nil
+}
+
+// Delete Thumbnail when deleting video
+func (this *Service) DeleteThumbnail(fileName string) error {
+
+	src := StorageRoot + Thumbnails + fileName
+
+	err := os.Remove(src)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
 	return nil
 }

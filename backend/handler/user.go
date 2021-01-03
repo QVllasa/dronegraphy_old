@@ -73,7 +73,7 @@ func (this *Handler) UploadPhoto(c echo.Context) error {
 	fileID := xid.New().String()
 	target := service.StorageRoot + service.Creator + token.UID + service.ProfileImage
 
-	f, err := this.service.UploadImage(file, target, fileID, true)
+	f, err := this.service.UploadImage(file, target, fileID, true, false)
 
 	fileName := filepath.Base(f.Name())
 
