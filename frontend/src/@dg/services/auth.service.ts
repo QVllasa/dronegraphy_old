@@ -5,7 +5,7 @@ import {AngularFireAuth} from '@angular/fire/auth';
 import {Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {UserService} from './user.service';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {catchError, map, switchMap, take, tap} from 'rxjs/operators';
 import firebase from 'firebase';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {getFirstName, getLastName} from '../utils/split-names';
@@ -33,35 +33,49 @@ export class AuthenticationService implements OnDestroy {
     // Sign Up User on Firebase
     signUp(email, password, name) {
         //TODO register user via backend not frontend, and then login
-        return from(this.afAuth.createUserWithEmailAndPassword(email, password)).pipe(
+        let user = {
+            email: email,
+            firstName: getFirstName(name),
+            lastName: getLastName(name),
+        };
+        console.log(password)
+        return this.userService.registerUser(user, password).pipe(
+            take(1),
             switchMap(res => {
-                const userData: IUser = {
-                    uid: res.user.uid,
-                    email: res.user.email,
-                    firstName: getFirstName(name),
-                    lastName: getLastName(name),
-                };
-                return this.userService.createUser(userData);  // POST
+                console.log(res)
+                return this.login(user.email, password)
             }),
-            switchMap(user => {
-                return this.userService.getUser(user.uid);  // GET
-            }),
-            switchMap(user => {
-                this.userService.user$.next(new User().deserialize(user));
-                return this.afAuth.authState;
-            }),
-            switchMap(state => {
-                state.sendEmailVerification();
-                return from(state.getIdTokenResult(true));
-            }),
-            switchMap(token => {
-                return this.userService.user$.pipe(
-                    map(user => {
-                        user.setClaims(Object.assign(token.claims));
-                    })
-                );
-            }),
-        );
+        )
+
+        // return from(this.afAuth.createUserWithEmailAndPassword(email, password)).pipe(
+        //     switchMap(res => {
+        //         const userData: IUser = {
+        //             uid: res.user.uid,
+        //             email: res.user.email,
+        //             firstName: getFirstName(name),
+        //             lastName: getLastName(name),
+        //         };
+        //         return this.userService.createUser(userData);  // POST
+        //     }),
+        //     switchMap(user => {
+        //         return this.userService.getUser(user.uid);  // GET
+        //     }),
+        //     switchMap(user => {
+        //         this.userService.user$.next(new User().deserialize(user));
+        //         return this.afAuth.authState;
+        //     }),
+        //     switchMap(state => {
+        //         state.sendEmailVerification();
+        //         return from(state.getIdTokenResult(true));
+        //     }),
+        //     switchMap(token => {
+        //         return this.userService.user$.pipe(
+        //             map(user => {
+        //                 user.setClaims(Object.assign(token.claims));
+        //             })
+        //         );
+        //     }),
+        // );
     }
 
 
@@ -72,13 +86,13 @@ export class AuthenticationService implements OnDestroy {
             }),
             switchMap(user => {
                 this.userService.user$.next(new User().deserialize(user));
-                if (this.stayLoggedIn){
+                if (this.stayLoggedIn) {
                     localStorage.setItem("currentUser", JSON.stringify(user))
                 }
                 return this.afAuth.idTokenResult;
             }),
             switchMap(token => {
-                if (this.stayLoggedIn){
+                if (this.stayLoggedIn) {
                     localStorage.setItem("idToken", JSON.stringify(token.token))
                 }
                 return this.userService.user$.pipe(

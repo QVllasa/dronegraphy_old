@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {IUser, User} from "../models/user.model";
 import {environment} from "../../environments/environment";
 import {AngularFireAuth} from "@angular/fire/auth";
@@ -50,6 +50,12 @@ export class UserService {
     }
 
 
+    registerUser(user, password: string) {
+        let options = {headers: new HttpHeaders().append("Pw", password)}
+        return this.http.post<IUser>(environment.apiUrl + '/register', user, options);
+    }
+
+
     createUser(user: IUser) {
         return this.http.post<IUser>(environment.apiUrl + '/users', user);
     }
@@ -93,12 +99,12 @@ export class UserService {
 
     changePassword(newPassword, form): Observable<void> {
         if ((newPassword != '') && !form.get('password').invalid) {
-        return this.afAuth.authState.pipe(
-            switchMap(res => {
-                    return from(res.updatePassword(newPassword));
-                }
+            return this.afAuth.authState.pipe(
+                switchMap(res => {
+                        return from(res.updatePassword(newPassword));
+                    }
+                )
             )
-        )
         }
         return of(null)
     }
@@ -114,25 +120,22 @@ export class UserService {
 
         const newEmail = form.get('info.email').value
         const newPassword = form.get('password').value
-        const lastName = form.get('info.lastName').value;
-        const firstName = form.get('info.firstName').value;
 
-        this.user$.value.email = newEmail;
-        this.user$.value.firstName = firstName;
-        this.user$.value.lastName = lastName;
+        // this.user$.value.email = newEmail;
+        this.user$.value.firstName = form.get('info.firstName').value;
+        this.user$.value.lastName = form.get('info.lastName').value;
 
         const changeUserInfo$ = this.changeUserInfo(this.user$.value).pipe(take(1));
-        const changeEmail$ = this.changeUserEmail(this.user$.value).pipe(take(1));
+        // const changeEmail$ = this.changeUserEmail(this.user$.value).pipe(take(1));
         const changePw$ = this.changePassword(newPassword, form).pipe(take(1));
 
         return concat(
-            changeEmail$,
             changeUserInfo$,
             changePw$
         )
     }
 
-    handleForm(form){
+    handleForm(form) {
         form.get('password').enable()
         form.patchValue({
             info: {
@@ -145,7 +148,7 @@ export class UserService {
         this._snackBar.open('Benutzerdaten aktualisiert.', 'SCHLIESSEN')
     }
 
-    handleError(err){
+    handleError(err) {
         if (err) {
             switch (err.code) {
                 case 'auth/requires-recent-login': {

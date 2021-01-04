@@ -102,6 +102,9 @@ export class VideoService {
 
     mapVideos(res: VideoResponse): Video[] {
         let videoList: Video[] = []
+        if (!res.videos){
+            return videoList
+        }
         for (let video of res.videos) {
             videoList.push(this.newVideo(video))
         }

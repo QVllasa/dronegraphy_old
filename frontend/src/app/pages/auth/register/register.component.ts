@@ -25,7 +25,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
     checkUser$: Subscription;
 
 
-
     constructor(private router: Router,
                 private userService: UserService,
                 private fb: FormBuilder,
@@ -54,12 +53,13 @@ export class RegisterComponent implements OnInit, OnDestroy {
         const email = this.form.get('email').value;
         const password = this.form.get('password').value.trim();
 
-        this.signUp$ = this.authService.signUp(email, password, name).pipe(take(1))
-            .subscribe(() => {
+        this.signUp$ = this.authService.signUp(email, password, name)
+            .subscribe(res => {
                     this.isLoading = false;
                     this.registerSuccess = true;
                 },
                 error => {
+                    console.log(error)
                     this.isLoading = false;
                     if (error.code === 'auth/email-already-in-use') {
                         this._snackBar.open('Pilot existiert bereits.', 'SCHLIESSEN');
