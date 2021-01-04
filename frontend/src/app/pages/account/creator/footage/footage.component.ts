@@ -120,6 +120,8 @@ export class FootageComponent implements OnInit {
         this.dialog.open(VideoCreateUpdateComponent, {
             width: 'auto'
         }).afterClosed().subscribe((video: Video) => {
+            console.log("dialog closed")
+            console.log(video)
             if (video) {
                 /**
                  * Here we are updating our local array.

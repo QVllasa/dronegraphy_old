@@ -18,6 +18,7 @@ import {OrderService} from "./order.service";
 export class AuthenticationService implements OnDestroy {
 
 
+
     logout$: Subscription;
     stayLoggedIn = false;
 
@@ -32,7 +33,7 @@ export class AuthenticationService implements OnDestroy {
 
     // Sign Up User on Firebase
     signUp(email, password, name) {
-        //TODO register user via backend not frontend, and then login
+
         let user = {
             email: email,
             firstName: getFirstName(name),
@@ -43,8 +44,14 @@ export class AuthenticationService implements OnDestroy {
             take(1),
             switchMap(res => {
                 console.log(res)
-                return this.login(user.email, password)
+                return this.handleLogin(user.email, password)
             }),
+            switchMap(res => {
+                return this.afAuth.authState
+            }),
+            switchMap(user => {
+                return from(user.sendEmailVerification())
+            })
         )
 
         // return from(this.afAuth.createUserWithEmailAndPassword(email, password)).pipe(
@@ -80,6 +87,30 @@ export class AuthenticationService implements OnDestroy {
 
 
     login(email: string, password: string) {
+        return this.handleLogin(email, password)
+    }
+
+    signOut() {
+        this.orderSerivce.cart$.next(null);
+        this.logout$ = from(this.afAuth.signOut()).pipe(
+            switchMap(() => {
+                localStorage.removeItem('currentUser')
+                return this.router.navigate(['/']);
+            }))
+            .subscribe(
+                () => {
+                    this.userService.user$.next(null);
+
+                },
+                error => {
+                    if (error) {
+                        return of(null);
+                    }
+                }
+            );
+    }
+
+    handleLogin(email: string, password: string){
         return from(this.afAuth.signInWithEmailAndPassword(email, password)).pipe(
             switchMap(res => {
                 return this.userService.getUser(res.user.uid);
@@ -102,26 +133,6 @@ export class AuthenticationService implements OnDestroy {
                 );
             })
         );
-    }
-
-    signOut() {
-        this.orderSerivce.cart$.next(null);
-        this.logout$ = from(this.afAuth.signOut()).pipe(
-            switchMap(() => {
-                localStorage.removeItem('currentUser')
-                return this.router.navigate(['/']);
-            }))
-            .subscribe(
-                () => {
-                    this.userService.user$.next(null);
-
-                },
-                error => {
-                    if (error) {
-                        return of(null);
-                    }
-                }
-            );
     }
 
 

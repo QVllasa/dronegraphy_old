@@ -19,7 +19,7 @@ import (
 
 func TestLoadCategoryFixtures(t *testing.T) {
 
-	gofakeit.Seed(0)
+	gofakeit.Seed(123)
 
 	if repository.DB == nil {
 		repository.NewDatabase()
@@ -39,7 +39,7 @@ func TestLoadCategoryFixtures(t *testing.T) {
 }
 
 func TestDeleteUser(t *testing.T) {
-	gofakeit.Seed(0)
+	gofakeit.Seed(123)
 
 	repository.NewDatabase()
 
@@ -73,7 +73,7 @@ func TestDeleteUser(t *testing.T) {
 
 func TestLoadUserFixtures(t *testing.T) {
 
-	gofakeit.Seed(0)
+	gofakeit.Seed(123)
 
 	repository.NewDatabase()
 
@@ -144,7 +144,7 @@ func TestLoadUserFixtures(t *testing.T) {
 
 func TestLoadVideoFixtures(t *testing.T) {
 
-	gofakeit.Seed(0)
+	gofakeit.Seed(123)
 
 	if repository.DB == nil {
 		repository.NewDatabase()
@@ -246,7 +246,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 		fileID := xid.New().String()
 		target := "../storage/thumbnails/"
 
-		if err = util.DownloadFile(gofakeit.ImageURL(300, 300)+".jpg", target+fileID+".jpg"); err != nil {
+		if err = util.DownloadFile(gofakeit.ImageURL(640	,360)+".jpg", target+fileID+".jpg"); err != nil {
 			log.Error(err)
 		}
 

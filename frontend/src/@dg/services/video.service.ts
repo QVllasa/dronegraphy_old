@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 import {IVideo, Video} from "../models/video.model";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {map, mergeMap, switchAll, switchMap, tap} from "rxjs/operators";
+import {map, mergeMap, switchAll, switchMap, take, tap} from "rxjs/operators";
 import {User} from "../models/user.model";
 
 interface VideoResponse {
@@ -72,6 +72,7 @@ export class VideoService {
         tb.append("thumbnail", thumbnail, thumbnail.name)
 
         return this.http.post<IVideo>(environment.apiUrl + '/videos', data).pipe(
+            take(1),
             mergeMap(video => {
                 console.log("in mergemap")
                 console.log(video)

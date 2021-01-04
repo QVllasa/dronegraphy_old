@@ -4,7 +4,6 @@ import (
 	"context"
 	"dronegraphy/backend/repository/model"
 	"dronegraphy/backend/service"
-	"firebase.google.com/go/v4/auth"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"github.com/rs/xid"
@@ -40,15 +39,6 @@ func (this *Handler) UpdateUser(c echo.Context) error {
 		return err
 	}
 
-	//Update user in firebase
-	params := (&auth.UserToUpdate{}).
-		Email(user.Email)
-	_, err = this.service.FirebaseApp.Client.UpdateUser(context.Background(), user.UID, params)
-	if err != nil {
-		log.Fatalf("error updating user: %v\n", err)
-	}
-
-	//TODO SEND EMAIL CHANGED CONFIRMATION
 
 	return c.JSON(http.StatusOK, user)
 }

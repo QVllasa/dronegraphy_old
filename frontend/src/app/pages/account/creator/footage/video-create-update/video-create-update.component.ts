@@ -70,7 +70,6 @@ export class VideoCreateUpdateComponent implements OnInit {
                 private dialogRef: MatDialogRef<VideoCreateUpdateComponent>,
                 private fb: FormBuilder) {
         dialogRef.disableClose = true;
-
     }
 
     ngOnInit() {
@@ -98,11 +97,6 @@ export class VideoCreateUpdateComponent implements OnInit {
             published: [this.defaults.published || false, [Validators.required]],
         });
 
-
-
-
-
-
         this.filteredFormats = this.formatCtrl.valueChanges.pipe(
             startWith(null),
             map((format: string | null) => format ? this._filter(format, this.allFormats) : this.allFormats.slice()));
@@ -113,6 +107,14 @@ export class VideoCreateUpdateComponent implements OnInit {
     }
 
     save() {
+        if (this.mode === 'create') {
+          this.createVideo();
+        } else if (this.mode === 'update') {
+          this.updateVideo();
+        }
+    }
+
+    createVideo(){
         if (!this.thumbnail) {
             this._snackBar.open("Dein Thumbnail fehlt!", "SCHLIESSEN")
             return
@@ -129,24 +131,20 @@ export class VideoCreateUpdateComponent implements OnInit {
 
         const videoData = new Video().deserialize(this.form.value)
 
+        //TODO GETTING UNDEFINED
         this.isLoading = true;
         this.videoService.createVideo(videoData, this.thumbnail).subscribe(video => {
-            console.log("in footage")
-            console.log(video)
             setTimeout(()=> {
                 this.isLoading = false;
             }, 3000)
             this.onSucess = true;
         })
 
-
-        // if (this.mode === 'create') {
-        //   this.createVideo();
-        // } else if (this.mode === 'update') {
-        //   this.updateVideo();
-        // }
     }
 
+    updateVideo(){
+
+    }
 
     onSelectVideo(vid: NgxDropzoneChangeEvent) {
         this.files.push(...vid.addedFiles);

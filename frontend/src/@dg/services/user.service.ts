@@ -118,18 +118,18 @@ export class UserService {
             return
         }
 
-        const newEmail = form.get('info.email').value
         const newPassword = form.get('password').value
 
-        // this.user$.value.email = newEmail;
+        this.user$.value.email = form.get('info.email').value;
         this.user$.value.firstName = form.get('info.firstName').value;
         this.user$.value.lastName = form.get('info.lastName').value;
 
         const changeUserInfo$ = this.changeUserInfo(this.user$.value).pipe(take(1));
-        // const changeEmail$ = this.changeUserEmail(this.user$.value).pipe(take(1));
+        const changeEmail$ = this.changeUserEmail(this.user$.value).pipe(take(1));
         const changePw$ = this.changePassword(newPassword, form).pipe(take(1));
 
         return concat(
+            changeEmail$,
             changeUserInfo$,
             changePw$
         )
