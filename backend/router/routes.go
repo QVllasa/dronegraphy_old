@@ -31,12 +31,12 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	//e.DELETE("/videos/:id", h.DeleteVideo, customMiddleware.Auth())
 
 	// MEMBER
-	routeGroup.POST("/users", controller.Register)
 	routeGroup.GET("/users/:id", controller.GetUser, mw.Auth())
 	routeGroup.PUT("/users/:id", controller.UpdateUser, mw.Auth())
 	//routeGroup.POST("/users/:id", controller.UploadPhoto, mw.Auth())
 
 	//// PUBLIC
+	routeGroup.POST("/register", controller.Register)
 	routeGroup.GET("/videos", controller.GetVideos)
 	routeGroup.GET("/videos/:id", controller.GetVideo)
 	routeGroup.GET("/creators/:id", controller.GetVideos)

@@ -38,6 +38,39 @@ func TestLoadCategoryFixtures(t *testing.T) {
 
 }
 
+func TestDeleteUser(t *testing.T) {
+	gofakeit.Seed(0)
+
+	repository.NewDatabase()
+
+	fbClient, err := service.NewFirebaseClient()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	iter := fbClient.Client.Users(context.Background(), "")
+	for {
+		user, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			log.Fatalf("error listing users: %s\n", err)
+		}
+
+		err = fbClient.Client.DeleteUser(context.Background(), user.UID)
+		if err != nil {
+			log.Fatalf("error deleting user: %v\n", err)
+		}
+		log.Printf("Successfully deleted user: %s\n", user.UID)
+		log.Printf("read user user: %v\n", user)
+	}
+
+	//user := model.User{}
+	users := repository.DB.Client.Database("dronegraphy_db").Collection("users")
+	_ = users.Drop(context.Background())
+}
+
 func TestLoadUserFixtures(t *testing.T) {
 
 	gofakeit.Seed(0)
