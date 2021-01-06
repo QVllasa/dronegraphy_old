@@ -57,7 +57,6 @@ export class ProfileComponent implements OnInit {
     }
 
 
-    // TODO duplicate Code -> create util function
     onActivateForm(type) {
         this.form.get('info.' + type).enable();
     }

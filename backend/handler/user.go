@@ -39,7 +39,6 @@ func (this *Handler) UpdateUser(c echo.Context) error {
 		return err
 	}
 
-
 	return c.JSON(http.StatusOK, user)
 }
 
@@ -75,7 +74,7 @@ func (this *Handler) UploadPhoto(c echo.Context) error {
 	fileID := xid.New().String()
 	target := service.StorageRoot + service.Creator + token.UID + service.ProfileImage
 
-	f, err := this.service.UploadImage(file, target, fileID, true, false)
+	f, err := this.service.SaveImage(file, target, fileID, true, false)
 
 	fileName := filepath.Base(f.Name())
 

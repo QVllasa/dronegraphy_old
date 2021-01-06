@@ -62,7 +62,7 @@ export class VideoCreateUpdateComponent implements OnInit {
     @ViewChild('autoTag') matAutocompleteTag: MatAutocomplete;
 
 
-    constructor(@Inject(MAT_DIALOG_DATA) public defaults: any,
+    constructor(@Inject(MAT_DIALOG_DATA) public defaults: Video,
                 private _snackBar: MatSnackBar,
                 private categoryService: CategoryService,
                 private uploadService: UploadService,
@@ -95,7 +95,14 @@ export class VideoCreateUpdateComponent implements OnInit {
             tags: [this.defaults.tags || []],
             sell: [this.defaults.getLicense || false, [Validators.required]],
             published: [this.defaults.published || false, [Validators.required]],
+            thumbnail: [this.defaults.thumbnail || null]
         });
+
+        if (this.defaults) {
+            this.form.patchValue({
+                thumbnail: this.defaults.thumbnail
+            })
+        }
 
         this.filteredFormats = this.formatCtrl.valueChanges.pipe(
             startWith(null),
@@ -108,42 +115,58 @@ export class VideoCreateUpdateComponent implements OnInit {
 
     save() {
         if (this.mode === 'create') {
-          this.createVideo();
+            if (!this.thumbnail) {
+                this._snackBar.open("Dein Thumbnail fehlt!", "SCHLIESSEN")
+                return
+            }
+            this.createVideo();
         } else if (this.mode === 'update') {
-          this.updateVideo();
+            if (this.form.get('thumbnail').value || this.thumbnail) {
+                this.updateVideo();
+            }else {
+                this._snackBar.open("Thumbnail fehlt", "SCHLIESSEN")
+            }
         }
     }
 
-    createVideo(){
-        if (!this.thumbnail) {
-            this._snackBar.open("Dein Thumbnail fehlt!", "SCHLIESSEN")
-            return
-        }
-        // if (this.files.length === 0) {
-        //     this._snackBar.open("Deine Videodateien fehlen!", "SCHLIESSEN")
-        //     return
-        // }
-
-        const videoFiles = new FormData();
-        for (let i = 0; i < this.files.length; i++) {
-            videoFiles.append("videoFiles[]", this.files[i], this.files[i]['name']);
-        }
+    createVideo() {
 
         const videoData = new Video().deserialize(this.form.value)
 
-        //TODO GETTING UNDEFINED
         this.isLoading = true;
-        this.videoService.createVideo(videoData, this.thumbnail).subscribe(video => {
-            setTimeout(()=> {
-                this.isLoading = false;
-            }, 3000)
-            this.onSucess = true;
-        })
+        this.videoService.createVideo(videoData, this.thumbnail, this.files)
+            .subscribe(video => {
+                this.defaults = video
+                setTimeout(() => {
+                    this.isLoading = false;
+                }, 3000)
+                this.onSucess = true;
+            })
+
 
     }
 
-    updateVideo(){
 
+    updateVideo() {
+        // const videoFiles = new FormData();
+        // for (let i = 0; i < this.files.length; i++) {
+        //     videoFiles.append("videoFiles[]", this.files[i], this.files[i]['name']);
+        // }
+
+        console.log(this.thumbnail)
+        console.log(this.defaults.thumbnail)
+
+        this.isLoading = true;
+        this.videoService.updateVideo(this.defaults.id, this.form.value, this.thumbnail)
+            .subscribe(video => {
+                this.defaults = new Video().deserialize(video)
+                this.isLoading = false;
+                this.onSucess = true;
+            })
+    }
+
+    closeDialog() {
+        this.dialogRef.close(this.defaults)
     }
 
     onSelectVideo(vid: NgxDropzoneChangeEvent) {
@@ -224,10 +247,10 @@ export class VideoCreateUpdateComponent implements OnInit {
         this.form.get(control).setValue(list)
     }
 
-    onFileUpload(event) {
-        this.thumbnail = event.target.files[0];
-
+    deleteThumbnail() {
+        this.form.patchValue({
+            thumbnail: null
+        })
     }
-
 
 }

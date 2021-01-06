@@ -21,10 +21,11 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 
 	// CREATOR
 	routeGroup.POST("/videos", controller.CreateVideo, mw.Auth())
-	routeGroup.POST("/videos/:id", controller.UpdateVideo, mw.Auth())
+	//routeGroup.POST("/videos/:id", controller.UpdateVideo, mw.Auth())
+	routeGroup.PUT("/videos/:id", controller.UpdateVideo, mw.Auth())
 	routeGroup.DELETE("/videos/:id", controller.DeleteVideo, mw.Auth())
 	routeGroup.POST("/thumbnails/:id", controller.UploadThumbnail, mw.Auth())
-	routeGroup.POST("/video_files/:id", controller.UploadVideoFiles, mw.Auth())
+	routeGroup.POST("/video_files/:id", controller.UploadVideoFiles)
 	routeGroup.POST("/photos", controller.UploadPhoto, mw.Auth())
 	routeGroup.POST("/categories", controller.CreateCategory)
 	//e.PUT("/videos/:id", h.UpdateVideo, middleware.BodyLimit("1M"), customMiddleware.Auth())

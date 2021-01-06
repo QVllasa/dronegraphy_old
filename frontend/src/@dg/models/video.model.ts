@@ -12,7 +12,7 @@ export interface IVideo {
     fps: number;
     camera: string;
     tags: string[];
-    category: string[];
+    categories: string[];
     downloads: number;
     views: number;
     creator?: User;
@@ -36,7 +36,7 @@ export class Video implements IVideo, Deserializable {
     public fps: number;
     public camera: string;
     public tags: string[];
-    public category: string[];
+    public categories: string[];
     public downloads: number;
     public views: number;
     public createdAt: Date;
@@ -78,7 +78,7 @@ export class Video implements IVideo, Deserializable {
     }
 
     getThumbnail(): string | null {
-        return "http://localhost:8080/img/"+this.thumbnail
+        return this.thumbnail ? "http://localhost:8080/img/"+this.thumbnail : null;
     }
 
     setCreator(creator: User) {

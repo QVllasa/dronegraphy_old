@@ -7,11 +7,12 @@
             <mat-icon class="transform scale-150">check</mat-icon>
         </div>
         <div class="text-center mt-4">
-            <h2 class="mat-h2">Ab gehts!</h2>
+            <h2 *ngIf="mode === 'create'" class="mat-h2">Ab gehts!</h2>
+            <h2 *ngIf="mode === 'update'" class="mat-h2">Erfolgreich aktualisiert!</h2>
             <h4 class="mat-h4">Du wirst benachrichtigt sobald deine Aufnahme online geht.</h4>
         </div>
         <mat-dialog-actions align="center" class="mt-12">
-            <button mat-button mat-dialog-close type="button" color="primary">ZURÜCK</button>
+            <button mat-button (click)="closeDialog()" type="button" color="primary">ZURÜCK</button>
         </mat-dialog-actions>
     </div>
 </ng-container>
@@ -41,7 +42,7 @@
         <ng-container >
             <div fxFlex="auto" fxLayout="row">
                 <div class="p-4 relative" fxLayout="column" fxFlex="auto" fxLayoutAlign="center center">
-                    <ng-container *ngIf="mode === 'create'">
+                    <ng-container *ngIf="mode === 'create' || !form.get('thumbnail').value">
                         <ngx-dropzone [multiple]="false"
                                       [maxFileSize]="500000"
                                       accept="image/jpeg,image/jpg,image/png"
@@ -59,18 +60,19 @@
                         </ngx-dropzone>
                         <mat-hint class="mt-2">Maximal {{500000 | bytes}} groß</mat-hint>
                     </ng-container>
-                    <ng-container *ngIf="mode === 'update'">
+                    <ng-container *ngIf="mode === 'update' && form.get('thumbnail').value">
 
                         <img class="max-h-full w-auto mx-auto"
                              [src]="defaults.getThumbnail()">
-                        <div class="h-full w-full bg-gray-light absolute top-0 right-0 opacity-0 hover:opacity-100 rounded-lg" style="backdrop-filter: brightness(0.5)">
-                            <button mat-fab
-                                    (click)="fileUpload.click()"
-                                    class="bg-white" color="accent">
-                                <mat-icon class="material-icons-round text-primary">edit</mat-icon>
+                        <div class="h-full w-full absolute top-0 left-0 opacity-0 hover:opacity-100 rounded-lg" >
+                            <button mat-mini-fab
+                                    type="button"
+                                    (click)="deleteThumbnail()"
+                                    class="absolute right-0 top-6" color="primary">
+                                <mat-icon class="material-icons-round">clear</mat-icon>
                             </button>
-                            <input [hidden]="true" type="file" (change)="onFileUpload($event)" #fileUpload id="fileUpload"
-                                   name="fileUpload" accept="image/*"/>
+<!--                            <input [hidden]="true" type="file" (change)="onFileUpload($event)" #fileUpload id="fileUpload"-->
+<!--                                   name="fileUpload" accept="image/*"/>-->
                         </div>
 
                     </ng-container>

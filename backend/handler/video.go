@@ -91,7 +91,7 @@ func (this *Handler) UploadThumbnail(c echo.Context) error {
 	//target := service.StorageRoot + service.Videos + id + service.Thumbnail
 	target := service.StorageRoot + service.Thumbnails
 
-	f, _ := this.service.UploadImage(file, target, fileID, false, true)
+	f, _ := this.service.SaveImage(file, target, fileID, false, true)
 
 	fileName := filepath.Base(f.Name())
 
@@ -105,11 +105,26 @@ func (this *Handler) UploadThumbnail(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, "unable to set fileID")
 	}
 
+	fmt.Println(fileName)
+
 	return c.JSON(http.StatusOK, fileName)
 }
 
+//TODO finish file uploads
 func (this *Handler) UploadVideoFiles(c echo.Context) error {
-	return nil
+
+	//id := c.Param("id")
+	//
+	//_, _ = primitive.ObjectIDFromHex(id)
+
+	// Multipart form
+	form, err := c.MultipartForm()
+	if err != nil {
+		return err
+	}
+	files := form.File["videoFiles[]"]
+
+	return c.JSON(http.StatusOK, "files uploaded!")
 }
 
 func (this *Handler) GetVideo(c echo.Context) error {
@@ -165,11 +180,9 @@ func (this *Handler) DeleteVideo(c echo.Context) error {
 		return err
 	}
 
-	if err = this.service.DeleteThumbnail(video.Thumbnail); err != nil {
-		return c.JSON(http.StatusInternalServerError, "cannot delete thumbnail")
-	}
+	_ = this.service.DeleteThumbnail(video.Thumbnail)
 
-	return c.JSON(http.StatusOK, video.ID.Hex()+"deleted")
+	return c.JSON(http.StatusOK, video.ID.Hex()+" deleted")
 }
 
 //func (this *Handler) UpdateVideo(c echo.Context) error {

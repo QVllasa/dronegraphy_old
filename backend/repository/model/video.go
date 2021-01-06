@@ -25,6 +25,7 @@ type (
 		Source     string             `json:"source" bson:"source"`
 		HLS        string             `json:"hls" bson:"hls"`
 		Thumbnail  string             `json:"thumbnail" bson:"thumbnail"`
+		StorageRef string             `json:"storage_ref" bson:"storge_ref"`
 
 		CreatedAt time.Time `json:"createdAt,omitempty" bson:"createdAt,omitempty"`
 		UpdatedAt time.Time `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`

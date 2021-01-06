@@ -98,11 +98,11 @@ export class FootageComponent implements OnInit {
      * We are simulating this request here.
      */
     getData() {
-        return this.videoService.getVideosByCreator(this.userSevice.user$.value.uid, -1,0).pipe(
+        return this.videoService.getVideosByCreator(this.userSevice.user$.value.uid, -1, 0).pipe(
             map(res => {
                 console.log(res)
                 this.totalCount = res.totalcount
-                if (!res.videos){
+                if (!res.videos) {
                     return []
                 }
                 return this.videoService.mapVideos(res)
@@ -120,14 +120,8 @@ export class FootageComponent implements OnInit {
         this.dialog.open(VideoCreateUpdateComponent, {
             width: 'auto'
         }).afterClosed().subscribe((video: Video) => {
-            console.log("dialog closed")
-            console.log(video)
             if (video) {
-                /**
-                 * Here we are updating our local array.
-                 * You would probably make an HTTP request here.
-                 */
-                this.videos.unshift(new Video().deserialize(video));
+                this.videos.unshift(video);
                 this.subject$.next(this.videos);
             }
         });
@@ -137,36 +131,29 @@ export class FootageComponent implements OnInit {
         this.dialog.open(VideoCreateUpdateComponent, {
             data: video
         }).afterClosed().subscribe(updatedVideo => {
-            /**
-             * Video is the updated video (if the user pressed Save - otherwise it's null)
-             */
             if (updatedVideo) {
-                /**
-                 * Here we are updating our local array.
-                 * You would probably make an HTTP request here.
-                 */
                 const index = this.videos.findIndex((existingVideo) => existingVideo.id === updatedVideo.id);
-                this.videos[index] = new Video().deserialize(updatedVideo);
+                this.videos[index] = updatedVideo;
                 this.subject$.next(this.videos);
             }
         });
     }
 
-    deleteVideo(video: Video) {
+    deleteVideo(video: Video, multiple: boolean) {
         this.videoService.removeVideo(video.id).subscribe(res => {
-            console.log(res)
             this.videos.splice(this.videos.findIndex((existingVideo) => existingVideo.id === video.id), 1);
             this.subject$.next(this.videos);
+            if (!multiple) {
+                this._snackBar.open("Aufnahme gelöscht", "SCHLIESSEN")
+            }
         })
 
     }
 
     deleteVideos(videos: Video[]) {
-        /**
-         * Here we are updating our local array.
-         * You would probably make an HTTP request here.
-         */
-        videos.forEach(c => this.deleteVideo(c));
+        videos.forEach(c => this.deleteVideo(c, true));
+        this.selection.clear()
+        this._snackBar.open("Aufnahme gelöscht", "SCHLIESSEN")
     }
 
     onFilterChange(value: string) {
@@ -209,7 +196,7 @@ export class FootageComponent implements OnInit {
     }
 
 
-    updatePublishState(video: Video){
+    updatePublishState(video: Video) {
         video.published = !video.published
         console.log(video)
         this.videoService.changePublishState(video).subscribe(res => {
@@ -218,8 +205,6 @@ export class FootageComponent implements OnInit {
         })
 
     }
-
-
 
 
 }
