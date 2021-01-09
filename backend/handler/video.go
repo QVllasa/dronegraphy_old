@@ -113,9 +113,21 @@ func (this *Handler) UploadThumbnail(c echo.Context) error {
 //TODO finish file uploads
 func (this *Handler) UploadVideoFiles(c echo.Context) error {
 
-	//id := c.Param("id")
-	//
-	//_, _ = primitive.ObjectIDFromHex(id)
+	id := c.Param("id")
+	docID, _ := primitive.ObjectIDFromHex(id)
+
+	video, err := this.repository.GetVideoById(id)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	if video.StorageRef != "" {
+		if err = os.RemoveAll(service.StorageRoot + service.Videos + video.StorageRef); err != nil {
+			log.Error(err)
+			return err
+		}
+	}
 
 	// Multipart form
 	form, err := c.MultipartForm()
@@ -124,7 +136,37 @@ func (this *Handler) UploadVideoFiles(c echo.Context) error {
 	}
 	files := form.File["videoFiles[]"]
 
-	return c.JSON(http.StatusOK, "files uploaded!")
+	fileID := xid.New().String()
+	//target := service.StorageRoot + service.Videos + id + service.Thumbnail
+	target := service.StorageRoot + service.Videos
+
+	fileList, err := this.service.SaveVideoFiles(files, target, fileID)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	filter := bson.M{"_id": docID}
+
+	_, err = this.repository.VideoColl.UpdateOne(context.Background(), filter,
+		bson.D{
+			{"$set",
+				bson.D{
+					{"storageRef", fileID},
+					{"storageContent", fileList}}},
+		})
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	video, err = this.repository.GetVideoById(id)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	return c.JSON(http.StatusOK, video)
 }
 
 func (this *Handler) GetVideo(c echo.Context) error {

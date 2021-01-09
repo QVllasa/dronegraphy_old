@@ -9,9 +9,9 @@ require (
 	firebase.google.com/go/v4 v4.1.0
 	github.com/aws/aws-sdk-go v1.36.13 // indirect
 	github.com/brianvoe/gofakeit/v5 v5.11.1
-	github.com/bxcodec/faker/v3 v3.5.0
+	github.com/bxcodec/faker/v3 v3.5.0 // indirect
 	github.com/casbin/casbin/v2 v2.19.4
-	github.com/casbin/mongodb-adapter/v3 v3.1.0
+	github.com/casbin/mongodb-adapter/v3 v3.1.0 // indirect
 	github.com/disintegration/imaging v1.6.2
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/golang/snappy v0.0.2 // indirect
@@ -21,6 +21,7 @@ require (
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/labstack/gommon v0.3.0
 	github.com/mattn/go-colorable v0.1.8 // indirect
+	github.com/rendyfebry/go-hls-transcoder v1.0.3
 	github.com/rs/xid v1.2.1
 	github.com/xdg/stringprep v1.0.0 // indirect
 	go.mongodb.org/mongo-driver v1.4.4
