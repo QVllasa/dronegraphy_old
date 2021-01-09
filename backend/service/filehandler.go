@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"github.com/disintegration/imaging"
 	"github.com/labstack/gommon/log"
-	hls "github.com/rendyfebry/go-hls-transcoder"
-	hlsPlaylist "github.com/rendyfebry/go-hls-transcoder/playlist"
 	"io"
 	"mime/multipart"
 	"os"
@@ -87,22 +85,10 @@ func (this *Service) SaveVideoFiles(files []*multipart.FileHeader, target string
 
 	for _, file := range files {
 
-		ffmpegPath := "/usr/local/bin/ffmpeg"
-		srcPath := "/assets/raw/movie.mov"
-		targetPath := hlsPath
-		resOptions := []string{"480p", "720p"}
-
-		variants, _ := hlsPlaylist.GenerateHLSVariant(resOptions, "")
-		hlsPlaylist.GeneratePlaylist(variants, targetPath, "")
-
-		for _, res := range resOptions {
-			_ = hls.GenerateHLS(ffmpegPath, srcPath, targetPath, res)
-		}
-
 		f := model.FileInfo{
 			Size:        file.Size,
 			Title:       file.Filename,
-			ContentType: file.Header["Content-Type"][0],
+			ContentType: file.Header.Values("Content-Type")[0],
 		}
 		fmt.Println(file.Filename)
 		fmt.Println(file.Header)
@@ -126,6 +112,25 @@ func (this *Service) SaveVideoFiles(files []*multipart.FileHeader, target string
 		if _, err = io.Copy(dst, src); err != nil {
 			log.Error(err)
 			return nil, err
+		}
+
+		//TODO Implement HLS
+		if file.Header.Values("Content-Type")[0] == "video/quicktime" {
+			ffmpegPath := "/usr/local/bin/ffmpeg"
+			srcPath := dst.Name()
+			targetPath := hlsPath
+			resOptions := []string{"360p"}
+
+			variants, _ := GenerateHLSVariant(resOptions, "")
+			GeneratePlaylist(variants, targetPath, "")
+
+			for _, res := range resOptions {
+				go func(process string) {
+					_ = GenerateHLS(ffmpegPath, srcPath, targetPath, res)
+					fmt.Println("finished")
+				}("")
+				fmt.Println("FINISH DECODING")
+			}
 		}
 
 		fileList = append(fileList, f)

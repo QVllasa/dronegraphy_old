@@ -44,6 +44,8 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	//routeGroup.GET("/creators", controller.GetVideos)
 	routeGroup.GET("/categories", controller.GetCategories)
 	routeGroup.GET("/photos/:id", controller.GetPhoto)
+
+	//routeGroup.GET("/hls/:id", controller.ServeHls)
 	//routeGroup.GET("/thumbnails/:id", controller.GetThumbnail)
 
 	//// STATIC Endpoints

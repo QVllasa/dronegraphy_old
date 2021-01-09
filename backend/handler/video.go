@@ -227,6 +227,16 @@ func (this *Handler) DeleteVideo(c echo.Context) error {
 	return c.JSON(http.StatusOK, video.ID.Hex()+" deleted")
 }
 
+//func (this *Handler) ServeHls(c echo.Context) error{
+//
+//	id := c.Param("id")
+//
+//
+//
+//
+//	return c.File()
+//}
+
 //func (this *Handler) UpdateVideo(c echo.Context) error {
 //	video, err := modifyVideo(context.Background(), c.Param("id"), c.Request().Body, this.Coll)
 //	if err != nil {
