@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"fmt"
+	"github.com/labstack/gommon/log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -145,24 +146,34 @@ func getOptions(srcPath, targetPath, res string) ([]string, error) {
 
 // GenerateHLS will generate HLS file based on resolution presets.
 // The available resolutions are: 360p, 480p, 720p and 1080p.
-func GenerateHLS(ffmpegPath, srcPath, targetPath, resolution string) error {
+func GenerateHLS(ffmpegPath, srcPath, targetPath, resolution string, c chan string) error {
+	fmt.Println(
+		fmt.Sprintf("Start generating HLS for %v", resolution),
+	)
 	options, err := getOptions(srcPath, targetPath, resolution)
 	if err != nil {
+		log.Fatal(err)
 		return err
 	}
 
-	return GenerateHLSCustom(ffmpegPath, options)
-}
-
-// GenerateHLSCustom will generate HLS using the flexible options params.s
-// options is array of string that accepted by ffmpeg command
-func GenerateHLSCustom(ffmpegPath string, options []string) error {
 	cmd := exec.Command(ffmpegPath, options...)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+	//cmd.Stdout = os.Stdout
+	//cmd.Stderr = os.Stderr
+	if err := cmd.Start(); err != nil {
+		log.Fatal(err)
+	}
 
-	err := cmd.Start()
+	fmt.Println(
+		fmt.Sprintf("Wating for %v HLS", resolution),
+	)
+
+	if err = cmd.Wait(); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(fmt.Sprintf("Finished Conversion with %v", cmd.ProcessState))
+
 	return err
+
 }
 
 type config struct {

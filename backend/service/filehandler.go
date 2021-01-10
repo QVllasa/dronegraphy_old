@@ -76,12 +76,17 @@ func (this *Service) SaveImage(file *multipart.FileHeader, target string, fileID
 func (this *Service) SaveVideoFiles(files []*multipart.FileHeader, target string, fileID string) ([]model.FileInfo, error) {
 
 	var fileList []model.FileInfo
+	var cTypes []string
 
 	_ = os.MkdirAll(target+fileID, 0777)
 
 	hlsPath := target + fileID + "/hls/"
 
 	_ = os.MkdirAll(target+fileID+"/hls/", 0777)
+
+	ffmpegPath := "/usr/local/bin/ffmpeg"
+	targetPath := hlsPath
+	resOptions := []string{"360p", "480p", "720p", "1080p"}
 
 	for _, file := range files {
 
@@ -90,8 +95,7 @@ func (this *Service) SaveVideoFiles(files []*multipart.FileHeader, target string
 			Title:       file.Filename,
 			ContentType: file.Header.Values("Content-Type")[0],
 		}
-		fmt.Println(file.Filename)
-		fmt.Println(file.Header)
+
 		// Source
 		src, err := file.Open()
 		if err != nil {
@@ -114,29 +118,44 @@ func (this *Service) SaveVideoFiles(files []*multipart.FileHeader, target string
 			return nil, err
 		}
 
-		//TODO Implement HLS
-		if file.Header.Values("Content-Type")[0] == "video/quicktime" {
-			ffmpegPath := "/usr/local/bin/ffmpeg"
-			srcPath := dst.Name()
-			targetPath := hlsPath
-			resOptions := []string{"360p"}
+		fileList = append(fileList, f)
 
+		cType := "video/quicktime"
+
+		fmt.Println(len(fileList))
+		fmt.Println(cTypes)
+
+		if (file.Header.Values("Content-Type")[0] == cType) && !stringInSlice(cType, cTypes) {
+
+			fmt.Println(file.Filename)
+
+			srcPath := dst.Name()
 			variants, _ := GenerateHLSVariant(resOptions, "")
 			GeneratePlaylist(variants, targetPath, "")
 
+			c := make(chan string)
+
 			for _, res := range resOptions {
-				go func(process string) {
-					_ = GenerateHLS(ffmpegPath, srcPath, targetPath, res)
-					fmt.Println("finished")
-				}("")
-				fmt.Println("FINISH DECODING")
+				res := res
+				go GenerateHLS(ffmpegPath, srcPath, targetPath, res, c)
+
 			}
+
 		}
 
-		fileList = append(fileList, f)
+		cTypes = append(cTypes, file.Header.Values("Content-Type")[0])
 	}
 
 	return fileList, nil
+}
+
+func stringInSlice(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
 }
 
 func ResizeImage(file *os.File) error {
