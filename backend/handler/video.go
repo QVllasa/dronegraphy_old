@@ -137,7 +137,6 @@ func (this *Handler) UploadVideoFiles(c echo.Context) error {
 	files := form.File["videoFiles[]"]
 
 	fileID := xid.New().String()
-	//target := service.StorageRoot + service.Videos + id + service.Thumbnail
 	target := service.StorageRoot + service.Videos
 
 	fileList, err := this.service.SaveVideoFiles(files, target, fileID)
@@ -147,7 +146,6 @@ func (this *Handler) UploadVideoFiles(c echo.Context) error {
 	}
 
 	filter := bson.M{"_id": docID}
-
 	_, err = this.repository.VideoColl.UpdateOne(context.Background(), filter,
 		bson.D{
 			{"$set",

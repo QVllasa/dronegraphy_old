@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"strings"
@@ -60,4 +61,27 @@ func DownloadFile(URL, fileName string) error {
 	fmt.Println(file.Name())
 
 	return nil
+}
+
+func SaveFile(file *multipart.FileHeader, target string) *os.File {
+	// Source
+	src, err := file.Open()
+	if err != nil {
+		log.Error(err)
+	}
+	defer src.Close()
+
+	// Destination
+	dst, err := os.Create(target)
+	if err != nil {
+		log.Error(err)
+	}
+	defer dst.Close()
+
+	// Copy
+	if _, err = io.Copy(dst, src); err != nil {
+		log.Error(err)
+	}
+
+	return dst
 }

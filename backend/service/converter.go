@@ -31,6 +31,31 @@ type Variant struct {
 	Codecs string
 }
 
+// GenerateHLS will generate HLS file based on resolution presets.
+// The available resolutions are: 360p, 480p, 720p and 1080p.
+func GenerateHLS(ffmpegPath, srcPath, targetPath, res string) error {
+	fmt.Println(
+		fmt.Sprintf("Start generating HLS for %v", res),
+	)
+	options, err := getOptions(srcPath, targetPath, res)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	cmd := exec.Command(ffmpegPath, options...)
+	if err := cmd.Start(); err != nil {
+		log.Fatal(err)
+	}
+
+	if err = cmd.Wait(); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("generateHLS finished " + res)
+
+	return err
+}
+
 // GenerateHLSVariant will generate variants info from the given resolutions.
 // The available resolutions are: 360p, 480p, 720p and 1080p.
 func GenerateHLSVariant(resOptions []string, locPrefix string) ([]*Variant, error) {
@@ -142,38 +167,6 @@ func getOptions(srcPath, targetPath, res string) ([]string, error) {
 	}
 
 	return options, nil
-}
-
-// GenerateHLS will generate HLS file based on resolution presets.
-// The available resolutions are: 360p, 480p, 720p and 1080p.
-func GenerateHLS(ffmpegPath, srcPath, targetPath, resolution string, c chan string) error {
-	fmt.Println(
-		fmt.Sprintf("Start generating HLS for %v", resolution),
-	)
-	options, err := getOptions(srcPath, targetPath, resolution)
-	if err != nil {
-		log.Fatal(err)
-		return err
-	}
-
-	cmd := exec.Command(ffmpegPath, options...)
-	//cmd.Stdout = os.Stdout
-	//cmd.Stderr = os.Stderr
-	if err := cmd.Start(); err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println(
-		fmt.Sprintf("Wating for %v HLS", resolution),
-	)
-
-	if err = cmd.Wait(); err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(fmt.Sprintf("Finished Conversion with %v", cmd.ProcessState))
-
-	return err
-
 }
 
 type config struct {

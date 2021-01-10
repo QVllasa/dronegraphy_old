@@ -2,10 +2,10 @@ package service
 
 import (
 	"dronegraphy/backend/repository/model"
+	"dronegraphy/backend/util"
 	"fmt"
 	"github.com/disintegration/imaging"
 	"github.com/labstack/gommon/log"
-	"io"
 	"mime/multipart"
 	"os"
 )
@@ -20,13 +20,19 @@ var (
 	Container    = "/container/"
 )
 
-func (this *Service) SaveImage(file *multipart.FileHeader, target string, fileID string, resize bool, isThumbnail bool) (*os.File, error) {
-
-	src, err := file.Open()
-	if err != nil {
-		log.Fatal(err)
+var (
+	resOptions = []string{
+		"360p",
+		"480p",
+		"720p",
+		"1080p",
 	}
-	defer src.Close()
+	ffmpegPath = "/usr/local/bin/ffmpeg"
+	mov        = "video/quicktime"
+	mp4        = "video/mp4"
+)
+
+func (this *Service) SaveImage(file *multipart.FileHeader, target string, fileID string, resize bool, isThumbnail bool) (*os.File, error) {
 
 	if !isThumbnail {
 		_ = os.MkdirAll(target, 0777)
@@ -50,17 +56,8 @@ func (this *Service) SaveImage(file *multipart.FileHeader, target string, fileID
 		}
 	}
 
-	f, err := os.Create(target + fileID + "_" + file.Filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer f.Close()
-
-	// Copy
-	if _, err = io.Copy(f, src); err != nil {
-		log.Fatal(err)
-		return nil, err
-	}
+	t := target + fileID + "_" + file.Filename
+	f := util.SaveFile(file, t)
 
 	if resize {
 		if err := ResizeImage(f); err != nil {
@@ -81,12 +78,9 @@ func (this *Service) SaveVideoFiles(files []*multipart.FileHeader, target string
 	_ = os.MkdirAll(target+fileID, 0777)
 
 	hlsPath := target + fileID + "/hls/"
+	_ = os.MkdirAll(hlsPath, 0777)
 
-	_ = os.MkdirAll(target+fileID+"/hls/", 0777)
-
-	ffmpegPath := "/usr/local/bin/ffmpeg"
-	targetPath := hlsPath
-	resOptions := []string{"360p", "480p", "720p", "1080p"}
+	c := make(chan string)
 
 	for _, file := range files {
 
@@ -96,57 +90,45 @@ func (this *Service) SaveVideoFiles(files []*multipart.FileHeader, target string
 			ContentType: file.Header.Values("Content-Type")[0],
 		}
 
-		// Source
-		src, err := file.Open()
-		if err != nil {
-			log.Error(err)
-			return nil, err
-		}
-		defer src.Close()
-
-		// Destination
-		dst, err := os.Create(target + fileID + "/" + file.Filename)
-		if err != nil {
-			log.Error(err)
-			return nil, err
-		}
-		defer dst.Close()
-
-		// Copy
-		if _, err = io.Copy(dst, src); err != nil {
-			log.Error(err)
-			return nil, err
-		}
-
 		fileList = append(fileList, f)
 
-		cType := "video/quicktime"
+		t := target + fileID + "/" + file.Filename
+		dst := util.SaveFile(file, t)
 
-		fmt.Println(len(fileList))
-		fmt.Println(cTypes)
-
-		if (file.Header.Values("Content-Type")[0] == cType) && !stringInSlice(cType, cTypes) {
-
-			fmt.Println(file.Filename)
-
-			srcPath := dst.Name()
-			variants, _ := GenerateHLSVariant(resOptions, "")
-			GeneratePlaylist(variants, targetPath, "")
-
-			c := make(chan string)
-
-			for _, res := range resOptions {
-				res := res
-				go GenerateHLS(ffmpegPath, srcPath, targetPath, res, c)
-
+		switch file.Header.Values("Content-Type")[0] {
+		case mov:
+			if !stringInSlice(mov, cTypes) {
+				ConvertToHls(dst, ffmpegPath, resOptions, hlsPath, c)
 			}
-
+		case mp4:
+			if !stringInSlice(mp4, cTypes) {
+				ConvertToHls(dst, ffmpegPath, resOptions, hlsPath, c)
+			}
+		default:
+			cTypes = append(cTypes, file.Header.Values("Content-Type")[0])
 		}
 
 		cTypes = append(cTypes, file.Header.Values("Content-Type")[0])
 	}
 
 	return fileList, nil
+}
+
+// Start Generation of HLS files out of MP4 or MOV files
+func ConvertToHls(dst *os.File, ffmpegPath string, resOptions []string, hlsPath string, c chan string) {
+	srcPath := dst.Name()
+	variants, _ := GenerateHLSVariant(resOptions, "")
+	GeneratePlaylist(variants, hlsPath, "")
+
+	go func() {
+		for _, res := range resOptions {
+			res := res
+			GenerateHLS(ffmpegPath, srcPath, hlsPath, res)
+			fmt.Println("Conversion finished")
+			close(c)
+		}
+	}()
+
 }
 
 func stringInSlice(a string, list []string) bool {
