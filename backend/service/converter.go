@@ -51,7 +51,6 @@ func GenerateHLS(ffmpegPath, srcPath, targetPath, res string) error {
 	if err = cmd.Wait(); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("generateHLS finished " + res)
 
 	return err
 }

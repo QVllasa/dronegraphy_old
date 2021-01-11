@@ -3,7 +3,6 @@ package service
 import (
 	"dronegraphy/backend/repository/model"
 	"dronegraphy/backend/util"
-	"fmt"
 	"github.com/disintegration/imaging"
 	"github.com/labstack/gommon/log"
 	"mime/multipart"
@@ -80,7 +79,7 @@ func (this *Service) SaveVideoFiles(files []*multipart.FileHeader, target string
 	hlsPath := target + fileID + "/hls/"
 	_ = os.MkdirAll(hlsPath, 0777)
 
-	c := make(chan string)
+	//c := make(chan bool)
 
 	for _, file := range files {
 
@@ -92,30 +91,51 @@ func (this *Service) SaveVideoFiles(files []*multipart.FileHeader, target string
 
 		fileList = append(fileList, f)
 
-		t := target + fileID + "/" + file.Filename
-		dst := util.SaveFile(file, t)
-
-		switch file.Header.Values("Content-Type")[0] {
-		case mov:
-			if !stringInSlice(mov, cTypes) {
-				ConvertToHls(dst, ffmpegPath, resOptions, hlsPath, c)
-			}
-		case mp4:
-			if !stringInSlice(mp4, cTypes) {
-				ConvertToHls(dst, ffmpegPath, resOptions, hlsPath, c)
-			}
-		default:
-			cTypes = append(cTypes, file.Header.Values("Content-Type")[0])
-		}
+		//t := target + fileID + "/" + file.Filename
+		//dst := util.SaveFile(file, t)
+		//
+		//switch file.Header.Values("Content-Type")[0] {
+		//case mov:
+		//	if !stringInSlice(mov, cTypes) {
+		//		ConvertToHls(dst, ffmpegPath, resOptions, hlsPath, c)
+		//	}
+		//case mp4:
+		//	if !stringInSlice(mp4, cTypes) {
+		//		ConvertToHls(dst, ffmpegPath, resOptions, hlsPath, c)
+		//	}
+		//default:
+		//	cTypes = append(cTypes, file.Header.Values("Content-Type")[0])
+		//}
 
 		cTypes = append(cTypes, file.Header.Values("Content-Type")[0])
 	}
+
+	this.SendEmail(
+		"info@dronegraphy.de",
+		"qendrim.vllasa@gmail.com",
+		"Deine Aufnahme ist fertig!",
+		"This is Gomail test body")
+
+	//Send Email when conversion is finished
+	//go func() {
+	//	for {
+	//		select {
+	//		case msg := <-c:
+	//			this.SendEmail(
+	//				"noreply@dronegraphy.de",
+	//				"qendrim.vllasa@gmail.com",
+	//				"Deine Aufnahme ist fertig!",
+	//				"This is Gomail test body")
+	//			fmt.Println(msg)
+	//		}
+	//	}
+	//}()
 
 	return fileList, nil
 }
 
 // Start Generation of HLS files out of MP4 or MOV files
-func ConvertToHls(dst *os.File, ffmpegPath string, resOptions []string, hlsPath string, c chan string) {
+func ConvertToHls(dst *os.File, ffmpegPath string, resOptions []string, hlsPath string, c chan bool) {
 	srcPath := dst.Name()
 	variants, _ := GenerateHLSVariant(resOptions, "")
 	GeneratePlaylist(variants, hlsPath, "")
@@ -124,11 +144,9 @@ func ConvertToHls(dst *os.File, ffmpegPath string, resOptions []string, hlsPath 
 		for _, res := range resOptions {
 			res := res
 			GenerateHLS(ffmpegPath, srcPath, hlsPath, res)
-			fmt.Println("Conversion finished")
-			close(c)
 		}
+		c <- true
 	}()
-
 }
 
 func stringInSlice(a string, list []string) bool {
