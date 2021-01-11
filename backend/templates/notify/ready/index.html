@@ -1,0 +1,502 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webwall Newsletter Template</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap"
+          rel="stylesheet">
+
+    <!-- jQuery Plugin -->
+
+    <style type="text/css">
+        div, p, a, li, td {
+            -webkit-text-size-adjust: none;
+            font-family: "Open Sans", sans-serif;
+        }
+
+        body {
+            font-family: "Open Sans", sans-serif;
+        }
+
+        img {
+            display: block;
+        }
+
+        table {
+            mso-table-lspace: 0pt !important;
+            mso-table-rspace: 0pt !important;
+        }
+
+        a {
+            text-decoration: none;
+            font-family: "Open Sans", sans-serif;
+            color: inherit;
+            display: inline-block;;
+        }
+
+        p {
+            margin: 0px;
+            padding: 0px;
+            font-family: "Open Sans", sans-serif;
+        }
+    </style>
+    <style type="text/css">
+        @media only screen and (max-width: 920px) {
+            .width_100 {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .tpl-content {
+                padding: 0px !important;
+            }
+
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+
+            .width_50percent {
+                max-width: 50%;
+                margin: 0 auto !important;
+                width: 50% !important;
+            }
+        }
+    </style>
+    <style type="text/css">
+        @media only screen and (max-width: 720px) {
+            .width_100 {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+
+            .tablet-resp-block {
+                display: block !important;
+                width: 100% !important;
+                height: auto !important;
+            }
+
+            .tablet-resp-erase {
+                display: none !important;
+                height: 0px !important;
+            }
+
+            .width_50percent {
+                max-width: 100%;
+                display: block !important;
+                height: auto !important;
+                margin: 0 auto !important;
+                width: 100% !important;
+            }
+        }
+    </style>
+    <style type="text/css">
+        @media only screen and (max-width: 620px) {
+            .padding-top-bottom {
+                padding: 20px 0px;
+            }
+
+            .height-and-padding-bottom {
+                height: auto;
+                padding-bottom: 20px !important;
+            }
+
+            .width_90percent {
+                width: 90% !important;
+                max-width: 90%;
+                margin: 0 auto !important;
+                height: auto !important;
+            }
+
+            .display-block {
+                display: block !important;
+                height: auto !important;
+                margin: 0 auto !important;
+                width: 100% !important;
+            }
+
+            .width_90percent .width_100percent {
+                width: 100% !important;
+                height: auto;
+                display: block;
+                margin: 0 auto !important;
+            }
+
+            .width_100percent {
+                width: 100% !important;
+                height: auto;
+                margin: 0 auto !important;
+            }
+
+            .tbody-and-tr {
+                display: block !important;
+                width: 100% !important;
+                height: auto !important;
+            }
+
+            .padding-top {
+                padding-top: 10px;
+            }
+
+            .padding {
+                padding: 10px 0px;
+            }
+
+            .logo-outer {
+                text-align: center;
+            }
+
+            .padding-top-60 {
+                padding-top: 60px !important;
+                height: auto;
+                display: block;
+            }
+
+            .padding-bottom-60 {
+                padding-bottom: 60px !important;
+                height: auto;
+                display: block;
+            }
+
+            .img-center img {
+                margin: 0 auto !important;
+            }
+
+            .erase {
+                display: none;
+                height: 0px;
+            }
+
+            .text-center {
+                float: none !important;
+                text-align: center;
+                text-align: -webkit-center;
+            }
+
+            .text-left {
+                float: none !important;
+                text-align: left;
+                text-align: -webkit-left;
+            }
+
+            .text-right {
+                float: none !important;
+                text-align: right;
+                text-align: -webkit-right;
+            }
+
+            .hero-section-font-1 {
+                font-size: 24px !important;
+                line-height: normal !important;
+                letter-spacing: normal !important
+            }
+
+            .hero-section-font-2 {
+                font-size: 36px !important;
+                line-height: normal !important;
+                letter-spacing: normal !important
+            }
+
+            .res-font-white {
+                color: #FFFFFF !important;
+            }
+
+            .full-width-img img {
+                width: 100%;
+                height: auto;
+            }
+
+            .resp-remove-bg {
+                background: #333333 !important;
+            }
+
+            .background-img {
+                background-image: none !important;
+            }
+
+            .background-cover {
+                background-size: cover !important;
+            }
+
+            .block-with-height {
+                display: inline-block;
+                width: 100%;
+            }
+
+            .inline-block {
+                display: inline-block;
+            }
+
+            .left-right-pad {
+                padding-left: 10px !important;
+                padding-right: 10px !important;
+            }
+
+            .padding-zero {
+                padding: 0px 0px 0px 0px !important;
+            }
+
+            a {
+                display: block;;
+            }
+        }
+    </style>
+    <style type="text/css">
+        @media only screen and (max-width: 420px) {
+            .menu {
+                font-size: 12px !important;
+            }
+
+            .display-block-mob {
+                display: block !important;
+                height: auto !important;
+                margin: 0 auto !important;
+                width: 100% !important;
+            }
+
+            br {
+                display: none;
+            }
+
+            .resp-menu {
+                font-size: 10px !important;
+                font-weight: normal !important;
+            }
+
+            .side-border {
+                border: 1px solid #5a5a5a !important;
+                border-left: 0px !important;
+                border-right: 0px !important;
+            }
+        }
+    </style>
+</head>
+<body style="margin:0px; padding:0px;">
+
+<!--Banner section-->
+<table class="width_100" align="center" border="0" cellpadding="0" cellspacing="0" width="900"
+       style="border-collapse:collapse;" bgcolor="#ffffff">
+    <tbody>
+    <tr>
+        <td width="100%" align="center" valign="middle">
+            <table class="width_90percent" align="center" border="0" cellpadding="0" width="600" cellspacing="0"
+                   style="border-collapse:collapse;">
+                <tbody>
+                <tr>
+                    <td class="display-block padding-top-60" width="100%" height="50" style="line-height:1px;"></td>
+                </tr>
+                <tr>
+                    <td width="100%" align="center" valign="middle" style="line-height:1px;"><a
+                            href="http://www.yourwebsiteurl.com/"><img src="cid:dronegraphy_Logo_V2.4.png" width="33"
+                                                                       height="36" alt="Logo" border="0"
+                                                                       style="display:block"></a></td>
+                </tr>
+                <tr>
+                    <td width="100%" height="15" style="line-height:1px;"></td>
+                </tr>
+                <tr>
+                    <td width="100%" align="center" valign="middle"
+                        style="margin: 0px;padding: 0px;color: #777777;font-size: 14px;font-family: 'Open Sans', sans-serif;font-weight: normal;letter-spacing: 3px;text-transform: uppercase;">
+                        explore what's trending on mailway.
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100%" height="30" style="line-height:1px;"></td>
+                </tr>
+                <tr>
+                    <td width="100%" align="center" valign="middle"
+                        style="border-radius: 10px;border: 1px solid #d6d6d6;display: block;">
+                        <table align="center" border="0" cellpadding="0" width="100%" cellspacing="0"
+                               style="border-collapse:collapse;">
+                            <tbody>
+                            <tr>
+                                <td width="100%" align="center" valign="middle">
+                                    <table align="center" border="0" cellpadding="0" width="100%" height="100%"
+                                           cellspacing="0" background="cid:Notify-Header-Bg-img-1.jpg"
+                                           style="background-image: url(cid:Notify-Header-Bg-img-1.jpg);background-position: center center;background-repeat: no-repeat;background-size: cover;border-radius: 10px 10px 0px 0px;">
+                                        <tbody>
+                                        <tr>
+                                            <td width="100%" height="40" style="line-height:1px;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" align="center" valign="middle" style="line-height:1px;">
+                                                <table align="center" width="100" cellpadding="0" cellspacing="0"
+                                                       border="0" style="border-collapse:collapse;">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td width="100" height="100" align="center" valign="middle"
+                                                            bgcolor="#ffffff" style="border-radius: 100%; backdrop-filter: brightness(2)">
+
+                                                            <img  src="cid:drone-svgrepo-com.svg" width="52"
+                                                                 height="52" alt="mail" title="mail" border="0"
+                                                                 style="display:block; height: 80%;color:#FFFFFF">
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="100%" align="center" valign="middle">
+                                    <table class="width_90percent" align="center" border="0" cellpadding="0" width="530"
+                                           cellspacing="0" style="border-collapse:collapse;">
+                                        <tbody>
+                                        <tr>
+                                            <td width="100%" height="10" style="line-height:1px;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="hero-section-font-1" width="100%" align="center" valign="middle"
+                                                style="margin: 0px;padding: 0px;color: rgb(51, 51, 51);font-family: 'Open Sans', sans-serif;font-size: 30px;font-weight: bold;text-transform: capitalize;line-height: 35px;">
+                                                Deine Aufnahme ist fertig!
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" height="20" style="line-height:1px;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" align="center" valign="middle">
+                                                <table align="center" border="0" cellpadding="0" width="70"
+                                                       cellspacing="0" style="border-collapse: collapse;">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td width="100%" height="1px"
+                                                            style="line-height:1px;border-bottom: 1px solid #6a75c6;"></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" height="30" style="line-height:1px;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" valign="top" align="center"
+                                                style="margin: 0px;padding: 0px;color: #777777;font-size: 14px;font-family: 'Open Sans', sans-serif;font-weight: normal;line-height: 24px;">
+                                                Deine Aufnahme wurde nun in das richtige Format gebracht und kann in
+                                                deinem Account eingesehen werden. Du musst sie nur noch gegebenenfalls
+                                                veröffentlichen, solltest du nicht "Sofort Veröffentlichen" angewählt
+                                                haben.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="display-block padding" width="100%" height="30"
+                                                style="line-height:1px;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" align="center" valign="middle">
+                                                <table align="center" border="0" cellpadding="0" cellspacing="0"
+                                                       style="border-collapse:collapse;">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td align="center" bgcolor="#6a75c6"
+                                                            style="margin:0px; padding: 0px;font-size: 14px;color:#FFFFFF;font-family: 'Open Sans', sans-serif;font-weight: bold;text-transform: uppercase; border-radius: 35px;">
+                                                            <a href="http://localhost:4200/account/footage"
+                                                               style="color: #ffffff;text-decoration:none;display:block;padding: 8px 25px;">Zu
+                                                                meinen Aufnahmen</a></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" height="20" style="line-height:1px;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" valign="top" align="center"
+                                                style="margin: 0px;padding: 0px;color: #777777;font-weight: normal;font-family: 'Open Sans', sans-serif;font-size: 14px;line-height: 24px;">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" height="25" style="line-height:1px;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" align="center" valign="top"
+                                                style="margin: 0px; padding: 0px; color: rgb(102, 102, 102); font-size: 14px; font-weight: 400; line-height: 24px; font-family: 'Open Sans', sans-serif;">
+                                                Ab geht die Post!
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" height="30" style="line-height:1px;"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100%" height="40" style="line-height:1px;" class="display-block padding"></td>
+                </tr>
+                <tr>
+                    <td width="100%" align="center" valign="bottom">
+                        <table align="center" cellpadding="0" cellspacing="0" border="0"
+                               style="border-collapse:collapse">
+                            <tbody>
+                            <tr>
+                                <td width="30" align="center" valign="middle" style="line-height:1px;"><a
+                                        href="https://www.facebook.com/" style="text-decoration:none;"><img
+                                        src="cid:Notify-black-social-icon-img-1.png" border="0" width="9" height="15"
+                                        alt="facebook" title="facebook" style="display:block;"></a></td>
+                                <td width="30" align="center" valign="middle" style="line-height:1px;"><a
+                                        href="https://twitter.com/" style="text-decoration:none;"><img
+                                        src="cid:Notify-black-social-icon-img-2.png" border="0" width="14"
+                                        height="12" alt="twitter" title="twitter" style="display:block;"></a></td>
+                                <td width="30" align="center" valign="middle" style="line-height:1px;"><a
+                                        href="https://instagram.com/" style="text-decoration:none;"><img
+                                        src="cid:Notify-black-social-icon-img-3.png" border="0" width="14"
+                                        height="13" alt="instagram" title="instagram" style="display:block;"></a></td>
+                                <td width="30" align="center" valign="middle" style="line-height:1px;"><a
+                                        href="https://in.linkedin.com/" style="text-decoration:none;"><img
+                                        src="cid:Notify-black-social-icon-img-4.png" border="0" width="14"
+                                        height="13" alt="linkedin" title="linkedin" style="display:block;"></a></td>
+                                <td width="30" align="center" valign="middle" style="line-height:1px;"><a
+                                        href="https://www.rss.com/" style="text-decoration:none;"><img
+                                        src="cid:Notify-black-social-icon-img-5.png" border="0" width="12"
+                                        height="13" alt="Rss" title="Rss" style="display:block;"></a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100%" height="25" style="line-height:1px;" class="display-block padding"></td>
+                </tr>
+                <tr>
+                    <td width="100%" align="center" valign="top"
+                        style="margin:0px;padding:0px;font-size:14px;color: #777777;font-family: 'Open Sans', sans-serif;font-weight:normal;">
+                        © Copyright 2021 dronegraphy. All rights reserved.
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100%" height="14" style="line-height:1px;"></td>
+                </tr>
+                <tr>
+                    <td width="100%" align="center" valign="top"
+                        style="margin: 0px;padding: 0px;font-size: 14px;color: #6a75c6;font-family: 'Open Sans', sans-serif;font-weight: normal;text-transform: capitalize;">
+                        <a href="#"
+                           style="text-decoration: underline;color: #6a75c6;display:inline-block;"></a></td>
+                </tr>
+                <tr>
+                    <td class="display-block padding-bottom-60" width="100%" height="50" style="line-height:1px;"></td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<!--Banner section End-->
+</body>
+</html>

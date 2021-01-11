@@ -111,22 +111,17 @@ func (this *Service) SaveVideoFiles(files []*multipart.FileHeader, target string
 	}
 
 	this.SendEmail(
-		"info@dronegraphy.de",
 		"qendrim.vllasa@gmail.com",
-		"Deine Aufnahme ist fertig!",
-		"This is Gomail test body")
+		1)
 
-	//Send Email when conversion is finished
+	////Send Email when conversion is finished
 	//go func() {
 	//	for {
 	//		select {
-	//		case msg := <-c:
+	//		case <-c:
 	//			this.SendEmail(
-	//				"noreply@dronegraphy.de",
 	//				"qendrim.vllasa@gmail.com",
-	//				"Deine Aufnahme ist fertig!",
-	//				"This is Gomail test body")
-	//			fmt.Println(msg)
+	//				1)
 	//		}
 	//	}
 	//}()

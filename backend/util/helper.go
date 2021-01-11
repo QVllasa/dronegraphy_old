@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"io"
+	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -84,4 +85,20 @@ func SaveFile(file *multipart.FileHeader, target string) *os.File {
 	}
 
 	return dst
+}
+
+func GetFileNames(searchDir string) ([]string, error) {
+
+	var fileList []string
+
+	files, err := ioutil.ReadDir(searchDir)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, file := range files {
+		fileList = append(fileList, file.Name())
+		//fmt.Println(file.Name())
+	}
+	return fileList, nil
 }
