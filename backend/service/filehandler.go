@@ -3,6 +3,7 @@ package service
 import (
 	"dronegraphy/backend/repository/model"
 	"dronegraphy/backend/util"
+	"fmt"
 	"github.com/disintegration/imaging"
 	"github.com/labstack/gommon/log"
 	"mime/multipart"
@@ -10,13 +11,13 @@ import (
 )
 
 var (
-	StorageRoot  = "backend/storage/"
-	Creator      = "/creators/"
-	ProfileImage = "/profileImage/"
-	Videos       = "videos/"
-	Thumbnails   = "thumbnails/"
-	HLS          = "/hls/"
-	Container    = "/container/"
+	StorageRoot  = "./backend/storage"
+	Creator      = "/creators"
+	ProfileImage = "/profileImage"
+	Videos       = "/videos"
+	Thumbnails   = "/thumbnails"
+	HLS          = "/hls"
+	Container    = "/container"
 )
 
 var (
@@ -55,7 +56,7 @@ func (this *Service) SaveImage(file *multipart.FileHeader, target string, fileID
 		}
 	}
 
-	t := target + fileID + "_" + file.Filename
+	t := target + "/" + fileID + "_" + file.Filename
 	f := util.SaveFile(file, t)
 
 	if resize {
@@ -69,17 +70,18 @@ func (this *Service) SaveImage(file *multipart.FileHeader, target string, fileID
 
 }
 
-func (this *Service) SaveVideoFiles(files []*multipart.FileHeader, target string, fileID string) ([]model.FileInfo, error) {
+func (this *Service) SaveVideoFiles(files []*multipart.FileHeader, fileID string) ([]model.FileInfo, error) {
 
 	var fileList []model.FileInfo
 	var cTypes []string
 
-	_ = os.MkdirAll(target+fileID, 0777)
+	filesPath := StorageRoot + Videos + "/" + fileID
+	hlsPath := filesPath + HLS
 
-	hlsPath := target + fileID + "/hls/"
+	_ = os.MkdirAll(filesPath, 0777)
 	_ = os.MkdirAll(hlsPath, 0777)
 
-	//c := make(chan bool)
+	c := make(chan bool)
 
 	for _, file := range files {
 
@@ -91,46 +93,43 @@ func (this *Service) SaveVideoFiles(files []*multipart.FileHeader, target string
 
 		fileList = append(fileList, f)
 
-		//t := target + fileID + "/" + file.Filename
-		//dst := util.SaveFile(file, t)
-		//
-		//switch file.Header.Values("Content-Type")[0] {
-		//case mov:
-		//	if !stringInSlice(mov, cTypes) {
-		//		ConvertToHls(dst, ffmpegPath, resOptions, hlsPath, c)
-		//	}
-		//case mp4:
-		//	if !stringInSlice(mp4, cTypes) {
-		//		ConvertToHls(dst, ffmpegPath, resOptions, hlsPath, c)
-		//	}
-		//default:
-		//	cTypes = append(cTypes, file.Header.Values("Content-Type")[0])
-		//}
+		t := filesPath + "/" + file.Filename
+		dst := util.SaveFile(file, t)
+
+		switch file.Header.Values("Content-Type")[0] {
+		case mov:
+			if !util.StringInSlice(mov, cTypes) {
+				ConvertToHls(dst, ffmpegPath, resOptions, hlsPath, c, fileID)
+			}
+		case mp4:
+			if !util.StringInSlice(mp4, cTypes) {
+				ConvertToHls(dst, ffmpegPath, resOptions, hlsPath, c, fileID)
+			}
+		default:
+			cTypes = append(cTypes, file.Header.Values("Content-Type")[0])
+		}
 
 		cTypes = append(cTypes, file.Header.Values("Content-Type")[0])
 	}
 
-	this.SendEmail(
-		"qendrim.vllasa@gmail.com",
-		1)
-
-	////Send Email when conversion is finished
-	//go func() {
-	//	for {
-	//		select {
-	//		case <-c:
-	//			this.SendEmail(
-	//				"qendrim.vllasa@gmail.com",
-	//				1)
-	//		}
-	//	}
-	//}()
+	//Send Email when conversion is finished
+	go func() {
+		for {
+			select {
+			case <-c:
+				fmt.Println("Conversion Finished!")
+				this.SendEmail(
+					"qendrim.vllasa@gmail.com",
+					1)
+			}
+		}
+	}()
 
 	return fileList, nil
 }
 
 // Start Generation of HLS files out of MP4 or MOV files
-func ConvertToHls(dst *os.File, ffmpegPath string, resOptions []string, hlsPath string, c chan bool) {
+func ConvertToHls(dst *os.File, ffmpegPath string, resOptions []string, hlsPath string, c chan bool, id string) {
 	srcPath := dst.Name()
 	variants, _ := GenerateHLSVariant(resOptions, "")
 	GeneratePlaylist(variants, hlsPath, "")
@@ -142,15 +141,6 @@ func ConvertToHls(dst *os.File, ffmpegPath string, resOptions []string, hlsPath 
 		}
 		c <- true
 	}()
-}
-
-func stringInSlice(a string, list []string) bool {
-	for _, b := range list {
-		if b == a {
-			return true
-		}
-	}
-	return false
 }
 
 func ResizeImage(file *os.File) error {
@@ -172,7 +162,7 @@ func ResizeImage(file *os.File) error {
 // Delete Thumbnail when deleting video
 func (this *Service) DeleteThumbnail(fileName string) error {
 
-	src := StorageRoot + Thumbnails + fileName
+	src := StorageRoot + Thumbnails + "/" + fileName
 
 	err := os.Remove(src)
 	if err != nil {

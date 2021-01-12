@@ -136,13 +136,13 @@ export class VideoCreateUpdateComponent implements OnInit {
         this.isLoading = true;
         this.videoService.createVideo(videoData, this.thumbnail, this.files)
             .subscribe(video => {
+                console.log(video)
                 this.defaults = video
                 setTimeout(() => {
                     this.isLoading = false;
                 }, 3000)
                 this.onSucess = true;
             })
-
 
     }
 

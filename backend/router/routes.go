@@ -5,6 +5,7 @@ import (
 	mw "dronegraphy/backend/router/middleware"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
+	"os"
 )
 
 // Register the routes
@@ -40,15 +41,14 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	routeGroup.POST("/register", controller.Register)
 	routeGroup.GET("/videos", controller.GetVideos)
 	routeGroup.GET("/videos/:id", controller.GetVideo)
+	routeGroup.GET("/:id/hls/:file", controller.GetPlaylist)
+	//routeGroup.GET("/hls/", controller.ServeHls)
 	routeGroup.GET("/creators/:id", controller.GetVideos)
-	//routeGroup.GET("/creators", controller.GetVideos)
 	routeGroup.GET("/categories", controller.GetCategories)
 	routeGroup.GET("/photos/:id", controller.GetPhoto)
 
-	//routeGroup.GET("/hls/:id", controller.ServeHls)
-	//routeGroup.GET("/thumbnails/:id", controller.GetThumbnail)
-
 	//// STATIC Endpoints
-	routeGroup.Static("/img", "/Users/qendrimvllasa/Projects/dronegraphy/backend/storage/thumbnails")
+	dir, _ := os.Getwd()
+	routeGroup.Static("/img", dir+"/backend/storage/thumbnails")
 
 }

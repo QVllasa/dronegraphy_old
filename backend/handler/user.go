@@ -72,7 +72,7 @@ func (this *Handler) UploadPhoto(c echo.Context) error {
 	}
 
 	fileID := xid.New().String()
-	target := service.StorageRoot + service.Creator + token.UID + service.ProfileImage
+	target := service.StorageRoot + service.Creator + "/" + token.UID + service.ProfileImage
 
 	f, err := this.service.SaveImage(file, target, fileID, true, false)
 
@@ -104,7 +104,7 @@ func (this *Handler) GetPhoto(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, "image not found")
 	}
 
-	src := service.StorageRoot + service.Creator + user.UID + service.ProfileImage
+	src := service.StorageRoot + service.Creator + "/" + user.UID + service.ProfileImage
 	err := filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
 		allFiles = append(allFiles, path)
 		return nil

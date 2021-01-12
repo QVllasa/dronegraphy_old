@@ -110,7 +110,6 @@ func (this *Handler) UploadThumbnail(c echo.Context) error {
 	return c.JSON(http.StatusOK, fileName)
 }
 
-//TODO finish file uploads
 func (this *Handler) UploadVideoFiles(c echo.Context) error {
 
 	id := c.Param("id")
@@ -123,7 +122,7 @@ func (this *Handler) UploadVideoFiles(c echo.Context) error {
 	}
 
 	if video.StorageRef != "" {
-		if err = os.RemoveAll(service.StorageRoot + service.Videos + video.StorageRef); err != nil {
+		if err = os.RemoveAll(service.StorageRoot + service.Videos + "/" + video.StorageRef); err != nil {
 			log.Error(err)
 			return err
 		}
@@ -137,9 +136,8 @@ func (this *Handler) UploadVideoFiles(c echo.Context) error {
 	files := form.File["videoFiles[]"]
 
 	fileID := xid.New().String()
-	target := service.StorageRoot + service.Videos
 
-	fileList, err := this.service.SaveVideoFiles(files, target, fileID)
+	fileList, err := this.service.SaveVideoFiles(files, fileID)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -225,15 +223,32 @@ func (this *Handler) DeleteVideo(c echo.Context) error {
 	return c.JSON(http.StatusOK, video.ID.Hex()+" deleted")
 }
 
-//func (this *Handler) ServeHls(c echo.Context) error{
-//
-//	id := c.Param("id")
-//
-//
-//
-//
-//	return c.File()
-//}
+func (this *Handler) GetPlaylist(c echo.Context) error {
+
+	id := c.Param("id")
+	fmt.Println(id)
+	filename := c.Param("file")
+	return c.File("./backend/storage/videos/" + id + "/hls/" + filename)
+
+	//if filename == "playlist.m3u8" {
+	//
+	//} else {
+	//	return c.File("./backend/storage/videos/" + filename)
+	//}
+
+	//fmt.Println(filename)
+	////dir, _ := os.Getwd()
+	//fmt.Println( "./backend/storage/videos/" + id + "/hls/" + filename)
+
+	//dir, _ := os.Getwd()
+	//fileList, _ := util.GetFileNames(dir + "/backend/storage/videos/" + id + "/hls")
+	//
+	//for _, f := range fileList{
+	//	fmt.Println(f)
+	//}
+	//
+	//return c.JSON(http.StatusOK, fileList)
+}
 
 //func (this *Handler) UpdateVideo(c echo.Context) error {
 //	video, err := modifyVideo(context.Background(), c.Param("id"), c.Request().Body, this.Coll)

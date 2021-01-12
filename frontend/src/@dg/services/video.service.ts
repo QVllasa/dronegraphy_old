@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 import {IVideo, Video} from "../models/video.model";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {map, mergeMap, take} from "rxjs/operators";
+import {map, mergeMap, take, tap} from "rxjs/operators";
 import {User} from "../models/user.model";
 import {of} from "rxjs";
 
@@ -86,6 +86,9 @@ export class VideoService {
                 take(1),
                 mergeMap(video => {
                     return this.uploadVideoThumbnail(video, tb)
+                }),
+                mergeMap(video => {
+                    return this.uploadVideoFiles(video, files)
                 }))
     }
 
@@ -116,11 +119,18 @@ export class VideoService {
         )
     }
 
-    uploadVideoFiles(id, files: FormData) {
-        return this.http.post<File>(environment.apiUrl + '/video_files/' + id, files, {
+    uploadVideoFiles(video: Video, files: FormData) {
+        return this.http.post<File>(environment.apiUrl + '/video_files/' + video.id, files, {
             reportProgress: true,
             observe: 'events'
-        })
+        }).pipe(
+            map(res => {
+                console.log(res)
+                const newVideo = this.newVideo(video)
+                newVideo.setThumbnail(res)
+                return newVideo
+            })
+        )
     }
 
     mapVideos(res: VideoResponse): Video[] {

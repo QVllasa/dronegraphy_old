@@ -21,3 +21,4 @@ p,ROLE_CREATOR,/thumbnails/:id,GET
 p,ROLE_ANONYMOUS,/thumbnails/:id,GET
 p,ROLE_CREATOR,/videos/:id,(PUT)|(GET)
 p,ROLE_CREATOR,/video_files/:id,POST
+p,ROLE_ANONYMOUS,/media/:id,GET
