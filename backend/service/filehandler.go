@@ -1,13 +1,15 @@
 package service
 
 import (
+	"context"
 	"dronegraphy/backend/repository/model"
 	"dronegraphy/backend/util"
-	"fmt"
 	"github.com/disintegration/imaging"
 	"github.com/labstack/gommon/log"
+	"gopkg.in/vansante/go-ffprobe.v2"
 	"mime/multipart"
 	"os"
+	"time"
 )
 
 var (
@@ -70,10 +72,11 @@ func (this *Service) SaveImage(file *multipart.FileHeader, target string, fileID
 
 }
 
-func (this *Service) SaveVideoFiles(files []*multipart.FileHeader, fileID string) ([]model.FileInfo, error) {
+func (this *Service) SaveVideoFiles(files []*multipart.FileHeader, fileID string, c chan bool) ([]model.FileInfo, *ffprobe.ProbeData, error) {
 
 	var fileList []model.FileInfo
 	var cTypes []string
+	var data *ffprobe.ProbeData
 
 	filesPath := StorageRoot + Videos + "/" + fileID
 	hlsPath := filesPath + HLS
@@ -81,13 +84,11 @@ func (this *Service) SaveVideoFiles(files []*multipart.FileHeader, fileID string
 	_ = os.MkdirAll(filesPath, 0777)
 	_ = os.MkdirAll(hlsPath, 0777)
 
-	c := make(chan bool)
-
 	for _, file := range files {
 
 		f := model.FileInfo{
 			Size:        file.Size,
-			Title:       file.Filename,
+			Name:        file.Filename,
 			ContentType: file.Header.Values("Content-Type")[0],
 		}
 
@@ -99,11 +100,13 @@ func (this *Service) SaveVideoFiles(files []*multipart.FileHeader, fileID string
 		switch file.Header.Values("Content-Type")[0] {
 		case mov:
 			if !util.StringInSlice(mov, cTypes) {
-				ConvertToHls(dst, ffmpegPath, resOptions, hlsPath, c, fileID)
+				data = this.GetVideoMetaData(dst)
+				ConvertToHls(dst, ffmpegPath, resOptions, hlsPath, c)
 			}
 		case mp4:
 			if !util.StringInSlice(mp4, cTypes) {
-				ConvertToHls(dst, ffmpegPath, resOptions, hlsPath, c, fileID)
+				data = this.GetVideoMetaData(dst)
+				ConvertToHls(dst, ffmpegPath, resOptions, hlsPath, c)
 			}
 		default:
 			cTypes = append(cTypes, file.Header.Values("Content-Type")[0])
@@ -112,24 +115,11 @@ func (this *Service) SaveVideoFiles(files []*multipart.FileHeader, fileID string
 		cTypes = append(cTypes, file.Header.Values("Content-Type")[0])
 	}
 
-	//Send Email when conversion is finished
-	go func() {
-		for {
-			select {
-			case <-c:
-				fmt.Println("Conversion Finished!")
-				this.SendEmail(
-					"qendrim.vllasa@gmail.com",
-					1)
-			}
-		}
-	}()
-
-	return fileList, nil
+	return fileList, data, nil
 }
 
 // Start Generation of HLS files out of MP4 or MOV files
-func ConvertToHls(dst *os.File, ffmpegPath string, resOptions []string, hlsPath string, c chan bool, id string) {
+func ConvertToHls(dst *os.File, ffmpegPath string, resOptions []string, hlsPath string, c chan bool) {
 	srcPath := dst.Name()
 	variants, _ := GenerateHLSVariant(resOptions, "")
 	GeneratePlaylist(variants, hlsPath, "")
@@ -170,4 +160,17 @@ func (this *Service) DeleteThumbnail(fileName string) error {
 		return err
 	}
 	return nil
+}
+
+func (this *Service) GetVideoMetaData(file *os.File) *ffprobe.ProbeData {
+
+	ctx, cancelFn := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelFn()
+
+	data, err := ffprobe.ProbeURL(ctx, file.Name())
+	if err != nil {
+		log.Error("Error getting data: %v", err)
+	}
+
+	return data
 }

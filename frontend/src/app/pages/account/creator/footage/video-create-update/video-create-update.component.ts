@@ -86,10 +86,10 @@ export class VideoCreateUpdateComponent implements OnInit {
             title: [this.defaults.title || '', [Validators.required]],
             categories: [this.defaults.categories || '', [Validators.required]],
             location: [this.defaults.location || '', [Validators.required]],
-            length: [this.defaults.length || '', [Validators.pattern("^[0-9]*$"), Validators.required]],
-            fps: [this.defaults.fps || '', [Validators.pattern("^[0-9]*$"), Validators.required]],
-            height: [this.defaults.height || '', [Validators.pattern("^[0-9]*$"), Validators.required]],
-            width: [this.defaults.width || '', [Validators.pattern("^[0-9]*$"), Validators.required]],
+            // length: [this.defaults.length || '', [Validators.pattern("^[0-9]*$"), Validators.required]],
+            // fps: [this.defaults.fps || '', [Validators.pattern("^[0-9]*$"), Validators.required]],
+            // height: [this.defaults.height || '', [Validators.pattern("^[0-9]*$"), Validators.required]],
+            // width: [this.defaults.width || '', [Validators.pattern("^[0-9]*$"), Validators.required]],
             camera: [this.defaults.camera || '', [Validators.required]],
             formats: [this.defaults.formats || []],
             tags: [this.defaults.tags || []],
@@ -138,9 +138,10 @@ export class VideoCreateUpdateComponent implements OnInit {
             .subscribe(video => {
                 console.log(video)
                 this.defaults = video
-                setTimeout(() => {
-                    this.isLoading = false;
-                }, 3000)
+                this.isLoading = false;
+                // setTimeout(() => {
+                //
+                // }, 3000)
                 this.onSucess = true;
             })
 

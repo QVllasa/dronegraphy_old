@@ -59,6 +59,7 @@ func (this *Repository) CreateVideo(video *model.Video, id string) error {
 	// Set CreatedAt
 	video.CreatedAt = time.Now()
 	video.Creator = creator
+	video.Converted = false
 
 	ID, err := this.VideoColl.InsertOne(context.Background(), video)
 	if err != nil {

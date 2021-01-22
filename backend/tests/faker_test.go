@@ -227,6 +227,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 		video.Length = gofakeit.Number(30, 300)
 		video.Location = gofakeit.City() + ", " + gofakeit.Country()
 		video.Published = gofakeit.Bool()
+		video.Converted = false
 		video.Sell = gofakeit.Bool()
 		video.Formats = []string{gofakeit.RandomString(tags)}
 		video.Views = gofakeit.Number(0, 99999)
@@ -238,7 +239,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 		}
 		video.CreatedAt = gofakeit.Date()
 		video.UpdatedAt = gofakeit.Date()
-		video.HLS = "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
+		//video.HLS = "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
 		//video.Thumbnail =
 
 		ID, _ := videos.InsertOne(context.Background(), video)

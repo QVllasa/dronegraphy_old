@@ -56,7 +56,7 @@ func (this *Handler) CreateVideo(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, "Unable to store video")
 	}
 
-	return c.JSON(http.StatusOK, video)
+	return c.JSON(http.StatusOK, video.ID.Hex())
 
 }
 
@@ -105,9 +105,7 @@ func (this *Handler) UploadThumbnail(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, "unable to set fileID")
 	}
 
-	fmt.Println(fileName)
-
-	return c.JSON(http.StatusOK, fileName)
+	return c.JSON(http.StatusOK, id)
 }
 
 func (this *Handler) UploadVideoFiles(c echo.Context) error {
@@ -120,6 +118,12 @@ func (this *Handler) UploadVideoFiles(c echo.Context) error {
 		log.Error(err)
 		return err
 	}
+
+	//user, err := this.repository.GetUserById(video.Creator.UID)
+	//if err != nil {
+	//	log.Error(err)
+	//	return err
+	//}
 
 	if video.StorageRef != "" {
 		if err = os.RemoveAll(service.StorageRoot + service.Videos + "/" + video.StorageRef); err != nil {
@@ -136,8 +140,29 @@ func (this *Handler) UploadVideoFiles(c echo.Context) error {
 	files := form.File["videoFiles[]"]
 
 	fileID := xid.New().String()
+	channel := make(chan bool)
 
-	fileList, err := this.service.SaveVideoFiles(files, fileID)
+	fileList, data, err := this.service.SaveVideoFiles(files, fileID, channel)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	//Send Email when conversion is finished
+	go func() {
+		for {
+			select {
+			case <-channel:
+				fmt.Println("Conversion Finished!")
+				this.service.SendEmail(
+					//TODO generic -> replace with user.UID
+					"qendrim.vllasa@gmail.com",
+					1)
+			}
+		}
+	}()
+
+	fps, err := strconv.Atoi(strings.Replace(data.FirstVideoStream().AvgFrameRate, "/1", "", -1))
 	if err != nil {
 		log.Error(err)
 		return err
@@ -149,6 +174,11 @@ func (this *Handler) UploadVideoFiles(c echo.Context) error {
 			{"$set",
 				bson.D{
 					{"storageRef", fileID},
+					{"length", data.Format.DurationSeconds},
+					{"fps", fps},
+					{"width", data.FirstVideoStream().Width},
+					{"height", data.FirstVideoStream().Height},
+					{"converted", false},
 					{"storageContent", fileList}}},
 		})
 	if err != nil {

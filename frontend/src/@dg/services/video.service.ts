@@ -120,7 +120,8 @@ export class VideoService {
     }
 
     uploadVideoFiles(video: Video, files: FormData) {
-        return this.http.post<File>(environment.apiUrl + '/video_files/' + video.id, files, {
+        console.log(video.id)
+        return this.http.post(environment.apiUrl + '/video_files/' + video.id, files, {
             reportProgress: true,
             observe: 'events'
         }).pipe(

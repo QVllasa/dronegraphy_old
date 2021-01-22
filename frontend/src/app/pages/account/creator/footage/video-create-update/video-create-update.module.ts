@@ -20,30 +20,34 @@ import {NgBytesPipeModule} from "angular-pipes";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {SecondsToMinutesModule} from "../../../../../../@dg/pipes/seconds/seconds-to-minutes.module";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatStepperModule} from "@angular/material/stepper";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FlexLayoutModule,
-    MatDialogModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    NgxDropzoneModule,
-    MatRadioModule,
-    MatSelectModule,
-    MatMenuModule,
-    IconModule,
-    MatDividerModule,
-    MatAutocompleteModule,
-    MatSnackBarModule,
-    MatChipsModule,
-    NgBytesPipeModule,
-    MatSlideToggleModule,
-    SecondsToMinutesModule,
-    MatProgressSpinnerModule
-  ],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FlexLayoutModule,
+        MatDialogModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        NgxDropzoneModule,
+        MatRadioModule,
+        MatSelectModule,
+        MatMenuModule,
+        IconModule,
+        MatDividerModule,
+        MatAutocompleteModule,
+        MatSnackBarModule,
+        MatChipsModule,
+        NgBytesPipeModule,
+        MatSlideToggleModule,
+        SecondsToMinutesModule,
+        MatProgressSpinnerModule,
+        MatTabsModule,
+        MatStepperModule
+    ],
   declarations: [VideoCreateUpdateComponent],
   entryComponents: [VideoCreateUpdateComponent],
   exports: [VideoCreateUpdateComponent]

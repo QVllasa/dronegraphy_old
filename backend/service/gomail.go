@@ -20,7 +20,7 @@ var (
 	Password = "Dominim123_!"
 )
 
-func (this *Service) SendEmail(to string, code int) {
+func (this *Service) SendEmail(to string, actionCode int) {
 
 	dir, _ := os.Getwd()
 
@@ -29,7 +29,7 @@ func (this *Service) SendEmail(to string, code int) {
 	var from string
 	var content string
 
-	switch code {
+	switch actionCode {
 	case 0:
 		html = "Welcome"
 	case 1:
