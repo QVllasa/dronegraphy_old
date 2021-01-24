@@ -146,6 +146,7 @@ func getOptions(srcPath, targetPath, res string) ([]string, error) {
 		"-y",
 		"-i", srcPath,
 		"-vf", "scale=trunc(oh*a/2)*2:1080",
+		//"-vf ","scale=w=1280:h=720:force_original_aspect_ratio=decrease",
 		"-c:a", "aac",
 		"-ar", "48000",
 		"-c:v", "h264",

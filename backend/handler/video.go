@@ -269,11 +269,3 @@ func (this *Handler) GetPlaylist(c echo.Context) error {
 	filename := c.Param("file")
 	return c.File(service.StorageRoot + service.Videos + "/" + id + "/hls/" + filename)
 }
-
-//func (this *Handler) UpdateVideo(c echo.Context) error {
-//	video, err := modifyVideo(context.Background(), c.Param("id"), c.Request().Body, this.Coll)
-//	if err != nil {
-//		return err
-//	}
-//	return c.JSON(http.StatusOK, video)
-//}

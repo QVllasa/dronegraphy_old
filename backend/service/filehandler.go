@@ -26,7 +26,7 @@ var (
 		//"360p",
 		//"480p",
 		"720p",
-		"1080p",
+		//"1080p",
 	}
 	ffmpegPath = "/usr/local/bin/ffmpeg"
 	mov        = "video/quicktime"

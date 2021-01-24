@@ -40,7 +40,8 @@ export class VideoService {
 
         return this.http.get<VideoResponse>(environment.apiUrl + '/videos', {params: params}).pipe(
             map(res => {
-                this.videos = [...this.videos, ...this.mapVideos(res)]
+                // this.videos = [...this.videos, ...this.mapVideos(res)]
+                this.videos = this.mapVideos(res)
                 return this.videos
             })
         )
