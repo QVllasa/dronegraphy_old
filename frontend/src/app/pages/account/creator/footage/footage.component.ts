@@ -120,11 +120,6 @@ export class FootageComponent implements OnInit {
         this.dialog.open(VideoCreateUpdateComponent, {
             width: 'auto'
 
-        }).afterClosed().subscribe((video: Video) => {
-            if (video) {
-                this.videos.unshift(video);
-                this.subject$.next(this.videos);
-            }
         });
     }
 

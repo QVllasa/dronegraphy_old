@@ -4,6 +4,7 @@ import (
 	"context"
 	"dronegraphy/backend/repository/model"
 	"encoding/json"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"go.mongodb.org/mongo-driver/bson"
@@ -46,7 +47,7 @@ import (
 //	return video, nil
 //}
 
-func (this *Repository) CreateVideo(video *model.Video, id string) error {
+func (this *Repository) CreateVideo(video *model.Video, id string) (string, error) {
 
 	u, _ := this.GetUserById(id)
 
@@ -64,16 +65,14 @@ func (this *Repository) CreateVideo(video *model.Video, id string) error {
 	ID, err := this.VideoColl.InsertOne(context.Background(), video)
 	if err != nil {
 		log.Errorf("Unable to store in database: %s", err)
-		return echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Video already exists"})
+		return "", echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Video already exists"})
 	}
 
-	res := this.VideoColl.FindOne(context.Background(), bson.M{"_id": ID.InsertedID})
-	if err := res.Decode(&video); err != nil {
-		log.Errorf("Unable to fetch Video ID: %v", err)
-		return echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Unable to fetch Video ID"})
-	}
+	vID := ID.InsertedID.(primitive.ObjectID).Hex()
 
-	return nil
+	fmt.Println(vID)
+
+	return vID, nil
 }
 
 func (this *Repository) GetVideos(page int64, limit int64, filter bson.M) ([]model.Video, error) {

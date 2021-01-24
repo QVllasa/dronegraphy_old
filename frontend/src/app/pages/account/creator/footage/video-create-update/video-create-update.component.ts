@@ -130,20 +130,17 @@ export class VideoCreateUpdateComponent implements OnInit {
     }
 
     createVideo() {
-
         const videoData = new Video().deserialize(this.form.value)
-
         this.isLoading = true;
         this.videoService.createVideo(videoData, this.thumbnail, this.files)
-            .subscribe(video => {
-                console.log(video)
-                this.defaults = video
+            .subscribe(res => {
+                console.log(res)
                 this.isLoading = false;
-                // setTimeout(() => {
-                //
-                // }, 3000)
                 this.onSucess = true;
-            })
+            },
+                error => {
+                console.log(error)
+                })
 
     }
 

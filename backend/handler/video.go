@@ -51,12 +51,13 @@ func (this *Handler) CreateVideo(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, "Validation Error: unable to parse request payload")
 	}
 
-	if err := this.repository.CreateVideo(video, token.UID); err != nil {
+	vID, err := this.repository.CreateVideo(video, token.UID)
+	if err != nil {
 		log.Error(err)
 		return c.JSON(http.StatusInternalServerError, "Unable to store video")
 	}
 
-	return c.JSON(http.StatusOK, video.ID.Hex())
+	return c.JSON(http.StatusOK, vID)
 
 }
 
@@ -154,6 +155,13 @@ func (this *Handler) UploadVideoFiles(c echo.Context) error {
 			select {
 			case <-channel:
 				fmt.Println("Conversion Finished!")
+				filter := bson.M{"_id": docID}
+				_, err = this.repository.VideoColl.UpdateOne(context.Background(), filter,
+					bson.D{
+						{"$set",
+							bson.D{
+								{"converted", true}}},
+					})
 				this.service.SendEmail(
 					//TODO generic -> replace with user.UID
 					"qendrim.vllasa@gmail.com",
@@ -192,7 +200,7 @@ func (this *Handler) UploadVideoFiles(c echo.Context) error {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, video)
+	return c.JSON(http.StatusOK, video.ID.Hex())
 }
 
 func (this *Handler) GetVideo(c echo.Context) error {
@@ -250,6 +258,8 @@ func (this *Handler) DeleteVideo(c echo.Context) error {
 
 	_ = this.service.DeleteThumbnail(video.Thumbnail)
 
+	_ = this.service.DeleteVideoFiles(video.StorageRef)
+
 	return c.JSON(http.StatusOK, video.ID.Hex()+" deleted")
 }
 
@@ -258,7 +268,7 @@ func (this *Handler) GetPlaylist(c echo.Context) error {
 	id := c.Param("id")
 	fmt.Println(id)
 	filename := c.Param("file")
-	return c.File("./backend/storage/videos/" + id + "/hls/" + filename)
+	return c.File(service.StorageRoot + service.Videos + "/" + id + "/hls/" + filename)
 
 	//if filename == "playlist.m3u8" {
 	//

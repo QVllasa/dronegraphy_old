@@ -24,8 +24,8 @@ var (
 
 var (
 	resOptions = []string{
-		"360p",
-		"480p",
+		//"360p",
+		//"480p",
 		"720p",
 		"1080p",
 	}
@@ -157,6 +157,19 @@ func (this *Service) DeleteThumbnail(fileName string) error {
 	err := os.Remove(src)
 	if err != nil {
 		log.Error("cannot delete thumbnail")
+		return err
+	}
+	return nil
+}
+
+// Delete Thumbnail when deleting video
+func (this *Service) DeleteVideoFiles(storageRef string) error {
+
+	src := StorageRoot + Videos + "/" + storageRef
+
+	err := os.RemoveAll(src)
+	if err != nil {
+		log.Error("cannot delete videofiles")
 		return err
 	}
 	return nil

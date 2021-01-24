@@ -1,5 +1,13 @@
 import {User} from './user.model';
 import {Deserializable} from "./deserialize.interface";
+import {environment} from "../../environments/environment";
+
+interface FileInfo{
+    size: number;
+    contentType: string;
+    name: string;
+
+}
 
 export interface IVideo {
     id: string;
@@ -14,7 +22,10 @@ export interface IVideo {
     tags: string[];
     categories: string[];
     downloads: number;
+    converted: boolean;
     views: number;
+    storageRef: string;
+    storageContent: FileInfo[];
     creator?: User;
     thumbnail?: string;
     sell?: boolean;
@@ -35,6 +46,8 @@ export class Video implements IVideo, Deserializable {
     public length: number;
     public fps: number;
     public camera: string;
+    public storageRef: string;
+    public storageContent: FileInfo[];
     public tags: string[];
     public categories: string[];
     public downloads: number;
@@ -43,6 +56,7 @@ export class Video implements IVideo, Deserializable {
     public updatedAt: Date;
     public thumbnail?: string;
     public published: boolean;
+    public converted: boolean;
 
     #sell: boolean;
     #onBanner: boolean;
@@ -70,7 +84,8 @@ export class Video implements IVideo, Deserializable {
     }
 
     getItemPath(): string | null {
-        return this.#hls;
+        // return this.#hls;
+        return environment.apiUrl+"/"+this.storageRef+"/hls/playlist.m3u8"
     }
 
     setThumbnail(fileName) {

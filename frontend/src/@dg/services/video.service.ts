@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 import {IVideo, Video} from "../models/video.model";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {map, mergeMap, take, tap} from "rxjs/operators";
+import {map, mergeMap, switchMap, take, takeLast, tap} from "rxjs/operators";
 import {User} from "../models/user.model";
 import {of} from "rxjs";
 
@@ -77,19 +77,15 @@ export class VideoService {
             files.append("videoFiles[]", videoFiles[i], videoFiles[i]['name']);
         }
 
-        videoFiles.forEach(v => console.log(v.name))
-        videoFiles.forEach(v => console.log(v.type))
-        videoFiles.forEach(v => console.log(v.size))
-
-        return this.http.post<IVideo>(environment.apiUrl + '/videos', data)
+        return this.http.post<string>(environment.apiUrl + '/videos', data)
             .pipe(
-                take(1),
-                mergeMap(video => {
-                    return this.uploadVideoThumbnail(video, tb)
+                switchMap(id => {
+                    return this.uploadVideoThumbnail(id, tb)
                 }),
-                mergeMap(video => {
-                    return this.uploadVideoFiles(video, files)
-                }))
+                switchMap(id => {
+                    return this.uploadVideoFiles(id, files)
+                })
+            )
     }
 
     updateVideo(id, data, thumbnail?: File) {
@@ -104,34 +100,16 @@ export class VideoService {
                         console.log("no thumbnail change")
                         return of(this.newVideo(video))
                     }
-                    return this.uploadVideoThumbnail(video, tb)
+                    return this.uploadVideoThumbnail(id, tb)
                 }))
     }
 
-    uploadVideoThumbnail(video: IVideo, file: FormData) {
-        return this.http.post<string>(environment.apiUrl + '/thumbnails/' + video.id, file).pipe(
-            map(res => {
-                console.log(res)
-                const newVideo = this.newVideo(video)
-                newVideo.setThumbnail(res)
-                return newVideo
-            })
-        )
+    uploadVideoThumbnail(id: string, file: FormData) {
+        return this.http.post<string>(environment.apiUrl + '/thumbnails/' + id, file)
     }
 
-    uploadVideoFiles(video: Video, files: FormData) {
-        console.log(video.id)
-        return this.http.post(environment.apiUrl + '/video_files/' + video.id, files, {
-            reportProgress: true,
-            observe: 'events'
-        }).pipe(
-            map(res => {
-                console.log(res)
-                const newVideo = this.newVideo(video)
-                newVideo.setThumbnail(res)
-                return newVideo
-            })
-        )
+    uploadVideoFiles(id: string, files: FormData) {
+        return this.http.post(environment.apiUrl + '/video_files/' + id, files)
     }
 
     mapVideos(res: VideoResponse): Video[] {
@@ -140,7 +118,9 @@ export class VideoService {
             return videoList
         }
         for (let video of res.videos) {
-            videoList.push(this.newVideo(video))
+            if (video.converted){
+                videoList.push(this.newVideo(video))
+            }
         }
         return videoList
     }
