@@ -264,30 +264,10 @@ func (this *Handler) DeleteVideo(c echo.Context) error {
 }
 
 func (this *Handler) GetPlaylist(c echo.Context) error {
-
 	id := c.Param("id")
 	fmt.Println(id)
 	filename := c.Param("file")
 	return c.File(service.StorageRoot + service.Videos + "/" + id + "/hls/" + filename)
-
-	//if filename == "playlist.m3u8" {
-	//
-	//} else {
-	//	return c.File("./backend/storage/videos/" + filename)
-	//}
-
-	//fmt.Println(filename)
-	////dir, _ := os.Getwd()
-	//fmt.Println( "./backend/storage/videos/" + id + "/hls/" + filename)
-
-	//dir, _ := os.Getwd()
-	//fileList, _ := util.GetFileNames(dir + "/backend/storage/videos/" + id + "/hls")
-	//
-	//for _, f := range fileList{
-	//	fmt.Println(f)
-	//}
-	//
-	//return c.JSON(http.StatusOK, fileList)
 }
 
 //func (this *Handler) UpdateVideo(c echo.Context) error {
@@ -296,26 +276,4 @@ func (this *Handler) GetPlaylist(c echo.Context) error {
 //		return err
 //	}
 //	return c.JSON(http.StatusOK, video)
-//}
-
-//func (this *Handler) CreateVideos(c echo.Context) error {
-//	var videos []Video
-//	c.Echo().Validator = &VideoValidator{Validator: v}
-//	if err := c.Bind(&videos); err != nil {
-//		log.Errorf("Unable to bind : %v", err)
-//		return c.JSON(http.StatusUnprocessableEntity, ErrorMessage{Message: "Binding Error: unable to parse request payload"})
-//	}
-//	for _, video := range videos {
-//		if err := c.Validate(video); err != nil {
-//			log.Errorf("Unable to validate the product %+v %v", video, err)
-//			return c.JSON(http.StatusUnprocessableEntity, ErrorMessage{Message: "Validation Error: unable to parse request payload"})
-//		}
-//	}
-//
-//	IDs, err := insertVideo(context.Background(), videos, this.Coll)
-//	if err != nil {
-//		return err
-//	}
-//
-//	return c.JSON(http.StatusOK, IDs)
 //}

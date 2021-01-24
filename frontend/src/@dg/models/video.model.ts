@@ -60,7 +60,6 @@ export class Video implements IVideo, Deserializable {
 
     #sell: boolean;
     #onBanner: boolean;
-    #hls: string;
     #creator: User;
     #favoriteBy: any;
 
@@ -76,14 +75,9 @@ export class Video implements IVideo, Deserializable {
 
     getLicense(): boolean | null {
         return this.#sell ? this.#sell : null
-
     }
 
-    setItemPath(path: string) {
-        this.#hls = path;
-    }
-
-    getItemPath(): string | null {
+    getHLS(): string | null {
         // return this.#hls;
         return environment.apiUrl+"/"+this.storageRef+"/hls/playlist.m3u8"
     }

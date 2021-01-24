@@ -19,7 +19,6 @@ var (
 	Videos       = "/videos"
 	Thumbnails   = "/thumbnails"
 	HLS          = "/hls"
-	Container    = "/container"
 )
 
 var (

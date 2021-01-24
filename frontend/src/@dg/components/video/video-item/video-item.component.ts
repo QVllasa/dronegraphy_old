@@ -42,7 +42,7 @@ export class VideoItemComponent implements OnInit {
             controls: false,
             inactivityTimeout: 0,
             videopage: false,
-            sources: [{src: this.videoItem.getItemPath(), type: 'application/x-mpegURL'}]
+            sources: [{src: this.videoItem.getHLS(), type: 'application/x-mpegURL'}]
         }
 
     }

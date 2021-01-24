@@ -142,7 +142,6 @@ export class VideoService {
         loadedVideo.setCreator(new User()
             .deserialize(video.creator))
         loadedVideo.setLicense(video.sell)
-        loadedVideo.setItemPath(video.hls)
         loadedVideo.setThumbnail(video.thumbnail)
         return loadedVideo
     }
