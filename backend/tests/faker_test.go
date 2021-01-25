@@ -17,6 +17,12 @@ import (
 	"testing"
 )
 
+var (
+	userCount     = 15
+	videoCount    = 200
+	categoryCount = 5
+)
+
 func TestLoadCategoryFixtures(t *testing.T) {
 
 	gofakeit.Seed(123)
@@ -29,7 +35,7 @@ func TestLoadCategoryFixtures(t *testing.T) {
 	categories := repository.DB.Client.Database("dronegraphy_db").Collection("categories")
 	_ = categories.Drop(context.Background())
 
-	for i := 0; i < 5; i++ {
+	for i := 0; i < categoryCount; i++ {
 		category.Value = gofakeit.Noun()
 		category.UpdatedAt = gofakeit.Date()
 		category.CreatedAt = gofakeit.Date()
@@ -104,7 +110,7 @@ func TestLoadUserFixtures(t *testing.T) {
 	users := repository.DB.Client.Database("dronegraphy_db").Collection("users")
 	_ = users.Drop(context.Background())
 
-	for i := 0; i < 20; i++ {
+	for i := 0; i < userCount; i++ {
 
 		roles := []string{
 			"ROLE_MEMBER", "ROLE_CREATOR",
@@ -215,7 +221,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 		"sport",
 	}
 
-	for i := 0; i < 500; i++ {
+	for i := 0; i < videoCount; i++ {
 
 		video.Title = gofakeit.LoremIpsumSentence(4)
 		video.Camera = "DJI Mavic Pro"
@@ -224,10 +230,10 @@ func TestLoadVideoFixtures(t *testing.T) {
 		video.Width = gofakeit.Number(240, 2160)
 		video.Height = gofakeit.Number(720, 3840)
 		video.FPS = gofakeit.Number(24, 120)
-		video.Length = gofakeit.Number(30, 300)
+		video.Length = float64(gofakeit.Number(30, 300))
 		video.Location = gofakeit.City() + ", " + gofakeit.Country()
 		video.Published = gofakeit.Bool()
-		video.Converted = false
+		video.Converted = true
 		video.Sell = gofakeit.Bool()
 		video.Formats = []string{gofakeit.RandomString(tags)}
 		video.Views = gofakeit.Number(0, 99999)
@@ -239,20 +245,26 @@ func TestLoadVideoFixtures(t *testing.T) {
 		}
 		video.CreatedAt = gofakeit.Date()
 		video.UpdatedAt = gofakeit.Date()
-		//video.HLS = "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-		//video.Thumbnail =
 
 		ID, _ := videos.InsertOne(context.Background(), video)
 
 		fileID := xid.New().String()
+		vID := xid.New().String()
 		target := "../storage/thumbnails/"
 
-		if err = util.DownloadFile(gofakeit.ImageURL(640	,360)+".jpg", target+fileID+".jpg"); err != nil {
+		if err = util.DownloadFile(gofakeit.ImageURL(640, 360)+".jpg", target+fileID+".jpg"); err != nil {
+			log.Error(err)
+		}
+
+		if err = util.CopyDir("./testfiles", "../../"+service.StorageRoot+service.Videos+"/"+vID); err != nil {
 			log.Error(err)
 		}
 
 		filter := bson.M{"_id": ID.InsertedID}
-		update := bson.D{{"$set", bson.D{{"thumbnail", fileID + ".jpg"}}}}
+		update := bson.D{{"$set", bson.D{
+			{"thumbnail", fileID + ".jpg"},
+			{"storageRef", vID},
+		}}}
 
 		_, err = videos.UpdateOne(context.Background(), filter, update)
 		//if err != nil {
