@@ -56,166 +56,169 @@
             </button>
         </div>
 
-        <table [dataSource]="dataSource" class="w-full" mat-table matSort>
+        <div class="overflow-auto w-full">
+            <table [dataSource]="dataSource" class="w-full" mat-table matSort>
 
-            <!--- Note that these columns can be defined in any order.
-                  The actual rendered columns are set as a property on the row definition" -->
+                <!--- Note that these columns can be defined in any order.
+                      The actual rendered columns are set as a property on the row definition" -->
 
-            <!-- Checkbox Column -->
-            <ng-container matColumnDef="checkbox">
-                <th *matHeaderCellDef mat-header-cell>
-                    <mat-checkbox (change)="$event ? masterToggle() : null"
-                                  [checked]="selection.hasValue() && isAllSelected()"
-                                  [indeterminate]="selection.hasValue() && !isAllSelected()"
-                                  color="primary">
-                    </mat-checkbox>
-                </th>
-                <td *matCellDef="let row" class="w-4" mat-cell>
-                    <mat-checkbox (change)="$event ? selection.toggle(row) : null"
-                                  (click)="$event.stopPropagation()"
-                                  [checked]="selection.isSelected(row)"
-                                  color="primary">
-                    </mat-checkbox>
-                </td>
-            </ng-container>
-
-            <!-- Image Column -->
-            <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
-                <ng-container *ngIf="column.type === 'image'" [matColumnDef]="column.property">
-                    <th *matHeaderCellDef mat-header-cell></th>
-                    <td *matCellDef="let row" class="w-8 min-w-8 pr-0 object-cover" mat-cell>
-                        <img [src]="row.getThumbnail()" class="h-8 w-8 align-middle" alt="">
+                <!-- Checkbox Column -->
+                <ng-container matColumnDef="checkbox">
+                    <th *matHeaderCellDef mat-header-cell>
+                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                                      [checked]="selection.hasValue() && isAllSelected()"
+                                      [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                      color="primary">
+                        </mat-checkbox>
+                    </th>
+                    <td *matCellDef="let row" class="w-4" mat-cell>
+                        <mat-checkbox (change)="$event ? selection.toggle(row) : null"
+                                      (click)="$event.stopPropagation()"
+                                      [checked]="selection.isSelected(row)"
+                                      color="primary">
+                        </mat-checkbox>
                     </td>
                 </ng-container>
-            </ng-container>
 
-            <!-- Slide Columns -->
-            <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
-                <ng-container *ngIf="column.type === 'published'" [matColumnDef]="column.property">
-                    <th *matHeaderCellDef class="uppercase" mat-header-cell
-                        mat-sort-header> {{ column.label }}</th>
-                    <td *matCellDef="let row" [ngClass]="column.cssClasses"
-                        mat-cell>
-                        <div *ngIf="row[column.property]" class="rounded-full flex items-center justify-center text-green bg-green-light cursor-pointer h-9 w-9">
-                            <mat-icon>check_circle_outline</mat-icon>
-                        </div>
-                        <div *ngIf="!row[column.property]" class="rounded-full flex items-center justify-center text-gray bg-gray-light cursor-pointer h-9 w-9">
-                            <mat-icon>remove_circle_outline</mat-icon>
+                <!-- Image Column -->
+                <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
+                    <ng-container *ngIf="column.type === 'image'" [matColumnDef]="column.property">
+                        <th *matHeaderCellDef mat-header-cell></th>
+                        <td *matCellDef="let row" class="w-8 min-w-8 pr-0 object-cover" mat-cell>
+                            <img [src]="row.getThumbnail()" class="h-8 w-8 align-middle" alt="">
+                        </td>
+                    </ng-container>
+                </ng-container>
+
+                <!-- Slide Columns -->
+                <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
+                    <ng-container *ngIf="column.type === 'published'" [matColumnDef]="column.property">
+                        <th *matHeaderCellDef class="uppercase" mat-header-cell
+                            mat-sort-header> {{ column.label }}</th>
+                        <td *matCellDef="let row" [ngClass]="column.cssClasses"
+                            mat-cell>
+                            <div *ngIf="row[column.property]" class="rounded-full flex items-center justify-center text-green bg-green-light cursor-pointer h-9 w-9">
+                                <mat-icon>check_circle_outline</mat-icon>
+                            </div>
+                            <div *ngIf="!row[column.property]" class="rounded-full flex items-center justify-center text-gray bg-gray-light cursor-pointer h-9 w-9">
+                                <mat-icon>remove_circle_outline</mat-icon>
+                            </div>
+                        </td>
+                    </ng-container>
+                </ng-container>
+
+                <!-- Text Columns -->
+                <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
+                    <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
+                        <th *matHeaderCellDef class="uppercase" mat-header-cell
+                            mat-sort-header> {{ column.label }}</th>
+                        <td *matCellDef="let row" [ngClass]="column.cssClasses"
+                            mat-cell>{{ row[column.property] }}</td>
+                    </ng-container>
+                </ng-container>
+
+                <!-- Length Columns -->
+                <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
+                    <ng-container *ngIf="column.type === 'length'" [matColumnDef]="column.property">
+                        <th *matHeaderCellDef class="uppercase" mat-header-cell
+                            mat-sort-header> {{ column.label }}</th>
+                        <td *matCellDef="let row" [ngClass]="column.cssClasses"
+                            matTooltip="Minuten"
+                            mat-cell>{{ row[column.property] | secondsToMinutes}}</td>
+                    </ng-container>
+                </ng-container>
+
+                <!-- Date Columns -->
+                <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
+                    <ng-container *ngIf="column.type === 'date'" [matColumnDef]="column.property">
+                        <th *matHeaderCellDef class="uppercase" mat-header-cell
+                            mat-sort-header> {{ column.label }}</th>
+                        <td *matCellDef="let row" [ngClass]="column.cssClasses"
+                            mat-cell>{{ row[column.property] | date: 'short'}}</td>
+                    </ng-container>
+                </ng-container>
+
+                <!-- Contact Column -->
+                <ng-container matColumnDef="contact">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
+                    <td *matCellDef="let row" mat-cell>
+                        <div class="flex">
+                            <a (click)="$event.stopPropagation()"
+                               class="w-8 h-8 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary-light"
+                               mat-icon-button>
+                                <mat-icon>add</mat-icon>
+                            </a>
+
+                            <a (click)="$event.stopPropagation()"
+                               class="w-8 h-8 leading-none flex items-center justify-center ml-1 hover:bg-hover text-teal bg-teal-light"
+                               mat-icon-button>
+                                <mat-icon>add</mat-icon>
+                            </a>
+
+                            <a (click)="$event.stopPropagation()"
+                               class="w-8 h-8 leading-none flex items-center justify-center ml-1 hover:bg-hover text-green bg-green-light"
+                               mat-icon-button>
+                                <mat-icon>add</mat-icon>
+                            </a>
                         </div>
                     </td>
                 </ng-container>
-            </ng-container>
 
-            <!-- Text Columns -->
-            <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
-                <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
-                    <th *matHeaderCellDef class="uppercase" mat-header-cell
-                        mat-sort-header> {{ column.label }}</th>
-                    <td *matCellDef="let row" [ngClass]="column.cssClasses"
-                        mat-cell>{{ row[column.property] }}</td>
-                </ng-container>
-            </ng-container>
-
-            <!-- Length Columns -->
-            <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
-                <ng-container *ngIf="column.type === 'length'" [matColumnDef]="column.property">
-                    <th *matHeaderCellDef class="uppercase" mat-header-cell
-                        mat-sort-header> {{ column.label }}</th>
-                    <td *matCellDef="let row" [ngClass]="column.cssClasses"
-                        matTooltip="Minuten"
-                        mat-cell>{{ row[column.property] | secondsToMinutes}}</td>
-                </ng-container>
-            </ng-container>
-
-            <!-- Date Columns -->
-            <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
-                <ng-container *ngIf="column.type === 'date'" [matColumnDef]="column.property">
-                    <th *matHeaderCellDef class="uppercase" mat-header-cell
-                        mat-sort-header> {{ column.label }}</th>
-                    <td *matCellDef="let row" [ngClass]="column.cssClasses"
-                        mat-cell>{{ row[column.property] | date: 'short'}}</td>
-                </ng-container>
-            </ng-container>
-
-            <!-- Contact Column -->
-            <ng-container matColumnDef="contact">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
-                <td *matCellDef="let row" mat-cell>
-                    <div class="flex">
-                        <a (click)="$event.stopPropagation()"
-                           class="w-8 h-8 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary-light"
-                           mat-icon-button>
-                            <mat-icon>add</mat-icon>
-                        </a>
-
-                        <a (click)="$event.stopPropagation()"
-                           class="w-8 h-8 leading-none flex items-center justify-center ml-1 hover:bg-hover text-teal bg-teal-light"
-                           mat-icon-button>
-                            <mat-icon>add</mat-icon>
-                        </a>
-
-                        <a (click)="$event.stopPropagation()"
-                           class="w-8 h-8 leading-none flex items-center justify-center ml-1 hover:bg-hover text-green bg-green-light"
-                           mat-icon-button>
-                            <mat-icon>add</mat-icon>
-                        </a>
-                    </div>
-                </td>
-            </ng-container>
-
-            <!-- Label Column -->
-            <ng-container matColumnDef="labels">
-                <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Labels</th>
-                <td *matCellDef="let row" mat-cell>
-                    <div (click)="$event.stopPropagation()" fxLayoutAlign="start center" fxLayoutGap="4px">
-                        <div *ngFor="let label of row.labels"
-                             [ngClass]="[label.textClass, label.bgClass]"
-                             class="rounded px-2 py-1 font-medium text-xs"
-                             fxFlex="none">
-                            {{ label.text }}
+                <!-- Label Column -->
+                <ng-container matColumnDef="labels">
+                    <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Labels</th>
+                    <td *matCellDef="let row" mat-cell>
+                        <div (click)="$event.stopPropagation()" fxLayoutAlign="start center" fxLayoutGap="4px">
+                            <div *ngFor="let label of row.labels"
+                                 [ngClass]="[label.textClass, label.bgClass]"
+                                 class="rounded px-2 py-1 font-medium text-xs"
+                                 fxFlex="none">
+                                {{ label.text }}
+                            </div>
+                            <div (click)="labelSelect.open()"
+                                 class="text-secondary bg-base text-hint cursor-pointer hover:bg-hover"
+                                 fxFlex="none"
+                                 fxLayout="row"
+                                 fxLayoutAlign="center center">
+                                <mat-icon>add</mat-icon>
+                            </div>
+                            <mat-select #labelSelect="matSelect"
+                                        (selectionChange)="onLabelChange($event, row)"
+                                        [value]="row.labels"
+                                        class="invisible w-0 h-0 text-sm"
+                                        fxFlex="0 1 0px"
+                                        multiple>
+                                <mat-option *ngFor="let label of labels" [value]="label">
+                                    <div [ngClass]="label.previewClass"
+                                         class="h-6 w-6 align-middle ltr:mr-2 rtl:ml-2 rounded inline-block"></div>
+                                    <span>{{ label.text }}</span>
+                                </mat-option>
+                            </mat-select>
                         </div>
-                        <div (click)="labelSelect.open()"
-                             class="text-secondary bg-base text-hint cursor-pointer hover:bg-hover"
-                             fxFlex="none"
-                             fxLayout="row"
-                             fxLayoutAlign="center center">
-                            <mat-icon>add</mat-icon>
-                        </div>
-                        <mat-select #labelSelect="matSelect"
-                                    (selectionChange)="onLabelChange($event, row)"
-                                    [value]="row.labels"
-                                    class="invisible w-0 h-0 text-sm"
-                                    fxFlex="0 1 0px"
-                                    multiple>
-                            <mat-option *ngFor="let label of labels" [value]="label">
-                                <div [ngClass]="label.previewClass"
-                                     class="h-6 w-6 align-middle ltr:mr-2 rtl:ml-2 rounded inline-block"></div>
-                                <span>{{ label.text }}</span>
-                            </mat-option>
-                        </mat-select>
-                    </div>
-                </td>
-            </ng-container>
+                    </td>
+                </ng-container>
 
-            <!-- Action Column -->
-            <ng-container matColumnDef="actions">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
-                <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>
-                    <button (click)="$event.stopPropagation()"
-                            [matMenuTriggerData]="{ video: row }"
-                            [matMenuTriggerFor]="actionsMenu"
-                            mat-icon-button
-                            type="button">
-                        <mat-icon>more_vert</mat-icon>
-                    </button>
-                </td>
-            </ng-container>
+                <!-- Action Column -->
+                <ng-container matColumnDef="actions" stickyEnd>
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
+                    <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>
+                        <button (click)="$event.stopPropagation()"
+                                [matMenuTriggerData]="{ video: row }"
+                                [matMenuTriggerFor]="actionsMenu"
+                                mat-icon-button
+                                type="button">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
 
-            <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
-            <tr *matRowDef="let row; columns: visibleColumns;"
-                class="hover:bg-hover trans-ease-out cursor-pointer"
-                mat-row></tr>
-        </table>
+                <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
+                <tr *matRowDef="let row; columns: visibleColumns;"
+                    class="hover:bg-hover trans-ease-out cursor-pointer"
+                    mat-row></tr>
+            </table>
+        </div>
+
 
         <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [length]="totalCount"
                        class="sticky left-0"></mat-paginator>

@@ -2,7 +2,7 @@
     <dg-page-layout-header class="h-64">
         <h1 fxLayoutAlign="center" class="mat-display-2">Mein Account</h1>
     </dg-page-layout-header>
-    <dg-page-layout-content fxLayoutAlign="center center" dgContainer>
+    <dg-page-layout-content class="w-full" fxLayoutAlign="center center" dgContainer>
         <div class="card w-full">
             <div *ngIf="!(userService.user$ | async)" fxLayoutAlign="center center">
                 <mat-spinner color="primary"

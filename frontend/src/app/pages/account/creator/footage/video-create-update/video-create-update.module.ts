@@ -22,6 +22,7 @@ import {SecondsToMinutesModule} from "../../../../../../@dg/pipes/seconds/second
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatStepperModule} from "@angular/material/stepper";
+import {MatListModule} from "@angular/material/list";
 
 @NgModule({
     imports: [
@@ -46,7 +47,8 @@ import {MatStepperModule} from "@angular/material/stepper";
         SecondsToMinutesModule,
         MatProgressSpinnerModule,
         MatTabsModule,
-        MatStepperModule
+        MatStepperModule,
+        MatListModule
     ],
   declarations: [VideoCreateUpdateComponent],
   entryComponents: [VideoCreateUpdateComponent],

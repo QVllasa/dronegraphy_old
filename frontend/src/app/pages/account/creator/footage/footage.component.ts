@@ -118,8 +118,6 @@ export class FootageComponent implements OnInit {
 
     createVideo() {
         this.dialog.open(VideoCreateUpdateComponent, {
-            width: 'auto'
-
         });
     }
 

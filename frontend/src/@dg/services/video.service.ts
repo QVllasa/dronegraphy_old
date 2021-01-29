@@ -119,7 +119,7 @@ export class VideoService {
             return videoList
         }
         for (let video of res.videos) {
-            if (video.converted && video.published){
+            if (video.converted){
                 videoList.push(this.newVideo(video))
             }
         }

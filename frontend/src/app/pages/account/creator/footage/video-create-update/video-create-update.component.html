@@ -16,7 +16,7 @@
         </mat-dialog-actions>
     </div>
 </ng-container>
-<form (ngSubmit)="save()" *ngIf="!onSucess && !isLoading" [formGroup]="form" class="min-w-6xl">
+<form (ngSubmit)="save()" *ngIf="!onSucess && !isLoading" [formGroup]="form" class="">
     <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
         <h2 *ngIf="form.get('title').value"
             class="headline m-0"
@@ -44,13 +44,14 @@
                 <mat-step>
                     <ng-template matStepLabel>Erzähle etwas über deine Aufnahme.</ng-template>
 
-                    <div class="p-12" fxFlex="auto" fxLayout="row">
-                        <div class="px-4 relative" fxLayout="column" fxFlex="auto" fxLayoutAlign="center center">
+                    <div class="p-12" fxLayout="row" fxLayoutAlign="space-between start">
+                        <div style="height: 144px; width: 256px;" class="px-4 relative" fxLayout="column"
+                             fxLayoutAlign="start">
                             <ng-container *ngIf="mode === 'create' || !form.get('thumbnail').value">
                                 <ngx-dropzone [multiple]="false"
                                               [maxFileSize]="500000"
                                               accept="image/jpeg,image/jpg,image/png"
-                                              class="max-w-xxxs min-w-40 mr-6 border-2 border-primary"
+                                              class="border-2 border-primary w-full"
                                               (change)="onSelectThumbnail($event)">
                                     <ngx-dropzone-label>
                                         <mat-icon class="text-3xl">add_photo_alternate</mat-icon>
@@ -82,15 +83,12 @@
                             </ng-container>
                         </div>
 
-                        <div fxFlex="auto" fxLayout="column">
+                        <div fxLayout="column">
                             <!--            TITLE-->
-                            <mat-form-field appearance="outline" class=" flex-auto">
+                            <mat-form-field appearance="outline" class="">
                                 <mat-label>Titel</mat-label>
                                 <input formControlName="title" matInput>
-                                <mat-error *ngIf="form.get('title').invalid">Bitte trage einen Titel ein, der dein Werk
-                                    kurz
-                                    und
-                                    prägnant beschreibt.
+                                <mat-error *ngIf="form.get('title').invalid">Titel fehlt.
                                 </mat-error>
                             </mat-form-field>
 
@@ -105,11 +103,7 @@
                                                         [value]="category.id">{{category.value}}</mat-option>
                                         </ng-container>
                                     </mat-select>
-                                    <mat-error *ngIf="form.get('categories').invalid">Bitte wähle mind. eine Kategorie
-                                        aus.
-                                        Wenn
-                                        deine
-                                        Kategorie fehlt, teile uns das bitte mit.
+                                    <mat-error *ngIf="form.get('categories').invalid">Bitte wähle eine Kategorie.
                                     </mat-error>
                                 </mat-form-field>
 
@@ -117,13 +111,7 @@
                                 <mat-form-field class="ml-6" fxFlex="auto" appearance="outline">
                                     <mat-label>Aufmahmeort</mat-label>
                                     <input placeholder="Berlin, Deutschland" formControlName="location" matInput>
-                                    <mat-error *ngIf="form.get('location').invalid">Bitte erzähle uns wo du diese
-                                        Aufnahme
-                                        gemacht
-                                        hast. Es findet keine Überprüfung statt, hilft anderen jedoch gezielter deine
-                                        Aufnahme
-                                        zu
-                                        finden.
+                                    <mat-error *ngIf="form.get('location').invalid">Wo hast du diese Aufnahme gemacht?
                                     </mat-error>
                                 </mat-form-field>
 
@@ -152,6 +140,7 @@
                                     <mat-label>Tags</mat-label>
                                     <mat-chip-list formControlName="tags" #tagsChipList aria-label="Tags selection">
                                         <mat-chip
+                                                class="transform scale-75"
                                                 *ngFor="let tag of form.get('tags').value"
                                                 [selectable]="selectable"
                                                 [removable]="removable"
@@ -183,67 +172,73 @@
 
                 </mat-step>
                 <mat-step>
-                    <ng-template matStepLabel>Lade deine Dateien hoch.</ng-template>
+                    <ng-container *ngIf="mode === 'create'">
+                        <ng-template matStepLabel>Lade deine Dateien hoch.</ng-template>
 
-                    <div class="mt-6" fxLayout="row" fxLayoutAlign="center center">
-                        <mat-form-field fxFlex="auto" class="mr-6" appearance="outline">
-                            <mat-label>Formate</mat-label>
-                            <mat-chip-list formControlName="formats" #formatsChipList aria-label="Format selection">
-                                <mat-chip
-                                        *ngFor="let format of form.get('formats').value"
-                                        [selectable]="selectable"
-                                        [removable]="removable"
-                                        (removed)="remove(format, 'formats')">
-                                    {{format}}
-                                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                </mat-chip>
-                                <input placeholder="+Format"
-                                       #formatInput
-                                       [formControl]="formatCtrl"
-                                       [matAutocomplete]="autoFormat"
-                                       [matChipInputFor]="formatsChipList"
-                                       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                       (matChipInputTokenEnd)="add($event, 'formats')">
-                            </mat-chip-list>
-                            <mat-autocomplete #autoFormat="matAutocomplete"
-                                              (optionSelected)="selected($event, 'formats')">
-                                <mat-option *ngFor="let format of filteredFormats | async" [value]="format">
-                                    {{format}}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </div>
-
-
-                    <ngx-dropzone class="min-h-64 border-2 border-primary" (change)="onSelectVideo($event)">
-                        <ng-container *ngFor="let f of files">
-                            <ngx-dropzone-video-preview ngProjectAs="ngx-dropzone-preview" [file]="f"
-                                                        *ngIf="f.type.includes('video')"
-                                                        [removable]="true" (removed)="onRemoveFile(f)">
-                            </ngx-dropzone-video-preview>
-                        </ng-container>
-                        <ng-container *ngFor="let f of files">
-                            <ngx-dropzone-preview ngProjectAs="ngx-dropzone-preview" [file]="f"
-                                                  *ngIf="!f.type.includes('video')"
-                                                  [removable]="true" (removed)="onRemoveFile(f)">
-                                <ngx-dropzone-label>{{f.name}}<br><span class="font-bold">{{f.size | bytes}}</span>
+                        <div class="mt-6" fxLayout="row" fxLayoutAlign="center center">
+                            <mat-form-field fxFlex="auto" class="mr-6" appearance="outline">
+                                <mat-label>Formate</mat-label>
+                                <mat-chip-list formControlName="formats" #formatsChipList aria-label="Format selection">
+                                    <mat-chip
+                                            *ngFor="let format of form.get('formats').value"
+                                            [selectable]="selectable"
+                                            [removable]="removable"
+                                            (removed)="remove(format, 'formats')">
+                                        {{format}}
+                                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                    </mat-chip>
+                                    <input placeholder="+Format"
+                                           #formatInput
+                                           [formControl]="formatCtrl"
+                                           [matAutocomplete]="autoFormat"
+                                           [matChipInputFor]="formatsChipList"
+                                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                           (matChipInputTokenEnd)="add($event, 'formats')">
+                                </mat-chip-list>
+                                <mat-autocomplete #autoFormat="matAutocomplete"
+                                                  (optionSelected)="selected($event, 'formats')">
+                                    <mat-option *ngFor="let format of filteredFormats | async" [value]="format">
+                                        {{format}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                        <ngx-dropzone class="min-h-64 border-2 border-primary" (change)="onSelectVideo($event)">
+                            <ng-container *ngFor="let f of files">
+                                <ngx-dropzone-video-preview ngProjectAs="ngx-dropzone-preview" [file]="f"
+                                                            *ngIf="f.type.includes('video')"
+                                                            [removable]="true" (removed)="onRemoveFile(f)">
+                                </ngx-dropzone-video-preview>
+                            </ng-container>
+                            <ng-container *ngFor="let f of files">
+                                <ngx-dropzone-preview ngProjectAs="ngx-dropzone-preview" [file]="f"
+                                                      *ngIf="!f.type.includes('video')"
+                                                      [removable]="true" (removed)="onRemoveFile(f)">
+                                    <ngx-dropzone-label>{{f.name}}<br><span class="font-bold">{{f.size | bytes}}</span>
+                                    </ngx-dropzone-label>
+                                </ngx-dropzone-preview>
+                            </ng-container>
+                            <ngx-dropzone-preview class="bg-none">
+                                <ngx-dropzone-label class="h-full w-full">
+                                    <div fxFlex="auto" fxLayout="column" fxLayoutAlign="space-evenly center"
+                                         class="text-primary bg-primary-light">
+                                        <mat-icon class="text-3xl ">add_circle_outline</mat-icon>
+                                        <span>Aufnahmen hinzufügen</span></div>
                                 </ngx-dropzone-label>
                             </ngx-dropzone-preview>
-                        </ng-container>
-                        <ngx-dropzone-preview class="bg-none">
-                            <ngx-dropzone-label class="h-full w-full">
-                                <div fxFlex="auto" fxLayout="column" fxLayoutAlign="space-evenly center"
-                                     class="text-primary bg-primary-light">
-                                    <mat-icon class="text-3xl ">add_circle_outline</mat-icon>
-                                    <span>Aufnahmen hinzufügen</span></div>
-                            </ngx-dropzone-label>
-                        </ngx-dropzone-preview>
-                    </ngx-dropzone>
+                        </ngx-dropzone>
+                    </ng-container>
+                    <ng-container *ngIf="mode === 'update'">
+                        <ng-template matStepLabel>Hochgeladene Dateien.</ng-template>
+                        <mat-list-item *ngFor="let item of defaults.storageContent">
+                            <div class="my-2" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center">
+                                <mat-icon mat-list-icon>perm_media</mat-icon>
+                                <div mat-line>{{item.name}}</div>
+                            </div>
+                        </mat-list-item>
+                    </ng-container>
 
-                    <div>
-                        <button mat-button matStepperPrevious>Back</button>
-                        <button mat-button (click)="stepper.reset()">Reset</button>
-                    </div>
+
                 </mat-step>
             </mat-vertical-stepper>
 

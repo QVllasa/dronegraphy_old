@@ -80,6 +80,7 @@ export class VideoCreateUpdateComponent implements OnInit {
             this.mode = 'update';
         } else {
             this.defaults = {} as Video;
+            console.log(this.defaults.storageContent)
         }
 
         this.form = this.fb.group({
