@@ -21,6 +21,7 @@ require (
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/labstack/gommon v0.3.0
 	github.com/mattn/go-colorable v0.1.8 // indirect
+	github.com/otiai10/copy v1.4.2 // indirect
 	github.com/rendyfebry/go-hls-transcoder v1.0.3
 	github.com/rs/xid v1.2.1
 	github.com/xdg/stringprep v1.0.0 // indirect

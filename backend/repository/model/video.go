@@ -34,6 +34,6 @@ type (
 	FileInfo struct {
 		Size        int64  `json:"size" bson:"size"`
 		ContentType string `json:"contentType" bson:"contentType"`
-		Name        string `json:"Name" bson:"Name"`
+		Name        string `json:"name" bson:"name"`
 	}
 )

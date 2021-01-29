@@ -260,10 +260,16 @@ func TestLoadVideoFixtures(t *testing.T) {
 			log.Error(err)
 		}
 
+		content := []model.FileInfo{{Name: "4k_H264.mov", ContentType: "mov", Size: int64(30)},
+			{Name: "4k.mov", ContentType: "mov", Size: int64(30)},
+			{Name: "hd.mov", ContentType: "mov", Size: int64(30)},
+			{Name: "sample-videos.zip", ContentType: "mov", Size: int64(30)}}
+
 		filter := bson.M{"_id": ID.InsertedID}
 		update := bson.D{{"$set", bson.D{
 			{"thumbnail", fileID + ".jpg"},
 			{"storageRef", vID},
+			{"storageContent", content},
 		}}}
 
 		_, err = videos.UpdateOne(context.Background(), filter, update)
