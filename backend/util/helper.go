@@ -214,3 +214,25 @@ func CopyDir(src string, dst string) (err error) {
 
 	return
 }
+
+func Unique(stringSlice []string) []string {
+	keys := make(map[string]bool)
+	list := []string{}
+	for _, entry := range stringSlice {
+		if _, value := keys[entry]; !value {
+			keys[entry] = true
+			list = append(list, entry)
+		}
+	}
+	return list
+}
+
+func RemoveItemFromSlice(items []string, item string) []string {
+	newitems := []string{}
+	for _, i := range items {
+		if i != item {
+			newitems = append(newitems, i)
+		}
+	}
+	return newitems
+}

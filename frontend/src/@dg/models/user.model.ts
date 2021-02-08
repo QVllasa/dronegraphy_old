@@ -9,6 +9,7 @@ export interface IUser {
     lastName: string;
     email?: string;
     profileImage?: string;
+    favoriteVideos?: string[];
     // imgPath?: string;
     // activated?: boolean;
     // [videos: number]: Video[];
@@ -24,7 +25,7 @@ export class User implements IUser, Deserializable {
     firstName: string;
     lastName: string;
     email?: string;
-    favorite?: Video[];
+    favoriteVideos?: string[];
     slogan?: string;
     profileImage?: string;
 
@@ -64,22 +65,22 @@ export class User implements IUser, Deserializable {
 
     }
 
-    setFavorite(video: Video) {
-        this.favorite.push(video)
+    setFavorites(favorites: string[]) {
+        this.favoriteVideos = favorites
     }
 
-    getFavorite(): Video[] | null {
-        if (!this.favorite || (this.favorite.length === 0)) {
+    getFavorites(): string[] | null {
+        if (!this.favoriteVideos || (this.favoriteVideos.length === 0)) {
             return null
         }
-        return this.favorite
+        return this.favoriteVideos
     }
 
-    removeFavorite(video: Video, count: number) {
-        if (!this.favorite || (this.favorite.length === 0)) {
+    removeFavorite(id: string, count: number) {
+        if (!this.favoriteVideos || (this.favoriteVideos.length === 0)) {
             return
         }
-        this.favorite.splice(this.favorite.indexOf(video), count)
+        this.favoriteVideos.splice(this.favoriteVideos.indexOf(id), count)
     }
 
 }

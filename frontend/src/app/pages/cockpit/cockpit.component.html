@@ -1,23 +1,29 @@
 <dg-page-layout mode="card" class="h-full w-auto" fxLayout="column" fxLayoutAlign="start center">
     <dg-page-layout-header class="h-64">
-        <h1 fxLayoutAlign="center" class="mat-display-2">Mein Cockpit</h1>
+        <h1 fxLayoutAlign="center" class="mat-display-2 font-bold">Mein Cockpit</h1>
     </dg-page-layout-header>
     <dg-page-layout-content class="w-full" fxLayoutAlign="center center" dgContainer>
         <div class="card min-h-md  w-full p-6 overflow-auto">
             <mat-tab-group mat-align-tabs="center" >
                 <mat-tab label="Meine Downloads">
                     <div class="p-6 max-h-3xl">
-                        <dg-video-grid [videos]="videos" ></dg-video-grid>
+<!--                        TODO fix change detection-->
+                        <ng-container *ngIf="downloadedVideos.length !== 0">
+                            <dg-video-grid [videos]="downloadedVideos" ></dg-video-grid>
+                        </ng-container>
                     </div>
                 </mat-tab>
                 <mat-tab label="Favoriten">
                     <div class="p-6 max-h-3xl">
-                        <dg-video-grid [videos]="videos" ></dg-video-grid>
+                        <ng-container *ngIf="favoriteVideos.length !== 0">
+                            <dg-video-grid [videos]="favoriteVideos" ></dg-video-grid>
+                        </ng-container>
                     </div>
                 </mat-tab>
                 <mat-tab label="Gespeicherte Piloten">
                     <div class="p-6 max-h-3xl">
-                        <dg-video-grid [videos]="videos" ></dg-video-grid>
+<!--                        TODO-->
+<!--                        <dg-video-grid [videos]="videos" ></dg-video-grid>-->
                     </div>
                 </mat-tab>
 

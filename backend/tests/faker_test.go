@@ -256,7 +256,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 			log.Error(err)
 		}
 
-		if err = util.CopyDir("./testfiles", "../../"+service.StorageRoot+service.Videos+"/"+vID); err != nil {
+		if err = util.CopyDir("./testfiles", "../../"+service.StorageRoot+service.Videos+"/"+vID+"/hls"); err != nil {
 			log.Error(err)
 		}
 

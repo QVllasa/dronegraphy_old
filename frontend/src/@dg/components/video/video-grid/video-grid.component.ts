@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit, SimpleChanges} from '@angular/core';
 import {DomSanitizer} from "@angular/platform-browser";
 import {VideoService} from "../../../services/video.service";
 import {Video} from "../../../models/video.model";
@@ -24,6 +24,8 @@ export class VideoGridComponent implements OnInit {
     ngOnInit() {
 
     }
+
+
 
     // onScrollDown() {
     //   const lastKey = this.videos.indexOf(this.videos[this.videos.length - 1]);

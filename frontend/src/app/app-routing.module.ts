@@ -36,6 +36,11 @@ const routes: Routes = [
 
             },
             {
+                path: 'creators',
+                loadChildren: () => import('./pages/creators/creators.module').then(m => m.CreatorsModule),
+
+            },
+            {
                 path: 'login',
                 loadChildren: () => import('./pages/auth/login/login.module').then(m => m.LoginModule),
 

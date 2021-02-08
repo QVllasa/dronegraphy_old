@@ -4,6 +4,7 @@ import (
 	"context"
 	"dronegraphy/backend/repository/model"
 	"dronegraphy/backend/service"
+	"dronegraphy/backend/util"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
@@ -16,6 +17,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type VideoResponse struct {
@@ -268,4 +270,54 @@ func (this *Handler) GetPlaylist(c echo.Context) error {
 	fmt.Println(id)
 	filename := c.Param("file")
 	return c.File(service.StorageRoot + service.Videos + "/" + id + "/hls/" + filename)
+}
+
+func (this *Handler) AddToFavorites(c echo.Context) error {
+	token, err := this.service.FirebaseApp.GetAndVerifyToken(c)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "no token found")
+	}
+
+	u, err := this.repository.GetUserById(token.UID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "no user found")
+	}
+
+	u.FavoriteVideos = util.Unique(append(u.FavoriteVideos, c.Param("id")))
+
+	filter := bson.M{"uid": u.UID}
+	u.UpdatedAt = time.Now()
+
+	_, err = this.repository.UserColl.UpdateOne(context.Background(), filter, bson.M{"$set": u})
+	if err != nil {
+		log.Errorf("Unable to update the user: %v", err)
+		return echo.NewHTTPError(http.StatusInternalServerError, "Unable to add to favorites the User")
+	}
+
+	return c.JSON(http.StatusOK, u.FavoriteVideos)
+}
+
+func (this *Handler) RemoveFromFavorites(c echo.Context) error {
+	token, err := this.service.FirebaseApp.GetAndVerifyToken(c)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "no token found")
+	}
+
+	u, err := this.repository.GetUserById(token.UID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "no user found")
+	}
+
+	u.FavoriteVideos = util.RemoveItemFromSlice(u.FavoriteVideos, c.Param("id"))
+
+	filter := bson.M{"uid": u.UID}
+	u.UpdatedAt = time.Now()
+
+	_, err = this.repository.UserColl.UpdateOne(context.Background(), filter, bson.M{"$set": u})
+	if err != nil {
+		log.Errorf("Unable to update the user: %v", err)
+		return echo.NewHTTPError(http.StatusInternalServerError, "Unable to add to favorites the User")
+	}
+
+	return c.JSON(http.StatusOK, u.FavoriteVideos)
 }

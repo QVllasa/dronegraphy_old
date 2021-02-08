@@ -5,6 +5,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatButtonModule} from '@angular/material/button';
+import {RouterModule} from "@angular/router";
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import {MatButtonModule} from '@angular/material/button';
         MatIconModule,
         MatInputModule,
         FlexLayoutModule,
-        MatButtonModule
+        MatButtonModule,
+        RouterModule
     ],
     exports: [HeaderComponent]
 })

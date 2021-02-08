@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {Video} from "../../../models/video.model";
 import {fadeIn400ms} from "../../../animations/fade-in.animation";
 import {OrderService} from "../../../services/order.service";
@@ -6,6 +6,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Subscription} from "rxjs";
 import {UserService} from "../../../services/user.service";
 import {Router} from "@angular/router";
+import {FavoritesService} from "../../../services/favorites.service";
 
 
 // declare var require: any;
@@ -38,8 +39,8 @@ import {Router} from "@angular/router";
                         <mat-icon
                                 class="material-icons-round text-xl">{{orderService.cart$.value?.includes(videoItem) ? 'shopping_cart' : 'add_shopping_cart' }}</mat-icon>
                     </button>
-                    <button mat-icon-button>
-                        <mat-icon class="material-icons-round text-xl">favorite_border</mat-icon>
+                    <button mat-icon-button (click)="updateFavorites(videoItem.id)" [color]="userService.user$.value.getFavorites()?.includes(videoItem.id) ? 'warn' : null" >
+                        <mat-icon class="material-icons-round text-xl">{{userService.user$.value.getFavorites()?.includes(videoItem.id) ? 'favorite' : 'favorite_border'}}</mat-icon>
                     </button>
                 </ng-container>
                 <button mat-icon-button>
@@ -63,6 +64,7 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
 
     constructor(
         public orderService: OrderService,
+        public favoritesService: FavoritesService,
         public router: Router,
         public userService: UserService,
         private _snackBar: MatSnackBar
@@ -73,6 +75,7 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
 
     }
 
+    //Adds and deletes items from cart
     updateCart() {
         if (!this.userService.user$.value) {
             this.router.navigate(['/login']).then()
@@ -93,6 +96,19 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
         videos = [];
         videos.push(this.videoItem)
         this.orderService.cart$.next(videos);
+    }
+
+    updateFavorites(id: string){
+        if (this.userService.user$.value.favoriteVideos.includes(id)){
+            this.favoritesService.deleteFromFavorites(id).subscribe(res => {
+                this.userService.user$.value.setFavorites(res)
+            })
+        }else{
+            this.favoritesService.saveAsFavorite(id).subscribe(res => {
+                this.userService.user$.value.setFavorites(res)
+            })
+        }
+        console.log(this.userService.user$.value.favoriteVideos)
     }
 
 

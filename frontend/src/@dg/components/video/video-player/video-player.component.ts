@@ -62,8 +62,10 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
 
     if (this.options.videopage) {
       this.route.params.subscribe((params: Params) => {
-        this.player.src(this.videoService.getVideo(params.id).getHLS());
-        this.player.load();
+        this.videoService.getVideo(params.id).subscribe(res =>{
+          this.player.src(res.getHLS());
+          this.player.load();
+        })
       });
     }
     this.player.on('loadstart', () => {

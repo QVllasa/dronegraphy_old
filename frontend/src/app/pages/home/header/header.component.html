@@ -1,6 +1,6 @@
 <div fxLayout="column" fxFlexFill fxLayoutAlign="center center">
     <div>
-        <h1 class="mat-display-3">Grenzenlose Drohnenaufnahmen</h1>
+        <h1 class="mat-display-3 font-bold">Grenzenlose Drohnenaufnahmen</h1>
     </div>
     <div fxLayout="column" fxLayoutAlign="center center" fxFill fxLayoutGap="24px">
         <mat-form-field color="primary" appearance="outline">
@@ -10,8 +10,9 @@
             <mat-hint>Beispiel: Wald, See, Meer,...</mat-hint>
         </mat-form-field>
         <div fxLayoutGap="24px">
-            <button mat-raised-button color="primary">Jetzt Starten</button>
-            <button mat-raised-button>Preise</button>
+            <button *ngIf="!(userService.user$ | async) as user" mat-raised-button routerLink="register" color="primary" class="text-lg py-1 px-6">Jetzt Starten</button>
+            <button *ngIf="(userService.user$ | async) as user" mat-raised-button routerLink="pricing" class="text-lg py-1 px-6" color="primary">Konto aufladen</button>
+            <button mat-raised-button routerLink="pricing" class="text-lg py-1 px-6">Preise</button>
         </div>
     </div>
 </div>

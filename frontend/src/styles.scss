@@ -3,6 +3,15 @@
 // dg Core
 @import "./@dg/styles/core";
 
+@import 'assets/fonts/scss/modules/_fonts.scss';
+
+$custom-typography: mat-typography-config(
+        $font-family: 'Cera Round Pro'
+);
+
+@include mat-core($custom-typography);
+
+
 /*
   You can override any CSS Variable or style here
   Example:

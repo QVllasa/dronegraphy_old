@@ -35,6 +35,8 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	// MEMBER
 	routeGroup.GET("/users/:id", controller.GetUser, mw.Auth())
 	routeGroup.PUT("/users/:id", controller.UpdateUser, mw.Auth())
+	routeGroup.POST("/addToFavorites/:id", controller.AddToFavorites, mw.Auth())
+	routeGroup.POST("/removeFromFavorites/:id", controller.RemoveFromFavorites, mw.Auth())
 	//routeGroup.POST("/users/:id", controller.UploadPhoto, mw.Auth())
 
 	//// PUBLIC

@@ -61,7 +61,11 @@ export class VideoService {
     }
 
     getVideo(id) {
-        return this.videos[id];
+        return this.http.get<IVideo>(environment.apiUrl+'/videos/'+id).pipe(
+            map(res => {
+                return this.newVideo(res)
+            })
+        );
     }
 
     removeVideo(id) {
