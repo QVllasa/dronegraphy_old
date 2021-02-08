@@ -99,16 +99,19 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
     }
 
     updateFavorites(id: string){
+        //Remove from favorites
         if (this.userService.user$.value.favoriteVideos.includes(id)){
             this.favoritesService.deleteFromFavorites(id).subscribe(res => {
                 this.userService.user$.value.setFavorites(res)
+                this._snackBar.open('Aus Favoriten entfernt.', 'SCHLIESSEN')
             })
+        //Add to favorites
         }else{
             this.favoritesService.saveAsFavorite(id).subscribe(res => {
                 this.userService.user$.value.setFavorites(res)
+                this._snackBar.open('Zu Favoriten hinzugefügt.', 'SCHLIESSEN')
             })
         }
-        console.log(this.userService.user$.value.favoriteVideos)
     }
 
 

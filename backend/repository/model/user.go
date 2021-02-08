@@ -18,6 +18,7 @@ type (
 		UpdatedAt        time.Time          `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
 		FavoriteVideos   []string           `json:"favoriteVideos" bson:"favoriteVideos"`
 		DownloadedVideos []string           `json:"downloadedVideos" bson:"downloadedVideos"`
+		Orders           []string           `json:"orders" bson:"orders"`
 	}
 
 	Creator struct {

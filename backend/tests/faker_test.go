@@ -119,6 +119,8 @@ func TestLoadUserFixtures(t *testing.T) {
 		user.FirstName = gofakeit.FirstName()
 		user.LastName = gofakeit.LastName()
 		user.Email = gofakeit.Email()
+		user.FavoriteVideos = []string{}
+		user.DownloadedVideos = []string{}
 		user.CreatedAt = gofakeit.Date()
 		user.UpdatedAt = gofakeit.Date()
 

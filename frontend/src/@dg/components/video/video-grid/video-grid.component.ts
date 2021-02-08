@@ -25,6 +25,10 @@ export class VideoGridComponent implements OnInit {
 
     }
 
+    ngOnChanges(changes: SimpleChanges) {
+        console.log(changes['videos'].currentValue);
+    }
+
 
 
     // onScrollDown() {
