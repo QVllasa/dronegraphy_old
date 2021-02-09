@@ -9,9 +9,19 @@ module.exports = {
     purgeLayersByDefault: true
   },
   theme: {
+    filter: { // defaults to {}
+      'none': 'none',
+      'grayscale': 'grayscale(1)',
+      'invert': 'invert(1)',
+      'sepia': 'sepia(1)',
+    },
+    backdropFilter: { // defaults to {}
+      'none': 'none',
+      'blur': 'blur(20px)',
+    },
     extend: {
       gridTemplateColumns: {
-        'video-grid': 'repeat(auto-fit, minmax(340px, 1fr))',
+        'video-grid': 'repeat(auto-fill, minmax(340px, 1fr))',
 
         // Complex site-specific column configuration
         'footer': '200px minmax(900px, 1fr) 100px',
@@ -596,6 +606,7 @@ module.exports = {
     container: false
   },
   plugins: [
+    require('tailwindcss-filters'),
     require('tailwindcss-aspect-ratio'),
     function ({addVariant, e}) {
       addVariant('ltr', ({separator, modifySelectors}) => {

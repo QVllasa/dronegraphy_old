@@ -16,7 +16,9 @@ import {UserService} from "../../../@dg/services/user.service";
 export class HomeComponent implements OnInit {
 
   videos: Video[] = [];
+  videoItem: Video;
   initialBatch = 27;
+  options: any;
 
   constructor(public userService: UserService,
               private activatedRoute: ActivatedRoute,
@@ -28,7 +30,23 @@ export class HomeComponent implements OnInit {
     this.videoService.getVideos(27, 0).subscribe(videos => {
       console.log(videos)
       this.videos = videos;
+
+      //For Header Video
+      this.videoItem = videos[0];
+      this.options = {
+        // poster: this.videoItem.getThumbnail(),
+        fluid: false,
+        aspectRatio: '16:9',
+        autoplay: true,
+        controls: false,
+        inactivityTimeout: 0,
+        videopage: false,
+        sources: [{src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'application/x-mpegURL'}]
+      }
     });
+
+
+
   }
 
 }

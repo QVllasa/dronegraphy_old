@@ -1,19 +1,39 @@
-<div class="w-full h-full p-gutter container bg-pattern" fxLayout="column" fxFill>
-    <section fxLayout="row" fxLayoutAlign="center center" fxFlex="450px" class="bg-blue">
+<div class="w-full h-full p-gutter container" fxLayout="column" fxFill>
+    <section fxLayout="row" fxLayoutAlign="center center" fxFlex="450px"
+             class="absolute top-0 left-0 w-full z-0">
+        <ng-container *ngIf="videoItem">
+            <div class="absolute top-0 left-0 z-10 w-full h-full" style="background: linear-gradient(0deg, rgba(245,246,248,1) 0%, rgba(0,115,236,0.8) 100%);">
+            </div>
+            <div class="absolute z-0 bg-primary w-full h-full overflow-hidden">
+                <dg-vjs-player [options]="options"></dg-vjs-player>
+            </div>
+        </ng-container>
+
+    </section>
+    <section fxLayout="row" fxLayoutAlign="center center" fxFlex="450px" class="relative">
         <dg-header></dg-header>
     </section>
+    <div class="sticky top-0 h-12 w-full z-10 backdrop-blur">
+        <div class="w-full h-full opacity-50" style="background-color: #f5f6f8">
+<!--            TODO add video filter options-->
+        </div>
+    </div>
     <section fxLayout="row" fxLayoutGap="24px">
         <div fxLayout="column" fxFlex="250px">
-            <div class="sticky top-12 text-center shadow-md bg-white pb-8">
+            <div class="sticky top-14 text-center shadow-md bg-white pb-8 z-10">
                 <tree-checkboxes class=""></tree-checkboxes>
                 <div fxLayout="column" fxLayoutAlign="center center">
-                    <button *ngIf="!(userService.user$ | async)" mat-flat-button color="primary" routerLink="register" class="mt-8">Starten</button>
-                    <button *ngIf="userService.user$ | async" mat-flat-button color="primary" routerLink="pricing" class="mt-8">Preise</button>
+                    <button *ngIf="!(userService.user$ | async)" mat-flat-button color="primary" routerLink="register"
+                            class="mt-8">Starten
+                    </button>
+                    <button *ngIf="userService.user$ | async" mat-flat-button color="primary" routerLink="pricing"
+                            class="mt-8">Preise
+                    </button>
                     <button mat-button color="primary" routerLink="creators" class="mt-8">Alle Piloten</button>
                 </div>
             </div>
         </div>
-        <div fxLayout="column" fxFlex="auto" >
+        <div fxLayout="column" fxFlex="auto">
             <dg-video-grid [videos]="videos"></dg-video-grid>
         </div>
     </section>

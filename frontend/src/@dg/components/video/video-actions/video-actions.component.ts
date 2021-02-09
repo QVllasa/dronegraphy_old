@@ -39,8 +39,8 @@ import {FavoritesService} from "../../../services/favorites.service";
                         <mat-icon
                                 class="material-icons-round text-xl">{{orderService.cart$.value?.includes(videoItem) ? 'shopping_cart' : 'add_shopping_cart' }}</mat-icon>
                     </button>
-                    <button mat-icon-button (click)="updateFavorites(videoItem.id)" [color]="userService.user$.value.getFavorites()?.includes(videoItem.id) ? 'warn' : null" >
-                        <mat-icon class="material-icons-round text-xl">{{userService.user$.value.getFavorites()?.includes(videoItem.id) ? 'favorite' : 'favorite_border'}}</mat-icon>
+                    <button mat-icon-button (click)="updateFavorites(videoItem.id)" [color]="userService.user$.value?.getFavorites()?.includes(videoItem.id) ? 'warn' : null" >
+                        <mat-icon class="material-icons-round text-xl">{{userService.user$.value?.getFavorites()?.includes(videoItem.id) ? 'favorite' : 'favorite_border'}}</mat-icon>
                     </button>
                 </ng-container>
                 <button mat-icon-button>
@@ -99,6 +99,10 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
     }
 
     updateFavorites(id: string){
+        if (!this.userService.user$.value) {
+            this.router.navigate(['/login']).then()
+            return
+        }
         //Remove from favorites
         if (this.userService.user$.value.favoriteVideos.includes(id)){
             this.favoritesService.deleteFromFavorites(id).subscribe(res => {

@@ -11,7 +11,7 @@ import {Video} from "../../../models/video.model";
 
 
 @Component({
-    selector: 'app-video-item',
+    selector: 'dg-video-item',
     templateUrl: './video-item.component.html',
     styleUrls: ['./video-item.component.scss'],
     encapsulation: ViewEncapsulation.None,
@@ -20,6 +20,7 @@ export class VideoItemComponent implements OnInit {
 
     @Input() videoItem: Video;
 
+
     loadStatus: boolean;
     timer: any;
     poster: any;
@@ -27,23 +28,24 @@ export class VideoItemComponent implements OnInit {
     options: any;
 
 
-
-
     constructor(private domSanitizer: DomSanitizer, private router: Router) {
     }
 
     ngOnInit(): void {
         this.poster = this.domSanitizer.bypassSecurityTrustStyle(`url(${this.videoItem.getThumbnail()})`);
-        this.options = {
-            poster: this.videoItem.getThumbnail(),
-            fluid: false,
-            aspectRatio: '16:9',
-            autoplay: true,
-            controls: false,
-            inactivityTimeout: 0,
-            videopage: false,
-            sources: [{src: this.videoItem.getHLS(), type: 'application/x-mpegURL'}]
+        if (!this.options) {
+            this.options = {
+                poster: this.videoItem.getThumbnail(),
+                fluid: false,
+                aspectRatio: '16:9',
+                autoplay: true,
+                controls: false,
+                inactivityTimeout: 0,
+                videopage: false,
+                sources: [{src: this.videoItem.getHLS(), type: 'application/x-mpegURL'}]
+            }
         }
+
 
     }
 
@@ -53,19 +55,23 @@ export class VideoItemComponent implements OnInit {
     }
 
     onShow() {
-        this.showActions = true;
-        this.timer = setTimeout(() => {
-            this.loadStatus = true;
-        }, 750);
+            this.showActions = true;
+            this.timer = setTimeout(() => {
+                this.loadStatus = true;
+            }, 750);
+
+
     }
 
     onHide() {
-        setTimeout(() => {
-            this.showActions = false;
+
+            setTimeout(() => {
+                this.showActions = false;
             }, 1000);
 
-        clearTimeout(this.timer);
-        this.loadStatus = false;
+            clearTimeout(this.timer);
+            this.loadStatus = false;
+
     }
 
     onLoadVideo() {

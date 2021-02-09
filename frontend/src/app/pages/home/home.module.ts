@@ -11,6 +11,8 @@ import {TreeCheckboxesModule} from '../../../@dg/components/tree-checkboxes/tree
 import {VideoGridModule} from '../../../@dg/components/video/video-grid/video-grid.module';
 import {HomeRoutingModule} from './home-routing.module';
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {VideoItemModule} from "../../../@dg/components/video/video-item/video-item.module";
+import {VideoPlayerModule} from "../../../@dg/components/video/video-player/video-player.module";
 
 
 @NgModule({
@@ -26,7 +28,9 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
         MatChipsModule,
         MatSnackBarModule,
         TreeCheckboxesModule,
-        VideoGridModule
+        VideoGridModule,
+        VideoItemModule,
+        VideoPlayerModule
     ],
     exports: []
 })
