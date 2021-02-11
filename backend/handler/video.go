@@ -321,3 +321,14 @@ func (this *Handler) RemoveFromFavorites(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, u.FavoriteVideos)
 }
+
+func(this *Handler) GetFilterOptions(c echo.Context) error{
+	var f []model.FilterOption
+
+	f, err := this.repository.GetFilters()
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "no filters found")
+	}
+
+	return c.JSON(http.StatusOK, f)
+}

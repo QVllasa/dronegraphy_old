@@ -20,7 +20,7 @@ import (
 var (
 	userCount     = 15
 	videoCount    = 200
-	categoryCount = 5
+	categoryCount = 15
 )
 
 func TestLoadCategoryFixtures(t *testing.T) {
@@ -31,14 +31,22 @@ func TestLoadCategoryFixtures(t *testing.T) {
 		repository.NewDatabase()
 	}
 
-	category := model.Category{}
+	var parents []string
+
+	for i := 0; i < 3; i++ {
+		parents = append(parents, gofakeit.Noun())
+	}
+
 	categories := repository.DB.Client.Database("dronegraphy_db").Collection("categories")
 	_ = categories.Drop(context.Background())
 
 	for i := 0; i < categoryCount; i++ {
-		category.Value = gofakeit.Noun()
-		category.UpdatedAt = gofakeit.Date()
-		category.CreatedAt = gofakeit.Date()
+		n := gofakeit.Number(0, 2)
+		category := model.SubCategory{
+			Value:  gofakeit.Noun(),
+			Parent: parents[n],
+		}
+
 		_, _ = categories.InsertOne(context.Background(), category)
 	}
 
@@ -175,7 +183,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 	defer catsCursor.Close(context.Background())
 
 	for catsCursor.Next(context.Background()) {
-		var category model.Category
+		var category model.SubCategory
 		if err = catsCursor.Decode(&category); err != nil {
 			log.Fatal(err)
 		}
@@ -195,16 +203,6 @@ func TestLoadVideoFixtures(t *testing.T) {
 	if err := usersCursor.All(context.Background(), &creators); err != nil {
 		fmt.Println(err)
 	}
-
-	//for usersCursor.Next(context.Background()) {
-	//	var user model.User
-	//	if err = usersCursor.Decode(&user); err != nil {
-	//		log.Fatal(err)
-	//	}
-	//	if user.Role == "ROLE_CREATOR" {
-	//		creators = append(creators, user)
-	//	}
-	//}
 
 	video := model.Video{}
 	videos := repository.DB.Client.Database("dronegraphy_db").Collection("videos")
@@ -281,4 +279,24 @@ func TestLoadVideoFixtures(t *testing.T) {
 		//}
 
 	}
+}
+
+func TestLoadFilterFixtures(t *testing.T) {
+	gofakeit.Seed(123)
+
+	if repository.DB == nil {
+		repository.NewDatabase()
+	}
+
+	f := model.FilterOption{}
+	filters := repository.DB.Client.Database("dronegraphy_db").Collection("filters")
+	_ = filters.Drop(context.Background())
+
+	for i := 0; i < categoryCount; i++ {
+		f.Value = gofakeit.Noun()
+		f.UpdatedAt = gofakeit.Date()
+		f.CreatedAt = gofakeit.Date()
+		_, _ = filters.InsertOne(context.Background(), f)
+	}
+
 }

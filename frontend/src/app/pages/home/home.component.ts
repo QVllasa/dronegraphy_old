@@ -7,6 +7,11 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {IVideo, Video} from "../../../@dg/models/video.model";
 import {VideoService} from "../../../@dg/services/video.service";
 import {UserService} from "../../../@dg/services/user.service";
+import {FormControl, FormGroup} from "@angular/forms";
+import { FilterService, IFilterOption} from "../../../@dg/services/filter.service";
+import {CategoryService} from "../../../@dg/services/category.service";
+
+
 
 @Component({
   selector: 'dg-home',
@@ -20,13 +25,32 @@ export class HomeComponent implements OnInit {
   initialBatch = 27;
   options: any;
 
+  filterOptions: IFilterOption[] = [];
+  form: FormGroup;
+  filterControl = new FormControl();
+  selectedValue: string;
+
+
   constructor(public userService: UserService,
               private activatedRoute: ActivatedRoute,
               private videoService: VideoService,
+              private filterService: FilterService,
               private _snackBar: MatSnackBar
               ) { }
 
   ngOnInit(): void {
+
+    this.filterService.getFilters().subscribe(filters => {
+      console.log(filters);
+      this.filterOptions = filters
+      this.filterControl.patchValue(this.filterOptions[0].value)
+      this.form = new FormGroup({
+        filter: this.filterControl
+      });
+    })
+
+
+
     this.videoService.getVideos(27, 0).subscribe(videos => {
       console.log(videos)
       this.videos = videos;

@@ -2,14 +2,12 @@ package model
 
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"time"
 )
 
 type (
-	Category struct {
-		ID        primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-		Value     string             `json:"value" bson:"value" validate:"required" `
-		CreatedAt time.Time          `json:"createdAt,omitempty" bson:"created_at,omitempty" `
-		UpdatedAt time.Time          `json:"updatedAt,omitempty" bson:"updated_at,omitempty" `
+	SubCategory struct {
+		ID     primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+		Value  string             `json:"sub_category" bson:"sub_category"`
+		Parent string     `json:"parent_category" bson:"parent_category"`
 	}
 )

@@ -7,11 +7,10 @@ import (
 	"github.com/labstack/gommon/log"
 	"go.mongodb.org/mongo-driver/bson"
 	"net/http"
-	"time"
 )
 
-func (this *Repository) CreateCategory(model *model.Category) error {
-	model.CreatedAt = time.Now()
+func (this *Repository) CreateCategory(model *model.SubCategory) error {
+
 
 	ID, err := this.CategoryColl.InsertOne(context.Background(), model)
 	if err != nil {
@@ -28,9 +27,9 @@ func (this *Repository) CreateCategory(model *model.Category) error {
 	return nil
 }
 
-func (this *Repository) GetAllCategories() ([]model.Category, error) {
+func (this *Repository) GetAllCategories() ([]model.SubCategory, error) {
 
-	var category []model.Category
+	var category []model.SubCategory
 
 	cursor, err := this.CategoryColl.Find(context.Background(), bson.M{})
 	if err != nil {

@@ -13,6 +13,8 @@ import {HomeRoutingModule} from './home-routing.module';
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {VideoItemModule} from "../../../@dg/components/video/video-item/video-item.module";
 import {VideoPlayerModule} from "../../../@dg/components/video/video-player/video-player.module";
+import {MatSelectModule} from "@angular/material/select";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 
 @NgModule({
@@ -30,7 +32,10 @@ import {VideoPlayerModule} from "../../../@dg/components/video/video-player/vide
         TreeCheckboxesModule,
         VideoGridModule,
         VideoItemModule,
-        VideoPlayerModule
+        VideoPlayerModule,
+        MatSelectModule,
+        FormsModule,
+        ReactiveFormsModule
     ],
     exports: []
 })

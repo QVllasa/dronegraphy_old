@@ -23,7 +23,7 @@ func (this *Handler) GetCategories(c echo.Context) error {
 
 func (this *Handler) CreateCategory(c echo.Context) error {
 
-	var category *model.Category
+	var category *model.SubCategory
 
 	if err := c.Bind(&category); err != nil {
 		log.Errorf("Unable to bind : %v", err)

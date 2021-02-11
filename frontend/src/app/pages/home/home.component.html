@@ -14,14 +14,20 @@
         <dg-header></dg-header>
     </section>
     <div class="sticky top-0 h-12 w-full z-10 backdrop-blur">
-        <div class="w-full h-full opacity-50" style="background-color: #f5f6f8">
-<!--            TODO add video filter options-->
+        <div fxLayout="row" fxLayoutAlign="end" class="h-full w-full opacity-50" style="background-color: #f5f6f8">
+            <mat-form-field appearance="legacy">
+                <mat-select class="font-bold" [formControl]="filterControl">
+                    <mat-option class="font-light" *ngFor="let filter of filterOptions" [value]="filter.value">
+                        {{filter.value}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
         </div>
     </div>
     <section fxLayout="row" fxLayoutGap="24px">
         <div fxLayout="column" fxFlex="250px">
             <div class="sticky top-14 text-center shadow-md bg-white pb-8 z-10">
-                <tree-checkboxes class=""></tree-checkboxes>
+                <tree-checkboxes ></tree-checkboxes>
                 <div fxLayout="column" fxLayoutAlign="center center">
                     <button *ngIf="!(userService.user$ | async)" mat-flat-button color="primary" routerLink="register"
                             class="mt-8">Starten

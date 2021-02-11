@@ -3,6 +3,7 @@ import {FlatTreeControl} from '@angular/cdk/tree';
 import {Component, Injectable, OnInit} from '@angular/core';
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
 import {BehaviorSubject} from 'rxjs';
+import {CategoryService} from "../../services/category.service";
 
 /**
  * Node for to-do item
@@ -21,6 +22,7 @@ export class TodoItemFlatNode {
 
 /**
  * The Json object for to-do list data.
+ * TODO Replace Data with GET Req
  */
 const TREE_DATA = {
   Groceries: {
@@ -51,11 +53,20 @@ export class ChecklistDatabase {
 
   get data(): TodoItemNode[] { return this.dataChange.value; }
 
-  constructor() {
+  constructor(private categoryService: CategoryService) {
     this.initialize();
   }
 
   initialize() {
+    this.categoryService.getCategories().subscribe(categories => {
+      for (let category of categories){
+        console.log(category.sub_category)
+      }
+      for (let category of categories){
+        console.log(category.parent_category)
+      }
+      console.log(categories)
+    })
     // Build the tree nodes from Json object. The result is a list of `TodoItemNode` with nested
     //     file node as children.
     const data = this.buildFileTree(TREE_DATA, 0);
