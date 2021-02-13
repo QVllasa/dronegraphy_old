@@ -1,10 +1,10 @@
-import {User} from './user.model';
-import {Deserializable} from "./deserialize.interface";
-
-export interface ICategory {
-    id: string;
-    sub_category: string;
-    parent_category: string;
+export interface IChildCategory {
+    id: string,
+    value: string,
+    parent_category: IParentCategory
 }
 
-
+export interface IParentCategory{
+    id: string,
+    value: string
+}

@@ -7,8 +7,8 @@ import (
 	"net/http"
 )
 
-func (this *Handler) GetCategories(c echo.Context) error {
-	categories, err := this.repository.GetAllCategories()
+func (this *Handler) GetChildCategories(c echo.Context) error {
+	categories, err := this.repository.GetAllChildCategories()
 	if err != nil {
 		log.Error(err)
 		return err
@@ -21,9 +21,23 @@ func (this *Handler) GetCategories(c echo.Context) error {
 	return c.JSON(http.StatusOK, categories)
 }
 
-func (this *Handler) CreateCategory(c echo.Context) error {
+func (this *Handler) GetParentCategories(c echo.Context) error {
+	categories, err := this.repository.GetAllParentCategories()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
 
-	var category *model.SubCategory
+	if len(categories) == 0 {
+		return echo.NewHTTPError(http.StatusOK, "No Categories found")
+	}
+
+	return c.JSON(http.StatusOK, categories)
+}
+
+func (this *Handler) CreateChildCategory(c echo.Context) error {
+
+	var category *model.ChildCategory
 
 	if err := c.Bind(&category); err != nil {
 		log.Errorf("Unable to bind : %v", err)

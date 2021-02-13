@@ -10,6 +10,7 @@ import {UserService} from "../../../@dg/services/user.service";
 import {FormControl, FormGroup} from "@angular/forms";
 import { FilterService, IFilterOption} from "../../../@dg/services/filter.service";
 import {CategoryService} from "../../../@dg/services/category.service";
+import {ParentCategory} from "../../../@dg/components/tree-checkboxes/tree-checkboxes.component";
 
 
 
@@ -71,6 +72,14 @@ export class HomeComponent implements OnInit {
 
 
 
+  }
+
+  filterByCategory(event: ParentCategory[]){
+    const values = [];
+    for (let v of event){
+      values.push(v.value);
+    }
+    console.log(values);
   }
 
 }

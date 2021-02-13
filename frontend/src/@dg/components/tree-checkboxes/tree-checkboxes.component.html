@@ -3,16 +3,12 @@
         <button mat-icon-button disabled></button>
         <mat-checkbox class="checklist-leaf-node" color="primary"
                       [checked]="checklistSelection.isSelected(node)"
-                      (change)="todoLeafItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
-    </mat-tree-node>
-
-    <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
-        <button mat-icon-button disabled></button>
+                      (change)="todoLeafItemSelectionToggle(node)">{{node.value}}</mat-checkbox>
     </mat-tree-node>
 
     <mat-tree-node class=" my-4" *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
         <button mat-icon-button matTreeNodeToggle
-                [attr.aria-label]="'Toggle ' + node.item">
+                [attr.aria-label]="'Toggle ' + node.value">
             <mat-icon class="mat-icon-rtl-mirror">
                 {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
             </mat-icon>
@@ -20,7 +16,7 @@
         <mat-checkbox [checked]="descendantsAllSelected(node)"
                       color="primary"
                       [indeterminate]="descendantsPartiallySelected(node)"
-                      (change)="todoItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+                      (change)="todoItemSelectionToggle(node)">{{node.value}}</mat-checkbox>
     </mat-tree-node>
 </mat-tree>
 

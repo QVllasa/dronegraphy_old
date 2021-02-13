@@ -5,9 +5,13 @@ import (
 )
 
 type (
-	SubCategory struct {
-		ID     primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-		Value  string             `json:"sub_category" bson:"sub_category"`
-		Parent string     `json:"parent_category" bson:"parent_category"`
+	ChildCategory struct {
+		ID             primitive.ObjectID `json:"id" bson:"_id"`
+		Value          string             `json:"value" bson:"value"`
+		ParentCategory ParentCategory     `json:"parent_category" bson:"parent_category"`
+	}
+	ParentCategory struct {
+		ID    primitive.ObjectID `json:"id" bson:"_id"`
+		Value string             `json:"value" bson:"value"`
 	}
 )

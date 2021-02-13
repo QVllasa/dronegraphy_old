@@ -12,7 +12,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import * as uuid from 'uuid';
 import {VideoService} from "../../../../../../@dg/services/video.service";
 import {CategoryService} from "../../../../../../@dg/services/category.service";
-import {ICategory} from "../../../../../../@dg/models/category.model";
+import {IChildCategory} from "../../../../../../@dg/models/category.model";
 import {HttpEventType} from "@angular/common/http";
 import {UploadService} from "../../../../../../@dg/services/upload.service";
 
@@ -54,7 +54,7 @@ export class VideoCreateUpdateComponent implements OnInit {
     allFormats: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
     allTags: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
 
-    categoryList: ICategory[] = [];
+    categoryList: IChildCategory[] = [];
 
     @ViewChild('formatInput') formatInput: ElementRef<HTMLInputElement>;
     @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
@@ -73,7 +73,7 @@ export class VideoCreateUpdateComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.categoryService.getCategories().subscribe(categories => {
+        this.categoryService.getChildCategories().subscribe(categories => {
             this.categoryList = categories
         })
         if (this.defaults) {

@@ -12,6 +12,7 @@ import (
 	"github.com/labstack/gommon/log"
 	"github.com/rs/xid"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"google.golang.org/api/iterator"
 	"testing"
@@ -20,7 +21,7 @@ import (
 var (
 	userCount     = 15
 	videoCount    = 200
-	categoryCount = 15
+	categoryCount = 16
 )
 
 func TestLoadCategoryFixtures(t *testing.T) {
@@ -31,23 +32,31 @@ func TestLoadCategoryFixtures(t *testing.T) {
 		repository.NewDatabase()
 	}
 
-	var parents []string
-
+	var parCats []model.ParentCategory
+	parCategories := repository.DB.Client.Database("dronegraphy_db").Collection("parent_categories")
+	_ = parCategories.Drop(context.Background())
 	for i := 0; i < 3; i++ {
-		parents = append(parents, gofakeit.Noun())
+		parent := model.ParentCategory{
+			Value: gofakeit.Noun(),
+			ID:    primitive.NewObjectID(),
+		}
+		parCats = append(parCats, parent)
+		_, _ = parCategories.InsertOne(context.Background(), parent)
 	}
 
-	categories := repository.DB.Client.Database("dronegraphy_db").Collection("categories")
-	_ = categories.Drop(context.Background())
+	var subCats []model.ChildCategory
+	subCategories := repository.DB.Client.Database("dronegraphy_db").Collection("child_categories")
+	_ = subCategories.Drop(context.Background())
 
 	for i := 0; i < categoryCount; i++ {
 		n := gofakeit.Number(0, 2)
-		category := model.SubCategory{
-			Value:  gofakeit.Noun(),
-			Parent: parents[n],
+		category := model.ChildCategory{
+			Value: gofakeit.Noun(),
+			ID:    primitive.NewObjectID(),
 		}
-
-		_, _ = categories.InsertOne(context.Background(), category)
+		category.ParentCategory = parCats[n]
+		subCats = append(subCats, category)
+		_, _ = subCategories.InsertOne(context.Background(), category)
 	}
 
 }
@@ -175,7 +184,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 		{"created_at", 0},
 	}
 
-	catsColl := repository.DB.Client.Database("dronegraphy_db").Collection("categories")
+	catsColl := repository.DB.Client.Database("dronegraphy_db").Collection("child_categories")
 	catsCursor, err := catsColl.Find(context.Background(), bson.M{}, options.Find().SetProjection(catProjection))
 	if err != nil {
 		fmt.Println(err)
@@ -183,7 +192,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 	defer catsCursor.Close(context.Background())
 
 	for catsCursor.Next(context.Background()) {
-		var category model.SubCategory
+		var category model.ChildCategory
 		if err = catsCursor.Decode(&category); err != nil {
 			log.Fatal(err)
 		}

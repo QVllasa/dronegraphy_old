@@ -28,7 +28,7 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	routeGroup.POST("/thumbnails/:id", controller.UploadThumbnail, mw.Auth())
 	routeGroup.POST("/video_files/:id", controller.UploadVideoFiles)
 	routeGroup.POST("/photos", controller.UploadPhoto, mw.Auth())
-	routeGroup.POST("/categories", controller.CreateCategory)
+	routeGroup.POST("/child_categories", controller.CreateChildCategory)
 	//e.PUT("/videos/:id", h.UpdateVideo, middleware.BodyLimit("1M"), customMiddleware.Auth())
 	//e.DELETE("/videos/:id", h.DeleteVideo, customMiddleware.Auth())
 
@@ -47,7 +47,8 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 
 	//routeGroup.GET("/hls/", controller.ServeHls)
 	routeGroup.GET("/creators/:id", controller.GetVideos)
-	routeGroup.GET("/categories", controller.GetCategories)
+	routeGroup.GET("/child_categories", controller.GetChildCategories)
+	routeGroup.GET("/parent_categories", controller.GetParentCategories)
 	routeGroup.GET("/filters", controller.GetFilterOptions)
 	routeGroup.GET("/photos/:id", controller.GetPhoto)
 

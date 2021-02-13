@@ -6,6 +6,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatTreeModule} from "@angular/material/tree";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
+import {FormsModule} from "@angular/forms";
 
 
 
@@ -18,6 +19,7 @@ import {MatButtonModule} from "@angular/material/button";
     MatTreeModule,
     MatInputModule,
     MatButtonModule,
+    FormsModule,
   ],
   exports: [
     TreeCheckboxesComponent
