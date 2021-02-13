@@ -6,8 +6,8 @@
     <div fxLayout="column" fxLayoutAlign="center center" fxFill fxLayoutGap="24px">
         <mat-form-field color="primary" appearance="outline">
             <mat-label>Finde die perfekte Aufnahme</mat-label>
-            <input matInput placeholder="">
-            <mat-icon matSuffix>search</mat-icon>
+            <input (keyup.enter)="onClick()" [(ngModel)]="search" matInput placeholder="">
+            <mat-icon matSuffix (click)="onClick()" >search</mat-icon>
             <mat-hint>Beispiel: Wald, See, Meer,...</mat-hint>
         </mat-form-field>
         <div fxLayoutGap="24px">

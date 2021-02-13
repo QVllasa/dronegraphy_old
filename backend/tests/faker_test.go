@@ -178,10 +178,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 	var categories []string
 
 	catProjection := bson.D{
-		{"_id", 1},
-		{"value", 0},
-		{"updated_at", 0},
-		{"created_at", 0},
+		{"value", 1},
 	}
 
 	catsColl := repository.DB.Client.Database("dronegraphy_db").Collection("child_categories")
@@ -196,7 +193,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 		if err = catsCursor.Decode(&category); err != nil {
 			log.Fatal(err)
 		}
-		categories = append(categories, category.ID.Hex())
+		categories = append(categories, category.Value)
 		fmt.Println(categories)
 	}
 
@@ -232,9 +229,10 @@ func TestLoadVideoFixtures(t *testing.T) {
 
 	for i := 0; i < videoCount; i++ {
 
+
 		video.Title = gofakeit.LoremIpsumSentence(4)
 		video.Camera = "DJI Mavic Pro"
-		video.Categories = []string{gofakeit.RandomString(categories)}
+		video.Categories = util.Unique(categories[gofakeit.Number(0,6):gofakeit.Number(6,16)])
 		video.Formats = []string{gofakeit.RandomString(formats)}
 		video.Width = gofakeit.Number(240, 2160)
 		video.Height = gofakeit.Number(720, 3840)

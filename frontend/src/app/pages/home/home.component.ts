@@ -70,11 +70,10 @@ export class HomeComponent implements OnInit {
       }
     });
 
-
-
   }
 
   filterByCategory(event: ParentCategory[]){
+
     const values = [];
     for (let v of event){
       values.push(v.value);
