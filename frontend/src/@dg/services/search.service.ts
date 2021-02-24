@@ -64,6 +64,7 @@ export class SearchService {
 
     removeKey(key) {
         this.keywords.searchWord.splice(this.keywords.searchWord.indexOf(key), 1);
+
         this.updateRoute();
     }
 
