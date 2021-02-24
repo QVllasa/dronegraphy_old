@@ -13,7 +13,7 @@ import {LoginRoutingModule} from "./login-routing.module";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {HttpClientModule} from "@angular/common/http";
-import {CloseModule} from "../../../../@dg/components/close/close.module";
+
 
 
 @NgModule({
@@ -31,8 +31,7 @@ import {CloseModule} from "../../../../@dg/components/close/close.module";
         RouterModule,
         MatSnackBarModule,
         MatProgressSpinnerModule,
-        HttpClientModule,
-        CloseModule
+        HttpClientModule
     ],
     providers: [
 

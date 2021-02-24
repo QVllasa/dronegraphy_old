@@ -4,12 +4,7 @@
         <h1 class="mat-display-3 font-bold text-white">Grenzenlose Drohnenaufnahmen</h1>
     </div>
     <div fxLayout="column" fxLayoutAlign="center center" fxFill fxLayoutGap="24px">
-        <mat-form-field color="primary" appearance="outline">
-            <mat-label>Finde die perfekte Aufnahme</mat-label>
-            <input (keyup.enter)="onClick()" [(ngModel)]="search" matInput placeholder="">
-            <mat-icon matSuffix (click)="onClick()" >search</mat-icon>
-            <mat-hint>Beispiel: Wald, See, Meer,...</mat-hint>
-        </mat-form-field>
+        <dg-search></dg-search>
         <div fxLayoutGap="24px">
             <button *ngIf="!(userService.user$ | async) as user" mat-raised-button routerLink="register" color="primary" class="text-lg py-1 px-6">Jetzt Starten</button>
             <button *ngIf="(userService.user$ | async) as user" mat-raised-button routerLink="pricing" class="text-lg py-1 px-6" color="primary">Konto aufladen</button>

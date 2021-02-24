@@ -1,0 +1,9 @@
+<div fxLayout="row" fxLayoutAlign="end" class="h-full w-full opacity-50" style="background-color: #f5f6f8">
+    <mat-form-field appearance="legacy">
+        <mat-select class="font-light text-primary" [formControl]="filterControl">
+            <mat-option class="font-light" *ngFor="let filter of sortOptions" [value]="filter.value">
+                {{filter.value}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>

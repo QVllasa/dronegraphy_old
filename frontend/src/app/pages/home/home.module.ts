@@ -15,6 +15,7 @@ import {VideoItemModule} from "../../../@dg/components/video/video-item/video-it
 import {VideoPlayerModule} from "../../../@dg/components/video/video-player/video-player.module";
 import {MatSelectModule} from "@angular/material/select";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {SortBarModule} from "../../../@dg/components/sort-bar/sort-bar.module";
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
         VideoPlayerModule,
         MatSelectModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        SortBarModule
     ],
     exports: []
 })

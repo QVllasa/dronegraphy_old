@@ -7,6 +7,7 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatButtonModule} from '@angular/material/button';
 import {RouterModule} from "@angular/router";
 import {FormsModule} from "@angular/forms";
+import {SearchModule} from "../../../../@dg/components/search/search.module";
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import {FormsModule} from "@angular/forms";
         FlexLayoutModule,
         MatButtonModule,
         RouterModule,
-        FormsModule
+        FormsModule,
+        SearchModule
     ],
     exports: [HeaderComponent]
 })

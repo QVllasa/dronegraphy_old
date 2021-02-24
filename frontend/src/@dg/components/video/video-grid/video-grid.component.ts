@@ -26,7 +26,7 @@ export class VideoGridComponent implements OnInit {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        console.log(changes['videos'].currentValue);
+        // console.log(changes['videos'].currentValue);
     }
 
 

@@ -23,14 +23,12 @@ export class ToolbarComponent implements OnInit {
         // hasShadow: boolean;
 
 
-
     navigationItems = this.navigationService.items;
 
     isHorizontalLayout$ = this.configService.config$.pipe(map(config => config.layout === 'horizontal'));
     isVerticalLayout$ = this.configService.config$.pipe(map(config => config.layout === 'vertical'));
     isNavbarInToolbar$ = this.configService.config$.pipe(map(config => config.navbar.position === 'in-toolbar'));
     isNavbarBelowToolbar$ = this.configService.config$.pipe(map(config => config.navbar.position === 'below-toolbar'));
-
 
 
     constructor(private layoutService: LayoutService,
@@ -43,7 +41,6 @@ export class ToolbarComponent implements OnInit {
     }
 
     ngOnInit() {
-
     }
 
     openQuickpanel() {

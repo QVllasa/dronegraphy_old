@@ -5,6 +5,7 @@ import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
 import {BehaviorSubject} from 'rxjs';
 import {CategoryService} from "../../services/category.service";
 import {map, mergeMap} from "rxjs/operators";
+import {SearchService} from "../../services/search.service";
 
 /**
  * Node for to-do item
@@ -29,7 +30,7 @@ export class ParentCategory {
 @Injectable()
 export class ChecklistDatabase {
 
-    //TODO use Objects instead of lists of strings
+    //TODO use Objects instead of lists of strings in order to use IDs
     tree_data: { [key: string]: any } = {};
 
     dataChange = new BehaviorSubject<ChildCategory[]>([]);
@@ -131,7 +132,7 @@ export class TreeCheckboxesComponent implements OnInit {
     /** The selection for checklist */
     checklistSelection = new SelectionModel<ParentCategory>(true /* multiple */);
 
-    constructor(private _database: ChecklistDatabase) {
+    constructor(private _database: ChecklistDatabase, private searchService: SearchService) {
         this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
             this.isExpandable, this.getChildren);
         this.treeControl = new FlatTreeControl<ParentCategory>(this.getLevel, this.isExpandable);
@@ -140,9 +141,17 @@ export class TreeCheckboxesComponent implements OnInit {
         _database.dataChange.subscribe(data => {
             this.dataSource.data = data;
         });
+
+
     }
 
     ngOnInit() {
+        console.log("init tree")
+        this.searchService.valueChangesSubject.subscribe(params => {
+            if (params.category.length > 0){
+            //    TODO check if is in category list
+            }
+        })
     }
 
     getLevel = (node: ParentCategory) => node.level;

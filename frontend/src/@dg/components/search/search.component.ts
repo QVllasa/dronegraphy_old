@@ -18,37 +18,23 @@ export class SearchComponent implements OnInit, OnDestroy {
   searchCtrl = new FormControl();
   icClose = icClose;
 
+  search: string;
+
+
+
   @ViewChild('searchInput', { static: true }) input: ElementRef;
 
   constructor(private layoutService: LayoutService,
               private searchService: SearchService) { }
 
   ngOnInit() {
-    this.searchService.isOpenSubject.next(true);
-    this.searchCtrl.valueChanges.pipe(
-      untilDestroyed(this)
-    ).subscribe(value => this.searchService.valueChangesSubject.next(value));
-
-    this.show$.pipe(
-      filter(show => show),
-      untilDestroyed(this)
-    ).subscribe(() => this.input.nativeElement.focus());
   }
 
-  close() {
-    this.layoutService.closeSearch();
-    this.searchCtrl.setValue(undefined);
-    this.searchService.isOpenSubject.next(false);
-  }
-
-  search() {
-    this.searchService.submitSubject.next(this.searchCtrl.value);
-    this.close();
+  onPressEnter(){
+    this.searchService.onSearch(this.search);
+    this.search = '';
   }
 
   ngOnDestroy(): void {
-    this.layoutService.closeSearch();
-    this.searchCtrl.setValue(undefined);
-    this.searchService.isOpenSubject.next(false);
   }
 }
