@@ -9,12 +9,10 @@ import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/a
 import {MatChipInputEvent} from "@angular/material/chips";
 import {NgxDropzoneChangeEvent} from "ngx-dropzone";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import * as uuid from 'uuid';
 import {VideoService} from "../../../../../../@dg/services/video.service";
 import {CategoryService} from "../../../../../../@dg/services/category.service";
-import {IChildCategory} from "../../../../../../@dg/models/category.model";
-import {HttpEventType} from "@angular/common/http";
 import {UploadService} from "../../../../../../@dg/services/upload.service";
+import {ICategory} from "../../../../../../@dg/models/category.model";
 
 
 interface CountryState {
@@ -54,7 +52,7 @@ export class VideoCreateUpdateComponent implements OnInit {
     allFormats: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
     allTags: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
 
-    categoryList: IChildCategory[] = [];
+    categoryList: ICategory[] = [];
 
     @ViewChild('formatInput') formatInput: ElementRef<HTMLInputElement>;
     @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
@@ -73,7 +71,7 @@ export class VideoCreateUpdateComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.categoryService.getChildCategories().subscribe(categories => {
+        this.categoryService.getCategories().subscribe(categories => {
             this.categoryList = categories
         })
         if (this.defaults) {

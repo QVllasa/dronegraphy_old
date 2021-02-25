@@ -1,18 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import {AuthenticationService} from "../../../@dg/services/auth.service";
-import {User} from "../../../@dg/models/user.model";
-import {of} from "rxjs";
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {IVideo, Video} from "../../../@dg/models/video.model";
+import {Video} from "../../../@dg/models/video.model";
 import {VideoService} from "../../../@dg/services/video.service";
 import {UserService} from "../../../@dg/services/user.service";
-import {FormControl, FormGroup} from "@angular/forms";
-import { SortingService} from "../../../@dg/services/sorting.service";
-import {CategoryService} from "../../../@dg/services/category.service";
-import {ParentCategory} from "../../../@dg/components/tree-checkboxes/tree-checkboxes.component";
 import {SearchService} from "../../../@dg/services/search.service";
-
+import {ICategory} from "../../../@dg/models/category.model";
 
 
 @Component({
@@ -62,7 +55,7 @@ export class HomeComponent implements OnInit {
 
   }
 
-  selectedCategory(event: ParentCategory[]){
+  selectedCategory(event: ICategory[]){
     this.searchService.onSelectCategory(event)
   }
 

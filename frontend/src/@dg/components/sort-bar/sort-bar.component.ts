@@ -18,7 +18,6 @@ export class SortBarComponent implements OnInit {
 
     ngOnInit(): void {
         this.sortingService.getFilters().subscribe(filters => {
-            console.log(filters);
             this.sortOptions = filters
             this.filterControl.patchValue(this.sortOptions[0].value)
             this.form = new FormGroup({

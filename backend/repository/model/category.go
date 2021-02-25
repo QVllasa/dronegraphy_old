@@ -5,13 +5,11 @@ import (
 )
 
 type (
-	ChildCategory struct {
-		ID             primitive.ObjectID `json:"id" bson:"_id"`
-		Value          string             `json:"value" bson:"value"`
-		ParentCategory ParentCategory     `json:"parent_category" bson:"parent_category"`
-	}
-	ParentCategory struct {
-		ID    primitive.ObjectID `json:"id" bson:"_id"`
-		Value string             `json:"value" bson:"value"`
+	Category struct {
+		ID         primitive.ObjectID `json:"id" bson:"_id"`
+		Value      string             `json:"value" bson:"value"`
+		Level      int                `json:"level" bsoon:"level"`
+		Children   []Category         `json:"children" bson:"children"`
+		Expandable bool               `json:"expandable" bson:"expandable"`
 	}
 )

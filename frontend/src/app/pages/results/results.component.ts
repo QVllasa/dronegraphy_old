@@ -3,9 +3,10 @@ import {UserService} from "../../../@dg/services/user.service";
 import {Video} from "../../../@dg/models/video.model";
 import {FormControl, FormGroup} from "@angular/forms";
 import {ISortOption, SortingService} from "../../../@dg/services/sorting.service";
-import {ParentCategory} from "../../../@dg/components/tree-checkboxes/tree-checkboxes.component";
 import {VideoService} from "../../../@dg/services/video.service";
 import {SearchService} from "../../../@dg/services/search.service";
+import {ICategory} from "../../../@dg/models/category.model";
+
 
 @Component({
     selector: 'dg-results',
@@ -38,7 +39,7 @@ export class ResultsComponent implements OnInit {
 
     }
 
-    selectedCategory(event: ParentCategory[]) {
+    selectedCategory(event: ICategory[]) {
        this.searchService.onSelectCategory(event)
     }
 

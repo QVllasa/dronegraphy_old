@@ -32,32 +32,57 @@ func TestLoadCategoryFixtures(t *testing.T) {
 		repository.NewDatabase()
 	}
 
-	var parCats []model.ParentCategory
-	parCategories := repository.DB.Client.Database("dronegraphy_db").Collection("parent_categories")
-	_ = parCategories.Drop(context.Background())
+	var c []model.Category
+	cColl := repository.DB.Client.Database("dronegraphy_db").Collection("categories")
+	_ = cColl.Drop(context.Background())
+
+	//generate parent categories
 	for i := 0; i < 3; i++ {
-		parent := model.ParentCategory{
-			Value: gofakeit.Noun(),
-			ID:    primitive.NewObjectID(),
+		parent := model.Category{
+			Value:    gofakeit.Noun(),
+			ID:       primitive.NewObjectID(),
+			Level:    0,
+			Children: []model.Category{},
+			Expandable: true,
 		}
-		parCats = append(parCats, parent)
-		_, _ = parCategories.InsertOne(context.Background(), parent)
+		c = append(c, parent)
 	}
 
-	var subCats []model.ChildCategory
-	subCategories := repository.DB.Client.Database("dronegraphy_db").Collection("child_categories")
-	_ = subCategories.Drop(context.Background())
-
-	for i := 0; i < categoryCount; i++ {
-		n := gofakeit.Number(0, 2)
-		category := model.ChildCategory{
+	//Generate child categories
+	for i := 0; i < 16; i++ {
+		child := model.Category{
 			Value: gofakeit.Noun(),
 			ID:    primitive.NewObjectID(),
+			Level: 1,
+			Expandable: false,
 		}
-		category.ParentCategory = parCats[n]
-		subCats = append(subCats, category)
-		_, _ = subCategories.InsertOne(context.Background(), category)
+		c = append(c, child)
 	}
+
+	//Mix child with parents
+	for _, i := range c {
+		if i.Level == 0 {
+			for _, j := range c {
+				if j.Level == 1 {
+					i.Children = append(i.Children, j)
+				}
+			}
+		}
+		_, _ = cColl.InsertOne(context.Background(), i)
+	}
+
+
+
+	//for i := 0; i < categoryCount; i++ {
+	//	n := gofakeit.Number(0, 2)
+	//	child := model.Category{
+	//		Value: gofakeit.Noun(),
+	//		ID:    primitive.NewObjectID(),
+	//	}
+	//	child.Children = p[n]
+	//	subCats = append(subCats, category)
+	//	_, _ = subCategories.InsertOne(context.Background(), category)
+	//}
 
 }
 
@@ -189,7 +214,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 	defer catsCursor.Close(context.Background())
 
 	for catsCursor.Next(context.Background()) {
-		var category model.ChildCategory
+		var category model.Category
 		if err = catsCursor.Decode(&category); err != nil {
 			log.Fatal(err)
 		}
@@ -229,10 +254,9 @@ func TestLoadVideoFixtures(t *testing.T) {
 
 	for i := 0; i < videoCount; i++ {
 
-
 		video.Title = gofakeit.LoremIpsumSentence(4)
 		video.Camera = "DJI Mavic Pro"
-		video.Categories = util.Unique(categories[gofakeit.Number(0,6):gofakeit.Number(6,16)])
+		video.Categories = util.Unique(categories[gofakeit.Number(0, 6):gofakeit.Number(6, 16)])
 		video.Formats = []string{gofakeit.RandomString(formats)}
 		video.Width = gofakeit.Number(240, 2160)
 		video.Height = gofakeit.Number(720, 3840)
