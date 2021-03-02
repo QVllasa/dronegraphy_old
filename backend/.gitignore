@@ -3,3 +3,4 @@
 /storage/
 /tests/backend/storage/
 /tests/testfiles/*
+/pkg/
