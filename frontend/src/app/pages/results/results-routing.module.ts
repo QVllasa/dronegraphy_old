@@ -1,13 +1,19 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {ResultsComponent} from "./results.component";
+import {ResultsComponent} from './results.component';
 
 
 
 const routes: Routes = [
   {
+    path: ':value',
+    component: ResultsComponent,
+    // pathMatch: 'full'
+  },
+  {
     path: '',
-    component: ResultsComponent
+    component: ResultsComponent,
+    pathMatch: 'full'
   }
 ];
 

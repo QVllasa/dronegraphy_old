@@ -10,9 +10,13 @@
 // }
 
 export interface ICategory {
+    checked?: boolean;
+    expandable?: boolean;
+    isExpanded?: boolean;
     id: string;
     value: string;
-    children?: ICategory[];
+    key: number;
+    parent_key?: number;
     level?: number;
-    expandable?: boolean;
 }
+

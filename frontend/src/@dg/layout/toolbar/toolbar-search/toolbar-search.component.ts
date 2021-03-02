@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import icSearch from '@iconify/icons-ic/twotone-search';
+import {SearchService} from '../../../services/search.service';
 
 @Component({
   selector: 'dg-toolbar-search',
@@ -10,11 +11,12 @@ import icSearch from '@iconify/icons-ic/twotone-search';
 export class ToolbarSearchComponent implements OnInit {
 
   isOpen: boolean;
-  icSearch = icSearch;
+  input: string;
 
-  @ViewChild('input', { read: ElementRef, static: true }) input: ElementRef;
 
-  constructor(private cd: ChangeDetectorRef) {}
+  @ViewChild('textfield', { read: ElementRef, static: true }) textfield: ElementRef;
+
+  constructor(private cd: ChangeDetectorRef, private searchService: SearchService) {}
 
   ngOnInit() {
   }
@@ -24,8 +26,13 @@ export class ToolbarSearchComponent implements OnInit {
     this.cd.markForCheck();
 
     setTimeout(() => {
-      this.input.nativeElement.focus();
+      this.textfield.nativeElement.focus();
     }, 100);
+  }
+
+  onPressEnter(){
+    this.searchService.onAddSearch(this.input);
+    this.input = '';
   }
 
   close() {

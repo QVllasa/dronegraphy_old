@@ -18,11 +18,9 @@ export class SearchComponent implements OnInit, OnDestroy {
   searchCtrl = new FormControl();
   icClose = icClose;
 
-  search: string;
+  input: string;
 
 
-
-  @ViewChild('searchInput', { static: true }) input: ElementRef;
 
   constructor(private layoutService: LayoutService,
               private searchService: SearchService) { }
@@ -31,8 +29,8 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   onPressEnter(){
-    this.searchService.onSearch(this.search);
-    this.search = '';
+    this.searchService.onAddSearch(this.input);
+    this.input = '';
   }
 
   ngOnDestroy(): void {

@@ -7,20 +7,24 @@ import {MatTreeModule} from "@angular/material/tree";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {FormsModule} from "@angular/forms";
+import {MatSelectModule} from "@angular/material/select";
+import {CdkTreeModule} from '@angular/cdk/tree';
 
 
 
 @NgModule({
   declarations: [TreeCheckboxesComponent],
-  imports: [
-    CommonModule,
-    MatIconModule,
-    MatCheckboxModule,
-    MatTreeModule,
-    MatInputModule,
-    MatButtonModule,
-    FormsModule,
-  ],
+    imports: [
+        CommonModule,
+        MatIconModule,
+        MatCheckboxModule,
+        MatTreeModule,
+        MatInputModule,
+        MatButtonModule,
+        FormsModule,
+        MatSelectModule,
+        CdkTreeModule,
+    ],
   exports: [
     TreeCheckboxesComponent
   ]

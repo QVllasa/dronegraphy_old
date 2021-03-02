@@ -1,8 +1,23 @@
-<div fxLayout="row" fxLayoutAlign="end" class="h-full w-full opacity-50" style="background-color: #f5f6f8">
+<div *ngIf="searchService.activeCategories$ | async as activeCategories"
+     fxLayout="row"
+     fxLayoutAlign="space-between center" class="h-full w-full opacity-90" style="background-color: #f5f6f8">
+    <mat-chip-list *ngIf="searchService.values$ | async as terms" class="ml-16"
+                   aria-label="Fish selection">
+        <mat-chip *ngFor="let cat of activeCategories">{{cat.value}}
+            <mat-icon (click)="removeCategory(cat)" matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <ng-container *ngIf="isArray(terms) && terms.length > 0">
+            <mat-chip *ngFor="let term of terms">{{term}}
+                <mat-icon (click)="removeTerm(term)" matChipRemove>cancel</mat-icon>
+            </mat-chip>
+        </ng-container>
+    </mat-chip-list>
+
     <mat-form-field appearance="legacy">
-        <mat-select class="font-light text-primary" [formControl]="filterControl">
-            <mat-option class="font-light" *ngFor="let filter of sortOptions" [value]="filter.value">
-                {{filter.value}}
+        <mat-select (selectionChange)="onSort($event.value)" class="font-light text-primary"
+                    [formControl]="sortControl">
+            <mat-option class="font-light" *ngFor="let sortOption of sortOptions" [value]="sortOption">
+                {{sortOption.value}}
             </mat-option>
         </mat-select>
     </mat-form-field>

@@ -3,11 +3,11 @@ import {LayoutService} from '../../services/layout.service';
 import {ConfigService} from '../../services/config.service';
 import {map} from 'rxjs/operators';
 import {NavigationService} from '../../services/navigation.service';
-import {AuthenticationService} from "../../services/auth.service";
-import {Router} from "@angular/router";
-import {OrderService} from "../../services/order.service";
-import {Video} from "../../models/video.model";
-import {UserService} from "../../services/user.service";
+import {AuthenticationService} from '../../services/auth.service';
+import {Router} from '@angular/router';
+import {OrderService} from '../../services/order.service';
+import {Video} from '../../models/video.model';
+import {UserService} from '../../services/user.service';
 
 @Component({
     selector: 'dg-toolbar',
@@ -25,6 +25,8 @@ export class ToolbarComponent implements OnInit {
 
     navigationItems = this.navigationService.items;
 
+    showClose: boolean;
+
     isHorizontalLayout$ = this.configService.config$.pipe(map(config => config.layout === 'horizontal'));
     isVerticalLayout$ = this.configService.config$.pipe(map(config => config.layout === 'vertical'));
     isNavbarInToolbar$ = this.configService.config$.pipe(map(config => config.navbar.position === 'in-toolbar'));
@@ -37,8 +39,7 @@ export class ToolbarComponent implements OnInit {
                 public orderService: OrderService,
                 public router: Router,
                 public userService: UserService,
-                public authService: AuthenticationService) {
-    }
+                public authService: AuthenticationService) {}
 
     ngOnInit() {
     }

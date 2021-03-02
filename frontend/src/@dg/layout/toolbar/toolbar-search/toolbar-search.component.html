@@ -1,9 +1,9 @@
 <div fxLayout="row" fxLayoutAlign="start center">
   <mat-form-field [class.search-open]="isOpen" appearance="outline" class="search" fxFlex="100">
     <mat-label>Suche&hellip;</mat-label>
-    <input #input (blur)="close()" matInput>
+    <input (keyup.enter)="onPressEnter()" #textfield [(ngModel)]="input" (blur)="close()" matInput>
   </mat-form-field>
   <button (click)="open()" mat-icon-button>
-    <mat-icon [icIcon]="icSearch"></mat-icon>
+    <mat-icon>search</mat-icon>
   </button>
 </div>

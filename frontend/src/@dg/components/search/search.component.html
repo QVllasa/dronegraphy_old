@@ -15,7 +15,7 @@
 
 <mat-form-field class="w-full" color="primary" appearance="outline">
   <mat-label>Finde die perfekte Aufnahme</mat-label>
-  <input (keyup.enter)="onPressEnter()" [(ngModel)]="search" matInput placeholder="">
+  <input (keyup.enter)="onPressEnter()" [(ngModel)]="input" matInput placeholder="">
   <mat-icon matSuffix (click)="onPressEnter()" class="cursor-pointer">search</mat-icon>
   <mat-hint>Beispiel: Wald, See, Meer,...</mat-hint>
 </mat-form-field>

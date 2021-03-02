@@ -39,7 +39,6 @@ export class AppComponent {
 
 
 
-
         Settings.defaultLocale = this.localeId;
 
         if (this.platform.BLINK) {

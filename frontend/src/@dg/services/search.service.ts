@@ -1,83 +1,121 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Subject} from 'rxjs';
-import {Router} from "@angular/router";
+import {Injectable, OnInit} from '@angular/core';
+import {BehaviorSubject} from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ICategory} from '../models/category.model';
+import {removeDuplicateObjects} from '../utils/remove-duplicate-objects';
+import {Location} from '@angular/common';
+import {ISortOption} from './sorting.service';
+import {tap} from 'rxjs/operators';
 
-interface IKeywords {
-    category: string[],
-    searchWord: string[]
-}
 
 @Injectable({
     providedIn: 'root'
 })
 export class SearchService {
 
-    keywords: IKeywords;
 
-    valueChangesSubject = new BehaviorSubject<IKeywords>({category: [], searchWord: []});
-    valueChanges$ = this.valueChangesSubject.asObservable();
+    // Store Search Values
+    values$ = new BehaviorSubject<string[]>([]);
 
-    submitSubject = new Subject<string>();
-    submit$ = this.submitSubject.asObservable();
 
-    isOpenSubject = new BehaviorSubject<boolean>(false);
-    isOpen$ = this.isOpenSubject.asObservable();
+    // Store Active Categories
+    activeCategories$ = new BehaviorSubject<ICategory[]>([]);
 
-    constructor(private router: Router) {
+    // Store Sorting Filter
+    activeSort$ = new BehaviorSubject<ISortOption>(null);
+
+
+    constructor(private router: Router, private route: ActivatedRoute, private location: Location) {
+        console.log('start search service');
+
+        // this.route.queryParams
+        //     .pipe(
+        //         tap(params => {
+        //             if (!params['search']) {
+        //                 return;
+        //             }
+        //             console.log('current query params', params['search']);
+        //             if (Array.isArray(params['search'])) {
+        //                 this.values$.next([...params['search']]);
+        //             } else {
+        //                 this.values$.next([params['search']]);
+        //             }
+        //         })
+        //     )
+        //     .subscribe();
     }
 
 
-    onSearch(terms) {
-        if (!terms){
-            return
+    onAddSearch(terms: string) {
+        if (!terms) {
+            return;
         }
+        let additionalKeys = terms.split(' ');
+        additionalKeys = additionalKeys.filter(e => String(e).trim());
+        let values = this.values$.value;
+        values.push(...additionalKeys);
+        values = values.filter((item, i, ar) => ar.indexOf(item) === i);
+        this.values$.next(values);
+        this.updateRoute();
+    }
 
-        //TODO fix search terms
-        console.log("search terms:", terms)
-        const additionalKeys = terms.split(' ');
-        additionalKeys.filter(e => String(e).trim());
-        if (!additionalKeys.includes('')) {
-            this.valueChangesSubject.value.searchWord.push(...additionalKeys)
-            // this.keywords.searchWord.push(additionalKeys);
+    onRemoveSearch(key) {
+        const val = this.values$.value;
+        val.splice(val.indexOf(key), 1);
+        this.values$.next(val);
+        this.updateRoute();
+    }
+
+
+    onSelectCategory(category: ICategory) {
+        console.log('values', this.activeCategories$.value);
+        let categories: ICategory[];
+        if (this.activeCategories$.value.length > 0) {
+            categories = this.activeCategories$.value;
+        } else {
+            categories = [];
         }
-        // this.keywords.searchWord = this.keywords.searchWord.filter((v, i) => this.keywords.searchWord.indexOf(v) === i);
-        // this.valueChangesSubject.next(this.keywords)
+        categories.push(category);
+        categories = removeDuplicateObjects(categories);
+        this.activeCategories$.next(categories);
         this.updateRoute();
     }
 
-    //TODO fix adding categories
-    onSelectCategory(categories) {
-        console.log(categories)
-        const values = [];
-        for (let v of categories) {
-            values.push(v.value);
-        }
-        // this.keywords.category.includes(category) ? this.onDeselectCategory(category) : this.keywords.category.push(category);
-        this.valueChangesSubject.value.category = values;
+    onDeselectCategory(category: ICategory) {
+        category.checked = false;
+        const categories = this.activeCategories$.value;
+        categories.splice(categories.indexOf(category), 1);
+        this.activeCategories$.next(categories);
         this.updateRoute();
     }
 
-    onDeselectCategory(category) {
-        this.keywords.category.splice(this.keywords.category.indexOf(category), 1);
+    onSortChange(sort: ISortOption) {
+        this.activeSort$.next(sort);
         this.updateRoute();
     }
 
-    removeKey(key) {
-        this.keywords.searchWord.splice(this.keywords.searchWord.indexOf(key), 1);
-
-        this.updateRoute();
-    }
 
     updateRoute() {
-        this.valueChanges$.subscribe(params => {
-            if ((params.searchWord.length > 0) || (params.category.length > 0)){
-                this.router.navigate(
-                    ['results'],
-                    {
-                        queryParams: {search: params.searchWord, category: params.category}
-                    });
-            }
-        })
+        const route = './results/';
+        if (this.activeCategories$.value.length > 0 || this.values$.value.length > 0) {
+            this.router.navigate([route, this.activeCategories$.value.map(a => a.value).join('&')], {
+                relativeTo: this.route,
+                queryParams: {search: this.values$.value, sort: this.activeSort$.value.key},
+                queryParamsHandling: 'merge'
+            });
+        } else if (this.values$.value.length > 0) {
+            this.router.navigate([route], {
+                relativeTo: this.route,
+                queryParams: {search: this.values$.value, sort: this.activeSort$.value.key},
+                queryParamsHandling: 'merge'
+            });
+        } else {
+            this.router.navigate([''], {
+                relativeTo: this.route,
+                queryParams: {search: this.values$.value, sort: this.activeSort$.value.key},
+                queryParamsHandling: 'merge'
+            });
+        }
 
     }
 

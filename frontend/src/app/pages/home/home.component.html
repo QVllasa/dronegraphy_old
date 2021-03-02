@@ -19,7 +19,7 @@
     <section fxLayout="row" fxLayoutGap="24px">
         <div fxLayout="column" fxFlex="250px">
             <div class="sticky top-14 text-center shadow-md bg-white pb-8 z-10">
-                <tree-checkboxes (selected)="selectedCategory($event)" ></tree-checkboxes>
+                <dg-tree-checkboxes></dg-tree-checkboxes>
                 <div fxLayout="column" fxLayoutAlign="center center">
                     <button *ngIf="!(userService.user$ | async)" mat-flat-button color="primary" routerLink="register"
                             class="mt-8">Starten
