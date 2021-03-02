@@ -19,6 +19,7 @@ func (this *Handler) GetCategories(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, categories)
 }
+
 //
 //func (this *Handler) GetParentCategories(c echo.Context) error {
 //	categories, err := this.repository.GetAllParentCategories()

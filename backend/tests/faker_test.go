@@ -8,7 +8,7 @@ import (
 	"dronegraphy/backend/util"
 	"firebase.google.com/go/v4/auth"
 	"fmt"
-	"github.com/brianvoe/gofakeit/v5"
+	"github.com/brianvoe/gofakeit/v6"
 	"github.com/labstack/gommon/log"
 	"github.com/rs/xid"
 	"go.mongodb.org/mongo-driver/bson"
@@ -37,13 +37,11 @@ func TestLoadCategoryFixtures(t *testing.T) {
 	_ = cColl.Drop(context.Background())
 
 	//generate parent categories
-	for i := 0; i < 3; i++ {
+	for i := 1; i < 3; i++ {
 		parent := model.Category{
-			Value:    gofakeit.Noun(),
-			ID:       primitive.NewObjectID(),
-			Level:    0,
-			Children: []model.Category{},
-			Expandable: true,
+			Value: gofakeit.Noun(),
+			Key:   i,
+			ID:    primitive.NewObjectID(),
 		}
 		c = append(c, parent)
 	}
@@ -51,38 +49,18 @@ func TestLoadCategoryFixtures(t *testing.T) {
 	//Generate child categories
 	for i := 0; i < 16; i++ {
 		child := model.Category{
-			Value: gofakeit.Noun(),
-			ID:    primitive.NewObjectID(),
-			Level: 1,
-			Expandable: false,
+			Value:     gofakeit.Noun(),
+			Key:       gofakeit.Number(3, 100),
+			ID:        primitive.NewObjectID(),
+			ParentKey: gofakeit.Number(1, 2),
 		}
 		c = append(c, child)
 	}
 
 	//Mix child with parents
 	for _, i := range c {
-		if i.Level == 0 {
-			for _, j := range c {
-				if j.Level == 1 {
-					i.Children = append(i.Children, j)
-				}
-			}
-		}
 		_, _ = cColl.InsertOne(context.Background(), i)
 	}
-
-
-
-	//for i := 0; i < categoryCount; i++ {
-	//	n := gofakeit.Number(0, 2)
-	//	child := model.Category{
-	//		Value: gofakeit.Noun(),
-	//		ID:    primitive.NewObjectID(),
-	//	}
-	//	child.Children = p[n]
-	//	subCats = append(subCats, category)
-	//	_, _ = subCategories.InsertOne(context.Background(), category)
-	//}
 
 }
 
@@ -319,14 +297,13 @@ func TestLoadFilterFixtures(t *testing.T) {
 		repository.NewDatabase()
 	}
 
-	f := model.FilterOption{}
+	f := model.SortOption{}
 	filters := repository.DB.Client.Database("dronegraphy_db").Collection("filters")
 	_ = filters.Drop(context.Background())
 
-	for i := 0; i < categoryCount; i++ {
+	for i := 1; i < 4; i++ {
 		f.Value = gofakeit.Noun()
-		f.UpdatedAt = gofakeit.Date()
-		f.CreatedAt = gofakeit.Date()
+		f.Key = i
 		_, _ = filters.InsertOne(context.Background(), f)
 	}
 

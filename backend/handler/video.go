@@ -322,8 +322,8 @@ func (this *Handler) RemoveFromFavorites(c echo.Context) error {
 	return c.JSON(http.StatusOK, u.FavoriteVideos)
 }
 
-func(this *Handler) GetFilterOptions(c echo.Context) error{
-	var f []model.FilterOption
+func (this *Handler) GetSortingOptions(c echo.Context) error {
+	var f []model.SortOption
 
 	f, err := this.repository.GetFilters()
 	if err != nil {

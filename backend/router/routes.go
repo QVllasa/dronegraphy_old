@@ -49,7 +49,7 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	routeGroup.GET("/creators/:id", controller.GetVideos)
 	routeGroup.GET("/categories", controller.GetCategories)
 	//routeGroup.GET("/parent_categories", controller.GetParentCategories)
-	routeGroup.GET("/filters", controller.GetFilterOptions)
+	routeGroup.GET("/sorting", controller.GetSortingOptions)
 	routeGroup.GET("/photos/:id", controller.GetPhoto)
 
 	//// STATIC Endpoints

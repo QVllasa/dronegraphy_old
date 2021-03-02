@@ -7,19 +7,19 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func (this *Repository) GetFilters() ([]model.FilterOption, error) {
-	var filterOptions  []model.FilterOption
+func (this *Repository) GetFilters() ([]model.SortOption, error) {
+	var sortOptions []model.SortOption
 
 	cursor, err := this.FilterColl.Find(context.Background(), bson.M{})
 	if err != nil {
 		log.Errorf("Unable to fetch users from database: %v", err)
-		return filterOptions, err
+		return sortOptions, err
 	}
 
-	if err = cursor.All(context.Background(), &filterOptions); err != nil {
+	if err = cursor.All(context.Background(), &sortOptions); err != nil {
 		log.Errorf("Unable to read the cursor: %v", err)
-		return filterOptions, err
+		return sortOptions, err
 	}
 
-	return filterOptions, nil
+	return sortOptions, nil
 }
