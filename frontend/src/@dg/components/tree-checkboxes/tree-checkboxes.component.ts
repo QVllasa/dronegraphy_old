@@ -35,7 +35,6 @@ export class TreeCheckboxesComponent {
             this.isLoading = false;
             this.dataSource = new ArrayDataSource<ICategory>(data);
             this.data = data;
-            console.log(this.dataSource);
         });
 
         // this.searchService.activeCategories$.subscribe(data => {

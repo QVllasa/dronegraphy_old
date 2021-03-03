@@ -1,7 +1,7 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit, SimpleChanges} from '@angular/core';
-import {DomSanitizer} from "@angular/platform-browser";
-import {VideoService} from "../../../services/video.service";
-import {Video} from "../../../models/video.model";
+import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit, SimpleChanges} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
+import {VideoService} from '../../../services/video.service';
+import {Video} from '../../../models/video.model';
 
 
 @Component({
@@ -14,32 +14,20 @@ export class VideoGridComponent implements OnInit {
     @Input() videos: Video[] = [];
     @Input() gridLayout: string;
 
-    finished = false;
-
-    lastIndex;
 
     constructor(private domSanitizer: DomSanitizer) {
     }
 
     ngOnInit() {
-
     }
 
-    ngOnChanges(changes: SimpleChanges) {
-        // console.log(changes['videos'].currentValue);
+    onScrollDown() {
+        console.log('scrolled down!!');
     }
 
+    onScrollUp() {
+        console.log('scrolled up!!');
+    }
 
-
-    // onScrollDown() {
-    //   const lastKey = this.videos.indexOf(this.videos[this.videos.length - 1]);
-    //   this.loadNewVideo(lastKey + 1, lastKey + 6);
-    // }
-
-
-    // loadNewVideo(from, to) {
-    //   const newVideos = this.videoService.getVideos(from, to);
-    //   this.videos.push(...newVideos);
-    // }
 
 }

@@ -1,3 +1,4 @@
+<dg-toolbar class="dg-toolbar relative z-50"></dg-toolbar>
 <div [class.boxed]="isBoxed$ | async"
      [class.horizontal-layout]="!(isLayoutVertical$ | async)"
      [class.vertical-layout]="isLayoutVertical$ | async"
@@ -13,8 +14,6 @@
   <dg-progress-bar></dg-progress-bar>
   <ng-container *ngTemplateOutlet="toolbarRef"></ng-container>
 
-<!--  <dg-search></dg-search>-->
-
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav
                  [fixedInViewport]="!(isDesktop$ | async)"
@@ -23,18 +22,10 @@
                  class="sidenav">
       <ng-container *ngTemplateOutlet="sidenavRef"></ng-container>
     </mat-sidenav>
+    <mat-sidenav-content class="sidenav-content"
 
-<!--    <mat-sidenav #quickpanel-->
-<!--                 [fixedInViewport]="!(isDesktop$ | async)"-->
-<!--                 class="quickpanel"-->
-<!--                 mode="over"-->
-<!--                 position="end">-->
-<!--      <ng-container *ngTemplateOutlet="quickpanelRef"></ng-container>-->
-<!--    </mat-sidenav>-->
-
-
-    <mat-sidenav-content class="sidenav-content">
-      <main class="content">
+    >
+      <main class="content" >
         <router-outlet></router-outlet>
       </main>
 

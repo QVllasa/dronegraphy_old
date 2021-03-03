@@ -26,23 +26,7 @@ export class SearchService {
 
 
     constructor(private router: Router, private route: ActivatedRoute, private location: Location) {
-        console.log('start search service');
 
-        // this.route.queryParams
-        //     .pipe(
-        //         tap(params => {
-        //             if (!params['search']) {
-        //                 return;
-        //             }
-        //             console.log('current query params', params['search']);
-        //             if (Array.isArray(params['search'])) {
-        //                 this.values$.next([...params['search']]);
-        //             } else {
-        //                 this.values$.next([params['search']]);
-        //             }
-        //         })
-        //     )
-        //     .subscribe();
     }
 
 

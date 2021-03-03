@@ -2,22 +2,10 @@
   <dg-sidenav [collapsed]="sidenavCollapsed$ | async"></dg-sidenav>
 </ng-template>
 
-<ng-template #toolbarRef>
-  <dg-toolbar class="dg-toolbar relative z-50"></dg-toolbar>
-</ng-template>
 
-<ng-template #footerRef>
-<!--  <dg-footer *ngIf="isFooterVisible$ | async" class="dg-footer"></dg-footer>-->
-</ng-template>
 
-<ng-template #quickpanelRef>
-<!--  <dg-quickpanel></dg-quickpanel>-->
-</ng-template>
 
-<dg-layout [footerRef]="footerRef"
-            [quickpanelRef]="quickpanelRef"
-            [sidenavRef]="sidenavRef"
-            [toolbarRef]="toolbarRef"></dg-layout>
+<dg-layout [sidenavRef]="sidenavRef"></dg-layout>
 
 <!--<dg-config-panel-toggle (openConfig)="configpanel.open()"></dg-config-panel-toggle>-->
 

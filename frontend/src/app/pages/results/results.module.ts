@@ -13,6 +13,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SortBarModule} from '../../../@dg/components/sort-bar/sort-bar.module';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -30,7 +32,9 @@ import {SortBarModule} from '../../../@dg/components/sort-bar/sort-bar.module';
         MatFormFieldModule,
         MatSelectModule,
         ReactiveFormsModule,
-        SortBarModule
+        SortBarModule,
+        InfiniteScrollModule,
+        MatProgressSpinnerModule
     ]
 })
 export class ResultsModule { }

@@ -1,10 +1,14 @@
-<div class="w-full h-full px-gutter container" fxLayout="column" fxFill>
-    <div class="sticky top-0 h-12 w-full z-10 backdrop-blur">
+<div class="w-full  px-gutter container overflow-auto h-screen relative" fxLayout="column" fxFill infiniteScroll
+     [infiniteScrollDistance]="1"
+     [infiniteScrollThrottle]="50"
+     [scrollWindow]="false"
+     (scrolled)="onLoad()">
+    <div class="sticky top-14 h-12 w-full z-10 backdrop-blur">
         <dg-sort-bar></dg-sort-bar>
     </div>
     <section fxLayout="row" fxLayoutGap="24px">
         <div fxLayout="column" fxFlex="250px">
-            <div class="sticky top-14 text-center shadow-md bg-white pb-8 z-10">
+            <div class="sticky top-28 text-center shadow-md bg-white pb-8 z-10">
                 <dg-tree-checkboxes ></dg-tree-checkboxes>
                 <div fxLayout="column" fxLayoutAlign="center center">
                     <button *ngIf="!(userService.user$ | async)" mat-flat-button color="primary" routerLink="register"
@@ -17,8 +21,14 @@
                 </div>
             </div>
         </div>
-        <div fxLayout="column" fxFlex="auto">
-            <dg-video-grid [videos]="videos"></dg-video-grid>
+        <div fxLayout="column" fxFlex="auto" class="relative" *ngIf="videos$ | async as videos">
+            <dg-video-grid class="relative top-16" [videos]="videos"></dg-video-grid>
+            <div *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center center" class="w-full h-20">
+                <mat-spinner diameter="30"></mat-spinner>
+            </div>
+            <div *ngIf="endOfResults" fxLayout="row" fxLayoutAlign="center center" class="w-full h-20">
+                END OF RESULTS
+            </div>
         </div>
     </section>
 </div>

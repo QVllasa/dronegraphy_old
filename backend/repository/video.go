@@ -75,15 +75,9 @@ func (this *Repository) CreateVideo(video *model.Video, id string) (string, erro
 	return vID, nil
 }
 
-func (this *Repository) GetVideos(page int64, limit int64, filter bson.M) ([]model.Video, error) {
+func (this *Repository) GetVideos(page int64, limit int64, filter bson.M, opt *options.FindOptions) ([]model.Video, error) {
 
 	var videos []model.Video
-
-	opt := options.Find()
-	if limit != -1 {
-		opt.SetSkip((page - 1) * limit)
-		opt.SetLimit(limit)
-	}
 
 	cursor, err := this.VideoColl.Find(context.Background(), filter, opt)
 

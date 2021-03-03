@@ -10,13 +10,14 @@ import {MatChipsModule} from '@angular/material/chips';
 import {TreeCheckboxesModule} from '../../../@dg/components/tree-checkboxes/tree-checkboxes.module';
 import {VideoGridModule} from '../../../@dg/components/video/video-grid/video-grid.module';
 import {HomeRoutingModule} from './home-routing.module';
-import {MatSnackBarModule} from "@angular/material/snack-bar";
-import {VideoItemModule} from "../../../@dg/components/video/video-item/video-item.module";
-import {VideoPlayerModule} from "../../../@dg/components/video/video-player/video-player.module";
-import {MatSelectModule} from "@angular/material/select";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {SortBarModule} from "../../../@dg/components/sort-bar/sort-bar.module";
-
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {VideoItemModule} from '../../../@dg/components/video/video-item/video-item.module';
+import {VideoPlayerModule} from '../../../@dg/components/video/video-player/video-player.module';
+import {MatSelectModule} from '@angular/material/select';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {SortBarModule} from '../../../@dg/components/sort-bar/sort-bar.module';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
     declarations: [HomeComponent],
@@ -37,7 +38,9 @@ import {SortBarModule} from "../../../@dg/components/sort-bar/sort-bar.module";
         MatSelectModule,
         FormsModule,
         ReactiveFormsModule,
-        SortBarModule
+        SortBarModule,
+        InfiniteScrollModule,
+        MatProgressSpinnerModule,
     ],
     exports: []
 })

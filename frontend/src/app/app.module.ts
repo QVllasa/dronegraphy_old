@@ -7,17 +7,14 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {dgModule} from '../@dg/dg.module';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {CustomLayoutModule} from './custom-layout/custom-layout.module';
-import {GridModule} from "@angular/flex-layout";
-import {AngularFireModule} from "@angular/fire";
-import {environment} from "../environments/environment";
-import {AngularFirestoreModule} from "@angular/fire/firestore";
-import {AngularFireAuthModule} from "@angular/fire/auth";
-import {MatSnackBarModule} from "@angular/material/snack-bar";
-import {ToolbarModule} from "../@dg/layout/toolbar/toolbar.module";
-import {AuthInterceptorService} from "../@dg/services/auth-interceptor.service";
-import { CreatorsComponent } from './pages/creators/creators.component';
-import { ResultsComponent } from './pages/results/results.component';
-
+import {GridModule} from '@angular/flex-layout';
+import {AngularFireModule} from '@angular/fire';
+import {environment} from '../environments/environment';
+import {AngularFirestoreModule} from '@angular/fire/firestore';
+import {AngularFireAuthModule} from '@angular/fire/auth';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {ToolbarModule} from '../@dg/layout/toolbar/toolbar.module';
+import {AuthInterceptorService} from '../@dg/services/auth-interceptor.service';
 
 
 @NgModule({

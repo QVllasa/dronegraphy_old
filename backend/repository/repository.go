@@ -10,7 +10,7 @@ type Repository struct {
 	UserColl     *mongo.Collection
 	VideoColl    *mongo.Collection
 	CategoryColl *mongo.Collection
-	FilterColl   *mongo.Collection
+	SortColl   *mongo.Collection
 }
 
 var Repo *Repository
@@ -23,7 +23,7 @@ func NewRepository(client *mongo.Client) (this *Repository) {
 	this.UserColl = this.Client.Database("dronegraphy_db").Collection("users")
 	this.VideoColl = this.Client.Database("dronegraphy_db").Collection("videos")
 	this.CategoryColl = this.Client.Database("dronegraphy_db").Collection("categories")
-	this.FilterColl = this.Client.Database("dronegraphy_db").Collection("filters")
+	this.SortColl = this.Client.Database("dronegraphy_db").Collection("sorting")
 	Repo = this
 
 	return this

@@ -1,4 +1,4 @@
-import {Component, Inject, LOCALE_ID, Renderer2} from '@angular/core';
+import {Component, HostListener, Inject, LOCALE_ID, Renderer2} from '@angular/core';
 import {Settings} from 'luxon';
 import {DOCUMENT} from '@angular/common';
 import {Platform} from '@angular/cdk/platform';
@@ -22,6 +22,7 @@ import {of} from "rxjs";
 })
 export class AppComponent {
     title = 'dg';
+
 
     constructor(private configService: ConfigService,
                 private styleService: StyleService,

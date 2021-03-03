@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ISortOption, SortingService} from '../../services/sorting.service';
 import {SearchService} from '../../services/search.service';
 import {ICategory} from '../../models/category.model';
-import {MatSelectChange} from '@angular/material/select';
-import {map, switchMap, take} from 'rxjs/operators';
+import {switchMap} from 'rxjs/operators';
+
 
 @Component({
     selector: 'dg-sort-bar',
@@ -12,10 +12,11 @@ import {map, switchMap, take} from 'rxjs/operators';
     styleUrls: ['./sort-bar.component.scss']
 })
 export class SortBarComponent implements OnInit {
+
+
     sortOptions: ISortOption[] = [];
     form: FormGroup;
     sortControl = new FormControl();
-
 
 
     constructor(public sortingService: SortingService,

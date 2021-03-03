@@ -1,12 +1,12 @@
 import {
-    AfterViewInit,
-    ChangeDetectorRef,
-    Component,
-    Inject,
-    Input,
-    OnInit,
-    TemplateRef,
-    ViewChild
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component, HostListener,
+  Inject,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewChild
 } from '@angular/core';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {LayoutService} from '../services/layout.service';
@@ -31,6 +31,8 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   @Input() footerRef: TemplateRef<any>;
   @Input() quickpanelRef: TemplateRef<any>;
 
+
+
   isLayoutVertical$ = this.configService.config$.pipe(map(config => config.layout === 'vertical'));
   isBoxed$ = this.configService.config$.pipe(map(config => config.boxed));
   isToolbarFixed$ = this.configService.config$.pipe(map(config => config.toolbar.fixed));
@@ -54,6 +56,18 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   @ViewChild('quickpanel', { static: true }) quickpanel: MatSidenav;
   @ViewChild('sidenav', { static: true }) sidenav: MatSidenav;
   @ViewChild(MatSidenavContainer, { static: true }) sidenavContainer: MatSidenavContainer;
+
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll() {
+// In chrome and some browser scroll is given to body tag
+    const pos = (document.documentElement.scrollTop || document.body.scrollTop) + document.documentElement.offsetHeight;
+    const max = document.documentElement.scrollHeight;
+// pos/max will give you the distance between scroll bottom and and bottom of screen in percentage.
+    if (pos === max )   {
+      console.log("asdasdasd")
+    }
+  }
+
 
   constructor(private cd: ChangeDetectorRef,
               private breakpointObserver: BreakpointObserver,
@@ -95,6 +109,10 @@ export class LayoutComponent implements OnInit, AfterViewInit {
       filter(([matches]) => !matches),
       untilDestroyed(this)
     ).subscribe(() => this.sidenav.close());
+  }
+
+  onScroll(){
+    console.log('scrolling');
   }
 
   ngAfterViewInit(): void {

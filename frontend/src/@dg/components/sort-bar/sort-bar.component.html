@@ -1,13 +1,15 @@
 <div *ngIf="searchService.activeCategories$ | async as activeCategories"
      fxLayout="row"
      fxLayoutAlign="space-between center" class="h-full w-full opacity-90" style="background-color: #f5f6f8">
+
     <mat-chip-list *ngIf="searchService.values$ | async as terms" class="ml-16"
                    aria-label="Fish selection">
-        <mat-chip *ngFor="let cat of activeCategories">{{cat.value}}
-            <mat-icon (click)="removeCategory(cat)" matChipRemove>cancel</mat-icon>
+        <span class="mr-1" *ngIf="terms.length > 0 || activeCategories.length > 0" >Search:</span>
+        <mat-chip class="text-primary border border-solid border-primary bg-white" *ngFor="let cat of activeCategories">{{cat.value}}
+            <mat-icon color="accent" (click)="removeCategory(cat)" matChipRemove>cancel</mat-icon>
         </mat-chip>
         <ng-container *ngIf="isArray(terms) && terms.length > 0">
-            <mat-chip *ngFor="let term of terms">{{term}}
+            <mat-chip class="text-primary border border-solid border-primary bg-white" *ngFor="let term of terms">{{term}}
                 <mat-icon (click)="removeTerm(term)" matChipRemove>cancel</mat-icon>
             </mat-chip>
         </ng-container>

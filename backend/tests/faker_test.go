@@ -15,6 +15,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"google.golang.org/api/iterator"
+	"strconv"
 	"testing"
 )
 
@@ -184,7 +185,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 		{"value", 1},
 	}
 
-	catsColl := repository.DB.Client.Database("dronegraphy_db").Collection("child_categories")
+	catsColl := repository.DB.Client.Database("dronegraphy_db").Collection("categories")
 	catsCursor, err := catsColl.Find(context.Background(), bson.M{}, options.Find().SetProjection(catProjection))
 	if err != nil {
 		fmt.Println(err)
@@ -232,9 +233,10 @@ func TestLoadVideoFixtures(t *testing.T) {
 
 	for i := 0; i < videoCount; i++ {
 
-		video.Title = gofakeit.LoremIpsumSentence(4)
+		//video.Title = gofakeit.LoremIpsumSentence(4)
+		video.Title = strconv.Itoa(i)
 		video.Camera = "DJI Mavic Pro"
-		video.Categories = util.Unique(categories[gofakeit.Number(0, 6):gofakeit.Number(6, 16)])
+		video.Categories = util.Unique(categories[gofakeit.Number(3, 6):gofakeit.Number(6, 15)])
 		video.Formats = []string{gofakeit.RandomString(formats)}
 		video.Width = gofakeit.Number(240, 2160)
 		video.Height = gofakeit.Number(720, 3840)
@@ -244,6 +246,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 		video.Published = gofakeit.Bool()
 		video.Converted = true
 		video.Sell = gofakeit.Bool()
+		video.StuffPick = gofakeit.Bool()
 		video.Formats = []string{gofakeit.RandomString(tags)}
 		video.Views = gofakeit.Number(0, 99999)
 		video.Downloads = gofakeit.Number(0, 99999)
@@ -298,7 +301,7 @@ func TestLoadFilterFixtures(t *testing.T) {
 	}
 
 	f := model.SortOption{}
-	filters := repository.DB.Client.Database("dronegraphy_db").Collection("filters")
+	filters := repository.DB.Client.Database("dronegraphy_db").Collection("sorting")
 	_ = filters.Drop(context.Background())
 
 	for i := 1; i < 4; i++ {

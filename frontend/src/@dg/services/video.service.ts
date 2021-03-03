@@ -3,17 +3,17 @@ import {Injectable} from '@angular/core';
 import {IVideo, Video} from '../models/video.model';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../environments/environment';
-import {map, mergeMap, switchMap, take, takeLast, tap} from 'rxjs/operators';
+import {map, mergeMap, switchMap, take} from 'rxjs/operators';
 import {User} from '../models/user.model';
 import {of} from 'rxjs';
 
-interface VideoResponse {
+export interface VideoResponse {
     totalcount: number;
     totalpages: number;
     page: number;
     limit: number;
     count: number;
-    videos: IVideo[]
+    videos: IVideo[];
 }
 
 @Injectable({
@@ -25,27 +25,25 @@ export class VideoService {
     videos: Video[] = [];
 
     constructor(private http: HttpClient) {
-
     }
 
 
-    getVideos(limit?, page?) {
+    getVideos(limit?, page?, category?, search?, sort?) {
         if (!page) {
             page = 0;
         }
         if (!limit) {
             limit = 0;
         }
-        let params = new HttpParams().set('limit', limit).set('page', page);
+        const params = new HttpParams()
+            .set('limit', limit)
+            .set('page', page)
+            .set('category', category)
+            .set('search', search)
+            .set('sort', sort)
+        ;
 
-        return this.http.get<VideoResponse>(environment.apiUrl + '/videos', {params: params}).pipe(
-            map(res => {
-                // this.videos = [...this.videos, ...this.mapVideos(res)]
-                this.videos = this.mapVideos(res);
-                return this.videos;
-            })
-        );
-        // return of(Videos(size))
+        return this.http.get<VideoResponse>(environment.apiUrl + '/videos', {params}).pipe(take(1));
     }
 
     getVideosByCreator(id, limit?, page?) {
@@ -55,9 +53,9 @@ export class VideoService {
         if (!limit) {
             limit = 0;
         }
-        let params = new HttpParams().set('limit', limit).set('page', page);
+        const params = new HttpParams().set('limit', limit).set('page', page);
 
-        return this.http.get<VideoResponse>(environment.apiUrl + '/creators/' + id, {params: params});
+        return this.http.get<VideoResponse>(environment.apiUrl + '/creators/' + id, {params});
     }
 
     getVideo(id) {
@@ -78,8 +76,9 @@ export class VideoService {
         tb.append('thumbnail', thumbnail, thumbnail.name);
 
         const files = new FormData();
+        // tslint:disable-next-line:prefer-for-of
         for (let i = 0; i < videoFiles.length; i++) {
-            files.append('videoFiles[]', videoFiles[i], videoFiles[i]['name']);
+            files.append('videoFiles[]', videoFiles[i], videoFiles[i].name);
         }
 
         return this.http.post<string>(environment.apiUrl + '/videos', data)
@@ -95,6 +94,7 @@ export class VideoService {
 
     updateVideo(id, data, thumbnail?: File) {
         const tb = new FormData();
+        // tslint:disable-next-line:no-unused-expression
         thumbnail ? tb.append('thumbnail', thumbnail, thumbnail.name) : null;
 
         return this.http.put<IVideo>(environment.apiUrl + '/videos/' + id, data)
@@ -118,11 +118,11 @@ export class VideoService {
     }
 
     mapVideos(res: VideoResponse): Video[] {
-        let videoList: Video[] = [];
+        const videoList: Video[] = [];
         if (!res.videos) {
             return videoList;
         }
-        for (let video of res.videos) {
+        for (const video of res.videos) {
             if (video.converted) {
                 videoList.push(this.newVideo(video));
             }

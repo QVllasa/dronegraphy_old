@@ -10,7 +10,7 @@ import (
 func (this *Repository) GetFilters() ([]model.SortOption, error) {
 	var sortOptions []model.SortOption
 
-	cursor, err := this.FilterColl.Find(context.Background(), bson.M{})
+	cursor, err := this.SortColl.Find(context.Background(), bson.M{})
 	if err != nil {
 		log.Errorf("Unable to fetch users from database: %v", err)
 		return sortOptions, err

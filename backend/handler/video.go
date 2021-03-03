@@ -11,6 +11,7 @@ import (
 	"github.com/rs/xid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"math"
 	"net/http"
 	"os"
@@ -22,7 +23,7 @@ import (
 
 type VideoResponse struct {
 	TotalCount int64         `json:"totalcount"`
-	TotalPages int           `json:"totlapages"`
+	TotalPages int           `json:"totalpages"`
 	Page       int64         `json:"page"`
 	Limit      int64         `json:"limit"`
 	Count      int           `json:"count"`
@@ -219,25 +220,46 @@ func (this *Handler) GetVideos(c echo.Context) error {
 
 	page, _ := strconv.ParseInt(c.QueryParam("page"), 10, 64)
 	limit, _ := strconv.ParseInt(c.QueryParam("limit"), 10, 64)
+	category := c.QueryParam("category")
+	search := c.QueryParam("search")
+
+	fmt.Println(category)
+	fmt.Println(search)
 
 	// Defaults
 	if page == 0 {
 		page = 1
 	}
 	if limit == 0 {
-		limit = 30
+		limit = 50
 	}
 
 	var response VideoResponse
 
 	filter := bson.M{}
+	opt := options.Find()
+	if limit != -1 {
+		opt.SetSkip((page - 1) * limit)
+		opt.SetLimit(limit)
+	}
+
+	switch sort, _ := strconv.ParseInt(c.QueryParam("sort"), 10, 64); sort {
+	case 1:
+		filter = bson.M{"stuff_pick": true}
+	case 2:
+		opt.SetSort(bson.M{"createdAt": -1})
+	case 3:
+		filter = bson.M{"sell": true}
+	default:
+		filter = bson.M{"stuff_pick": true}
+	}
 
 	if c.Param("id") != "" {
 		fmt.Println(c.Param("id"))
 		filter = bson.M{"creator.uid": c.Param("id")}
 	}
 
-	response.Videos, _ = this.repository.GetVideos(page, limit, filter)
+	response.Videos, _ = this.repository.GetVideos(page, limit, filter, opt)
 
 	response.TotalCount, _ = this.repository.VideoColl.CountDocuments(context.Background(), filter)
 

@@ -18,6 +18,7 @@ type (
 		FPS            int                `json:"fps" bson:"fps"`
 		Tags           []string           `json:"tags" bson:"tags"`
 		Sell           bool               `json:"sell" bson:"sell"`
+		StuffPick      bool               `json:"stuff_pick" bson:"stuff_pick"`
 		Published      bool               `json:"published" bson:"published"`
 		Converted      bool               `json:"converted" bson:"converted"`
 		Categories     []string           `json:"categories" bson:"categories" validate:"required"`

@@ -3,12 +3,11 @@ import {UserService} from '../../../@dg/services/user.service';
 import {Video} from '../../../@dg/models/video.model';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ISortOption, SortingService} from '../../../@dg/services/sorting.service';
-import {VideoService} from '../../../@dg/services/video.service';
+import {VideoResponse, VideoService} from '../../../@dg/services/video.service';
 import {SearchService} from '../../../@dg/services/search.service';
-import {ICategory} from '../../../@dg/models/category.model';
 import {ActivatedRoute, ActivatedRouteSnapshot} from '@angular/router';
-import {pipe} from 'rxjs';
-import {switchMap, take, tap} from 'rxjs/operators';
+import {BehaviorSubject, pipe} from 'rxjs';
+import {map, switchMap, take, tap} from 'rxjs/operators';
 import {CategoryService} from '../../../@dg/services/category.service';
 
 
@@ -19,7 +18,12 @@ import {CategoryService} from '../../../@dg/services/category.service';
 })
 export class ResultsComponent implements OnInit {
 
-    videos: Video[];
+    videos$ = new BehaviorSubject<Video[]>([]);
+    response: VideoResponse;
+
+    batchSize = 50;
+    endOfResults: boolean;
+    isLoading: boolean;
 
     filterOptions: ISortOption[] = [];
     form: FormGroup;
@@ -72,15 +76,33 @@ export class ResultsComponent implements OnInit {
                     this.searchService.activeCategories$.next(list);
                 }));
 
-
-
-
-
-        this.videoService.getVideos(27, 0).subscribe(videos => {
-            // console.log(videos)
-            this.videos = videos;
-
+        this.loadVideos();
+        this.videos$.subscribe(videos => {
+            console.log(videos.length);
         });
 
     }
+
+    onLoad() {
+        const limit = this.batchSize;
+        const page = this.response.page + 1;
+        this.endOfResults = false;
+        if (page === this.response.totalpages + 1) {
+            this.endOfResults = true;
+            return;
+        }
+        this.isLoading = true;
+        setTimeout(() => {
+            this.loadVideos(limit, page);
+        }, 500);
+    }
+
+    async loadVideos(limit?: number, page?: number, category?: string[], search?: string[]) {
+        const res = await this.videoService.getVideos(limit, page, category, search).toPromise();
+        this.videos$.next([...this.videos$.value, ...this.videoService.mapVideos(res)]);
+        this.response = res;
+        console.log(res);
+        this.isLoading = false;
+    }
+
 }
