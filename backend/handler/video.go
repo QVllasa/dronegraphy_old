@@ -220,10 +220,10 @@ func (this *Handler) GetVideos(c echo.Context) error {
 
 	page, _ := strconv.ParseInt(c.QueryParam("page"), 10, 64)
 	limit, _ := strconv.ParseInt(c.QueryParam("limit"), 10, 64)
-	category := c.QueryParam("category")
+	categories := c.QueryParam("category")
 	search := c.QueryParam("search")
 
-	fmt.Println(category)
+	fmt.Println(categories)
 	fmt.Println(search)
 
 	// Defaults
@@ -236,7 +236,8 @@ func (this *Handler) GetVideos(c echo.Context) error {
 
 	var response VideoResponse
 
-	filter := bson.M{}
+	//filter := bson.M{}
+	sorting := bson.M{}
 	opt := options.Find()
 	if limit != -1 {
 		opt.SetSkip((page - 1) * limit)
@@ -245,14 +246,21 @@ func (this *Handler) GetVideos(c echo.Context) error {
 
 	switch sort, _ := strconv.ParseInt(c.QueryParam("sort"), 10, 64); sort {
 	case 1:
-		filter = bson.M{"stuff_pick": true}
+		sorting = bson.M{"stuff_pick": true}
 	case 2:
 		opt.SetSort(bson.M{"createdAt": -1})
 	case 3:
-		filter = bson.M{"sell": true}
+		sorting = bson.M{"sell": false}
 	default:
-		filter = bson.M{"stuff_pick": true}
+		sorting = bson.M{}
 	}
+
+	// TODO build query with sorting, category and text search
+	// Create indexes for all text search fields (title, location, camera etc.)
+	// Example: {$and: [{$text: {$search:"port"}}, {sell: true}, {stuff_pick: true}]}
+	// Example partial text search {$and: [{title: {$regex:"1"}}, {sell: true}, {stuff_pick: true}, {categories: {$all:[18]}}]}
+	// Problem: partial text search works only on one field, which blows up the query while text search does not support partially text search
+	filter := bson.M{"": sorting}
 
 	if c.Param("id") != "" {
 		fmt.Println(c.Param("id"))
@@ -263,7 +271,7 @@ func (this *Handler) GetVideos(c echo.Context) error {
 
 	response.TotalCount, _ = this.repository.VideoColl.CountDocuments(context.Background(), filter)
 
-	response.TotalPages = int(math.Round(float64(response.TotalCount) / float64(limit)))
+	response.TotalPages = int(math.Ceil(float64(response.TotalCount) / float64(limit)))
 	response.Limit = limit
 	response.Page = page
 	response.Count = len(response.Videos)
@@ -305,7 +313,7 @@ func (this *Handler) AddToFavorites(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "no user found")
 	}
 
-	u.FavoriteVideos = util.Unique(append(u.FavoriteVideos, c.Param("id")))
+	u.FavoriteVideos = util.UniqueStringArray(append(u.FavoriteVideos, c.Param("id")))
 
 	filter := bson.M{"uid": u.UID}
 	u.UpdatedAt = time.Now()

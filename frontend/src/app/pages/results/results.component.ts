@@ -18,22 +18,11 @@ import {CategoryService} from '../../../@dg/services/category.service';
 })
 export class ResultsComponent implements OnInit {
 
-    videos$ = new BehaviorSubject<Video[]>([]);
-    response: VideoResponse;
-
-    batchSize = 50;
-    endOfResults: boolean;
-    isLoading: boolean;
-
-    filterOptions: ISortOption[] = [];
-    form: FormGroup;
-    filterControl = new FormControl();
-    selectedValue: string;
 
     constructor(public userService: UserService,
                 private categoryService: CategoryService,
                 private searchService: SearchService,
-                private videoService: VideoService,
+                public videoService: VideoService,
                 private route: ActivatedRoute,
                 private sortingService: SortingService) {
         console.log('start result component');
@@ -75,34 +64,10 @@ export class ResultsComponent implements OnInit {
                     console.log('initial route params:', list);
                     this.searchService.activeCategories$.next(list);
                 }));
-
-        this.loadVideos();
-        this.videos$.subscribe(videos => {
-            console.log(videos.length);
-        });
-
     }
 
-    onLoad() {
-        const limit = this.batchSize;
-        const page = this.response.page + 1;
-        this.endOfResults = false;
-        if (page === this.response.totalpages + 1) {
-            this.endOfResults = true;
-            return;
-        }
-        this.isLoading = true;
-        setTimeout(() => {
-            this.loadVideos(limit, page);
-        }, 500);
-    }
-
-    async loadVideos(limit?: number, page?: number, category?: string[], search?: string[]) {
-        const res = await this.videoService.getVideos(limit, page, category, search).toPromise();
-        this.videos$.next([...this.videos$.value, ...this.videoService.mapVideos(res)]);
-        this.response = res;
-        console.log(res);
-        this.isLoading = false;
+    loadMore(){
+        this.videoService.onLoadMore();
     }
 
 }

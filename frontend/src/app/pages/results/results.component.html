@@ -1,15 +1,15 @@
-<div class="w-full  px-gutter container overflow-auto h-screen relative" fxLayout="column" fxFill infiniteScroll
+<div class="w-full  p-gutter pt-14 container overflow-auto h-screen relative" fxLayout="column" fxFill infiniteScroll
      [infiniteScrollDistance]="1"
      [infiniteScrollThrottle]="50"
      [scrollWindow]="false"
-     (scrolled)="onLoad()">
-    <div class="sticky top-14 h-12 w-full z-10 backdrop-blur">
+     (scrolled)="loadMore()">
+    <div class="sticky top-0 h-12 w-full z-10 backdrop-blur">
         <dg-sort-bar></dg-sort-bar>
     </div>
     <section fxLayout="row" fxLayoutGap="24px">
         <div fxLayout="column" fxFlex="250px">
-            <div class="sticky top-28 text-center shadow-md bg-white pb-8 z-10">
-                <dg-tree-checkboxes ></dg-tree-checkboxes>
+            <div class="sticky top-12 text-center shadow-md bg-white pb-8 z-10">
+                <dg-tree-checkboxes></dg-tree-checkboxes>
                 <div fxLayout="column" fxLayoutAlign="center center">
                     <button *ngIf="!(userService.user$ | async)" mat-flat-button color="primary" routerLink="register"
                             class="mt-8">Starten
@@ -21,13 +21,13 @@
                 </div>
             </div>
         </div>
-        <div fxLayout="column" fxFlex="auto" class="relative" *ngIf="videos$ | async as videos">
-            <dg-video-grid class="relative top-16" [videos]="videos"></dg-video-grid>
-            <div *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center center" class="w-full h-20">
+        <div fxLayout="column" fxFlex="auto" *ngIf="videoService.videos$ | async as videos">
+            <dg-video-grid [videos]="videos"></dg-video-grid>
+            <div *ngIf="videoService.isLoading$ | async" fxLayout="row" fxLayoutAlign="center center" class="w-full h-20">
                 <mat-spinner diameter="30"></mat-spinner>
             </div>
-            <div *ngIf="endOfResults" fxLayout="row" fxLayoutAlign="center center" class="w-full h-20">
-                END OF RESULTS
+            <div *ngIf="videoService.endOfResults$ | async" fxLayout="row" fxLayoutAlign="center center" class="w-full h-20">
+               end of results
             </div>
         </div>
     </section>

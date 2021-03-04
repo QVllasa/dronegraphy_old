@@ -2,7 +2,7 @@
      [infiniteScrollDistance]="1"
      [infiniteScrollThrottle]="50"
      [scrollWindow]="false"
-     (scrolled)="onLoad()">
+     (scrolled)="loadMore()">
     <section fxLayout="row" fxLayoutAlign="center center" fxFlex="450px"
              class="absolute top-0 left-0 w-full z-0">
         <ng-container *ngIf="videoItem">
@@ -17,12 +17,12 @@
     <section fxLayout="row" fxLayoutAlign="center center" fxFlex="450px" class="relative">
         <dg-header></dg-header>
     </section>
-    <div class="sticky top-8 h-12 w-full z-10 backdrop-blur">
+    <div class="sticky top-0 h-12 w-full z-10 backdrop-blur">
         <dg-sort-bar ></dg-sort-bar>
     </div>
     <section fxLayout="row" fxLayoutGap="24px">
         <div fxLayout="column" fxFlex="250px">
-            <div class="sticky top-20 text-center shadow-md bg-white pb-8 z-10">
+            <div class="sticky top-12 text-center shadow-md bg-white pb-8 z-10">
                 <dg-tree-checkboxes ></dg-tree-checkboxes>
                 <div fxLayout="column" fxLayoutAlign="center center">
                     <button *ngIf="!(userService.user$ | async)" mat-flat-button color="primary" routerLink="register"
@@ -35,13 +35,13 @@
                 </div>
             </div>
         </div>
-        <div fxLayout="column" fxFlex="auto">
-            <dg-video-grid  [videos]="videos$.value"></dg-video-grid>
-            <div *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center center" class="w-full h-20">
+        <div fxLayout="column" fxFlex="auto" *ngIf="videoService.videos$ | async as videos">
+            <dg-video-grid  [videos]="videos"></dg-video-grid>
+            <div *ngIf="videoService.isLoading$ | async" fxLayout="row" fxLayoutAlign="center center" class="w-full h-20">
                 <mat-spinner diameter="30"></mat-spinner>
             </div>
-            <div *ngIf="endOfResults" fxLayout="row" fxLayoutAlign="center center" class="w-full h-20">
-                END OF RESULTS
+            <div *ngIf="videoService.endOfResults$ | async as end" fxLayout="row" fxLayoutAlign="center center" class="w-full h-20">
+                {{end ? 'more to come!': 'end of result'}}
             </div>
         </div>
     </section>

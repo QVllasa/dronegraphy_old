@@ -21,7 +21,7 @@ import (
 
 var (
 	userCount     = 15
-	videoCount    = 200
+	videoCount    = 400
 	categoryCount = 16
 )
 
@@ -179,10 +179,10 @@ func TestLoadVideoFixtures(t *testing.T) {
 		repository.NewDatabase()
 	}
 
-	var categories []string
+	var categories []int
 
 	catProjection := bson.D{
-		{"value", 1},
+		{"key", 1},
 	}
 
 	catsColl := repository.DB.Client.Database("dronegraphy_db").Collection("categories")
@@ -197,7 +197,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 		if err = catsCursor.Decode(&category); err != nil {
 			log.Fatal(err)
 		}
-		categories = append(categories, category.Value)
+		categories = append(categories, category.Key)
 		fmt.Println(categories)
 	}
 
@@ -236,7 +236,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 		//video.Title = gofakeit.LoremIpsumSentence(4)
 		video.Title = strconv.Itoa(i)
 		video.Camera = "DJI Mavic Pro"
-		video.Categories = util.Unique(categories[gofakeit.Number(3, 6):gofakeit.Number(6, 15)])
+		video.Categories = util.UniqueIntArray(categories[gofakeit.Number(1, 5):gofakeit.Number(6, 15)])
 		video.Formats = []string{gofakeit.RandomString(formats)}
 		video.Width = gofakeit.Number(240, 2160)
 		video.Height = gofakeit.Number(720, 3840)

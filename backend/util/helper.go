@@ -215,9 +215,21 @@ func CopyDir(src string, dst string) (err error) {
 	return
 }
 
-func Unique(stringSlice []string) []string {
+func UniqueStringArray(stringSlice []string) []string {
 	keys := make(map[string]bool)
-	list := []string{}
+	var list []string
+	for _, entry := range stringSlice {
+		if _, value := keys[entry]; !value {
+			keys[entry] = true
+			list = append(list, entry)
+		}
+	}
+	return list
+}
+
+func UniqueIntArray(stringSlice []int) []int {
+	keys := make(map[int]bool)
+	var list []int
 	for _, entry := range stringSlice {
 		if _, value := keys[entry]; !value {
 			keys[entry] = true

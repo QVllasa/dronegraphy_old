@@ -21,7 +21,7 @@ type (
 		StuffPick      bool               `json:"stuff_pick" bson:"stuff_pick"`
 		Published      bool               `json:"published" bson:"published"`
 		Converted      bool               `json:"converted" bson:"converted"`
-		Categories     []string           `json:"categories" bson:"categories" validate:"required"`
+		Categories     []int              `json:"categories" bson:"categories" validate:"required"`
 		Downloads      int                `json:"downloads" bson:"downloads"`
 		Views          int                `json:"views" bson:"views"`
 		Thumbnail      string             `json:"thumbnail" bson:"thumbnail"`

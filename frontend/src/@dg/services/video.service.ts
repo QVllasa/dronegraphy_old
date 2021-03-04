@@ -5,7 +5,8 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {map, mergeMap, switchMap, take} from 'rxjs/operators';
 import {User} from '../models/user.model';
-import {of} from 'rxjs';
+import {BehaviorSubject, of} from 'rxjs';
+import {SearchService} from './search.service';
 
 export interface VideoResponse {
     totalcount: number;
@@ -22,9 +23,30 @@ export interface VideoResponse {
 export class VideoService {
 
 
-    videos: Video[] = [];
+    videos$ = new BehaviorSubject<Video[]>([]);
+    headerVideo$ = new BehaviorSubject<Video>(null);
+    isLoading$ = new BehaviorSubject<boolean>(false);
+    endOfResults$ = new BehaviorSubject<boolean>(false);
+    response: VideoResponse;
+    batchSize = 50;
+    sortKey = 1;
 
-    constructor(private http: HttpClient) {
+    // TODO add filtering by category and search word
+    constructor(private http: HttpClient, private searchService: SearchService) {
+        this.onLoadVideos();
+        this.searchService.activeSort$.subscribe(sortOption => {
+            if (!sortOption) {
+                return;
+            }
+            this.sortKey = sortOption.key;
+            this.videos$.next([]);
+            this.isLoading$.next(true);
+            setTimeout(() => {
+                    this.onReloadVideos(undefined, undefined, undefined, undefined, sortOption.key).then(() => this.isLoading$.next(false));
+                },
+                0
+            );
+        });
     }
 
 
@@ -45,6 +67,37 @@ export class VideoService {
 
         return this.http.get<VideoResponse>(environment.apiUrl + '/videos', {params}).pipe(take(1));
     }
+
+    onLoadMore() {
+        const limit = this.batchSize;
+        const page = this.response.page + 1;
+        this.endOfResults$.next(false);
+        if (page === this.response.totalpages + 1) {
+            this.endOfResults$.next(true);
+            return;
+        } else if (this.isLoading$.value) {
+            return;
+        }
+        this.isLoading$.next(true);
+        setTimeout(() => {
+            this.onLoadVideos(limit, page, undefined, undefined, this.sortKey).then(() => this.isLoading$.next(false));
+        }, 0);
+    }
+
+    async onLoadVideos(limit?: number, page?: number, category?: string[], search?: string[], sort?: number) {
+        const res = await this.getVideos(limit, page, category, search, sort).toPromise();
+        this.videos$.next([...this.videos$.value, ...this.mapVideos(res)]);
+        console.log('Load', this.videos$.value.length, res);
+        this.response = res;
+    }
+
+    async onReloadVideos(limit?: number, page?: number, category?: string[], search?: string[], sort?: number) {
+        const res = await this.getVideos(limit, page, category, search, sort).toPromise();
+        this.videos$.next([...this.videos$.value, ...this.mapVideos(res)]);
+        console.log('Reload', this.videos$.value.length, res);
+        this.response = res;
+    }
+
 
     getVideosByCreator(id, limit?, page?) {
         if (!page) {
@@ -69,7 +122,6 @@ export class VideoService {
     removeVideo(id) {
         return this.http.delete(environment.apiUrl + '/videos/' + id);
     }
-
 
     createVideo(data: Video, thumbnail: File, videoFiles: File[]) {
         const tb = new FormData();
