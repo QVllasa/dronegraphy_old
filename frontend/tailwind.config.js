@@ -21,7 +21,7 @@ module.exports = {
     },
     extend: {
       gridTemplateColumns: {
-        'video-grid': 'repeat(auto-fill, minmax(340px, 1fr))',
+        'video-grid': 'repeat(auto-fill, minmax(480px, 1fr))',
 
         // Complex site-specific column configuration
         'footer': '200px minmax(900px, 1fr) 100px',

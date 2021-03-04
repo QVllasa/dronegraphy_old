@@ -1,6 +1,6 @@
 /.env
 /.serviceAccountKey.json
 /storage/
-/tests/backend/storage/
-/tests/testfiles/*
+/tests/backend/
+
 
