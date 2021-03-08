@@ -55,7 +55,5 @@ export class CustomLayoutComponent implements OnInit {
         ).subscribe(open => open ? this.configpanel.open() : this.configpanel.close());
     }
 
-    onScroll(){
-        console.log("scrolled");
-    }
+
 }

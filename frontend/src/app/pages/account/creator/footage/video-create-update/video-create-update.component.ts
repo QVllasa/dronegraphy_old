@@ -78,7 +78,6 @@ export class VideoCreateUpdateComponent implements OnInit {
             this.mode = 'update';
         } else {
             this.defaults = {} as Video;
-            console.log(this.defaults.storageContent)
         }
 
         this.form = this.fb.group({
@@ -133,7 +132,7 @@ export class VideoCreateUpdateComponent implements OnInit {
         this.isLoading = true;
         this.videoService.createVideo(videoData, this.thumbnail, this.files)
             .subscribe(res => {
-                console.log(res)
+
                 this.isLoading = false;
                 this.onSucess = true;
             },
@@ -150,8 +149,6 @@ export class VideoCreateUpdateComponent implements OnInit {
         //     videoFiles.append("videoFiles[]", this.files[i], this.files[i]['name']);
         // }
 
-        console.log(this.thumbnail)
-        console.log(this.defaults.thumbnail)
 
         this.isLoading = true;
         this.videoService.updateVideo(this.defaults.id, this.form.value, this.thumbnail)

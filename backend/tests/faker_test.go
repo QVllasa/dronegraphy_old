@@ -20,9 +20,10 @@ import (
 )
 
 var (
-	userCount     = 15
-	videoCount    = 400
-	categoryCount = 16
+	userCount   = 15
+	videoCount  = 400
+	childCount  = 16
+	parentCount = 3
 )
 
 func TestLoadCategoryFixtures(t *testing.T) {
@@ -38,7 +39,7 @@ func TestLoadCategoryFixtures(t *testing.T) {
 	_ = cColl.Drop(context.Background())
 
 	//generate parent categories
-	for i := 1; i < 3; i++ {
+	for i := 1; i < parentCount; i++ {
 		parent := model.Category{
 			Value: gofakeit.Noun(),
 			Key:   i,
@@ -48,7 +49,7 @@ func TestLoadCategoryFixtures(t *testing.T) {
 	}
 
 	//Generate child categories
-	for i := 0; i < 16; i++ {
+	for i := 0; i < childCount; i++ {
 		child := model.Category{
 			Value:     gofakeit.Noun(),
 			Key:       gofakeit.Number(3, 100),
@@ -182,7 +183,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 	var categories []int
 
 	catProjection := bson.D{
-		{"key", 1},
+		//{"key", 1},
 	}
 
 	catsColl := repository.DB.Client.Database("dronegraphy_db").Collection("categories")
@@ -197,8 +198,13 @@ func TestLoadVideoFixtures(t *testing.T) {
 		if err = catsCursor.Decode(&category); err != nil {
 			log.Fatal(err)
 		}
-		categories = append(categories, category.Key)
+
+		if category.ParentKey != 0 {
+			categories = append(categories, category.Key)
+		}
+
 		fmt.Println(categories)
+
 	}
 
 	var creators []model.Creator

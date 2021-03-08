@@ -5,6 +5,7 @@ import (
 	"dronegraphy/backend/repository/model"
 	"dronegraphy/backend/service"
 	"dronegraphy/backend/util"
+	"encoding/json"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
@@ -218,58 +219,87 @@ func (this *Handler) GetVideo(c echo.Context) error {
 
 func (this *Handler) GetVideos(c echo.Context) error {
 
-	page, _ := strconv.ParseInt(c.QueryParam("page"), 10, 64)
-	limit, _ := strconv.ParseInt(c.QueryParam("limit"), 10, 64)
-	categories := c.QueryParam("category")
-	search := c.QueryParam("search")
-
-	fmt.Println(categories)
-	fmt.Println(search)
-
-	// Defaults
-	if page == 0 {
+	page, err := strconv.ParseInt(c.QueryParam("page"), 10, 64)
+	if err != nil {
+		// Defaults
 		page = 1
 	}
-	if limit == 0 {
+
+	limit, err := strconv.ParseInt(c.QueryParam("limit"), 10, 64)
+	if err != nil {
+		// Defaults
 		limit = 50
 	}
 
-	var response VideoResponse
 
-	// TODO build query with sorting, category and text search
-	// Create indexes for all text search fields (title, location, camera etc.)
-	// Example: {$and: [{$text: {$search:"port"}}, {sell: true}, {stuff_pick: true}]}
-	// Example partial text search {$and: [{title: {$regex:"1"}}, {sell: true}, {stuff_pick: true}, {categories: {$all:[18]}}]}
-	// Problem: partial text search works only on one field, which blows up the query while text search does not support partially text search
 
-	filter := bson.M{}
-	//sorting := bson.M{}
+	categoryKeys := getCategoriesFromString(c.QueryParam("category"))
+
+	search := c.QueryParam("search")
+
+	// Options
 	opt := options.Find()
+	sortKey, err := strconv.ParseInt(c.QueryParam("sort"), 10, 64)
+	if err != nil {
+		fmt.Println("sortkey: ", err)
+
+	}
+
+
 	if limit != -1 {
 		opt.SetSkip((page - 1) * limit)
 		opt.SetLimit(limit)
 	}
-
-	switch sort, _ := strconv.ParseInt(c.QueryParam("sort"), 10, 64); sort {
-	case 1:
-		filter = bson.M{"stuff_pick": true}
-	case 2:
+	if sortKey == 0 {
+		opt.SetSort(bson.M{"downloads": -1})
+	}
+	if sortKey == 2 {
+		// Sortieren nach Neueste zuerst
 		opt.SetSort(bson.M{"createdAt": -1})
-	case 3:
-		filter = bson.M{"sell": false}
-	default:
-		filter = bson.M{}
 	}
 
+	// Filter
+	filter := map[string][]map[string]interface{}{}
+
+	if search != "" {
+		fmt.Println("search: ", search)
+		filter["$and"] = append(filter["$and"], bson.M{"$text": bson.M{"$search": search}})
+	}
+
+	// Sortieren nach besondere Auswahl
+	if sortKey == 1 {
+		filter["$and"] = append(filter["$and"], bson.M{"stuff_pick": true})
+	}
+
+	// Sortieren nach Kostenlos
+	if sortKey == 3 {
+		filter["$and"] = append(filter["$and"], bson.M{"sell": false})
+	}
+	if len(categoryKeys) > 0 {
+		var c []bson.M
+		for _, j := range categoryKeys {
+			fmt.Println(j)
+			c = append(c, bson.M{"$elemMatch": bson.M{"$eq": j}})
+		}
+
+		f := bson.M{
+			"categories": bson.M{
+				"$all": c,
+			},
+		}
+		filter["$and"] = append(filter["$and"], f)
+	}
 	if c.Param("id") != "" {
-		fmt.Println(c.Param("id"))
-		filter = bson.M{"creator.uid": c.Param("id")}
+		filter["$and"] = append(filter["$and"], bson.M{"creator.uid": c.Param("id")})
 	}
 
+	//{$and:[{sell:false}, {categories:{$all:[{$elemMatch:{$eq:4}} {$elemMatch:{$eq:96}} {$elemMatch:{$eq:2}} {$elemMatch:{$eq:18}} {$elemMatch:{$eq:51}} {$elemMatch:{$eq:37}} {$elemMatch:{$eq:14}}]}}]}
+
+	fmt.Println("final filter:", filter)
+
+	var response VideoResponse
 	response.Videos, _ = this.repository.GetVideos(page, limit, filter, opt)
-
 	response.TotalCount, _ = this.repository.VideoColl.CountDocuments(context.Background(), filter)
-
 	response.TotalPages = int(math.Ceil(float64(response.TotalCount) / float64(limit)))
 	response.Limit = limit
 	response.Page = page
@@ -360,4 +390,17 @@ func (this *Handler) GetSortingOptions(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, f)
+}
+
+func getCategoriesFromString(categories string) []int64 {
+	var c []int64
+	var keys []int64
+	_ = json.Unmarshal([]byte(categories), &keys)
+
+	if len(keys) != 0 {
+		for _, key := range keys {
+			c = append(c, key)
+		}
+	}
+	return c
 }

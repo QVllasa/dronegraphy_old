@@ -57,16 +57,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   @ViewChild('sidenav', { static: true }) sidenav: MatSidenav;
   @ViewChild(MatSidenavContainer, { static: true }) sidenavContainer: MatSidenavContainer;
 
-  @HostListener('window:scroll', ['$event'])
-  onWindowScroll() {
-// In chrome and some browser scroll is given to body tag
-    const pos = (document.documentElement.scrollTop || document.body.scrollTop) + document.documentElement.offsetHeight;
-    const max = document.documentElement.scrollHeight;
-// pos/max will give you the distance between scroll bottom and and bottom of screen in percentage.
-    if (pos === max )   {
-      console.log("asdasdasd")
-    }
-  }
+
 
 
   constructor(private cd: ChangeDetectorRef,
@@ -111,9 +102,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     ).subscribe(() => this.sidenav.close());
   }
 
-  onScroll(){
-    console.log('scrolling');
-  }
+
 
   ngAfterViewInit(): void {
     /**

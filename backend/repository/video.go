@@ -15,37 +15,6 @@ import (
 	"time"
 )
 
-//func (this *Repository) UpdateVideo(id string, reqBody io.ReadCloser) (*model.Video, error) {
-//
-//	var video *model.Video
-//	//user, err := this.GetUserById(id)
-//	//if err != nil {
-//	//	log.Errorf("User not found: %v", err)
-//	//	return nil, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "User not found"})
-//	//}
-//	//
-//	//if err := json.NewDecoder(reqBody).Decode(&user); err != nil {
-//	//	log.Errorf("Unable decode using request body: %v", err)
-//	//	return nil, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Unable to decode JSON"})
-//	//} else {
-//	//	fmt.Printf("user: %v", user)
-//	//}
-//	//
-//	////if err := handler.V.Struct(user); err != nil {
-//	////	log.Errorf("Unable to validate the struct: %v", err)
-//	////	return user, err
-//	////}
-//	//
-//	//filter := bson.M{"uid": user.UID}
-//	//
-//	//_, err = this.UserColl.UpdateOne(context.Background(), filter, bson.M{"$set": user})
-//	//if err != nil {
-//	//	log.Errorf("Unable to update the user: %v", err)
-//	//	return nil, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Unable to update the User"})
-//	//}
-//
-//	return video, nil
-//}
 
 func (this *Repository) CreateVideo(video *model.Video, id string) (string, error) {
 
@@ -75,7 +44,7 @@ func (this *Repository) CreateVideo(video *model.Video, id string) (string, erro
 	return vID, nil
 }
 
-func (this *Repository) GetVideos(page int64, limit int64, filter bson.M, opt *options.FindOptions) ([]model.Video, error) {
+func (this *Repository) GetVideos(page int64, limit int64, filter map[string][]map[string]interface{}, opt *options.FindOptions) ([]model.Video, error) {
 
 	var videos []model.Video
 

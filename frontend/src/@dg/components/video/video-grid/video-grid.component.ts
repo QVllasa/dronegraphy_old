@@ -21,13 +21,8 @@ export class VideoGridComponent implements OnInit {
     ngOnInit() {
     }
 
-    onScrollDown() {
-        console.log('scrolled down!!');
-    }
 
-    onScrollUp() {
-        console.log('scrolled up!!');
-    }
+
 
 
 }

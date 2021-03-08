@@ -3,10 +3,12 @@ import {Injectable} from '@angular/core';
 import {IVideo, Video} from '../models/video.model';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../environments/environment';
-import {map, mergeMap, switchMap, take} from 'rxjs/operators';
+import {map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
 import {User} from '../models/user.model';
-import {BehaviorSubject, of} from 'rxjs';
+import {BehaviorSubject, combineLatest, concat, merge, of, zip} from 'rxjs';
 import {SearchService} from './search.service';
+import {ICategory} from '../models/category.model';
+import {CategoryService} from './category.service';
 
 export interface VideoResponse {
     totalcount: number;
@@ -29,41 +31,91 @@ export class VideoService {
     endOfResults$ = new BehaviorSubject<boolean>(false);
     response: VideoResponse;
     batchSize = 50;
-    sortKey = 1;
+
+    sortKey: number = null;
+    selectedCategories: string[] = [];
+    searchWords: string[];
 
     // TODO add filtering by category and search word
-    constructor(private http: HttpClient, private searchService: SearchService) {
-        this.onLoadVideos();
-        this.searchService.activeSort$.subscribe(sortOption => {
-            if (!sortOption) {
-                return;
-            }
-            this.sortKey = sortOption.key;
-            this.videos$.next([]);
-            this.isLoading$.next(true);
-            setTimeout(() => {
-                    this.onReloadVideos(undefined, undefined, undefined, undefined, sortOption.key).then(() => this.isLoading$.next(false));
-                },
-                0
-            );
-        });
+    constructor(private http: HttpClient, private searchService: SearchService, private categoryService: CategoryService) {
+
+
+        const activeSort$ = this.searchService.activeSort$;
+        const checkedCategories$ = this.categoryService.categories$;
+        const search$ = this.searchService.search$;
+
+
+        merge(
+            activeSort$
+                .pipe(
+                    tap(sortOption => {
+                        if (!sortOption) {
+                            return;
+                        }
+                        this.sortKey = sortOption.key;
+                    })
+                ),
+            checkedCategories$.pipe(
+                tap(categories => {
+                    categories = categories.filter(item => item.checked === true);
+                    this.selectedCategories = categories.map(a => '' + a.key);
+                })
+            ),
+            search$.pipe(
+                tap(search => {
+                    this.searchWords = search;
+                })
+            )
+        )
+            .subscribe((res) => {
+                console.log(res);
+                // this.isLoading$.next(true);
+                // this.videos$.next([]);
+                // console.log('selected categories: ', this.selectedCategories);
+
+                // TODO use switchmap instead, because its firing too many times
+                // this.onReloadVideos(
+                //     undefined,
+                //     undefined,
+                //     this.selectedCategories,
+                //     this.searchWords,
+                //     this.sortKey)
+                //     .then(() => this.isLoading$.next(false));
+            });
+
     }
 
 
-    getVideos(limit?, page?, category?, search?, sort?) {
+    getVideos(limit?: number, page?: number, category?: string[], search?: string[], sortKey?: number) {
         if (!page) {
-            page = 0;
+            // Same as in Backend
+            page = 1;
         }
         if (!limit) {
-            limit = 0;
+            // Same as in Backend
+            limit = 50;
         }
+        if (!category) {
+            category = [];
+        }
+        if (!search) {
+            search = [];
+        }
+
+        const transformedCategories = '[' + category + ']';
+
+        const transformedSearch = search.join(' ');
+
+
         const params = new HttpParams()
-            .set('limit', limit)
-            .set('page', page)
-            .set('category', category)
-            .set('search', search)
-            .set('sort', sort)
-        ;
+            .set('limit', limit.toString())
+            .set('page', page.toString())
+            .set('search', transformedSearch)
+            .set('category', transformedCategories)
+            .set('sort', '' + sortKey);
+
+        // console.log(params);
+
 
         return this.http.get<VideoResponse>(environment.apiUrl + '/videos', {params}).pipe(take(1));
     }
@@ -79,22 +131,34 @@ export class VideoService {
             return;
         }
         this.isLoading$.next(true);
-        setTimeout(() => {
-            this.onLoadVideos(limit, page, undefined, undefined, this.sortKey).then(() => this.isLoading$.next(false));
-        }, 0);
+        this.onReloadVideos(
+            limit,
+            page,
+            this.selectedCategories,
+            this.searchWords,
+            this.sortKey)
+            .then(() => this.isLoading$.next(false));
     }
 
-    async onLoadVideos(limit?: number, page?: number, category?: string[], search?: string[], sort?: number) {
-        const res = await this.getVideos(limit, page, category, search, sort).toPromise();
-        this.videos$.next([...this.videos$.value, ...this.mapVideos(res)]);
-        console.log('Load', this.videos$.value.length, res);
-        this.response = res;
-    }
+    // async onLoadVideos(limit?: number, page?: number, category?: string[], search?: string[], sort?: number) {
+    //     const res = await this.getVideos(limit, page, category, search, sort).toPromise();
+    //     this.videos$.next([...this.videos$.value, ...this.mapVideos(res)]);
+    //     console.log('Total Loaded Videos', this.videos$.value.length, res);
+    //     this.response = res;
+    // }
 
+
+    // TODO use Observable instead because its firing too many times
     async onReloadVideos(limit?: number, page?: number, category?: string[], search?: string[], sort?: number) {
         const res = await this.getVideos(limit, page, category, search, sort).toPromise();
-        this.videos$.next([...this.videos$.value, ...this.mapVideos(res)]);
-        console.log('Reload', this.videos$.value.length, res);
+        if (this.videos$.value.length > 0) {
+            this.videos$.next([...this.videos$.value, ...this.mapVideos(res)]);
+        } else {
+            this.videos$.next(this.mapVideos(res));
+        }
+
+        console.log('Total Reloaded Videos', this.videos$.value.length, res);
+        // console.log('Total Reloaded Videos');
         this.response = res;
     }
 
@@ -154,7 +218,6 @@ export class VideoService {
                 take(1),
                 mergeMap(video => {
                     if (!thumbnail) {
-                        console.log('no thumbnail change');
                         return of(this.newVideo(video));
                     }
                     return this.uploadVideoThumbnail(id, tb);
@@ -184,7 +247,6 @@ export class VideoService {
 
     changePublishState(video: Video) {
 
-        console.log(video.published);
         return this.http.post<IVideo>(environment.apiUrl + '/videos/' + video.id, video).pipe(
             map(res => {
                 return this.newVideo(res);
@@ -203,5 +265,8 @@ export class VideoService {
         return loadedVideo;
     }
 
+    generateParams() {
+
+    }
 
 }

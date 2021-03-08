@@ -1,9 +1,12 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ISortOption, SortingService} from '../../services/sorting.service';
 import {SearchService} from '../../services/search.service';
 import {ICategory} from '../../models/category.model';
-import {switchMap} from 'rxjs/operators';
+import {switchMap, take, tap} from 'rxjs/operators';
+import {ActivatedRoute} from '@angular/router';
+import {pipe} from 'rxjs';
+import {CategoryService} from '../../services/category.service';
 
 
 @Component({
@@ -14,28 +17,43 @@ import {switchMap} from 'rxjs/operators';
 export class SortBarComponent implements OnInit {
 
 
-    sortOptions: ISortOption[] = [];
     form: FormGroup;
     sortControl = new FormControl();
+    sortOptions: ISortOption[] = [];
+
+
+    /**
+     *  Initial Value for Sorting on Start Page
+     *  Sorts for "Besondere Auswahl"
+     */
+    initialKey = 1;
 
 
     constructor(public sortingService: SortingService,
+                private route: ActivatedRoute,
+                public categoryService: CategoryService,
                 public searchService: SearchService) {
-
-
-    }
-
-    ngOnInit(): void {
-        this.sortingService.getFilters()
+        this.sortingService.getSortOptions()
             .pipe(
                 switchMap(options => {
                     this.sortOptions = options;
                     this.form = new FormGroup({
                         filter: this.sortControl
                     });
-                    return this.searchService.activeSort$;
-                }),
-            ).subscribe();
+                    return this.route.queryParams.pipe(take(1));
+                })
+            )
+            .subscribe(param => {
+                const sortKey = +param['sort'];
+                if (!sortKey) {
+                    const initialSortOption = this.sortOptions.find(x => x.key === this.initialKey);
+                    this.searchService.activeSort$.next(initialSortOption);
+                } else {
+                    const initialSortOption = this.sortOptions.find(x => x.key === sortKey);
+                    this.searchService.activeSort$.next(initialSortOption);
+                }
+            });
+
 
         this.searchService.activeSort$.subscribe(value => {
             if (value) {
@@ -44,8 +62,12 @@ export class SortBarComponent implements OnInit {
         });
     }
 
+    ngOnInit(): void {
+
+    }
+
     removeCategory(category: ICategory) {
-        this.searchService.onDeselectCategory(category);
+        this.searchService.onToggleCategory(category);
     }
 
     removeTerm(term: string) {
@@ -53,7 +75,7 @@ export class SortBarComponent implements OnInit {
     }
 
     onSort(value: ISortOption) {
-        console.log(value.value);
+
         this.searchService.onSortChange(value);
     }
 

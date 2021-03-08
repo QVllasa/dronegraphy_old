@@ -39,11 +39,10 @@ export class AuthenticationService implements OnDestroy {
             firstName: getFirstName(name),
             lastName: getLastName(name),
         };
-        console.log(password)
+
         return this.userService.registerUser(user, password).pipe(
             take(1),
             switchMap(res => {
-                console.log(res)
                 return this.handleLogin(user.email, password)
             }),
             switchMap(res => {

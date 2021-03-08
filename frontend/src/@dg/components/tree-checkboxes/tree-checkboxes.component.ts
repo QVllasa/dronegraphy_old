@@ -5,7 +5,7 @@ import {CategoryService} from '../../services/category.service';
 import {SearchService} from '../../services/search.service';
 import {ICategory} from '../../models/category.model';
 import {ActivatedRoute} from '@angular/router';
-import {mergeMap, switchMap, tap} from 'rxjs/operators';
+import {mergeMap, switchMap, take, tap} from 'rxjs/operators';
 import {ArrayDataSource} from '@angular/cdk/collections';
 import {removeDuplicateObjects} from '../../utils/remove-duplicate-objects';
 
@@ -36,14 +36,6 @@ export class TreeCheckboxesComponent {
             this.dataSource = new ArrayDataSource<ICategory>(data);
             this.data = data;
         });
-
-        // this.searchService.activeCategories$.subscribe(data => {
-        //     if (this.data.length === 0) {
-        //         return;
-        //     }
-        //     // this.dataSource = new ArrayDataSource<ICategory>(this.data);
-        // });
-
     }
 
     hasChild = (_: number, node: ICategory) => node.expandable;
@@ -72,12 +64,8 @@ export class TreeCheckboxesComponent {
         return true;
     }
 
-    clickedActive(element) {
-        if (this.searchService.activeCategories$.value.includes(element)) {
-            this.searchService.onDeselectCategory(element);
-        } else {
-            this.searchService.onSelectCategory(element);
-        }
+    clickedActive(element: ICategory) {
+        this.searchService.onToggleCategory(element);
     }
 }
 

@@ -83,7 +83,7 @@ export class FootageComponent implements OnInit {
             this.dataSource.data = videos;
         });
 
-        // console.log(this.columns)
+
 
         this.searchCtrl.valueChanges.subscribe(value => this.onFilterChange(value));
     }
@@ -100,7 +100,6 @@ export class FootageComponent implements OnInit {
     getData() {
         return this.videoService.getVideosByCreator(this.userSevice.user$.value.uid, -1, 0).pipe(
             map(res => {
-                console.log(res)
                 this.totalCount = res.totalcount
                 if (!res.videos) {
                     return []
@@ -192,7 +191,7 @@ export class FootageComponent implements OnInit {
 
     updatePublishState(video: Video) {
         video.published = !video.published
-        console.log(video)
+
         this.videoService.changePublishState(video).subscribe(res => {
             this.videos[this.videos.findIndex(el => el.id === res.id)] = res;
             this._snackBar.open("Status geändert!", "SCHLIESSEN")

@@ -6,7 +6,7 @@ import {ResultsComponent} from './results.component';
 
 const routes: Routes = [
   {
-    path: ':value',
+    path: ':category',
     component: ResultsComponent,
     // pathMatch: 'full'
   },
