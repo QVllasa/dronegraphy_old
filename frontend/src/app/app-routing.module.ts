@@ -20,6 +20,10 @@ const routes: Routes = [
                 loadChildren: () => import('./pages/results/results.module').then(m => m.ResultsModule),
             },
             {
+                path: 'footage',
+                loadChildren: () => import('./pages/footage/footage.module').then(m => m.FootageModule),
+            },
+            {
                 path: 'account',
                 loadChildren: () => import('./pages/account/account.module').then(m => m.AccountModule),
                 // canLoad: [AuthGuard]

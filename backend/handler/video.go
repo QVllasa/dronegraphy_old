@@ -231,8 +231,6 @@ func (this *Handler) GetVideos(c echo.Context) error {
 		limit = 50
 	}
 
-
-
 	categoryKeys := getCategoriesFromString(c.QueryParam("category"))
 
 	search := c.QueryParam("search")
@@ -245,7 +243,6 @@ func (this *Handler) GetVideos(c echo.Context) error {
 
 	}
 
-
 	if limit != -1 {
 		opt.SetSkip((page - 1) * limit)
 		opt.SetLimit(limit)
@@ -254,7 +251,6 @@ func (this *Handler) GetVideos(c echo.Context) error {
 		opt.SetSort(bson.M{"downloads": -1})
 	}
 	if sortKey == 2 {
-		// Sortieren nach Neueste zuerst
 		opt.SetSort(bson.M{"createdAt": -1})
 	}
 
@@ -275,6 +271,11 @@ func (this *Handler) GetVideos(c echo.Context) error {
 	if sortKey == 3 {
 		filter["$and"] = append(filter["$and"], bson.M{"sell": false})
 	}
+
+	// All
+	if sortKey == 4 {
+		filter["$and"] = append(filter["$and"], bson.M{})
+	}
 	if len(categoryKeys) > 0 {
 		var c []bson.M
 		for _, j := range categoryKeys {
@@ -292,8 +293,6 @@ func (this *Handler) GetVideos(c echo.Context) error {
 	if c.Param("id") != "" {
 		filter["$and"] = append(filter["$and"], bson.M{"creator.uid": c.Param("id")})
 	}
-
-	//{$and:[{sell:false}, {categories:{$all:[{$elemMatch:{$eq:4}} {$elemMatch:{$eq:96}} {$elemMatch:{$eq:2}} {$elemMatch:{$eq:18}} {$elemMatch:{$eq:51}} {$elemMatch:{$eq:37}} {$elemMatch:{$eq:14}}]}}]}
 
 	fmt.Println("final filter:", filter)
 

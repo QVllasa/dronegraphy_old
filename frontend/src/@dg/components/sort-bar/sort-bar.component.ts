@@ -75,7 +75,6 @@ export class SortBarComponent implements OnInit {
     }
 
     onSort(value: ISortOption) {
-
         this.searchService.onSortChange(value);
     }
 

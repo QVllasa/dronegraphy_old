@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {Router} from '@angular/router';
-import {Video} from "../../../models/video.model";
+import {Video} from '../../../models/video.model';
 
 
 //
@@ -19,16 +19,18 @@ import {Video} from "../../../models/video.model";
 export class VideoItemComponent implements OnInit {
 
     @Input() videoItem: Video;
+    @Input() options: any;
+    @Input() playOnHover: boolean;
 
 
     loadStatus: boolean;
     timer: any;
     poster: any;
     showActions: boolean;
-    options: any;
+    // options: any;
 
 
-    constructor(private domSanitizer: DomSanitizer, private router: Router) {
+    constructor(private domSanitizer: DomSanitizer) {
     }
 
     ngOnInit(): void {
@@ -43,39 +45,29 @@ export class VideoItemComponent implements OnInit {
                 inactivityTimeout: 0,
                 videopage: false,
                 sources: [{src: this.videoItem.getHLS(), type: 'application/x-mpegURL'}]
-            }
+            };
         }
 
 
     }
 
 
-    hyphenateUrlParams(str: string) {
-        return str.replace(/\s/g, '-');
-    }
-
     onShow() {
-            this.showActions = true;
-            this.timer = setTimeout(() => {
-                this.loadStatus = true;
-            }, 750);
-
-
+        this.showActions = true;
+        this.timer = setTimeout(() => {
+            this.loadStatus = true;
+        }, 750);
     }
 
     onHide() {
 
-            setTimeout(() => {
-                this.showActions = false;
-            }, 1000);
+        setTimeout(() => {
+            this.showActions = false;
+        }, 1000);
 
-            clearTimeout(this.timer);
-            this.loadStatus = false;
+        clearTimeout(this.timer);
+        this.loadStatus = false;
 
-    }
-
-    onLoadVideo() {
-        this.router.navigate(['/video', this.videoItem.id, this.hyphenateUrlParams(this.videoItem.title)]).then();
     }
 
 

@@ -1,0 +1,119 @@
+<dg-page-layout class="w-full h-screen p-gutter pt-14 relative bg-pattern" fxLayout="column"
+                fxLayoutAlign="start center">
+    <dg-page-layout-header class="mt-16">
+        <!--        <div fxLayout="column" fxLayoutAlign="center center">-->
+        <!--            <h1 class="mat-display-2">Login</h1>-->
+        <!--        </div>-->
+    </dg-page-layout-header>
+
+    <dg-page-layout-content *ngIf="!isLoading" class="h-screen w-screen" fxLayout="row" fxLayoutAlign="start start">
+        <div class="w-full h-full px-gutter" fxLayout="column" fxFlex="60">
+            <dg-video-item [options]="options" [playOnHover]="false" [videoItem]="video"></dg-video-item>
+        </div>
+        <div class="px-gutter" fxLayout="column" fxFlex="auto">
+            <div>
+                <div class="mat-display-2">{{video.title}}</div>
+                <div class="mat-headline font-weight-lighter">Von {{video.getCreator().getFullName()}}</div>
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <div fxLayout="row" fxLayoutGap="12px">
+                        <mat-label class="font-bold">Originale Auflösung:</mat-label>
+                        <mat-label class="">{{video.getResolution()}}</mat-label>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="12px">
+                        <mat-label class="font-bold">Drohne:</mat-label>
+                        <mat-label class="">{{video.camera}}</mat-label>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="12px">
+                        <mat-label class="font-bold">Ort:</mat-label>
+                        <mat-label class="">{{video.location}}</mat-label>
+                    </div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <mat-divider class="my-4"></mat-divider>
+                <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="12px">
+                    <div fxLayout="column">
+                        <div class="font-bold">
+                            Formate:
+                        </div>
+                        <ul class="p-0" role="list">
+                            <mat-list-item *ngFor="let format of video.formats"
+                                           class=""
+                                           role="listitem">{{format}}</mat-list-item>
+                            <mat-list-item class=""
+                                           role="listitem">asdasd
+                            </mat-list-item>
+                            <mat-list-item class=""
+                                           role="listitem">asdasd
+                            </mat-list-item>
+                            <mat-list-item class=""
+                                           role="listitem">asdasd
+                            </mat-list-item>
+                        </ul>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="12px">
+                        <mat-label class="font-bold">Bildrate</mat-label>
+                        <mat-label>{{video.fps}} Bilder pro Sekunde</mat-label>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="12px">
+                        <mat-label class="font-bold">Länge</mat-label>
+                        <mat-label>{{video.length | secondsToMinutes}}</mat-label>
+                    </div>
+                    <div>
+                    </div>
+                    <div></div>
+                </div>
+                <mat-divider class="my-12"></mat-divider>
+                <div fxLayout="column" fxLayoutGap="12px">
+                    <mat-label class="font-bold">Tags</mat-label>
+                    <mat-chip-list aria-label="Fish selection"  [selectable]="false">
+                        <mat-chip *ngFor="let tag of video.tags"  class="text-primary border border-solid border-primary bg-white">{{tag}}</mat-chip>
+                        <mat-chip class="text-primary border border-solid border-primary bg-white" selected>asd</mat-chip>
+                        <mat-chip class="text-primary border border-solid border-primary bg-white" selected>asd</mat-chip>
+                        <mat-chip class="text-primary border border-solid border-primary bg-white" selected>asd</mat-chip>
+                        <mat-chip class="text-primary border border-solid border-primary bg-white" selected>asd</mat-chip>
+                        <mat-chip class="text-primary border border-solid border-primary bg-white" selected>asd</mat-chip>
+                        <mat-chip class="text-primary border border-solid border-primary bg-white" selected>asd</mat-chip>
+                    </mat-chip-list>
+                </div>
+                <mat-divider  class="my-12"></mat-divider>
+                <div fxLayout="row" fxLayoutGap="24px">
+                    <button class="font-bold" mat-raised-button color="primary">
+                        <mat-icon>add_shopping_cart</mat-icon>
+                        Hinzufügen
+                    </button>
+                    <button *ngIf="false" class="font-bold" mat-raised-button color="primary">
+                        <mat-icon>add_shopping_cart</mat-icon>
+                        Hinzufügen
+                    </button>
+                    <div fxLayoutGap="8px">
+                        <button color="white" mat-mini-fab>
+                            <mat-icon color="primary">favorite_border</mat-icon>
+                        </button>
+                        <button color="white" mat-mini-fab>
+                            <mat-icon color="primary">share</mat-icon>
+                        </button>
+                    </div>
+
+                </div>
+<!--                <div fxLayout="row" fxLayoutGap="16px">-->
+<!--                    <div fxLayout="column" fxLayoutAlign="space-between center">-->
+<!--                        <mat-icon>cloud_download</mat-icon>-->
+<!--                        <mat-label class="font-light">43212</mat-label>-->
+<!--                    </div>-->
+<!--                    <div fxLayout="column" fxLayoutAlign="space-between center">-->
+<!--                        <mat-icon>replay</mat-icon>-->
+<!--                        <mat-label class="font-light">123434</mat-label>-->
+<!--                    </div>-->
+
+<!--                </div>-->
+            </div>
+
+
+
+        </div>
+    </dg-page-layout-content>
+
+</dg-page-layout>
+
+

@@ -1,5 +1,5 @@
 <!--<div class="relative flex" >-->
-<div class="rounded relative h-full w-full flex aspect-ratio-16/9 bg-no-repeat bg-cover bg-top"
+<div *ngIf="playOnHover" class="rounded relative h-full w-full flex aspect-ratio-16/9 bg-no-repeat bg-cover bg-top"
      (mouseenter)="onShow()" (mouseleave)="onHide()"
      [style.backgroundImage]="poster">
     <dg-vjs-player
@@ -8,6 +8,14 @@
             [options]="options"></dg-vjs-player>
     <dg-vjs-actions [videoItem]="videoItem" *ngIf="showActions"></dg-vjs-actions>
 </div>
+
+
+    <dg-vjs-player
+            *ngIf="!playOnHover"
+            class="relative h-full w-full flex bg-no-repeat bg-cover bg-top"
+            [options]="options"></dg-vjs-player>
+<!--    <dg-vjs-actions [videoItem]="videoItem" *ngIf="showActions"></dg-vjs-actions>-->
+
 
 <!--</div>-->
 

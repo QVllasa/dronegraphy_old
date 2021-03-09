@@ -1,18 +1,18 @@
 import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {Video} from "../../../../../../@dg/models/video.model";
-import {map, mergeMap, startWith, switchMap} from "rxjs/operators";
-import {COMMA, ENTER} from "@angular/cdk/keycodes";
-import {Observable} from "rxjs";
-import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
-import {MatChipInputEvent} from "@angular/material/chips";
-import {NgxDropzoneChangeEvent} from "ngx-dropzone";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {VideoService} from "../../../../../../@dg/services/video.service";
-import {CategoryService} from "../../../../../../@dg/services/category.service";
-import {UploadService} from "../../../../../../@dg/services/upload.service";
-import {ICategory} from "../../../../../../@dg/models/category.model";
+import {Video} from '../../../../../../@dg/models/video.model';
+import {map, mergeMap, startWith, switchMap} from 'rxjs/operators';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {Observable} from 'rxjs';
+import {MatAutocomplete, MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {NgxDropzoneChangeEvent} from 'ngx-dropzone';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {VideoService} from '../../../../../../@dg/services/video.service';
+import {CategoryService} from '../../../../../../@dg/services/category.service';
+import {UploadService} from '../../../../../../@dg/services/upload.service';
+import {ICategory} from '../../../../../../@dg/models/category.model';
 
 
 interface CountryState {
@@ -32,7 +32,7 @@ export class VideoCreateUpdateComponent implements OnInit {
     isLoading = false;
     form: FormGroup;
 
-    //Default create
+    // Default create
     mode: 'create' | 'update' = 'create';
 
     files: File[] = [];
@@ -71,9 +71,9 @@ export class VideoCreateUpdateComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.categoryService.getCategories().subscribe(categories => {
-            this.categoryList = categories
-        })
+        this.categoryService.categories$.subscribe(categories => {
+            this.categoryList = categories;
+        });
         if (this.defaults) {
             this.mode = 'update';
         } else {
@@ -99,7 +99,7 @@ export class VideoCreateUpdateComponent implements OnInit {
         if (this.defaults) {
             this.form.patchValue({
                 thumbnail: this.defaults.thumbnail
-            })
+            });
         }
 
         this.filteredFormats = this.formatCtrl.valueChanges.pipe(
@@ -114,31 +114,31 @@ export class VideoCreateUpdateComponent implements OnInit {
     save() {
         if (this.mode === 'create') {
             if (!this.thumbnail) {
-                this._snackBar.open("Dein Thumbnail fehlt!", "SCHLIESSEN")
-                return
+                this._snackBar.open('Dein Thumbnail fehlt!', 'SCHLIESSEN');
+                return;
             }
             this.createVideo();
         } else if (this.mode === 'update') {
             if (this.form.get('thumbnail').value || this.thumbnail) {
                 this.updateVideo();
-            }else {
-                this._snackBar.open("Thumbnail fehlt", "SCHLIESSEN")
+            } else {
+                this._snackBar.open('Thumbnail fehlt', 'SCHLIESSEN');
             }
         }
     }
 
     createVideo() {
-        const videoData = new Video().deserialize(this.form.value)
+        const videoData = new Video().deserialize(this.form.value);
         this.isLoading = true;
         this.videoService.createVideo(videoData, this.thumbnail, this.files)
             .subscribe(res => {
 
-                this.isLoading = false;
-                this.onSucess = true;
-            },
+                    this.isLoading = false;
+                    this.onSucess = true;
+                },
                 error => {
-                console.log(error)
-                })
+                    console.log(error);
+                });
 
     }
 
@@ -153,14 +153,14 @@ export class VideoCreateUpdateComponent implements OnInit {
         this.isLoading = true;
         this.videoService.updateVideo(this.defaults.id, this.form.value, this.thumbnail)
             .subscribe(video => {
-                this.defaults = new Video().deserialize(video)
+                this.defaults = new Video().deserialize(video);
                 this.isLoading = false;
                 this.onSucess = true;
-            })
+            });
     }
 
     closeDialog() {
-        this.dialogRef.close(this.defaults)
+        this.dialogRef.close(this.defaults);
     }
 
     onSelectVideo(vid: NgxDropzoneChangeEvent) {
@@ -169,8 +169,8 @@ export class VideoCreateUpdateComponent implements OnInit {
 
     onSelectThumbnail(img: NgxDropzoneChangeEvent) {
         if (img.rejectedFiles.length > 0) {
-            this._snackBar.open("Datei ist zu groß!", "SCHLIESSEN")
-            return
+            this._snackBar.open('Datei ist zu groß!', 'SCHLIESSEN');
+            return;
         }
         this.thumbnail = img.addedFiles[0];
     }
@@ -200,7 +200,7 @@ export class VideoCreateUpdateComponent implements OnInit {
 
         // Add our fruit
         if ((value || '').trim()) {
-            this.update(value, control)
+            this.update(value, control);
         }
 
         // Reset the input value
@@ -208,7 +208,7 @@ export class VideoCreateUpdateComponent implements OnInit {
             input.value = '';
         }
 
-        this.update(null)
+        this.update(null);
     }
 
     remove(format: string, control: string): void {
@@ -226,7 +226,7 @@ export class VideoCreateUpdateComponent implements OnInit {
     }
 
     selected(event: MatAutocompleteSelectedEvent, control: string): void {
-        this.form.get(control).value.push(event.option.viewValue)
+        this.form.get(control).value.push(event.option.viewValue);
         this.formatInput.nativeElement.value = '';
         this.formatCtrl.setValue(null);
     }
@@ -234,17 +234,17 @@ export class VideoCreateUpdateComponent implements OnInit {
 
     update(value, control?: string) {
         if (!value) {
-            return
+            return;
         }
-        let list = this.form.get(control).value;
-        list.push(value.trim())
-        this.form.get(control).setValue(list)
+        const list = this.form.get(control).value;
+        list.push(value.trim());
+        this.form.get(control).setValue(list);
     }
 
     deleteThumbnail() {
         this.form.patchValue({
             thumbnail: null
-        })
+        });
     }
 
 }

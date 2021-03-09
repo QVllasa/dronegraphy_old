@@ -5,12 +5,12 @@ import {PricingComponent} from './pricing.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
-import {ContainerModule} from "../../../@dg/directives/container/container.module";
-import {PageLayoutModule} from "../../../@dg/components/page-layout/page-layout.module";
+import {ContainerModule} from '../../../@dg/directives/container/container.module';
+import {PageLayoutModule} from '../../../@dg/components/page-layout/page-layout.module';
 
 
 @NgModule({
-  declarations: [PricingComponent],
+    declarations: [PricingComponent],
     imports: [
         CommonModule,
         PricingRoutingModule,
@@ -21,4 +21,5 @@ import {PageLayoutModule} from "../../../@dg/components/page-layout/page-layout.
         PageLayoutModule
     ]
 })
-export class PricingModule { }
+export class PricingModule {
+}

@@ -1,27 +1,38 @@
-<div class="w-full h-screen" fxLayout="column" fxLayoutAlign="space-around center">
-    <div fxLayout="column" fxLayoutAlign="center center">
-        <h1 fxLayoutAlign="center" class="mat-display-2">Login</h1>
+<dg-page-layout class="w-full h-screen p-gutter pt-14 container relative bg-pattern" fxLayout="column"
+                fxLayoutAlign="start center">
+    <dg-page-layout-header class="mt-16">
+        <div fxLayout="column" fxLayoutAlign="center center">
+            <h1 class="mat-display-2">Login</h1>
+        </div>
+    </dg-page-layout-header>
+
+    <dg-page-layout-content dgContainer fxLayout="column" fxLayoutAlign="center center">
         <div class="card overflow-hidden w-full max-w-xs">
             <form [formGroup]="form" class="p-6" fxLayout="column" fxLayoutGap="16px">
                 <div fxFlex="auto" fxLayout="column">
-                    <mat-form-field fxFlex="grow" appearance="outline" >
+                    <mat-form-field fxFlex="grow" appearance="outline">
                         <mat-label>E-Mail</mat-label>
                         <input formControlName="email" matInput required>
-                        <mat-error *ngIf="!form.get('email').valid || form.get('email').hasError('required')"> Ohne E-Mail besteht leider kein Funkkontakt.</mat-error>
+                        <mat-error *ngIf="!form.get('email').valid || form.get('email').hasError('required')"> Ohne
+                            E-Mail besteht leider kein Funkkontakt.
+                        </mat-error>
                     </mat-form-field>
                     <mat-form-field fxFlex="grow" appearance="outline">
                         <mat-label>Password</mat-label>
                         <input [type]="inputType" formControlName="password" matInput required>
-                        <button (click)="toggleVisibility()" mat-icon-button matSuffix matTooltip="Toggle Visibility" type="button">
+                        <button (click)="toggleVisibility()" mat-icon-button matSuffix matTooltip="Toggle Visibility"
+                                type="button">
                             <mat-icon *ngIf="visible">visibility</mat-icon>
                             <mat-icon *ngIf="!visible">visibility_off</mat-icon>
                         </button>
-                        <mat-error *ngIf="form.get('password').hasError('required')">Oops, das Password fehlt.</mat-error>
+                        <mat-error *ngIf="form.get('password').hasError('required')">Oops, das Password fehlt.
+                        </mat-error>
                     </mat-form-field>
                 </div>
-                <button (click)="send()"  [color]="!isLoading ? 'primary' : null" mat-flat-button type="submit" [disabled]="!form.valid" >
-                    <div  *ngIf="isLoading" class="h-10 w-full" fxLayout="row" fxLayoutAlign="center center">
-                        <mat-spinner color="primary" diameter="25" ></mat-spinner>
+                <button (click)="send()" [color]="!isLoading ? 'primary' : null" mat-flat-button type="submit"
+                        [disabled]="!form.valid">
+                    <div *ngIf="isLoading" class="h-10 w-full" fxLayout="row" fxLayoutAlign="center center">
+                        <mat-spinner color="primary" diameter="25"></mat-spinner>
                     </div>
                     <span *ngIf="!isLoading">LOGIN</span>
                 </button>
@@ -35,11 +46,8 @@
                 </button>
             </form>
         </div>
-    </div>
-    <div>
+    </dg-page-layout-content>
 
-    </div>
-
-</div>
+</dg-page-layout>
 
 

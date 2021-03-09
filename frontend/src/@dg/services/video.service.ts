@@ -36,7 +36,6 @@ export class VideoService {
     selectedCategories: string[] = [];
     searchWords: string[];
 
-    // TODO add filtering by category and search word
     constructor(private http: HttpClient, private searchService: SearchService, private categoryService: CategoryService) {
 
 
@@ -67,20 +66,23 @@ export class VideoService {
                 })
             )
         )
+            .pipe(
+                switchMap(res => {
+                    console.log(res);
+                    this.isLoading$.next(true);
+                    this.videos$.next([]);
+                    console.log('selected categories: ', this.selectedCategories);
+                    return this.onReloadVideos(
+                        undefined,
+                        undefined,
+                        this.selectedCategories,
+                        this.searchWords,
+                        this.sortKey
+                    );
+                })
+            )
             .subscribe((res) => {
-                console.log(res);
-                // this.isLoading$.next(true);
-                // this.videos$.next([]);
-                // console.log('selected categories: ', this.selectedCategories);
-
-                // TODO use switchmap instead, because its firing too many times
-                // this.onReloadVideos(
-                //     undefined,
-                //     undefined,
-                //     this.selectedCategories,
-                //     this.searchWords,
-                //     this.sortKey)
-                //     .then(() => this.isLoading$.next(false));
+                this.isLoading$.next(false);
             });
 
     }
@@ -136,30 +138,31 @@ export class VideoService {
             page,
             this.selectedCategories,
             this.searchWords,
-            this.sortKey)
-            .then(() => this.isLoading$.next(false));
+            this.sortKey
+        )
+            .pipe(take(1))
+            .subscribe(() => {
+                this.isLoading$.next(false);
+            });
     }
 
-    // async onLoadVideos(limit?: number, page?: number, category?: string[], search?: string[], sort?: number) {
-    //     const res = await this.getVideos(limit, page, category, search, sort).toPromise();
-    //     this.videos$.next([...this.videos$.value, ...this.mapVideos(res)]);
-    //     console.log('Total Loaded Videos', this.videos$.value.length, res);
-    //     this.response = res;
-    // }
 
+    onReloadVideos(limit?: number, page?: number, category?: string[], search?: string[], sort?: number) {
+        return this.getVideos(limit, page, category, search, sort)
+            .pipe(
+                tap(res => {
+                    if (this.videos$.value.length > 0) {
+                        this.videos$.next([...this.videos$.value, ...this.mapVideos(res)]);
+                    } else {
+                        this.videos$.next(this.mapVideos(res));
+                        // TODO remove Demo
+                        this.headerVideo$.next(this.videos$.value[0]);
+                    }
 
-    // TODO use Observable instead because its firing too many times
-    async onReloadVideos(limit?: number, page?: number, category?: string[], search?: string[], sort?: number) {
-        const res = await this.getVideos(limit, page, category, search, sort).toPromise();
-        if (this.videos$.value.length > 0) {
-            this.videos$.next([...this.videos$.value, ...this.mapVideos(res)]);
-        } else {
-            this.videos$.next(this.mapVideos(res));
-        }
-
-        console.log('Total Reloaded Videos', this.videos$.value.length, res);
-        // console.log('Total Reloaded Videos');
-        this.response = res;
+                    console.log('Total Reloaded Videos', this.videos$.value.length, res);
+                    this.response = res;
+                })
+            );
     }
 
 
@@ -265,8 +268,5 @@ export class VideoService {
         return loadedVideo;
     }
 
-    generateParams() {
-
-    }
 
 }

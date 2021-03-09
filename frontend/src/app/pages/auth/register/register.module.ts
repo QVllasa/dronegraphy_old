@@ -15,6 +15,8 @@ import {NgParticlesModule} from "ng-particles";
 import {MatListModule} from "@angular/material/list";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {PageLayoutModule} from '../../../../@dg/components/page-layout/page-layout.module';
+import {ContainerModule} from '../../../../@dg/directives/container/container.module';
 
 
 @NgModule({
@@ -34,7 +36,9 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
         NgParticlesModule,
         MatListModule,
         MatSnackBarModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        PageLayoutModule,
+        ContainerModule
     ]
 })
 export class RegisterModule { }

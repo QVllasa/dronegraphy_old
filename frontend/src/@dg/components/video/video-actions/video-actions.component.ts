@@ -1,12 +1,13 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {Video} from "../../../models/video.model";
-import {fadeIn400ms} from "../../../animations/fade-in.animation";
-import {OrderService} from "../../../services/order.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {Subscription} from "rxjs";
-import {UserService} from "../../../services/user.service";
-import {Router} from "@angular/router";
-import {FavoritesService} from "../../../services/favorites.service";
+import {Video} from '../../../models/video.model';
+import {fadeIn400ms} from '../../../animations/fade-in.animation';
+import {OrderService} from '../../../services/order.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {Subscription} from 'rxjs';
+import {UserService} from '../../../services/user.service';
+import {Router} from '@angular/router';
+import {FavoritesService} from '../../../services/favorites.service';
+import {hyphenateUrlParams} from '../../../utils/hyphenate-url-params';
 
 
 // declare var require: any;
@@ -27,7 +28,7 @@ import {FavoritesService} from "../../../services/favorites.service";
                 </mat-chip-list>
             </div>
             <div class="absolute bottom-0 left-0 text-white cursor-pointer p-1">
-                <mat-label class="text-sm  mat-body-strong">{{videoItem.title}}</mat-label>
+                <mat-label (click)="onLoadVideo(videoItem)" class="text-sm  mat-body-strong">{{videoItem.title}}</mat-label>
                 <br>
                 <mat-label class=" text-sm mat-body-1 font-weight-lighter">
                     Von {{videoItem.getCreator().getFullName()}}</mat-label>
@@ -39,8 +40,10 @@ import {FavoritesService} from "../../../services/favorites.service";
                         <mat-icon
                                 class="material-icons-round text-xl">{{orderService.cart$.value?.includes(videoItem) ? 'shopping_cart' : 'add_shopping_cart' }}</mat-icon>
                     </button>
-                    <button mat-icon-button (click)="updateFavorites(videoItem.id)" [color]="userService.user$.value?.getFavorites()?.includes(videoItem.id) ? 'warn' : null" >
-                        <mat-icon class="material-icons-round text-xl">{{userService.user$.value?.getFavorites()?.includes(videoItem.id) ? 'favorite' : 'favorite_border'}}</mat-icon>
+                    <button mat-icon-button (click)="updateFavorites(videoItem.id)"
+                            [color]="userService.user$.value?.getFavorites()?.includes(videoItem.id) ? 'warn' : null">
+                        <mat-icon
+                                class="material-icons-round text-xl">{{userService.user$.value?.getFavorites()?.includes(videoItem.id) ? 'favorite' : 'favorite_border'}}</mat-icon>
                     </button>
                 </ng-container>
                 <button mat-icon-button>
@@ -78,44 +81,49 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
     //Adds and deletes items from cart
     updateCart() {
         if (!this.userService.user$.value) {
-            this.router.navigate(['/login']).then()
-            return
+            this.router.navigate(['/login']).then();
+            return;
         }
         let videos = this.orderService.cart$.value;
         if (videos && !videos.includes(this.videoItem)) {
-            videos.push(this.videoItem)
-            this._snackBar.open('Zum Warenkorb hinzugefügt.', 'SCHLIESSEN')
-            return
+            videos.push(this.videoItem);
+            this._snackBar.open('Zum Warenkorb hinzugefügt.', 'SCHLIESSEN');
+            return;
         } else if (videos && videos.includes(this.videoItem)) {
-            videos.splice(videos.indexOf(this.videoItem), 1)
-            this._snackBar.open('Vom Warenkorb gelöscht.', 'SCHLIESSEN')
-            return
+            videos.splice(videos.indexOf(this.videoItem), 1);
+            this._snackBar.open('Vom Warenkorb gelöscht.', 'SCHLIESSEN');
+            return;
         }
 
 
         videos = [];
-        videos.push(this.videoItem)
+        videos.push(this.videoItem);
         this.orderService.cart$.next(videos);
     }
 
-    updateFavorites(id: string){
+    updateFavorites(id: string) {
         if (!this.userService.user$.value) {
-            this.router.navigate(['/login']).then()
-            return
+            this.router.navigate(['/login']).then();
+            return;
         }
         //Remove from favorites
-        if (this.userService.user$.value.favoriteVideos.includes(id)){
+        if (this.userService.user$.value.favoriteVideos.includes(id)) {
             this.favoritesService.deleteFromFavorites(id).subscribe(res => {
-                this.userService.user$.value.setFavorites(res)
-                this._snackBar.open('Aus Favoriten entfernt.', 'SCHLIESSEN')
-            })
-        //Add to favorites
-        }else{
+                this.userService.user$.value.setFavorites(res);
+                this._snackBar.open('Aus Favoriten entfernt.', 'SCHLIESSEN');
+            });
+            //Add to favorites
+        } else {
             this.favoritesService.saveAsFavorite(id).subscribe(res => {
-                this.userService.user$.value.setFavorites(res)
-                this._snackBar.open('Zu Favoriten hinzugefügt.', 'SCHLIESSEN')
-            })
+                this.userService.user$.value.setFavorites(res);
+                this._snackBar.open('Zu Favoriten hinzugefügt.', 'SCHLIESSEN');
+            });
         }
+    }
+
+
+    onLoadVideo(video: Video) {
+        this.router.navigate(['footage', video.id, hyphenateUrlParams(video.title)]).then();
     }
 
 

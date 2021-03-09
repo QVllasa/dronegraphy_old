@@ -46,7 +46,6 @@ export class HomeComponent implements OnInit {
     ngOnInit(): void {
         if (!this.videoItem) {
             this.videoService.headerVideo$
-                .pipe(take(1))
                 .subscribe(video => {
                     this.videoItem = video;
                 });

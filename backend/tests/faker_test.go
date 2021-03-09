@@ -15,7 +15,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"google.golang.org/api/iterator"
-	"strconv"
+	"io/ioutil"
+	"os"
+	"path"
 	"testing"
 )
 
@@ -224,6 +226,18 @@ func TestLoadVideoFixtures(t *testing.T) {
 	videos := repository.DB.Client.Database("dronegraphy_db").Collection("videos")
 	_ = videos.Drop(context.Background())
 
+	target := "../storage/thumbnails/"
+
+	tbdir, _ := ioutil.ReadDir(target)
+	for _, d := range tbdir {
+		os.RemoveAll(path.Join([]string{target, d.Name()}...))
+	}
+
+	viddir, _ := ioutil.ReadDir("../../" + service.StorageRoot + service.Videos)
+	for _, d := range viddir {
+		os.RemoveAll(path.Join([]string{"../../" + service.StorageRoot + service.Videos, d.Name()}...))
+	}
+
 	formats := []string{
 		"HD mp4",
 		"HQ mp4",
@@ -239,11 +253,15 @@ func TestLoadVideoFixtures(t *testing.T) {
 
 	for i := 0; i < videoCount; i++ {
 
-		//video.Title = gofakeit.LoremIpsumSentence(4)
-		video.Title = strconv.Itoa(i)
+		video.Title = gofakeit.LoremIpsumSentence(4)
 		video.Camera = "DJI Mavic Pro"
-		video.Categories = util.UniqueIntArray(categories[gofakeit.Number(1, 5):gofakeit.Number(6, 15)])
-		video.Formats = []string{gofakeit.RandomString(formats)}
+
+		var c []int
+		for i := 1; i < gofakeit.Number(2, 5); i++ {
+			c = append(c, gofakeit.RandomInt(categories))
+		}
+		video.Categories = c
+
 		video.Width = gofakeit.Number(240, 2160)
 		video.Height = gofakeit.Number(720, 3840)
 		video.FPS = gofakeit.Number(24, 120)
@@ -253,7 +271,8 @@ func TestLoadVideoFixtures(t *testing.T) {
 		video.Converted = true
 		video.Sell = gofakeit.Bool()
 		video.StuffPick = gofakeit.Bool()
-		video.Formats = []string{gofakeit.RandomString(tags)}
+		video.Formats = []string{gofakeit.RandomString(formats)}
+		video.Tags = []string{gofakeit.RandomString(tags)}
 		video.Views = gofakeit.Number(0, 99999)
 		video.Downloads = gofakeit.Number(0, 99999)
 		video.Creator = model.Creator{
@@ -268,7 +287,6 @@ func TestLoadVideoFixtures(t *testing.T) {
 
 		fileID := xid.New().String()
 		vID := xid.New().String()
-		target := "../storage/thumbnails/"
 
 		if err = util.DownloadFile(gofakeit.ImageURL(640, 360)+".jpg", target+fileID+".jpg"); err != nil {
 			log.Error(err)
@@ -306,14 +324,19 @@ func TestLoadFilterFixtures(t *testing.T) {
 		repository.NewDatabase()
 	}
 
-	f := model.SortOption{}
 	filters := repository.DB.Client.Database("dronegraphy_db").Collection("sorting")
 	_ = filters.Drop(context.Background())
 
-	for i := 1; i < 4; i++ {
-		f.Value = gofakeit.Noun()
-		f.Key = i
-		_, _ = filters.InsertOne(context.Background(), f)
+	f := []model.SortOption{
+		{Value: "Nach Downloads", Key: 0},
+		{Value: "Unsere Auswahl", Key: 1},
+		{Value: "Neueste", Key: 2},
+		{Value: "Kostenlos", Key: 3},
+		{Value: "Alle", Key: 4},
+	}
+
+	for _, i := range f {
+		_, _ = filters.InsertOne(context.Background(), i)
 	}
 
 }

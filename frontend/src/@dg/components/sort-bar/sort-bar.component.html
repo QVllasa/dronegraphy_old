@@ -4,7 +4,7 @@
 
     <mat-chip-list *ngIf="searchService.search$ | async as terms" class="ml-16"
                    aria-label="Fish selection">
-        <span class="mr-1" *ngIf="terms.length > 0">Search:</span>
+        <span class="mr-1" *ngIf="terms.length > 0">Suche:</span>
         <ng-container *ngFor="let cat of activeCategories">
             <mat-chip class="text-primary border border-solid border-primary bg-white" *ngIf="cat.checked">{{cat.value}}
                 <mat-icon color="accent" (click)="removeCategory(cat)" matChipRemove>cancel</mat-icon>

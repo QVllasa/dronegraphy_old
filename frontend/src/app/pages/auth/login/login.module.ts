@@ -13,6 +13,8 @@ import {LoginRoutingModule} from "./login-routing.module";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {HttpClientModule} from "@angular/common/http";
+import {PageLayoutModule} from '../../../../@dg/components/page-layout/page-layout.module';
+import {ContainerModule} from '../../../../@dg/directives/container/container.module';
 
 
 
@@ -31,7 +33,9 @@ import {HttpClientModule} from "@angular/common/http";
         RouterModule,
         MatSnackBarModule,
         MatProgressSpinnerModule,
-        HttpClientModule
+        HttpClientModule,
+        PageLayoutModule,
+        ContainerModule
     ],
     providers: [
 
