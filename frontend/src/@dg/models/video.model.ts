@@ -1,8 +1,8 @@
 import {User} from './user.model';
-import {Deserializable} from "./deserialize.interface";
-import {environment} from "../../environments/environment";
+import {Deserializable} from './deserialize.interface';
+import {environment} from '../../environments/environment';
 
-interface FileInfo{
+interface FileInfo {
     size: number;
     contentType: string;
     name: string;
@@ -14,13 +14,13 @@ export interface IVideo {
     title: string;
     location: string;
     formats: string[];
-    height: number,
-    width: number,
+    height: number;
+    width: number;
     length: number;
     fps: number;
     camera: string;
     tags: string[];
-    categories: string[];
+    categories: number[];
     downloads: number;
     converted: boolean;
     views: number;
@@ -49,7 +49,7 @@ export class Video implements IVideo, Deserializable {
     public storageRef: string;
     public storageContent: FileInfo[];
     public tags: string[];
-    public categories: string[];
+    public categories: number[];
     public downloads: number;
     public views: number;
     public createdAt: Date;
@@ -74,12 +74,12 @@ export class Video implements IVideo, Deserializable {
     }
 
     getLicense(): boolean | null {
-        return this.#sell ? this.#sell : null
+        return this.#sell ? this.#sell : null;
     }
 
     getHLS(): string | null {
         // return this.#hls;
-        return environment.apiUrl+"/"+this.storageRef+"/hls/playlist.m3u8"
+        return environment.apiUrl + '/' + this.storageRef + '/hls/playlist.m3u8';
     }
 
     setThumbnail(fileName) {
@@ -87,27 +87,24 @@ export class Video implements IVideo, Deserializable {
     }
 
     getThumbnail(): string | null {
-        return this.thumbnail ? "http://localhost:8080/img/"+this.thumbnail : null;
+        return this.thumbnail ? 'http://localhost:8080/img/' + this.thumbnail : null;
     }
 
     setCreator(creator: User) {
-        this.#creator = creator
+        this.#creator = creator;
     }
 
     getCreator(): User {
-        return this.#creator
+        return this.#creator;
     }
 
     getDownloadsCount() {
-        return
+        return;
     }
 
     getResolution() {
-        return this.width + 'x' + this.height
+        return this.width + 'x' + this.height;
     }
-
-
-
 
 
 }

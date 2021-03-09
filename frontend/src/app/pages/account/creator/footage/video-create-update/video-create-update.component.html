@@ -100,7 +100,7 @@
                                     <mat-select formControlName="categories" multiple>
                                         <ng-container *ngIf="categoryList.length > 0">
                                             <mat-option *ngFor="let category of categoryList"
-                                                        [value]="category.id">{{category.value}}</mat-option>
+                                                        [value]="category.key">{{category.value}}</mat-option>
                                         </ng-container>
                                     </mat-select>
                                     <mat-error *ngIf="form.get('categories').invalid">Bitte wähle eine Kategorie.
