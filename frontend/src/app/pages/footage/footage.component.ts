@@ -34,6 +34,7 @@ export class FootageComponent implements OnInit {
                 sources: [{src: this.video.getHLS(), type: 'application/x-mpegURL'}]
             };
             this.isLoading = false;
+            console.log('options loaded');
         });
     }
 

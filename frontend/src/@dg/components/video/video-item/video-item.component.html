@@ -1,22 +1,23 @@
 <!--<div class="relative flex" >-->
-<div *ngIf="playOnHover" class="rounded relative h-full w-full flex aspect-ratio-16/9 bg-no-repeat bg-cover bg-top"
-     (mouseenter)="onShow()" (mouseleave)="onHide()"
-     [style.backgroundImage]="poster">
-    <dg-vjs-player
-            [style.backgroundImage]="poster"
-            *ngIf="loadStatus"
-            [options]="options"></dg-vjs-player>
-    <dg-vjs-actions [videoItem]="videoItem" *ngIf="showActions"></dg-vjs-actions>
-</div>
+<ng-container *ngIf="playOnHover">
+    <div class="rounded relative h-full w-full flex aspect-ratio-16/9 bg-no-repeat bg-cover bg-top"
+         (mouseenter)="onShow()" (mouseleave)="onHide()"
+         [style.backgroundImage]="poster">
+        <dg-vjs-player
+                [style.backgroundImage]="poster"
+                *ngIf="loadStatus"
+                [options]="options"></dg-vjs-player>
+        <dg-vjs-actions [videoItem]="videoItem" *ngIf="showActions"></dg-vjs-actions>
+    </div>
+</ng-container>
 
 
+<ng-container *ngIf="!playOnHover">
     <dg-vjs-player
-            *ngIf="!playOnHover"
             class="relative h-full w-full flex bg-no-repeat bg-cover bg-top"
             [options]="options"></dg-vjs-player>
-<!--    <dg-vjs-actions [videoItem]="videoItem" *ngIf="showActions"></dg-vjs-actions>-->
+</ng-container>
 
 
-<!--</div>-->
 
 

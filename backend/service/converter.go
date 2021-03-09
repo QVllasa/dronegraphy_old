@@ -161,7 +161,7 @@ func getOptions(srcPath, targetPath, res string) ([]string, error) {
 		"-maxrate", config.Maxrate,
 		"-bufsize", config.BufSize,
 		"-b:a", config.AudioBitrate,
-		"-preset", "ultrafast",
+		"-preset", "veryslow",
 		"-hls_segment_filename", filenameTS,
 		filenameM3U8,
 	}

@@ -23,7 +23,7 @@ import (
 
 var (
 	userCount   = 15
-	videoCount  = 400
+	videoCount  = 10
 	childCount  = 16
 	parentCount = 3
 )

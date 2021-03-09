@@ -27,7 +27,7 @@ export class VideoItemComponent implements OnInit {
     timer: any;
     poster: any;
     showActions: boolean;
-    // options: any;
+
 
 
     constructor(private domSanitizer: DomSanitizer) {

@@ -48,34 +48,18 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
     constructor(
         private elementRef: ElementRef,
         private domSanitizer: DomSanitizer,
-        private route: ActivatedRoute,
-        private videoService: VideoService
     ) {
     }
 
     ngOnInit() {
-        // instantiate Video.js
-        this.player = videojs(this.target.nativeElement, this.options, function onPlayerReady() {
-        });
+        console.log(this.options);
+        this.player = videojs(this.target.nativeElement, this.options, function onPlayerReady() {});
 
-        // this.player.hlsQualitySelector = videojsqualityselector;
-        // this.player.hlsQualitySelector();
+        this.player.hlsQualitySelector = videojsqualityselector;
+        this.player.hlsQualitySelector();
 
-        this.player = videojs(this.target.nativeElement, this.options, function onPlayerReady() {
-            this.hlsQualitySelector();
-        });
-
-        if (this.options.videopage) {
-            this.route.params.subscribe((params: Params) => {
-                this.videoService.getVideo(params.id).subscribe(res => {
-                    this.player.src(res.getHLS());
-                    this.player.load();
-                });
-            });
-        }
         this.player.on('loadstart', () => {
             this.loading = this.domSanitizer.bypassSecurityTrustStyle(`url(${this.options.poster})`);
-            // this.loading = this.options.thumbnail;
         });
         this.player.on('canplay', () => {
             this.loading = '';
