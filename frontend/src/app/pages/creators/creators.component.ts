@@ -39,7 +39,6 @@ export class CreatorsComponent implements OnInit {
                     return forkJoin(list);
                 }))
             .subscribe({
-                // TODO add videos to creator
                 next: values => {
                     for (const i of values) {
                         for (const j of this.creators) {
