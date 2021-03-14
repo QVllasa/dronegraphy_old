@@ -1,13 +1,6 @@
 <dg-toolbar class="dg-toolbar relative z-50"></dg-toolbar>
-<div [class.boxed]="isBoxed$ | async"
-     [class.horizontal-layout]="!(isLayoutVertical$ | async)"
+<div [class.horizontal-layout]="!(isLayoutVertical$ | async)"
      [class.vertical-layout]="isLayoutVertical$ | async"
-     [class.has-fixed-footer]="(isFooterFixed$ | async) && isFooterVisible$ | async"
-     [class.has-footer]="isFooterVisible$ | async"
-     [class.scroll-disabled]="scrollDisabled$ | async"
-     [class.toolbar-fixed]="isToolbarFixed$ | async"
-     [class.sidenav-collapsed]="sidenavCollapsed$ | async"
-     [class.content-container]="containerEnabled$ | async"
      [class.with-search]="searchOpen$ | async"
      class="page-container">
 
@@ -29,7 +22,6 @@
         <router-outlet></router-outlet>
       </main>
 
-      <ng-container *ngTemplateOutlet="footerRef"></ng-container>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>

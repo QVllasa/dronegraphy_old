@@ -48,7 +48,7 @@ export class ConfigService {
 
     body.classList.add(config.id);
 
-    config.sidenav.state === 'expanded' ? this.layoutService.expandSidenav() : this.layoutService.collapseSidenav();
+    // config.sidenav.state === 'expanded' ? this.layoutService.expandSidenav() : this.layoutService.collapseSidenav();
 
     // Workaround so charts and other externals know they have to resize on Layout switch
     if (window) {

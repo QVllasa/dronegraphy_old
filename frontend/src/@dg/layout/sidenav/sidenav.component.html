@@ -3,16 +3,15 @@
      fxLayout="column" fxLayoutAlign="center start" class="sidenav">
     <div class="sidenav-items pl-24" *ngFor="let item of items">
         <ng-container *ngIf="item.type === 'header-link'">
-            <a class="mat-display-1 font-black cursor-pointer text-gray m-0 hover:text-primary">{{item.label}}</a>
+            <a (click)="toggleCollapse()" [routerLink]="item.route" class="mat-display-1 font-black cursor-pointer text-gray-800 m-0 hover:text-primary">{{item.label}}</a>
         </ng-container>
         <ng-container *ngIf="item.type === 'link'">
-            <a class="font-light cursor-pointer text-gray hover:text-primary m-0">{{item.label}}</a>
+            <a (click)="toggleCollapse()" [routerLink]="item.route" class="font-light cursor-pointer text-gray-800 hover:text-primary m-0">{{item.label}}</a>
         </ng-container>
-
     </div>
     <div class="sidenav-items pl-24" >
         <ng-container *ngFor="let item of items">
-            <button class="mr-2" *ngIf="item.type === 'button'" mat-flat-button color="primary">{{item.label}}</button>
+            <button (click)="toggleCollapse()" class="mr-2" *ngIf="item.type === 'button'" mat-flat-button color="primary">{{item.label}}</button>
         </ng-container>
     </div>
 </div>

@@ -8,39 +8,26 @@ import {ConfigService} from '../../services/config.service';
 import {map} from 'rxjs/operators';
 
 @Component({
-  selector: 'dg-sidenav',
-  templateUrl: './sidenav.component.html',
-  styleUrls: ['./sidenav.component.scss']
+    selector: 'dg-sidenav',
+    templateUrl: './sidenav.component.html',
+    styleUrls: ['./sidenav.component.scss']
 })
 export class SidenavComponent implements OnInit {
 
   @Input() collapsed: boolean;
-  collapsedOpen$ = this.layoutService.sidenavCollapsedOpen$;
-  title$ = this.configService.config$.pipe(map(config => config.sidenav.title));
-  imageUrl$ = this.configService.config$.pipe(map(config => config.sidenav.imageUrl));
-  showCollapsePin$ = this.configService.config$.pipe(map(config => config.sidenav.showCollapsePin));
+  collapsedOpen$ = this.layoutService.sidenavOpen$;
 
-  items = this.navigationService.items;
-  trackByRoute = trackByRoute;
-  icRadioButtonChecked = icRadioButtonChecked;
-  icRadioButtonUnchecked = icRadioButtonUnchecked;
+    items = this.navigationService.items;
+    trackByRoute = trackByRoute;
 
-  constructor(private navigationService: NavigationService,
-              private layoutService: LayoutService,
-              private configService: ConfigService) { }
+    constructor(private navigationService: NavigationService,
+                private layoutService: LayoutService) {
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
-  onMouseEnter() {
-    this.layoutService.collapseOpenSidenav();
-  }
-
-  onMouseLeave() {
-    this.layoutService.collapseCloseSidenav();
-  }
-
-  toggleCollapse() {
-    this.collapsed ? this.layoutService.expandSidenav() : this.layoutService.collapseSidenav();
-  }
+    toggleCollapse() {
+        this.collapsed ? this.layoutService.closeSidenav() : this.layoutService.openSidenav();
+    }
 }

@@ -1,16 +1,8 @@
 <ng-template #sidenavRef>
-  <dg-sidenav [collapsed]="sidenavCollapsed$ | async"></dg-sidenav>
+  <dg-sidenav [collapsed]="sidenavOpen$ | async"></dg-sidenav>
 </ng-template>
-
-
 
 
 <dg-layout [sidenavRef]="sidenavRef"></dg-layout>
 
-<!--<dg-config-panel-toggle (openConfig)="configpanel.open()"></dg-config-panel-toggle>-->
 
-<!-- CONFIGPANEL -->
-<dg-sidebar #configpanel [invisibleBackdrop]="true" position="right">
-  <dg-config-panel></dg-config-panel>
-</dg-sidebar>
-<!-- END CONFIGPANEL -->
