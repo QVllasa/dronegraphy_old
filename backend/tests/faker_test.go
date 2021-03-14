@@ -275,10 +275,12 @@ func TestLoadVideoFixtures(t *testing.T) {
 		video.Tags = []string{gofakeit.RandomString(tags)}
 		video.Views = gofakeit.Number(0, 99999)
 		video.Downloads = gofakeit.Number(0, 99999)
+
+		owner := creators[gofakeit.Number(0, len(creators)-1)]
 		video.Creator = model.Creator{
-			UID:       creators[gofakeit.Number(0, len(creators)-1)].UID,
-			FirstName: creators[gofakeit.Number(0, len(creators)-1)].FirstName,
-			LastName:  creators[gofakeit.Number(0, len(creators)-1)].LastName,
+			UID:       owner.UID,
+			FirstName: owner.FirstName,
+			LastName:  owner.LastName,
 		}
 		video.CreatedAt = gofakeit.Date()
 		video.UpdatedAt = gofakeit.Date()

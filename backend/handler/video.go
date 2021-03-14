@@ -25,6 +25,7 @@ import (
 type VideoResponse struct {
 	TotalCount int64         `json:"totalcount"`
 	TotalPages int           `json:"totalpages"`
+	UID        string        `json:"uid,omitempty"`
 	Page       int64         `json:"page"`
 	Limit      int64         `json:"limit"`
 	Count      int           `json:"count"`
@@ -288,13 +289,16 @@ func (this *Handler) GetVideos(c echo.Context) error {
 		}
 		filter["$and"] = append(filter["$and"], f)
 	}
+
+	var response VideoResponse
+
 	if c.Param("id") != "" {
 		filter["$and"] = append(filter["$and"], bson.M{"creator.uid": c.Param("id")})
+		response.UID = c.Param("id")
 	}
 
 	fmt.Println("final filter:", filter)
 
-	var response VideoResponse
 	response.Videos, _ = this.repository.GetVideos(page, limit, filter, opt)
 	response.TotalCount, _ = this.repository.VideoColl.CountDocuments(context.Background(), filter)
 	response.TotalPages = int(math.Ceil(float64(response.TotalCount) / float64(limit)))
