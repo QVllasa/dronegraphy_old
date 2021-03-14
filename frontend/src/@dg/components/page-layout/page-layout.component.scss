@@ -42,10 +42,10 @@
   place-content: center flex-start;
 
   .dg-breadcrumb {
-    @apply text-primary-contrast opacity-50;
+    //@apply text-primary-contrast opacity-50;
 
     &:hover {
-      @apply text-primary-contrast opacity-100;
+      //@apply text-primary-contrast opacity-100;
     }
   }
 }

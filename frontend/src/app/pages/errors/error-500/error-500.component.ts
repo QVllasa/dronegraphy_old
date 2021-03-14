@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import icSearch from '@iconify/icons-ic/twotone-search';
 
 @Component({
-  selector: 'vex-error-500',
+  selector: 'dg-error-500',
   templateUrl: './error-500.component.html',
   styleUrls: ['./error-500.component.scss']
 })

@@ -22,12 +22,12 @@
 
 ::ng-deep {
   dg-breadcrumbs {
-    @apply hidden;
+    //@apply hidden;
   }
 
   @screen sm {
     dg-breadcrumbs {
-      @apply block;
+      //@apply block;
     }
   }
 }

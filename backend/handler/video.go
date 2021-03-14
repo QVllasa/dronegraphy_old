@@ -106,7 +106,7 @@ func (this *Handler) UploadThumbnail(c echo.Context) error {
 	_, err = this.repository.VideoColl.UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		log.Error(err)
-		os.Remove(f.Name())
+		_ = os.Remove(f.Name())
 		return c.JSON(http.StatusInternalServerError, "unable to set fileID")
 	}
 

@@ -3,10 +3,10 @@
      fxLayout="column" fxLayoutAlign="center start" class="sidenav">
     <div class="sidenav-items pl-24" *ngFor="let item of items">
         <ng-container *ngIf="item.type === 'header-link'">
-            <a class="mat-display-1 font-black m-0">{{item.label}}</a>
+            <a class="mat-display-1 font-black cursor-pointer text-gray m-0 hover:text-primary">{{item.label}}</a>
         </ng-container>
         <ng-container *ngIf="item.type === 'link'">
-            <a class="mat-title font-light m-0">{{item.label}}</a>
+            <a class="font-light cursor-pointer text-gray hover:text-primary m-0">{{item.label}}</a>
         </ng-container>
 
     </div>

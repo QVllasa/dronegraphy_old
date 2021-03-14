@@ -1,18 +1,23 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {CreatorsComponent} from "./creators.component";
+import {CreatorsComponent} from './creators.component';
 
 
 const routes: Routes = [
-  {
-    path: '',
-    component: CreatorsComponent
-  }
+    {
+        path: '',
+        component: CreatorsComponent,
+        children: [
+            {
+                path: ':id',
+            }
+        ]
+    }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule]
 })
 export class CreatorsRoutingModule {
 }

@@ -12,7 +12,7 @@ import {NavigationService} from '../@dg/services/navigation.service';
 import {ConfigName} from '../@dg/models/config-name.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {AuthenticationService} from '../@dg/services/auth.service';
-import {of} from "rxjs";
+
 
 
 @Component({
@@ -94,26 +94,46 @@ export class AppComponent {
             {
                 type: 'header-link',
                 label: 'Cockpit',
-                route: '/'
+                route: '/cockpit'
             },
             {
                 type: 'header-link',
                 label: 'Piloten',
-                route: '/'
+                route: '/creators'
             },
             {
                 type: 'link',
-                label: 'Dashboard',
+                label: 'Preise',
+                route: '/pricing'
+            },
+            // TODO create Page
+            {
+                type: 'link',
+                label: 'Support',
                 route: '/'
             },
+            // TODO create Page
             {
-                type: 'button',
-                label: 'Dashboard',
+                type: 'link',
+                label: 'Über uns',
                 route: '/'
             },
+            // TODO create page
+            {
+                type: 'link',
+                label: 'Tipps und Tricks',
+                route: '/'
+            },
+            // TODO create page
+            {
+                type: 'link',
+                label: 'Pilot werden',
+                route: '/'
+            },
+            // TODO create page
             {
                 type: 'button',
-                label: 'Dashboard',
+                label: 'Aufnahmen verkaufen',
                 route: '/'
             },
         ];

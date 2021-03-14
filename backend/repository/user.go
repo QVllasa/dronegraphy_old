@@ -8,6 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"io"
 	"net/http"
 	"time"
@@ -84,6 +85,36 @@ func (this *Repository) GetAllUsers() ([]model.User, error) {
 	}
 	return users, nil
 
+}
+
+func (this *Repository) GetAllCreators() ([]model.User, error) {
+
+	var creators []model.User
+
+	filter := bson.M{"role": "ROLE_CREATOR"}
+
+	creatorProjection := bson.D{
+		//{"firstName", 1},
+		//{"lastName", 1},
+		{"uid", 0},
+		{"created_at", 0},
+		{"updated_at", 0},
+		{"favoriteVideos", 0},
+		{"orders", 0},
+		{"email", 0},
+	}
+
+	cursor, err := this.UserColl.Find(context.Background(), filter, options.Find().SetProjection(creatorProjection))
+	if err != nil {
+		log.Errorf("Unable to fetch creators from database: %v", err)
+		return creators, err
+	}
+
+	if err = cursor.All(context.Background(), &creators); err != nil {
+		log.Errorf("Unable to read the cursor: %v", err)
+		return creators, err
+	}
+	return creators, nil
 }
 
 func (this *Repository) GetUserById(id string) (model.User, error) {
