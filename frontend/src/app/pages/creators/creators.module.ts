@@ -12,6 +12,8 @@ import {PageLayoutModule} from '../../../@dg/components/page-layout/page-layout.
 import {ContainerModule} from '../../../@dg/directives/container/container.module';
 import {MatRippleModule} from '@angular/material/core';
 import {MatGridListModule} from '@angular/material/grid-list';
+import {VideoItemModule} from '../../../@dg/components/video/video-item/video-item.module';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -27,7 +29,9 @@ import {MatGridListModule} from '@angular/material/grid-list';
         PageLayoutModule,
         ContainerModule,
         MatRippleModule,
-        MatGridListModule
+        MatGridListModule,
+        VideoItemModule,
+        MatProgressSpinnerModule
     ]
 })
 export class CreatorsModule {

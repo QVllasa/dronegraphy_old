@@ -17,6 +17,7 @@ export interface VideoResponse {
     limit: number;
     count: number;
     videos: IVideo[];
+    uid?: string;
 }
 
 @Injectable({
@@ -166,7 +167,7 @@ export class VideoService {
     }
 
 
-    getVideosByCreator(id, limit?, page?) {
+    getVideosByCreator(id, limit?, page?){
         if (!page) {
             page = 0;
         }

@@ -9,7 +9,8 @@
     </dg-page-layout-header>
 
     <dg-page-layout-content dgContainer fxLayout="column" fxLayoutAlign="center center">
-        <div class="grid grid-cols-3 gap-4 w-full">
+        <mat-spinner *ngIf="isLoading" diameter="50"></mat-spinner>
+        <div *ngIf="!isLoading" class="grid grid-cols-3 gap-4 w-full">
             <div *ngFor="let creator of creators">
                 <div class="card">
                     <div fxLayout="row" fxLayoutAlign="space-evenly center"
@@ -23,7 +24,9 @@
                     </div>
                     <div class="p-2 h-64 w-full" fxLayout="column" fxLayoutAlign="center center">
                         <mat-grid-list class="w-full h-full" cols="2" gutterSize="4px" rowHeight="fit">
-                            <mat-grid-tile class="bg-primary rounded">1</mat-grid-tile>
+                            <mat-grid-tile class="bg-primary rounded">1
+<!--                                <dg-video-item></dg-video-item>-->
+                            </mat-grid-tile>
                             <mat-grid-tile class="bg-accent rounded">2</mat-grid-tile>
                             <mat-grid-tile class="bg-black rounded">3</mat-grid-tile>
                             <mat-grid-tile class="bg-primary-light rounded">4</mat-grid-tile>

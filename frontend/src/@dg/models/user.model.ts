@@ -1,7 +1,7 @@
-import {IClaims} from "./JWTTokenDecoded.interface";
-import {Deserializable} from "./deserialize.interface";
-import {Video} from "./video.model";
-import {environment} from "../../environments/environment";
+import {IClaims} from './JWTTokenDecoded.interface';
+import {Deserializable} from './deserialize.interface';
+import {environment} from '../../environments/environment';
+import {IVideo, Video} from './video.model';
 
 export interface IUser {
     uid: string;
@@ -38,15 +38,15 @@ export class User implements IUser, Deserializable {
     }
 
     getFullName() {
-        return this.firstName + ' ' + this.lastName
+        return this.firstName + ' ' + this.lastName;
     }
 
-    setProfileImage(id){
+    setProfileImage(id) {
         this.profileImage = id;
     }
 
-    getProfileImage(){
-        return environment.apiUrl+'/photos/'+this.profileImage
+    getProfileImage() {
+        return environment.apiUrl + '/photos/' + this.profileImage;
     }
 
     setClaims(claims: IClaims) {
@@ -55,7 +55,7 @@ export class User implements IUser, Deserializable {
 
     get role(): string | null {
         if (this.#claims) {
-            this.#role = this.#claims["role"]
+            this.#role = this.#claims['role'];
         }
         return this.#role ? this.#role : null;
     }
@@ -66,22 +66,26 @@ export class User implements IUser, Deserializable {
     }
 
     setFavorites(favorites: string[]) {
-        this.favoriteVideos = favorites
+        this.favoriteVideos = favorites;
     }
 
     getFavorites(): string[] | null {
         if (!this.favoriteVideos || (this.favoriteVideos.length === 0)) {
-            return null
+            return null;
         }
-        return this.favoriteVideos
+        return this.favoriteVideos;
     }
 
     removeFavorite(id: string, count: number) {
         if (!this.favoriteVideos || (this.favoriteVideos.length === 0)) {
-            return
+            return;
         }
-        this.favoriteVideos.splice(this.favoriteVideos.indexOf(id), count)
+        this.favoriteVideos.splice(this.favoriteVideos.indexOf(id), count);
     }
 
 }
 
+export class Creator extends User {
+    footage: Video[];
+    videoCount: number;
+}
