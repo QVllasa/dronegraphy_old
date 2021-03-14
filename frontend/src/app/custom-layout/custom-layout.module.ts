@@ -4,9 +4,6 @@ import {LayoutModule} from '../../@dg/layout/layout.module';
 import {CustomLayoutComponent} from './custom-layout.component';
 import {SidenavModule} from '../../@dg/layout/sidenav/sidenav.module';
 import {ToolbarModule} from '../../@dg/layout/toolbar/toolbar.module';
-import {FooterModule} from '../../@dg/layout/footer/footer.module';
-import {SidebarModule} from '../../@dg/components/sidebar/sidebar.module';
-import {QuickpanelModule} from '../../@dg/layout/quickpanel/quickpanel.module';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {FlexLayoutModule} from '@angular/flex-layout';
@@ -21,9 +18,6 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
         SidenavModule,
         MatSnackBarModule,
         ToolbarModule,
-        FooterModule,
-        SidebarModule,
-        QuickpanelModule,
         MatIconModule,
         MatButtonModule,
         FlexLayoutModule

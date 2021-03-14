@@ -11,6 +11,7 @@ import {CreatorsComponent} from './creators.component';
 import {PageLayoutModule} from '../../../@dg/components/page-layout/page-layout.module';
 import {ContainerModule} from '../../../@dg/directives/container/container.module';
 import {MatRippleModule} from '@angular/material/core';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import {MatRippleModule} from '@angular/material/core';
         MatIconModule,
         PageLayoutModule,
         ContainerModule,
-        MatRippleModule
+        MatRippleModule,
+        MatGridListModule
     ]
 })
 export class CreatorsModule {
