@@ -23,7 +23,7 @@ import (
 
 var (
 	userCount   = 15
-	videoCount  = 10
+	videoCount  = 400
 	childCount  = 16
 	parentCount = 3
 )
@@ -165,7 +165,7 @@ func TestLoadUserFixtures(t *testing.T) {
 			log.Errorf("setting custom claims failed: %v", err)
 		}
 
-		fbClient.Client.RevokeRefreshTokens(context.Background(), user.UID)
+		_ = fbClient.Client.RevokeRefreshTokens(context.Background(), user.UID)
 
 		user.UID = u.UID
 

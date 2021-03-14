@@ -7,7 +7,7 @@ import faGithub from '@iconify/icons-logos/github-icon';
 import icMail from '@iconify/icons-ic/twotone-mail';
 
 @Component({
-  selector: 'vex-coming-soon',
+  selector: 'dg-coming-soon',
   templateUrl: './coming-soon.component.html',
   styleUrls: ['./coming-soon.component.scss'],
   animations: [

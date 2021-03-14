@@ -44,6 +44,7 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	routeGroup.GET("/videos", controller.GetVideos)
 	routeGroup.GET("/videos/:id", controller.GetVideo)
 	routeGroup.GET("/:id/hls/:file", controller.GetPlaylist)
+	routeGroup.GET("/creators", controller.GetCreators)
 
 	//routeGroup.GET("/hls/", controller.ServeHls)
 	routeGroup.GET("/creators/:id", controller.GetVideos)

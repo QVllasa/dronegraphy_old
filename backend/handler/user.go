@@ -120,3 +120,17 @@ func (this *Handler) GetPhoto(c echo.Context) error {
 
 	return c.JSON(http.StatusNotFound, "not found")
 }
+
+func (this *Handler) GetCreators(c echo.Context) error {
+	creators, err := this.repository.GetAllCreators()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	if len(creators) == 0 {
+		return echo.NewHTTPError(http.StatusOK, "No Creators found")
+	}
+
+	return c.JSON(http.StatusOK, creators)
+}

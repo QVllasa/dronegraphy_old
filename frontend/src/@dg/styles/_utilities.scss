@@ -13,31 +13,31 @@
 }
 
 .card {
-  @apply rounded shadow-8 bg-card;
+  //@apply rounded shadow-8 bg-card;
 }
 
 .avatar {
-  @apply h-10 w-10 object-cover rounded-full bg-hover;
+  //@apply h-10 w-10 object-cover rounded-full bg-hover;
 }
 
 .hidden-input {
-  @apply border-2 border-solid border-transparent py-1 px-3 rounded;
+  //@apply border-2 border-solid border-transparent py-1 px-3 rounded;
 
   &:focus {
-    @apply border-primary outline-none;
+    //@apply border-primary outline-none;
   }
 
   &.empty {
-    @apply border-primary;
+    //@apply border-primary;
   }
 }
 
 .list-item {
-  @apply rounded h-12 px-4 cursor-pointer;
+  //@apply rounded h-12 px-4 cursor-pointer;
 }
 
 .list-item:hover {
-  @apply bg-hover;
+  //@apply bg-hover;
 }
 
 .textarea-clean {
@@ -67,6 +67,6 @@
 
 .dg-blogpost {
   p {
-    @apply my-3;
+    //@apply my-3;
   }
 }

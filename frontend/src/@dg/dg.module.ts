@@ -5,6 +5,7 @@ import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldDefaultOptions} from '@angul
 import {SecondsToMinutesModule} from "./pipes/seconds/seconds-to-minutes.module";
 
 
+
 @NgModule({
     imports: [
         CommonModule,

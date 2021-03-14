@@ -3,7 +3,7 @@
 // dg Core
 @import "./@dg/styles/core";
 
-@import 'assets/fonts/scss/modules/_fonts.scss';
+@import './assets/fonts/scss/modules/_fonts.scss';
 
 $custom-typography: mat-typography-config(
         $font-family: 'Cera Round Pro'
