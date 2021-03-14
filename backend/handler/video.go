@@ -32,7 +32,6 @@ type VideoResponse struct {
 }
 
 func (this *Handler) CreateVideo(c echo.Context) error {
-
 	token, _ := this.service.FirebaseApp.GetAndVerifyToken(c)
 
 	u, _ := this.repository.GetUserById(token.UID)
@@ -62,7 +61,6 @@ func (this *Handler) CreateVideo(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, vID)
-
 }
 
 func (this *Handler) UpdateVideo(c echo.Context) error {
