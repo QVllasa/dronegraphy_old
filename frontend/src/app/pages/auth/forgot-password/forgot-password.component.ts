@@ -8,7 +8,7 @@ import {Subscription} from 'rxjs';
 import {UserService} from "../../../../@dg/services/user.service";
 
 @Component({
-    selector: 'vex-forgot-password',
+    selector: 'dg-forgot-password',
     templateUrl: './forgot-password.component.html',
     styleUrls: ['./forgot-password.component.scss'],
     animations: []

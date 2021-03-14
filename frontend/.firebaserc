@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "drophy-24f06"
+  },
+  "targets": {
+    "drophy-24f06": {
+      "hosting": {
+        "dg": [
+          "drophy-24f06"
+        ]
+      }
+    }
   }
 }
