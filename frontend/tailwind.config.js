@@ -6,16 +6,16 @@ module.exports = {
   separator: ':',
   future: {
     removeDeprecatedGapUtilities: true,
-    purgeLayersByDefault: true
+    purgeLayersByDEFAULT: true
   },
   theme: {
-    filter: { // defaults to {}
+    filter: { // DEFAULTs to {}
       'none': 'none',
       'grayscale': 'grayscale(1)',
       'invert': 'invert(1)',
       'sepia': 'sepia(1)',
     },
-    backdropFilter: { // defaults to {}
+    backdropFilter: { // DEFAULTs to {}
       'none': 'none',
       'blur': 'blur(20px)',
     },
@@ -27,7 +27,7 @@ module.exports = {
         'footer': '200px minmax(900px, 1fr) 100px',
       }
     },
-    aspectRatio: { // defaults to {}
+    aspectRatio: { // DEFAULTs to {}
       'none': 0,
       'square': [1, 1], // or 1 / 1, or simply 1
       '16/9': [16, 9],  // or 16 / 9
@@ -52,59 +52,59 @@ module.exports = {
 
       gray: {
         light: 'rgba(158, 158, 158, 0.1)',
-        default: 'rgb(158, 158, 158)',
+        DEFAULT: 'rgb(158, 158, 158)',
       },
       red: {
         light: 'rgba(244, 67, 54, 0.1)',
-        default: 'rgb(244, 67, 54)',
+        DEFAULT: 'rgb(244, 67, 54)',
       },
       orange: {
         light: 'rgba(255, 152, 0, 0.1)',
-        default: 'rgb(255, 152, 0)',
+        DEFAULT: 'rgb(255, 152, 0)',
       },
       'deep-orange': {
         light: 'rgba(255, 87, 34, 0.1)',
-        default: 'rgb(255, 87, 34)',
+        DEFAULT: 'rgb(255, 87, 34)',
       },
       amber: {
         light: 'rgba(255, 193, 7, 0.1)',
-        default: 'rgb(255, 193, 7)',
+        DEFAULT: 'rgb(255, 193, 7)',
       },
       green: {
         light: 'rgba(76, 175, 80, 0.1)',
-        default: 'rgb(76, 175, 80)',
+        DEFAULT: 'rgb(76, 175, 80)',
       },
       teal: {
         light: 'rgba(0, 150, 136, 0.1)',
-        default: 'rgb(0, 150, 136)',
+        DEFAULT: 'rgb(0, 150, 136)',
       },
       cyan: {
         light: 'rgba(0, 188, 212, 0.1)',
-        default: 'rgb(0, 188, 212)',
+        DEFAULT: 'rgb(0, 188, 212)',
       },
       purple: {
         light: 'rgba(156, 39, 176, 0.1)',
-        default: 'rgb(156, 39, 176)',
+        DEFAULT: 'rgb(156, 39, 176)',
       },
       'deep-purple': {
         light: 'rgba(103, 58, 183, 0.1)',
-        default: 'rgb(103, 58, 183)',
+        DEFAULT: 'rgb(103, 58, 183)',
       },
       pink: {
         light: 'rgba(233, 30, 99, 0.1)',
-        default: 'rgb(233, 30, 99)',
+        DEFAULT: 'rgb(233, 30, 99)',
       },
       primary: {
         light: 'rgba(var(--color-primary), .1)',
-        default: 'rgb(var(--color-primary))',
+        DEFAULT: 'rgb(var(--color-primary))',
       },
       accent: {
         light: 'rgba(var(--color-accent), .1)',
-        default: 'rgb(var(--color-accent))',
+        DEFAULT: 'rgb(var(--color-accent))',
       },
       warn: {
         light: 'rgba(var(--color-warn), .1)',
-        default: 'rgb(var(--color-warn))',
+        DEFAULT: 'rgb(var(--color-warn))',
       }
     },
     spacing: {
@@ -156,17 +156,17 @@ module.exports = {
     },
     borderColor: theme => ({
       ...theme('colors'),
-      default: 'var(--foreground-divider)',
+      DEFAULT: 'var(--foreground-divider)',
     }),
     borderRadius: {
       none: '0',
       sm: '0.125rem',
-      default: '0.25rem',
+      DEFAULT: '0.25rem',
       lg: '0.5rem',
       full: '9999px',
     },
     borderWidth: {
-      default: '1px',
+      DEFAULT: '1px',
       '0': '0',
       '2': '2px',
       '3': '3px',
@@ -174,7 +174,7 @@ module.exports = {
       '8': '8px',
     },
     boxShadow: {
-      default: 'var(--elevation-z6)',
+      DEFAULT: 'var(--elevation-z6)',
       md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
       lg: '0px 7px 8px -4px rgba(82, 63, 104, 0.06),0px 12px 17px 2px rgba(82, 63, 104, 0.042),0px 5px 22px 4px rgba(82, 63, 104, 0.036)',
       xl: '0px 8px 10px -5px rgba(82, 63, 104, 0.06),0px 16px 24px 2px rgba(82, 63, 104, 0.042),0px 6px 30px 5px rgba(82, 63, 104, 0.036)',
@@ -206,7 +206,7 @@ module.exports = {
     },
     cursor: {
       auto: 'auto',
-      default: 'default',
+      DEFAULT: 'DEFAULT',
       pointer: 'pointer',
       wait: 'wait',
       text: 'text',
@@ -224,11 +224,11 @@ module.exports = {
     },
     flexGrow: {
       '0': '0',
-      default: '1',
+      DEFAULT: '1',
     },
     flexShrink: {
       '0': '0',
-      default: '1',
+      DEFAULT: '1',
     },
     fontFamily: {
       sans: [
