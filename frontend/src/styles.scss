@@ -6,7 +6,7 @@
 @import './assets/fonts/scss/modules/_fonts.scss';
 
 $custom-typography: mat-typography-config(
-        $font-family: 'Gilroy'
+        $font-family: 'Poppins'
 );
 
 @include mat-core($custom-typography);
