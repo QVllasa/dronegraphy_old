@@ -2,6 +2,7 @@ import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {Router} from '@angular/router';
 import {Video} from '../../../models/video.model';
+import {hyphenateUrlParams} from '../../../utils/hyphenate-url-params';
 
 
 //
@@ -31,24 +32,11 @@ export class VideoItemComponent implements OnInit {
     showActions: boolean;
 
 
-    constructor(private domSanitizer: DomSanitizer) {
+    constructor(private domSanitizer: DomSanitizer, private router: Router) {
     }
 
     ngOnInit(): void {
         this.poster = this.domSanitizer.bypassSecurityTrustStyle(`url(${this.videoItem.getThumbnail()})`);
-        // if (!this.options) {
-        //     this.options = {
-        //         poster: this.videoItem.getThumbnail(),
-        //         fluid: false,
-        //         aspectRatio: '16:9',
-        //         autoplay: true,
-        //         controls: false,
-        //         inactivityTimeout: 0,
-        //         videopage: false,
-        //         sources: [{src: this.videoItem.getHLS(), type: 'application/x-mpegURL'}]
-        //     };
-        // }
-
         switch (this.mode) {
             case 'actions':
                 this.options = {
@@ -112,6 +100,10 @@ export class VideoItemComponent implements OnInit {
 
         clearTimeout(this.timer);
         this.loadStatus = false;
+    }
+
+    onLoadVideo(video: Video) {
+        this.router.navigate(['footage', video.id, hyphenateUrlParams(video.title)]).then();
     }
 
 

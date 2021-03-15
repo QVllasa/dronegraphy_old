@@ -18,8 +18,6 @@ import {UserService} from '../../@dg/services/user.service';
 })
 export class CustomLayoutComponent implements OnInit {
 
-    sidenavOpen$ = this.layoutService.sidenavOpen$;
-
 
     @ViewChild('configpanel', {static: true}) configpanel: SidebarComponent;
 

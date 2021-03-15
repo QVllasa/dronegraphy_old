@@ -1,7 +1,8 @@
 
 <ng-container *ngIf="mode === 'actions'">
-    <div class="rounded relative h-full w-full flex aspect-ratio-16/9 bg-no-repeat bg-cover bg-top"
+    <div class="rounded relative h-64 w-64 flex aspect-ratio-16/9 bg-no-repeat bg-center cursor-pointer"
          (mouseenter)="onShow()" (mouseleave)="onHide()"
+         (click)="onLoadVideo(videoItem)"
          [style.backgroundImage]="poster">
         <dg-vjs-player
                 [style.backgroundImage]="poster"
@@ -19,8 +20,9 @@
 
 
 <ng-container *ngIf="mode === 'details'">
-    <div class="rounded relative h-full w-full flex aspect-ratio-16/9 bg-no-repeat bg-cover bg-top"
+    <div class="rounded relative h-full w-full flex aspect-ratio-16/9 bg-no-repeat bg-cover bg-top cursor-pointer"
          (mouseenter)="onShow()" (mouseleave)="onHide()"
+         (click)="onLoadVideo(videoItem)"
          [style.backgroundImage]="poster">
         <dg-vjs-player
                 [style.backgroundImage]="poster"

@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import icSearch from '@iconify/icons-ic/twotone-search';
+import { AnimationItem } from 'lottie-web';
+import { AnimationOptions } from 'ngx-lottie';
 
 @Component({
   selector: 'dg-error404',
@@ -8,7 +9,14 @@ import icSearch from '@iconify/icons-ic/twotone-search';
 })
 export class Error404Component implements OnInit {
 
-  icSearch = icSearch;
+  options: AnimationOptions = {
+    path: '/assets/animations/lottieflow-404.json',
+
+  };
+
+  animationCreated(animationItem: AnimationItem): void {
+    console.log(animationItem);
+  }
 
   constructor() { }
 

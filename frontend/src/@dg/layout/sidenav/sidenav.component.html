@@ -1,5 +1,4 @@
-<div [class.collapsed]="collapsed"
-     [class.open]="collapsed && collapsedOpen$ | async"
+<div [class.open]="layoutService.sidenavOpen$ | async"
      fxLayout="column" fxLayoutAlign="center start" class="sidenav">
     <div class="sidenav-items pl-24" *ngFor="let item of items">
         <ng-container *ngIf="item.type === 'header-link'">

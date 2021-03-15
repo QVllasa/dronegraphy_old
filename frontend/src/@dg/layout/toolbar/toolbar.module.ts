@@ -14,6 +14,7 @@ import {NavigationItemModule} from '../../components/navigation-item/navigation-
 import {MegaMenuModule} from '../../components/mega-menu/mega-menu.module';
 import {ContainerModule} from '../../directives/container/container.module';
 import {MatBadgeModule} from '@angular/material/badge';
+import {LottieModule} from 'ngx-lottie';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import {MatBadgeModule} from '@angular/material/badge';
         NavigationItemModule,
         MegaMenuModule,
         ContainerModule,
-        MatBadgeModule
+        MatBadgeModule,
+        LottieModule
     ],
     exports: [ToolbarComponent]
 })

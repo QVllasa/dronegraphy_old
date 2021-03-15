@@ -16,7 +16,7 @@
                     <div fxLayout="row" fxLayoutAlign="space-evenly center"
                          class="p-4 text-center hover:bg-hover trans-ease-out cursor-pointer relative"
                          matRipple>
-                        <img class="avatar h-20 w-20">
+                        <img [src]="creator.getProfileImage()" class="avatar h-20 w-20">
                         <div fxLayout="column" fxLayoutAlign="center start">
                             <h2 class="text-base font-medium mt-3">{{creator.getFullName()}}</h2>
                             <h2 class="text-xs mb-1">Berlin, Germany</h2>
@@ -25,9 +25,9 @@
                     <div class="p-2 h-64 w-full" fxLayout="column" fxLayoutAlign="center center">
                         <mat-grid-list class="w-full h-full" cols="2" gutterSize="4px" rowHeight="fit">
                             <mat-grid-tile class="rounded" *ngFor="let video of creator.footage">
-                                <dg-video-item class="h-full w-full" mode="actions"  [videoItem]="video"></dg-video-item>
+                                <dg-video-item class="h-full w-full" mode="actions" [videoItem]="video"></dg-video-item>
                             </mat-grid-tile>
-                            <mat-grid-tile class="bg-primary-light rounded">{{'+'+creator.videoCount}}</mat-grid-tile>
+                            <mat-grid-tile class="bg-primary-light text-xl font-bold text-gray-500 rounded">{{'+'+creator.videoCount}}</mat-grid-tile>
                         </mat-grid-list>
                     </div>
                 </div>

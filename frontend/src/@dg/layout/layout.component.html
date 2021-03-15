@@ -9,9 +9,10 @@
 
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav
+                 disableClose="true"
+                 (openedChange)="toggleCollapse($event)"
                  [fixedInViewport]="!(isDesktop$ | async)"
                  [mode]="!(isDesktop$ | async) || (isLayoutVertical$ | async) ? 'over' : 'side'"
-                 [opened]="(isDesktop$ | async) && !(isLayoutVertical$ | async)"
                  class="sidenav">
       <ng-container *ngTemplateOutlet="sidenavRef"></ng-container>
     </mat-sidenav>

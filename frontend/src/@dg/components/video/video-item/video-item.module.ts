@@ -10,6 +10,7 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {OnHoverModule} from "../../../directives/onHover.module";
 import {VideoActionsComponent} from "../video-actions/video-actions.component";
 import {VideoPlayerModule} from "../video-player/video-player.module";
+import {RouterModule} from '@angular/router';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import {VideoPlayerModule} from "../video-player/video-player.module";
         MatButtonModule,
         MatIconModule,
         MatFormFieldModule,
-        OnHoverModule
+        OnHoverModule,
+        RouterModule
     ],
     exports: [VideoItemComponent]
 })

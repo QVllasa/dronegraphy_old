@@ -4,9 +4,6 @@
   transition: var(--trans-ease-out);
   width: var(--sidenav-width);
 
-  &.collapsed {
-    width: var(--sidenav-collapsed-width);
-
     &:not(.open) {
       .sidenav-toolbar {
         .title {
@@ -41,7 +38,7 @@
     &.open {
       width: var(--sidenav-width);
     }
-  }
+
 }
 
 .sidenav-toolbar {

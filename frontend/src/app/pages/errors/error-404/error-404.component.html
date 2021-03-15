@@ -1,12 +1,15 @@
-<div class="w-full p-gutter text-center">
-  <img class="w-full max-w-lg mx-auto mb-6" src="assets/img/illustrations/data_center.svg">
+<div class="w-full h-screen p-gutter container pt-14">
+  <div class="h-full max-w-md w-full mx-auto mt-6"
+       fxLayout="column" fxLayoutGap=""
+       fxLayoutAlign="space-evenly center">
+    <div>
+      <ng-lottie width="300px"
+                 height="200px"
+                 [options]="options"
+                 (animationCreated)="animationCreated($event)"></ng-lottie>
+      <h2 class="headline mt-4">Oops, diese Seite existiert nicht.</h2>
+    </div>
 
-  <h1 class="display-3 font-medium m-0">404</h1>
-  <h2 class="headline m-0">Oops, diese Seite existiert nicht.</h2>
-
-  <div class="h-12 max-w-md w-full mx-auto mt-6"
-       fxLayout="row"
-       fxLayoutAlign="center center">
     <button routerLink="/" mat-raised-button color="primary" >
       <span>Zurück zu den Aufnahmen</span>
     </button>

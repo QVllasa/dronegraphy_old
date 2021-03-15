@@ -20,7 +20,6 @@ export class LayoutComponent implements OnInit {
     @Input() toolbarRef: TemplateRef<any>;
 
 
-
     isLayoutVertical$ = this.configService.config$.pipe(map(config => config.layout === 'vertical'));
     isDesktop$ = this.layoutService.isDesktop$;
 
@@ -41,6 +40,7 @@ export class LayoutComponent implements OnInit {
 
     ngOnInit() {
 
+        //TODO fix sidenav with close button
         /**
          * Open/Close Sidenav through LayoutService
          */
@@ -48,6 +48,11 @@ export class LayoutComponent implements OnInit {
             untilDestroyed(this)
         ).subscribe(open => open ? this.sidenav.open() : this.sidenav.close());
 
+    }
+
+    toggleCollapse(ev) {
+        console.log('sidenav: ', ev);
+        // this.layoutService.sidenavOpen$.value ? this.layoutService.closeSidenav() : this.layoutService.openSidenav();
     }
 
 

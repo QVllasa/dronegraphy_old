@@ -14,20 +14,18 @@ import {map} from 'rxjs/operators';
 })
 export class SidenavComponent implements OnInit {
 
-  @Input() collapsed: boolean;
-  collapsedOpen$ = this.layoutService.sidenavOpen$;
 
     items = this.navigationService.items;
     trackByRoute = trackByRoute;
 
     constructor(private navigationService: NavigationService,
-                private layoutService: LayoutService) {
+                public layoutService: LayoutService) {
     }
 
     ngOnInit() {
     }
 
     toggleCollapse() {
-        this.collapsed ? this.layoutService.closeSidenav() : this.layoutService.openSidenav();
+        this.layoutService.sidenavOpen$.value ? this.layoutService.closeSidenav() : this.layoutService.openSidenav();
     }
 }

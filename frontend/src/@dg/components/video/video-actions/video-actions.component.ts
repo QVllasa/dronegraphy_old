@@ -28,7 +28,7 @@ import {hyphenateUrlParams} from '../../../utils/hyphenate-url-params';
                 </mat-chip-list>
             </div>
             <div class="absolute bottom-0 left-0 text-white cursor-pointer p-1">
-                <mat-label (click)="onLoadVideo(videoItem)" class="text-sm  mat-body-strong">{{videoItem.title}}</mat-label>
+                <mat-label class="text-sm  mat-body-strong">{{videoItem.title}}</mat-label>
                 <br>
                 <mat-label class=" text-sm mat-body-1 font-weight-lighter">
                     Von {{videoItem.getCreator().getFullName()}}</mat-label>
@@ -122,9 +122,7 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
     }
 
 
-    onLoadVideo(video: Video) {
-        this.router.navigate(['footage', video.id, hyphenateUrlParams(video.title)]).then();
-    }
+
 
 
     ngOnDestroy() {

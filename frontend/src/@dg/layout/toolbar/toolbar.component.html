@@ -2,7 +2,10 @@
     <div>
         <ng-container>
             <button class="absolute top-8" (click)="toggleSidenav()" mat-fab color="primary" type="button">
-                <mat-icon class="text-white">menu</mat-icon>
+                <ng-lottie width="24px"
+                           height="24px"
+                           [options]="options"
+                           (animationCreated)="animationCreated($event)"></ng-lottie>
             </button>
         </ng-container>
     </div>
