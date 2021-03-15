@@ -24,11 +24,9 @@
                     </div>
                     <div class="p-2 h-64 w-full" fxLayout="column" fxLayoutAlign="center center">
                         <mat-grid-list class="w-full h-full" cols="2" gutterSize="4px" rowHeight="fit">
-                            <mat-grid-tile class="bg-primary rounded">1
-<!--                                <dg-video-item></dg-video-item>-->
+                            <mat-grid-tile class="rounded" *ngFor="let video of creator.footage">
+                                <dg-video-item class="h-full w-full" mode="actions"  [videoItem]="video"></dg-video-item>
                             </mat-grid-tile>
-                            <mat-grid-tile class="bg-accent rounded">2</mat-grid-tile>
-                            <mat-grid-tile class="bg-black rounded">3</mat-grid-tile>
                             <mat-grid-tile class="bg-primary-light rounded">{{'+'+creator.videoCount}}</mat-grid-tile>
                         </mat-grid-list>
                     </div>

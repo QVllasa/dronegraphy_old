@@ -23,16 +23,6 @@ export class FootageComponent implements OnInit {
         console.log(id);
         this.videoService.getVideo(id).subscribe(res => {
             this.video = res;
-            this.options = {
-                poster: null,
-                fluid: false,
-                aspectRatio: '16:9',
-                autoplay: true,
-                controls: true,
-                inactivityTimeout: 0,
-                videopage: false,
-                sources: [{src: this.video.getHLS(), type: 'application/x-mpegURL'}]
-            };
             this.isLoading = false;
             console.log('options loaded');
         });

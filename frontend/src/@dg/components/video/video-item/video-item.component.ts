@@ -19,15 +19,16 @@ import {Video} from '../../../models/video.model';
 export class VideoItemComponent implements OnInit {
 
     @Input() videoItem: Video;
-    @Input() options: any;
+    // @Input() options: any;
     @Input() playOnHover: boolean;
+    @Input() mode: 'base' | 'actions' | 'details' = 'details';
 
 
+    options: any;
     loadStatus: boolean;
     timer: any;
     poster: any;
     showActions: boolean;
-
 
 
     constructor(private domSanitizer: DomSanitizer) {
@@ -35,20 +36,65 @@ export class VideoItemComponent implements OnInit {
 
     ngOnInit(): void {
         this.poster = this.domSanitizer.bypassSecurityTrustStyle(`url(${this.videoItem.getThumbnail()})`);
-        if (!this.options) {
-            this.options = {
-                poster: this.videoItem.getThumbnail(),
-                fluid: false,
-                aspectRatio: '16:9',
-                autoplay: true,
-                controls: false,
-                inactivityTimeout: 0,
-                videopage: false,
-                sources: [{src: this.videoItem.getHLS(), type: 'application/x-mpegURL'}]
-            };
+        // if (!this.options) {
+        //     this.options = {
+        //         poster: this.videoItem.getThumbnail(),
+        //         fluid: false,
+        //         aspectRatio: '16:9',
+        //         autoplay: true,
+        //         controls: false,
+        //         inactivityTimeout: 0,
+        //         videopage: false,
+        //         sources: [{src: this.videoItem.getHLS(), type: 'application/x-mpegURL'}]
+        //     };
+        // }
+
+        switch (this.mode) {
+            case 'actions':
+                this.options = {
+                    poster: this.videoItem.getThumbnail(),
+                    fluid: false,
+                    aspectRatio: '16:9',
+                    autoplay: true,
+                    controls: false,
+                    inactivityTimeout: 0,
+                    sources: [{src: this.videoItem.getHLS(), type: 'application/x-mpegURL'}]
+                };
+                break;
+            case 'base':
+                this.options = {
+                    poster: null,
+                    fluid: false,
+                    aspectRatio: '16:9',
+                    autoplay: true,
+                    controls: true,
+                    inactivityTimeout: 0,
+                    sources: [{src: this.videoItem.getHLS(), type: 'application/x-mpegURL'}]
+                };
+                break;
+            case 'details':
+                this.options = {
+                    poster: this.videoItem.getThumbnail(),
+                    fluid: false,
+                    aspectRatio: '16:9',
+                    autoplay: true,
+                    controls: false,
+                    inactivityTimeout: 0,
+                    sources: [{src: this.videoItem.getHLS(), type: 'application/x-mpegURL'}]
+                };
+                break;
+            default:
+                this.options = {
+                    poster: this.videoItem.getThumbnail(),
+                    fluid: false,
+                    aspectRatio: '16:9',
+                    autoplay: true,
+                    controls: false,
+                    inactivityTimeout: 0,
+                    sources: [{src: this.videoItem.getHLS(), type: 'application/x-mpegURL'}]
+                };
+                break;
         }
-
-
     }
 
 
@@ -60,14 +106,12 @@ export class VideoItemComponent implements OnInit {
     }
 
     onHide() {
-
         setTimeout(() => {
             this.showActions = false;
         }, 1000);
 
         clearTimeout(this.timer);
         this.loadStatus = false;
-
     }
 
 

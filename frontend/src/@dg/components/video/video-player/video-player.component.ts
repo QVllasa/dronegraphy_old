@@ -32,7 +32,6 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
         autoplay: boolean,
         inactivityTimeout: number,
         controls: boolean,
-        videopage: boolean,
         sources: {
             src: string,
             type: string,

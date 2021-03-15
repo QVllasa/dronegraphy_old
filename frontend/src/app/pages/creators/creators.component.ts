@@ -18,12 +18,13 @@ export class CreatorsComponent implements OnInit {
     creators: Creator[];
     videos: Video[];
     isLoading: boolean;
+    options: any;
 
     constructor(private http: HttpClient, private userService: UserService, private videoService: VideoService) {
     }
 
     ngOnInit(): void {
-        // TODO get videos of each creator use forkJoin with list of uids
+
         this.isLoading = true;
         this.http.get<IUser[]>(environment.apiUrl + '/creators')
             .pipe(

@@ -15,7 +15,7 @@ export class VideoGridComponent implements OnInit {
     @Input() gridLayout: string;
 
 
-    constructor(private domSanitizer: DomSanitizer) {
+    constructor() {
     }
 
     ngOnInit() {

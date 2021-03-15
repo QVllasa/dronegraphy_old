@@ -1,5 +1,24 @@
-<!--<div class="relative flex" >-->
-<ng-container *ngIf="playOnHover">
+
+<ng-container *ngIf="mode === 'actions'">
+    <div class="rounded relative h-full w-full flex aspect-ratio-16/9 bg-no-repeat bg-cover bg-top"
+         (mouseenter)="onShow()" (mouseleave)="onHide()"
+         [style.backgroundImage]="poster">
+        <dg-vjs-player
+                [style.backgroundImage]="poster"
+                *ngIf="loadStatus"
+                [options]="options"></dg-vjs-player>
+    </div>
+</ng-container>
+
+
+<ng-container *ngIf="mode === 'base'">
+    <dg-vjs-player
+            class="relative h-full w-full flex bg-no-repeat bg-cover bg-top"
+            [options]="options"></dg-vjs-player>
+</ng-container>
+
+
+<ng-container *ngIf="mode === 'details'">
     <div class="rounded relative h-full w-full flex aspect-ratio-16/9 bg-no-repeat bg-cover bg-top"
          (mouseenter)="onShow()" (mouseleave)="onHide()"
          [style.backgroundImage]="poster">
@@ -10,14 +29,4 @@
         <dg-vjs-actions [videoItem]="videoItem" *ngIf="showActions"></dg-vjs-actions>
     </div>
 </ng-container>
-
-
-<ng-container *ngIf="!playOnHover">
-    <dg-vjs-player
-            class="relative h-full w-full flex bg-no-repeat bg-cover bg-top"
-            [options]="options"></dg-vjs-player>
-</ng-container>
-
-
-
 

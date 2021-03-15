@@ -8,7 +8,7 @@
 
     <dg-page-layout-content *ngIf="!isLoading" class="h-screen w-screen" fxLayout="row" fxLayoutAlign="start start">
         <div class="w-full h-full px-gutter" fxLayout="column" fxFlex="60">
-            <dg-video-item [options]="options" [playOnHover]="false" [videoItem]="video"></dg-video-item>
+            <dg-video-item mode="base" [videoItem]="video"></dg-video-item>
         </div>
         <div class="px-gutter" fxLayout="column" fxFlex="auto">
             <div>
