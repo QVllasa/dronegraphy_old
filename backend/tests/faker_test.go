@@ -112,6 +112,13 @@ func TestLoadUserFixtures(t *testing.T) {
 		fmt.Println(err)
 	}
 
+	target := "../storage/creators/"
+
+	udir, _ := ioutil.ReadDir(target)
+	for _, d := range udir {
+		os.RemoveAll(path.Join([]string{target, d.Name()}...))
+	}
+
 	iter := fbClient.Client.Users(context.Background(), "")
 	for {
 		user, err := iter.Next()
@@ -154,6 +161,7 @@ func TestLoadUserFixtures(t *testing.T) {
 		u, err := fbClient.Client.CreateUser(context.Background(), params)
 		if err != nil {
 			log.Fatalf("error creating user: %v\n", err)
+			panic(err)
 		}
 		log.Printf("Successfully created user: %v\n", u)
 
@@ -161,13 +169,31 @@ func TestLoadUserFixtures(t *testing.T) {
 			"role": user.Role,
 		}
 
-		if err := fbClient.Client.SetCustomUserClaims(context.Background(), user.UID, claims); err != nil {
+		if err := fbClient.Client.SetCustomUserClaims(context.Background(), u.UID, claims); err != nil {
 			log.Errorf("setting custom claims failed: %v", err)
+			panic(err)
 		}
 
 		_ = fbClient.Client.RevokeRefreshTokens(context.Background(), user.UID)
 
 		user.UID = u.UID
+
+		fileID := xid.New().String()
+
+		t := target + user.UID + "/profileImage"
+
+		if _, err := os.Stat(t); os.IsNotExist(err) {
+			if err = os.MkdirAll(t, os.ModePerm); err != nil {
+				panic(err)
+			}
+		}
+
+		if err = util.DownloadFile(gofakeit.ImageURL(640, 360)+".jpg", target+user.UID+"/profileImage/"+fileID+".jpg"); err != nil {
+			log.Error(err)
+			panic(err)
+		}
+
+		user.ProfileImage = fileID + ".jpg"
 
 		_, _ = users.InsertOne(context.Background(), user)
 	}
@@ -288,11 +314,12 @@ func TestLoadVideoFixtures(t *testing.T) {
 		ID, _ := videos.InsertOne(context.Background(), video)
 
 		fileID := xid.New().String()
-		vID := xid.New().String()
 
 		if err = util.DownloadFile(gofakeit.ImageURL(640, 360)+".jpg", target+fileID+".jpg"); err != nil {
 			log.Error(err)
 		}
+
+		vID := xid.New().String()
 
 		if err = util.CopyDir("./testfiles", "../../"+service.StorageRoot+service.Videos+"/"+vID+"/hls"); err != nil {
 			log.Error(err)
