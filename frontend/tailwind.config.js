@@ -1,6 +1,6 @@
 module.exports = {
   purge: [],
-  target: 'relaxed',
+  // target: 'relaxed',
   prefix: '',
   important: true,
   separator: ':',

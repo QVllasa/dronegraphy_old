@@ -33,7 +33,7 @@ export class CreatorsComponent implements OnInit {
                     const list: Observable<VideoResponse>[] = [];
                     for (const creator of res) {
                         this.creators.push(new Creator().deserialize(creator));
-                        list.push(this.videoService.getVideosByCreator(creator.uid, -5).pipe(take(1)));
+                        list.push(this.videoService.getVideosByCreator(creator.uid, -3).pipe(take(1)));
                     }
                     console.log(list);
                     return forkJoin(list);

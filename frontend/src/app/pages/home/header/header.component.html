@@ -8,7 +8,7 @@
         <div fxLayoutGap="24px">
             <button *ngIf="!(userService.user$ | async) as user" mat-raised-button routerLink="register" color="primary" class="text-lg py-1 px-6">Jetzt Starten</button>
             <button *ngIf="(userService.user$ | async) as user" mat-raised-button routerLink="pricing" class="text-lg py-1 px-6" color="primary">Konto aufladen</button>
-            <button mat-raised-button routerLink="pricing" class="text-lg py-1 px-6">Preise</button>
+            <button mat-raised-button color="white" routerLink="pricing" class="text-lg py-1 text-primary px-6">Preise</button>
         </div>
     </div>
 </div>
