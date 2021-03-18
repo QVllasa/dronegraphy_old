@@ -19,8 +19,8 @@
     </dg-page-layout-header>
 
     <dg-page-layout-content dgContainer fxLayout="column" fxLayoutAlign="center center">
-        <div class="card w-full h-6xl">
-            <div class="w-full p-gutter" fxLayout="row" fxLayoutAlign="space-between start">
+        <div class="card w-full">
+            <div class="w-full p-gutter " fxLayout="row" fxLayoutAlign="space-between start">
                 <div class="w-full" fxLayout="row" fxLayoutAlign="space-evenly" fxLayoutGap="12px">
                     <div fxLayout="column">
                         230 Aufnahmen
@@ -45,8 +45,12 @@
                     </div>
                 </div>
             </div>
-            <dg-video-grid [videos]="videos"></dg-video-grid>
+            <div *ngIf="!isLoading" class="w-full px-gutter pb-gutter">
+                <dg-video-grid [videos]="creator.getFootage()"></dg-video-grid>
+            </div>
+            <mat-spinner *ngIf="isLoading" diameter="50" color="primary"></mat-spinner>
         </div>
+
     </dg-page-layout-content>
 
 

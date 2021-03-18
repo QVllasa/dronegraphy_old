@@ -54,7 +54,7 @@ export class CreatorsComponent implements OnInit {
                         }
                     }
                     this.isLoading = false;
-                    console.log(this.creators);
+                    // console.log(this.creators);
                 },
                 complete: () => console.log('This is how it ends!'),
                 error: err => console.log(err),

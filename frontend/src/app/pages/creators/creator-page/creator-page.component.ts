@@ -1,9 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {VideoService} from '../../../../@dg/services/video.service';
+import {VideoResponse, VideoService} from '../../../../@dg/services/video.service';
 import {IVideo, Video} from '../../../../@dg/models/video.model';
 import {HttpClient} from '@angular/common/http';
 import {ActivatedRoute} from '@angular/router';
-import {tap} from 'rxjs/operators';
+import {switchMap, tap} from 'rxjs/operators';
+import {UserService} from '../../../../@dg/services/user.service';
+import {Creator} from '../../../../@dg/models/user.model';
 
 @Component({
     selector: 'dg-creator-page',
@@ -13,10 +15,12 @@ import {tap} from 'rxjs/operators';
 export class CreatorPageComponent implements OnInit {
 
     headerVideo: Video;
-    videos: Video[];
     options: any;
+    isLoading: boolean;
 
-    constructor(private videoService: VideoService, private route: ActivatedRoute) {
+    creator: Creator;
+
+    constructor(private videoService: VideoService, private route: ActivatedRoute, private userSerivce: UserService) {
         this.options = {
             fluid: false,
             aspectRatio: '16:9',
@@ -39,12 +43,22 @@ export class CreatorPageComponent implements OnInit {
                 });
         }
 
+        this.isLoading = true;
         this.route.params
-            .pipe(tap(param => console.log(param['key'])))
-            .subscribe(param => {
-            // console.log(param['key']);
-        });
+            .pipe(
+                tap(param => console.log(param['key'])),
+                switchMap(param => {
+                    return this.userSerivce.getCreator(+param['key']);
+                }),
+                switchMap(creator => {
+                    this.creator = new Creator().deserialize(creator);
+                    return this.videoService.getVideosByCreator(this.creator.key);
+                }))
+            .subscribe((res: VideoResponse) => {
+                this.creator.setFootage(this.videoService.mapVideos(res));
+                this.isLoading = false;
+                console.log(this.creator);
+            });
     }
-
 
 }

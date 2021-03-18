@@ -51,7 +51,7 @@ export class UserService {
 
 
     registerUser(user, password: string) {
-        let options = {headers: new HttpHeaders().append('Pw', password)};
+        const options = {headers: new HttpHeaders().append('Pw', password)};
         return this.http.post<IUser>(environment.apiUrl + '/register', user, options);
     }
 
@@ -168,6 +168,10 @@ export class UserService {
                 }
             }
         }
+    }
+
+    getCreator(key: number) {
+        return this.http.get<IUser>(environment.apiUrl + '/creators/' + key);
     }
 
 

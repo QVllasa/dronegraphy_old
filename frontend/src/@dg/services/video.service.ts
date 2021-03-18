@@ -44,7 +44,6 @@ export class VideoService {
         const checkedCategories$ = this.categoryService.categories$;
         const search$ = this.searchService.search$;
 
-
         merge(
             activeSort$
                 .pipe(
@@ -167,7 +166,7 @@ export class VideoService {
     }
 
 
-    getVideosByCreator(id, limit?, page?){
+    getVideosByCreator(key, limit?, page?) {
         if (!page) {
             page = 0;
         }
@@ -176,7 +175,7 @@ export class VideoService {
         }
         const params = new HttpParams().set('limit', limit).set('page', page);
 
-        return this.http.get<VideoResponse>(environment.apiUrl + '/creators/' + id, {params});
+        return this.http.get<VideoResponse>(environment.apiUrl + '/creators/' + key + '/videos', {params});
     }
 
     getVideo(id) {

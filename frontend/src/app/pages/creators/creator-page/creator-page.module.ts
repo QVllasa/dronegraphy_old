@@ -8,20 +8,22 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {VideoPlayerModule} from '../../../../@dg/components/video/video-player/video-player.module';
 import {VideoGridModule} from '../../../../@dg/components/video/video-grid/video-grid.module';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 @NgModule({
   declarations: [CreatorPageComponent],
-  imports: [
-    CommonModule,
-    PageLayoutModule,
-    FlexLayoutModule,
-    ContainerModule,
-    MatButtonModule,
-    MatIconModule,
-    VideoPlayerModule,
-    VideoGridModule
-  ],
+    imports: [
+        CommonModule,
+        PageLayoutModule,
+        FlexLayoutModule,
+        ContainerModule,
+        MatButtonModule,
+        MatIconModule,
+        VideoPlayerModule,
+        VideoGridModule,
+        MatProgressSpinnerModule
+    ],
   exports: [CreatorPageComponent]
 })
 export class CreatorPageModule { }
