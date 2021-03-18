@@ -292,9 +292,9 @@ func (this *Handler) GetVideos(c echo.Context) error {
 
 	var response VideoResponse
 
-	if c.Param("id") != "" {
-		filter["$and"] = append(filter["$and"], bson.M{"creator.uid": c.Param("id")})
-		response.UID = c.Param("id")
+	if c.Param("key") != "" {
+		filter["$and"] = append(filter["$and"], bson.M{"creator.key": c.Param("key")})
+		response.UID = c.Param("key")
 	}
 
 	fmt.Println("final filter:", filter)

@@ -147,6 +147,10 @@ func TestLoadUserFixtures(t *testing.T) {
 			"ROLE_MEMBER", "ROLE_CREATOR",
 		}
 		user.Role = gofakeit.RandomString(roles)
+
+		if user.Role == "ROLE_CREATOR" {
+			user.Key = gofakeit.Number(100, 10000)
+		}
 		user.FirstName = gofakeit.FirstName()
 		user.LastName = gofakeit.LastName()
 		user.Email = gofakeit.Email()
@@ -188,7 +192,9 @@ func TestLoadUserFixtures(t *testing.T) {
 			}
 		}
 
-		if err = util.DownloadFile(gofakeit.ImageURL(640, 360)+".jpg", target+user.UID+"/profileImage/"+fileID+".jpg"); err != nil {
+
+		//https://thispersondoesnotexist.com/image
+		if err = util.DownloadFile("https://thispersondoesnotexist.com/image", target+user.UID+"/profileImage/"+fileID+".jpg"); err != nil {
 			log.Error(err)
 			panic(err)
 		}

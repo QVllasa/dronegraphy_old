@@ -8,6 +8,7 @@ import (
 type (
 	User struct {
 		ID               primitive.ObjectID `json:"-" bson:"_id,omitempty"`
+		Key              int                `json:"key,omitempty" bson:"key,omitempty"`
 		Email            string             `json:"email,omitempty" bson:"email,omitempty" validate:"required,email"`
 		FirstName        string             `json:"firstName" bson:"firstName" validate:"required"`
 		LastName         string             `json:"lastName" bson:"lastName"`
