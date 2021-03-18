@@ -1,4 +1,4 @@
-import {Creator, User} from './user.model';
+import {Creator} from './user.model';
 import {Deserializable} from './deserialize.interface';
 import {environment} from '../../environments/environment';
 

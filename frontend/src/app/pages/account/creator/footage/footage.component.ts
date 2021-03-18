@@ -1,30 +1,27 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {Observable, of, ReplaySubject} from "rxjs";
-import {Video} from "../../../../../@dg/models/video.model";
-import {TableColumn} from "../../../../../@dg/models/table-column.interface";
-import {MatTableDataSource} from "@angular/material/table";
-import {SelectionModel} from "@angular/cdk/collections";
-import {FormControl} from "@angular/forms";
-import {aioTableData, aioTableLabels} from "../../../../../static-data/aio-table-data";
-import {filter, map} from "rxjs/operators";
-import {MatSelectChange} from "@angular/material/select";
-import {MatPaginator} from "@angular/material/paginator";
-import {MatSort} from "@angular/material/sort";
-import {VideoService} from "../../../../../@dg/services/video.service";
-import {VideoCreateUpdateComponent} from "./video-create-update/video-create-update.component";
-import {MatDialog} from "@angular/material/dialog";
-import {UserService} from "../../../../../@dg/services/user.service";
-import {User} from "../../../../../@dg/models/user.model";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {HttpEventType} from "@angular/common/http";
-import {UploadService} from "../../../../../@dg/services/upload.service";
+import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Observable, ReplaySubject} from 'rxjs';
+import {Video} from '../../../../../@dg/models/video.model';
+import {TableColumn} from '../../../../../@dg/models/table-column.interface';
+import {MatTableDataSource} from '@angular/material/table';
+import {SelectionModel} from '@angular/cdk/collections';
+import {FormControl} from '@angular/forms';
+import {aioTableLabels} from '../../../../../static-data/aio-table-data';
+import {filter, map} from 'rxjs/operators';
+import {MatSelectChange} from '@angular/material/select';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {VideoService} from '../../../../../@dg/services/video.service';
+import {VideoCreateUpdateComponent} from './video-create-update/video-create-update.component';
+import {MatDialog} from '@angular/material/dialog';
+import {UserService} from '../../../../../@dg/services/user.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
     selector: 'dg-footage',
     templateUrl: './footage.component.html',
     styleUrls: ['./footage.component.scss']
 })
-export class FootageComponent implements OnInit {
+export class FootageComponent implements OnInit, AfterViewInit {
 
     subject$: ReplaySubject<Video[]> = new ReplaySubject<Video[]>(0);
     data$: Observable<Video[]> = this.subject$.asObservable();
@@ -84,7 +81,6 @@ export class FootageComponent implements OnInit {
         });
 
 
-
         this.searchCtrl.valueChanges.subscribe(value => this.onFilterChange(value));
     }
 
@@ -100,13 +96,13 @@ export class FootageComponent implements OnInit {
     getData() {
         return this.videoService.getVideosByCreator(this.userSevice.user$.value.uid, -1, 0).pipe(
             map(res => {
-                this.totalCount = res.totalcount
+                this.totalCount = res.totalcount;
                 if (!res.videos) {
-                    return []
+                    return [];
                 }
-                return this.videoService.mapVideos(res)
+                return this.videoService.mapVideos(res);
             })
-        )
+        );
     }
 
 
@@ -116,8 +112,7 @@ export class FootageComponent implements OnInit {
     }
 
     createVideo() {
-        this.dialog.open(VideoCreateUpdateComponent, {
-        });
+        this.dialog.open(VideoCreateUpdateComponent, {});
     }
 
     updateVideo(video: Video) {
@@ -137,16 +132,16 @@ export class FootageComponent implements OnInit {
             this.videos.splice(this.videos.findIndex((existingVideo) => existingVideo.id === video.id), 1);
             this.subject$.next(this.videos);
             if (!multiple) {
-                this._snackBar.open("Aufnahme gelöscht", "SCHLIESSEN")
+                this._snackBar.open('Aufnahme gelöscht', 'SCHLIESSEN');
             }
-        })
+        });
 
     }
 
     deleteVideos(videos: Video[]) {
         videos.forEach(c => this.deleteVideo(c, true));
-        this.selection.clear()
-        this._snackBar.open("Aufnahme gelöscht", "SCHLIESSEN")
+        this.selection.clear();
+        this._snackBar.open('Aufnahme gelöscht', 'SCHLIESSEN');
     }
 
     onFilterChange(value: string) {
@@ -190,12 +185,12 @@ export class FootageComponent implements OnInit {
 
 
     updatePublishState(video: Video) {
-        video.published = !video.published
+        video.published = !video.published;
 
         this.videoService.changePublishState(video).subscribe(res => {
             this.videos[this.videos.findIndex(el => el.id === res.id)] = res;
-            this._snackBar.open("Status geändert!", "SCHLIESSEN")
-        })
+            this._snackBar.open('Status geändert!', 'SCHLIESSEN');
+        });
 
     }
 

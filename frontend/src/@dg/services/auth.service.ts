@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject, from, of, Subscription} from 'rxjs';
-import {IUser, User} from '../models/user.model';
+import {IUser, Member} from '../models/user.model';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
@@ -9,14 +9,13 @@ import {catchError, map, switchMap, take, tap} from 'rxjs/operators';
 import firebase from 'firebase';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {getFirstName, getLastName} from '../utils/split-names';
-import {OrderService} from "./order.service";
+import {OrderService} from './order.service';
 
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthenticationService implements OnDestroy {
-
 
 
     logout$: Subscription;
@@ -34,8 +33,8 @@ export class AuthenticationService implements OnDestroy {
     // Sign Up User on Firebase
     signUp(email, password, name) {
 
-        let user = {
-            email: email,
+        const user = {
+            email,
             firstName: getFirstName(name),
             lastName: getLastName(name),
         };
@@ -43,15 +42,15 @@ export class AuthenticationService implements OnDestroy {
         return this.userService.registerUser(user, password).pipe(
             take(1),
             switchMap(res => {
-                return this.handleLogin(user.email, password)
+                return this.handleLogin(user.email, password);
             }),
             switchMap(res => {
-                return this.afAuth.authState
+                return this.afAuth.authState;
             }),
             switchMap(user => {
-                return from(user.sendEmailVerification())
+                return from(user.sendEmailVerification());
             })
-        )
+        );
 
         // return from(this.afAuth.createUserWithEmailAndPassword(email, password)).pipe(
         //     switchMap(res => {
@@ -86,14 +85,14 @@ export class AuthenticationService implements OnDestroy {
 
 
     login(email: string, password: string) {
-        return this.handleLogin(email, password)
+        return this.handleLogin(email, password);
     }
 
     signOut() {
         this.orderSerivce.cart$.next(null);
         this.logout$ = from(this.afAuth.signOut()).pipe(
             switchMap(() => {
-                localStorage.removeItem('currentUser')
+                localStorage.removeItem('currentUser');
                 return this.router.navigate(['/']);
             }))
             .subscribe(
@@ -109,21 +108,21 @@ export class AuthenticationService implements OnDestroy {
             );
     }
 
-    handleLogin(email: string, password: string){
+    handleLogin(email: string, password: string) {
         return from(this.afAuth.signInWithEmailAndPassword(email, password)).pipe(
             switchMap(res => {
                 return this.userService.getUser(res.user.uid);
             }),
             switchMap(user => {
-                this.userService.user$.next(new User().deserialize(user));
+                this.userService.user$.next(new Member().deserialize(user));
                 if (this.stayLoggedIn) {
-                    localStorage.setItem("currentUser", JSON.stringify(user))
+                    localStorage.setItem('currentUser', JSON.stringify(user));
                 }
                 return this.afAuth.idTokenResult;
             }),
             switchMap(token => {
                 if (this.stayLoggedIn) {
-                    localStorage.setItem("idToken", JSON.stringify(token.token))
+                    localStorage.setItem('idToken', JSON.stringify(token.token));
                 }
                 return this.userService.user$.pipe(
                     map(user => {

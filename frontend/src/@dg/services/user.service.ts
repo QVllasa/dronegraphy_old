@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Creator, IUser, User} from '../models/user.model';
+import {Creator, IUser, Member} from '../models/user.model';
 import {environment} from '../../environments/environment';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
@@ -16,7 +16,7 @@ import {Video} from '../models/video.model';
 })
 export class UserService {
 
-    user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
+    user$: BehaviorSubject<Member | Creator> = new BehaviorSubject<Member | Creator>(null);
 
 
     constructor(private http: HttpClient,
@@ -71,7 +71,7 @@ export class UserService {
     //     return this.http.get<File>(environment.apiUrl + '/photo/' + id)
     // }
 
-    updateUser(user: User) {
+    updateUser(user: Member | Creator) {
         return this.http.put<IUser>(environment.apiUrl + '/users/' + user.uid, user);
     }
 
@@ -88,11 +88,11 @@ export class UserService {
 
     }
 
-    changeUserInfo(user: User): Observable<IUser | null> {
+    changeUserInfo(user: Member | Creator): Observable<IUser | null> {
         return this.updateUser(user);
     }
 
-    changeUserEmail(user: User): Observable<void> {
+    changeUserEmail(user: Member | Creator): Observable<void> {
         return this.afAuth.authState.pipe(
             switchMap((res) => {
                 return from(res.updateEmail(user.email));
@@ -101,7 +101,7 @@ export class UserService {
     }
 
     changePassword(newPassword, form): Observable<void> {
-        if ((newPassword != '') && !form.get('password').invalid) {
+        if ((newPassword !== '') && !form.get('password').invalid) {
             return this.afAuth.authState.pipe(
                 switchMap(res => {
                         return from(res.updatePassword(newPassword));
@@ -187,12 +187,12 @@ export class UserService {
     }
 
     mapCreators(res: IUser[]): Creator[] {
+        console.log('mapCreators: ', res);
         const creators: Creator[] = [];
         for (const creator of res) {
             creators.push(new Creator().deserialize(creator));
         }
         return creators;
-
     }
 
 

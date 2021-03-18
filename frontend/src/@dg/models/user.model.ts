@@ -8,17 +8,19 @@ export interface IUser {
     firstName: string;
     lastName: string;
     email?: string;
-    favoriteVideos?: string[];
+    createdAt: string;
+    updatedAt: string;
 }
 
-export class User implements IUser, Deserializable {
-
+export class Member implements IUser, Deserializable {
     uid: string;
     firstName: string;
     lastName: string;
     email?: string;
+    createdAt: string;
+    updatedAt: string;
     favoriteVideos?: string[];
-    profileImage?: string;
+
 
     #role: string = null;
     #claims: IClaims = null;
@@ -26,20 +28,6 @@ export class User implements IUser, Deserializable {
     deserialize(input: IUser): this {
         Object.assign(this, input);
         return this;
-    }
-
-    getFullName() {
-        return this.firstName + ' ' + this.lastName;
-    }
-
-
-    setProfileImage(id) {
-        this.profileImage = id;
-    }
-
-
-    getProfileImage() {
-        return environment.apiUrl + '/photos/' + this.profileImage;
     }
 
     setClaims(claims: IClaims) {
@@ -73,7 +61,14 @@ export class User implements IUser, Deserializable {
 
 }
 
-export class Creator extends User {
+export class Creator implements IUser, Deserializable {
+    uid: string;
+    firstName: string;
+    lastName: string;
+    email?: string;
+    createdAt: string;
+    updatedAt: string;
+    profileImage?: string;
     footage: Video[];
     videoCount: number;
     key: number;
@@ -87,6 +82,19 @@ export class Creator extends User {
     // favorites?: Video[];
     // saved?: IUser[];
     // job?: any;
+
+
+    #role: string = null;
+    #claims: IClaims = null;
+
+    deserialize(input: IUser): this {
+        Object.assign(this, input);
+        return this;
+    }
+
+    getFullName() {
+        return this.firstName + ' ' + this.lastName;
+    }
 
     getFootage(): Video[] {
         return this.footage;
@@ -102,6 +110,25 @@ export class Creator extends User {
 
     getLocation() {
         return this.location ? this.location : 'Nothing to show';
+    }
+
+    getProfileImage() {
+        return environment.apiUrl + '/photos/' + this.profileImage;
+    }
+
+    setProfileImage(id) {
+        this.profileImage = id;
+    }
+
+    setClaims(claims: IClaims) {
+        this.#claims = claims;
+    }
+
+    get role(): string | null {
+        if (this.#claims) {
+            this.#role = this.#claims['role'];
+        }
+        return this.#role ? this.#role : null;
     }
 
 

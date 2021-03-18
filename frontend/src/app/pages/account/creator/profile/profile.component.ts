@@ -8,6 +8,7 @@ import {UserService} from '../../../../../@dg/services/user.service';
 import {UploadService} from '../../../../../@dg/services/upload.service';
 import {HttpEvent, HttpEventType} from '@angular/common/http';
 import {of} from 'rxjs';
+import {Creator} from '../../../../../@dg/models/user.model';
 
 @Component({
     selector: 'dg-profile',
@@ -106,9 +107,11 @@ export class ProfileComponent implements OnInit {
             )
             .subscribe(res => {
                 if (res) {
-                    this.userService.user$.value.setProfileImage(res);
-                    this._snackBar.open('Profilbild aktualisiert', 'SCHLIESSEN');
-                    this.fileUpload.nativeElement.value = '';
+                    if (this.userService.user$.value instanceof Creator) {
+                        this.userService.user$.value.setProfileImage(res);
+                        this._snackBar.open('Profilbild aktualisiert', 'SCHLIESSEN');
+                        this.fileUpload.nativeElement.value = '';
+                    }
                 }
             });
 

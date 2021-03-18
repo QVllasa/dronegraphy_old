@@ -1,13 +1,13 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BreakpointObserver} from '@angular/cdk/layout';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
+import {UntilDestroy} from '@ngneat/until-destroy';
 import {SidebarComponent} from '../../@dg/components/sidebar/sidebar.component';
 import {LayoutService} from '../../@dg/services/layout.service';
 import {ConfigService} from '../../@dg/services/config.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {User} from '../../@dg/models/user.model';
 import {UserService} from '../../@dg/services/user.service';
+import {Member} from '../../@dg/models/user.model';
 
 
 @UntilDestroy()
@@ -32,7 +32,7 @@ export class CustomLayoutComponent implements OnInit {
 
     ngOnInit() {
         this.activatedRoute.data.subscribe(
-            (data: { user: User }) => {
+            (data: { user: Member }) => {
                 if (!data.user) {
                     this.userService.user$.next(null);
                 }

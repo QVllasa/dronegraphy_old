@@ -4,7 +4,7 @@ import {IVideo, Video} from '../models/video.model';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
-import {User} from '../models/user.model';
+import {Creator, Member} from '../models/user.model';
 import {BehaviorSubject, combineLatest, concat, merge, of, zip} from 'rxjs';
 import {SearchService} from './search.service';
 import {ICategory} from '../models/category.model';
@@ -261,7 +261,7 @@ export class VideoService {
         let loadedVideo;
         loadedVideo = new Video()
             .deserialize(video);
-        loadedVideo.setCreator(new User()
+        loadedVideo.setCreator(new Creator()
             .deserialize(video.creator));
         loadedVideo.setLicense(video.sell);
         loadedVideo.setThumbnail(video.thumbnail);

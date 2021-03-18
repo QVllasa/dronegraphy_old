@@ -1,12 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {Creator, IUser, User} from '../../../@dg/models/user.model';
-import {environment} from '../../../environments/environment';
+import {Creator} from '../../../@dg/models/user.model';
 import {HttpClient} from '@angular/common/http';
 import {UserService} from '../../../@dg/services/user.service';
-import {map, mergeMap, take, tap} from 'rxjs/operators';
+import {mergeMap, take} from 'rxjs/operators';
 import {Video} from '../../../@dg/models/video.model';
 import {VideoResponse, VideoService} from '../../../@dg/services/video.service';
-import {forkJoin, from, Observable} from 'rxjs';
+import {forkJoin, Observable} from 'rxjs';
 import {Router} from '@angular/router';
 import {hyphenateUrlParams} from '../../../@dg/utils/hyphenate-url-params';
 
@@ -53,7 +52,7 @@ export class CreatorsComponent implements OnInit {
                         }
                     }
                     this.isLoading = false;
-                    // console.log(this.creators);
+                    console.log(this.creators);
                 },
                 complete: () => console.log('This is how it ends!'),
                 error: err => console.log(err),
