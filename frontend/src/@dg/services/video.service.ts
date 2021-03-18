@@ -17,7 +17,7 @@ export interface VideoResponse {
     limit: number;
     count: number;
     videos: IVideo[];
-    uid?: string;
+    key?: number;
 }
 
 @Injectable({

@@ -2,7 +2,7 @@
          class="absolute top-0 left-0 w-full z-0 h-md">
     <ng-container *ngIf="headerVideo">
         <div class="absolute top-0 left-0 z-10 w-full h-full"
-             style="background: linear-gradient(0deg, rgba(245,246,248,1) 0%, rgba(0,115,236,0.2) 100%);">
+             style="background: linear-gradient(0deg, rgba(245,246,248,1) 0%, rgba(0,115,236,0.6) 100%);">
         </div>
         <div class="absolute z-0 bg-primary w-full h-full overflow-hidden">
             <dg-vjs-player [options]="options"></dg-vjs-player>
@@ -13,20 +13,20 @@
                 fxLayoutAlign="start center">
     <dg-page-layout-header class="w-full mt-16">
         <div fxLayout="column" fxLayoutAlign="center start" class="px-gutter max-w-lg">
-            <h1 class="text-4xl font-semibold text-white">Creator Name</h1>
-            <h2 class="text-xl font-normal text-white">Some Slogan You can tell Some Slogan You can tell Some</h2>
+            <h1 class="text-4xl font-semibold text-white">{{creator.getFullName()}}</h1>
+            <h2 class="text-xl font-normal text-white">{{creator.getSlogan()}}</h2>
         </div>
     </dg-page-layout-header>
 
     <dg-page-layout-content dgContainer fxLayout="column" fxLayoutAlign="center center">
         <div class="card w-full">
-            <div class="w-full p-gutter " fxLayout="row" fxLayoutAlign="space-between start">
+            <div class="w-full p-gutter h-38" fxLayout="row" fxLayoutAlign="space-between start">
                 <div class="w-full" fxLayout="row" fxLayoutAlign="space-evenly" fxLayoutGap="12px">
                     <div fxLayout="column">
-                        230 Aufnahmen
+                        {{videoCount}} Aufnahmen
                     </div>
                     <div fxLayout="column">
-                        Aus Belin, Germany
+                        Aus {{creator.getLocation()}}
                     </div>
                 </div>
                 <div class="transform -translate-y-24 w-full ">

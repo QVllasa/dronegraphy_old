@@ -10,7 +10,7 @@
         <div class="px-gutter" fxLayout="column" fxFlex="auto">
             <div>
                 <div class="mat-display-2">{{video.title}}</div>
-                <div class="mat-headline font-weight-lighter">Von {{video.getCreator().getFullName()}}</div>
+                <div class="mat-headline font-weight-lighter " >Von <span class="font-medium hover:text-primary cursor-pointer" (click)="onLoadCreator(video)">{{video.getCreator().getFullName()}}</span></div>
                 <div fxLayout="row" fxLayoutAlign="space-between center">
                     <div fxLayout="row" fxLayoutGap="12px">
                         <mat-label class="font-bold">Originale Auflösung:</mat-label>

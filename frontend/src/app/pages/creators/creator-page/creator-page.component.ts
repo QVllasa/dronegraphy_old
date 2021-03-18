@@ -17,6 +17,7 @@ export class CreatorPageComponent implements OnInit {
     headerVideo: Video;
     options: any;
     isLoading: boolean;
+    videoCount: number;
 
     creator: Creator;
 
@@ -55,6 +56,7 @@ export class CreatorPageComponent implements OnInit {
                     return this.videoService.getVideosByCreator(this.creator.key);
                 }))
             .subscribe((res: VideoResponse) => {
+                this.videoCount = res.totalcount;
                 this.creator.setFootage(this.videoService.mapVideos(res));
                 this.isLoading = false;
                 console.log(this.creator);

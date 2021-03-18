@@ -3,10 +3,12 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Creator, IUser, User} from '../models/user.model';
 import {environment} from '../../environments/environment';
 import {AngularFireAuth} from '@angular/fire/auth';
-import {switchMap, take, tap} from 'rxjs/operators';
-import {BehaviorSubject, concat, from, Observable, of} from 'rxjs';
+import {map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
+import {BehaviorSubject, concat, forkJoin, from, Observable, of} from 'rxjs';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {VideoResponse, VideoService} from './video.service';
+import {Video} from '../models/video.model';
 
 
 @Injectable({
@@ -18,6 +20,7 @@ export class UserService {
 
 
     constructor(private http: HttpClient,
+                private videoService: VideoService,
                 private _snackBar: MatSnackBar,
                 private afAuth: AngularFireAuth) {
     }
@@ -172,6 +175,24 @@ export class UserService {
 
     getCreator(key: number) {
         return this.http.get<IUser>(environment.apiUrl + '/creators/' + key);
+    }
+
+    getCreators() {
+        return this.http.get<IUser[]>(environment.apiUrl + '/creators')
+            .pipe(
+                map(res => {
+                    return this.mapCreators(res);
+                })
+            );
+    }
+
+    mapCreators(res: IUser[]): Creator[] {
+        const creators: Creator[] = [];
+        for (const creator of res) {
+            creators.push(new Creator().deserialize(creator));
+        }
+        return creators;
+
     }
 
 

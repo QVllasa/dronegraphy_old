@@ -78,6 +78,7 @@ export class Creator extends User {
     videoCount: number;
     key: number;
     slogan?: string;
+    location?: string;
 
     // imgPath?: string;
     // activated?: boolean;
@@ -93,6 +94,14 @@ export class Creator extends User {
 
     setFootage(videos: Video[]) {
         this.footage = videos;
+    }
+
+    getSlogan() {
+        return this.slogan ? this.slogan : 'Nothing to show';
+    }
+
+    getLocation() {
+        return this.location ? this.location : 'Nothing to show';
     }
 
 

@@ -17,7 +17,7 @@ import {hyphenateUrlParams} from '../../../@dg/utils/hyphenate-url-params';
 })
 export class CreatorsComponent implements OnInit {
 
-    creators: Creator[];
+    creators: Creator[] = [];
     videos: Video[];
     isLoading: boolean;
     options: any;
@@ -31,23 +31,22 @@ export class CreatorsComponent implements OnInit {
     ngOnInit(): void {
 
         this.isLoading = true;
-        this.http.get<IUser[]>(environment.apiUrl + '/creators')
+
+        this.userService.getCreators()
             .pipe(
-                mergeMap(res => {
-                    this.creators = [];
+                mergeMap((creators: Creator[]) => {
+                    this.creators = creators;
                     const list: Observable<VideoResponse>[] = [];
-                    for (const creator of res) {
-                        this.creators.push(new Creator().deserialize(creator));
-                        list.push(this.videoService.getVideosByCreator(creator.uid, -3).pipe(take(1)));
+                    for (const creator of creators) {
+                        list.push(this.videoService.getVideosByCreator(creator.key, -3).pipe(take(1)));
                     }
-                    // console.log(list);
                     return forkJoin(list);
                 }))
             .subscribe({
                 next: values => {
                     for (const i of values) {
                         for (const j of this.creators) {
-                            if (i.uid === j.uid) {
+                            if (i.key === j.key) {
                                 j.footage = this.videoService.mapVideos(i);
                                 j.videoCount = i.totalcount;
                             }
