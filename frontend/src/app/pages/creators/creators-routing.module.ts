@@ -1,13 +1,23 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {CreatorsComponent} from './creators.component';
-import {ProfileComponent} from './profile/profile.component';
+import {CreatorPageComponent} from './creator-page/creator-page.component';
 
 
 const routes: Routes = [
     {
         path: '',
-        component: CreatorsComponent,
+        component: CreatorsComponent
+    },
+    {
+        path: ':key',
+        component: CreatorPageComponent,
+        children: [
+            {
+                path: ':name',
+                component: CreatorPageComponent
+            }
+        ]
     }
 ];
 

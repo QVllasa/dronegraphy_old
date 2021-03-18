@@ -44,7 +44,7 @@
         </div>
     </ng-container>
 </div>
-<div *ngIf="(this.router.url !== '/') && !(this.router.url.includes('results'))" class="fixed top-18 right-0 px-gutter">
+<div *ngIf="(this.router.url !== '/') && !(this.router.url.includes('results'))" class="fixed top-18 z-0 right-0 px-gutter">
     <button [routerLink]="'/'" color="white" mat-mini-fab>
         <mat-icon color="primary">close</mat-icon>
     </button>

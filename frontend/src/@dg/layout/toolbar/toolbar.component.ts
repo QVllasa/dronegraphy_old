@@ -48,7 +48,7 @@ export class ToolbarComponent implements OnInit {
         this.animationItem = animationItem;
         this.animationItem.playSpeed = 2;
         this.layoutService.sidenavOpen$.subscribe(value => {
-            console.log(value);
+            // console.log(value);
             this.updateAnimation(value);
         });
     }

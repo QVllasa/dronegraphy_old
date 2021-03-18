@@ -51,7 +51,7 @@ export class LayoutComponent implements OnInit {
     }
 
     toggleCollapse(ev) {
-        console.log('sidenav: ', ev);
+        // console.log('sidenav: ', ev);
         // this.layoutService.sidenavOpen$.value ? this.layoutService.closeSidenav() : this.layoutService.openSidenav();
     }
 

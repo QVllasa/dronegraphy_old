@@ -8,15 +8,7 @@ export interface IUser {
     firstName: string;
     lastName: string;
     email?: string;
-    profileImage?: string;
     favoriteVideos?: string[];
-    // imgPath?: string;
-    // activated?: boolean;
-    // [videos: number]: Video[];
-    // orders?: Order[];
-    // favorites?: Video[];
-    // saved?: IUser[];
-    // job?: any;
 }
 
 export class User implements IUser, Deserializable {
@@ -26,7 +18,6 @@ export class User implements IUser, Deserializable {
     lastName: string;
     email?: string;
     favoriteVideos?: string[];
-    slogan?: string;
     profileImage?: string;
 
     #role: string = null;
@@ -41,9 +32,11 @@ export class User implements IUser, Deserializable {
         return this.firstName + ' ' + this.lastName;
     }
 
+
     setProfileImage(id) {
         this.profileImage = id;
     }
+
 
     getProfileImage() {
         return environment.apiUrl + '/photos/' + this.profileImage;
@@ -58,11 +51,6 @@ export class User implements IUser, Deserializable {
             this.#role = this.#claims['role'];
         }
         return this.#role ? this.#role : null;
-    }
-
-
-    removePhoto() {
-
     }
 
     setFavorites(favorites: string[]) {
@@ -88,4 +76,24 @@ export class User implements IUser, Deserializable {
 export class Creator extends User {
     footage: Video[];
     videoCount: number;
+    key: number;
+    slogan?: string;
+
+    // imgPath?: string;
+    // activated?: boolean;
+    // [videos: number]: Video[];
+    // orders?: Order[];
+    // favorites?: Video[];
+    // saved?: IUser[];
+    // job?: any;
+
+    getFootage(): Video[] {
+        return this.footage;
+    }
+
+    setFootage(videos: Video[]) {
+        this.footage = videos;
+    }
+
+
 }

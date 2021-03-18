@@ -69,10 +69,10 @@ export class VideoService {
         )
             .pipe(
                 switchMap(res => {
-                    console.log(res);
+                    // console.log(res);
                     this.isLoading$.next(true);
                     this.videos$.next([]);
-                    console.log('selected categories: ', this.selectedCategories);
+                    // console.log('selected categories: ', this.selectedCategories);
                     return this.onReloadVideos(
                         undefined,
                         undefined,
@@ -160,7 +160,7 @@ export class VideoService {
                         this.headerVideo$.next(this.videos$.value[0]);
                     }
 
-                    console.log('Total Reloaded Videos', this.videos$.value.length, res);
+                    // console.log('Total Reloaded Videos', this.videos$.value.length, res);
                     this.response = res;
                 })
             );

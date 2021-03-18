@@ -1,13 +1,13 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {FormGroup} from "@angular/forms";
-import {map, takeWhile} from "rxjs/operators";
-import {AuthenticationService} from "../../../../../@dg/services/auth.service";
-import {AngularFireAuth} from "@angular/fire/auth";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {UserService} from "../../../../../@dg/services/user.service";
-import {UploadService} from "../../../../../@dg/services/upload.service";
-import {HttpEventType} from "@angular/common/http";
-import {of} from "rxjs";
+import {FormGroup} from '@angular/forms';
+import {map, takeWhile} from 'rxjs/operators';
+import {AuthenticationService} from '../../../../../@dg/services/auth.service';
+import {AngularFireAuth} from '@angular/fire/auth';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {UserService} from '../../../../../@dg/services/user.service';
+import {UploadService} from '../../../../../@dg/services/upload.service';
+import {HttpEvent, HttpEventType} from '@angular/common/http';
+import {of} from 'rxjs';
 
 @Component({
     selector: 'dg-profile',
@@ -23,8 +23,8 @@ export class ProfileComponent implements OnInit {
     visible = false;
     fileToUpload: File = null;
 
-    @ViewChild("fileUpload", {static: false}) fileUpload: ElementRef;
-    file: File = null
+    @ViewChild('fileUpload', {static: false}) fileUpload: ElementRef;
+    file: File = null;
 
 
     constructor(public authService: AuthenticationService,
@@ -35,8 +35,8 @@ export class ProfileComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.isLoading = false
-        this.form = this.userService.initForm()
+        this.isLoading = false;
+        this.form = this.userService.initForm();
         this.userService.user$
             .pipe(
                 takeWhile(user => !user, true),
@@ -44,7 +44,7 @@ export class ProfileComponent implements OnInit {
             .subscribe(user => {
 
                 if (!user) {
-                    return
+                    return;
                 }
                 this.form.patchValue({
                     info: {
@@ -52,8 +52,8 @@ export class ProfileComponent implements OnInit {
                         firstName: user.firstName,
                         lastName: user.lastName,
                     },
-                })
-            })
+                });
+            });
     }
 
 
@@ -70,12 +70,12 @@ export class ProfileComponent implements OnInit {
         this.isLoading = true;
         this.userService.sendChanges(this.form).subscribe(result => {
                 this.isLoading = false;
-                this.userService.handleForm(this.form)
+                this.userService.handleForm(this.form);
             },
             error => {
                 this.isLoading = false;
                 if (error) {
-                    this.userService.handleError(error)
+                    this.userService.handleError(error);
                 }
             });
     }
@@ -92,25 +92,25 @@ export class ProfileComponent implements OnInit {
 
     onFileUpload(event) {
         this.file = event.target.files[0];
-        const fd = new FormData()
-        fd.append("file", this.file, this.file.name)
+        const fd = new FormData();
+        fd.append('file', this.file, this.file.name);
 
         this.uploadService.uploadImage(fd)
             .pipe(
-                map(event => {
+                map((event) => {
                     if (event.type === HttpEventType.UploadProgress) {
                     } else if (event.type === HttpEventType.Response) {
-                        return event.body
+                        return event.body;
                     }
                 }),
             )
             .subscribe(res => {
-                if (res){
-                    this.userService.user$.value.setProfileImage(res)
-                    this._snackBar.open("Profilbild aktualisiert", "SCHLIESSEN")
-                    this.fileUpload.nativeElement.value = "";
+                if (res) {
+                    this.userService.user$.value.setProfileImage(res);
+                    this._snackBar.open('Profilbild aktualisiert', 'SCHLIESSEN');
+                    this.fileUpload.nativeElement.value = '';
                 }
-            })
+            });
 
     }
 

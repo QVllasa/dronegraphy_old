@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {IUser, User} from "../models/user.model";
-import {environment} from "../../environments/environment";
-import {AngularFireAuth} from "@angular/fire/auth";
-import {switchMap, take, tap} from "rxjs/operators";
-import {BehaviorSubject, concat, from, Observable, of} from "rxjs";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Creator, IUser, User} from '../models/user.model';
+import {environment} from '../../environments/environment';
+import {AngularFireAuth} from '@angular/fire/auth';
+import {switchMap, take, tap} from 'rxjs/operators';
+import {BehaviorSubject, concat, from, Observable, of} from 'rxjs';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 @Injectable({
@@ -46,12 +46,12 @@ export class UserService {
                 value: '',
                 disabled: false
             }, [Validators.minLength(8)]),
-        })
+        });
     }
 
 
     registerUser(user, password: string) {
-        let options = {headers: new HttpHeaders().append("Pw", password)}
+        let options = {headers: new HttpHeaders().append('Pw', password)};
         return this.http.post<IUser>(environment.apiUrl + '/register', user, options);
     }
 
@@ -77,24 +77,24 @@ export class UserService {
             take(1),
             tap(user => {
                 if (!user) {
-                    return
+                    return;
                 }
                 user.delete().then();
-            })).subscribe()
+            })).subscribe();
 
 
     }
 
     changeUserInfo(user: User): Observable<IUser | null> {
-        return this.updateUser(user)
+        return this.updateUser(user);
     }
 
     changeUserEmail(user: User): Observable<void> {
         return this.afAuth.authState.pipe(
             switchMap((res) => {
-                return from(res.updateEmail(user.email))
+                return from(res.updateEmail(user.email));
             })
-        )
+        );
     }
 
     changePassword(newPassword, form): Observable<void> {
@@ -104,21 +104,21 @@ export class UserService {
                         return from(res.updatePassword(newPassword));
                     }
                 )
-            )
+            );
         }
-        return of(null)
+        return of(null);
     }
 
 
     sendChanges(form: FormGroup) {
-        form.disable()
+        form.disable();
         if (form.get('info').invalid) {
-            form.get('password').enable()
+            form.get('password').enable();
             this._snackBar.open('Bitte korrekt ausfüllen.', 'SCHLIESSEN');
-            return
+            return;
         }
 
-        const newPassword = form.get('password').value
+        const newPassword = form.get('password').value;
 
         this.user$.value.email = form.get('info.email').value;
         this.user$.value.firstName = form.get('info.firstName').value;
@@ -132,11 +132,11 @@ export class UserService {
             changeEmail$,
             changeUserInfo$,
             changePw$
-        )
+        );
     }
 
     handleForm(form) {
-        form.get('password').enable()
+        form.get('password').enable();
         form.patchValue({
             info: {
                 email: this.user$.value.email,
@@ -144,8 +144,8 @@ export class UserService {
                 lastName: this.user$.value.lastName,
             },
             password: ''
-        })
-        this._snackBar.open('Benutzerdaten aktualisiert.', 'SCHLIESSEN')
+        });
+        this._snackBar.open('Benutzerdaten aktualisiert.', 'SCHLIESSEN');
     }
 
     handleError(err) {

@@ -14,6 +14,7 @@ import {MatRippleModule} from '@angular/material/core';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {VideoItemModule} from '../../../@dg/components/video/video-item/video-item.module';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {CreatorPageModule} from './creator-page/creator-page.module';
 
 
 
@@ -32,8 +33,10 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
         MatRippleModule,
         MatGridListModule,
         VideoItemModule,
-        MatProgressSpinnerModule
-    ]
+        MatProgressSpinnerModule,
+        CreatorPageModule
+    ],
+    exports: [CreatorsComponent]
 })
 export class CreatorsModule {
 }

@@ -15,7 +15,7 @@ export class Error404Component implements OnInit {
   };
 
   animationCreated(animationItem: AnimationItem): void {
-    console.log(animationItem);
+    // console.log(animationItem);
   }
 
   constructor() { }

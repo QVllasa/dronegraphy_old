@@ -20,11 +20,11 @@ export class FootageComponent implements OnInit {
     ngOnInit(): void {
         this.isLoading = true;
         const id = this.route.snapshot.params['id'];
-        console.log(id);
+        // console.log(id);
         this.videoService.getVideo(id).subscribe(res => {
             this.video = res;
             this.isLoading = false;
-            console.log('options loaded');
+            // console.log('options loaded');
         });
     }
 

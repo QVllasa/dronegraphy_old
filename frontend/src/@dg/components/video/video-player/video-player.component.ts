@@ -51,7 +51,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        console.log(this.options);
+        // console.log(this.options);
         this.player = videojs(this.target.nativeElement, this.options, function onPlayerReady() {});
 
         this.player.hlsQualitySelector = videojsqualityselector;

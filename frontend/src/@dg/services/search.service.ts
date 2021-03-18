@@ -67,7 +67,7 @@ export class SearchService {
             return;
         }
         const categories = this.categoryService.categories$.value.filter((i => i.checked === true));
-        console.log(categories);
+        // console.log(categories);
         this.router.navigate([route, categories.map(a => a.value).join('&')], {
             relativeTo: this.route,
             queryParams: {search: this.search$.value, sort: this.activeSort$.value.key},
