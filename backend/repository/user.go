@@ -18,9 +18,9 @@ type ErrorMessage struct {
 	Message string `json:"message"`
 }
 
-func (this *Repository) UpdateUser(id string, reqBody io.ReadCloser) (*model.User, error) {
+func (this *Repository) UpdateUser(id string, reqBody io.ReadCloser) (*model.Member, error) {
 
-	user, err := this.GetUserById(id)
+	user, err := this.GetMemberById(id)
 	if err != nil {
 		log.Errorf("User not found: %v", err)
 		return nil, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "User not found"})
@@ -47,10 +47,10 @@ func (this *Repository) UpdateUser(id string, reqBody io.ReadCloser) (*model.Use
 		return nil, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Unable to update the User"})
 	}
 
-	return &user, nil
+	return user, nil
 }
 
-func (this *Repository) CreateUser(model *model.User) error {
+func (this *Repository) CreateUser(model *model.Member) error {
 
 	model.CreatedAt = time.Now()
 
@@ -69,7 +69,8 @@ func (this *Repository) CreateUser(model *model.User) error {
 	return nil
 }
 
-func (this *Repository) GetAllUsers() ([]model.User, error) {
+// Restricted
+func (this *Repository) GetAllMembers() ([]model.User, error) {
 
 	var users []model.User
 
@@ -87,49 +88,45 @@ func (this *Repository) GetAllUsers() ([]model.User, error) {
 
 }
 
-func (this *Repository) GetAllCreators() ([]model.User, error) {
-
-	var creators []model.User
-
-	filter := bson.M{"role": "ROLE_CREATOR"}
-
-	creatorProjection := bson.D{
-		//{"firstName", 1},
-		//{"lastName", 1},
-		//{"uid", 0},
-		{"created_at", 0},
-		{"updated_at", 0},
-		{"favoriteVideos", 0},
-		{"orders", 0},
-		{"email", 0},
-	}
-
-	cursor, err := this.UserColl.Find(context.Background(), filter, options.Find().SetProjection(creatorProjection))
-	if err != nil {
-		log.Errorf("Unable to fetch creators from database: %v", err)
-		return creators, err
-	}
-
-	if err = cursor.All(context.Background(), &creators); err != nil {
-		log.Errorf("Unable to read the cursor: %v", err)
-		return creators, err
-	}
-	return creators, nil
-}
-
-func (this *Repository) GetUserById(id string) (model.User, error) {
-	var user model.User
+// TODO replace with *model.... everywhere
+func (this *Repository) GetMemberById(id string) (*model.Member, error) {
+	var user model.Member
 	filter := bson.M{"uid": id}
 	err := this.UserColl.FindOne(context.Background(), filter).Decode(&user)
 	if err != nil {
 		log.Info("No user found")
-		return user, err
+		return &user, err
 	}
-	return user, nil
+	return &user, nil
 }
 
-func (this *Repository) GetCreator(key int64) (model.User, error) {
-	var user model.User
+func (this *Repository) GetAllCreators() (*[]model.Creator, error) {
+
+	var creators []model.Creator
+
+	filter := bson.M{"user.role": "ROLE_CREATOR"}
+	projection := bson.D{
+		//{"firstName", 1},
+		//{"lastName", 1},
+		{"user.uid", 0},
+		{"user.email", 0},
+	}
+
+	cursor, err := this.UserColl.Find(context.Background(), filter, options.Find().SetProjection(projection))
+	if err != nil {
+		log.Errorf("Unable to fetch creators from database: %v", err)
+		return &creators, err
+	}
+
+	if err = cursor.All(context.Background(), &creators); err != nil {
+		log.Errorf("Unable to read the cursor: %v", err)
+		return &creators, err
+	}
+	return &creators, nil
+}
+
+func (this *Repository) GetCreator(key int64) (model.Creator, error) {
+	var user model.Creator
 	filter := bson.M{"key": key}
 	err := this.UserColl.FindOne(context.Background(), filter).Decode(&user)
 	if err != nil {
@@ -137,4 +134,15 @@ func (this *Repository) GetCreator(key int64) (model.User, error) {
 		return user, err
 	}
 	return user, nil
+}
+
+func (this *Repository) GetCreatorById(id string) (*model.Creator, error) {
+	var user model.Creator
+	filter := bson.M{"uid": id}
+	err := this.UserColl.FindOne(context.Background(), filter).Decode(&user)
+	if err != nil {
+		log.Info("No user found")
+		return &user, err
+	}
+	return &user, nil
 }

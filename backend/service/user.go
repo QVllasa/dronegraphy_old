@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-func (this *Service) Register(user *model.User, password string) error {
+func (this *Service) Register(user *model.Member, password string) error {
 
 	params := (&auth.UserToCreate{}).
 		Email(user.Email).

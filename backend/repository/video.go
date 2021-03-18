@@ -15,15 +15,16 @@ import (
 	"time"
 )
 
-
 func (this *Repository) CreateVideo(video *model.Video, id string) (string, error) {
 
-	u, _ := this.GetUserById(id)
+	u, _ := this.GetCreatorById(id)
 
 	creator := model.Creator{
-		Key:       u.Key,
-		FirstName: u.FirstName,
-		LastName:  u.LastName,
+		Key: u.Key,
+		//BaseUser: model.BaseUser{
+		//	FirstName: u.FirstName,
+		//	LastName:  u.LastName,
+		//},
 	}
 
 	// Set CreatedAt

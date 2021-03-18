@@ -25,7 +25,7 @@ import (
 type VideoResponse struct {
 	TotalCount int64         `json:"totalcount"`
 	TotalPages int           `json:"totalpages"`
-	Key        int64        `json:"key,omitempty"`
+	Key        int64         `json:"key,omitempty"`
 	Page       int64         `json:"page"`
 	Limit      int64         `json:"limit"`
 	Count      int           `json:"count"`
@@ -35,13 +35,15 @@ type VideoResponse struct {
 func (this *Handler) CreateVideo(c echo.Context) error {
 	token, _ := this.service.FirebaseApp.GetAndVerifyToken(c)
 
-	u, _ := this.repository.GetUserById(token.UID)
+	u, _ := this.repository.GetCreatorById(token.UID)
 
 	video := &model.Video{
 		Creator: model.Creator{
-			Key:       u.Key,
-			FirstName: u.FirstName,
-			LastName:  u.LastName,
+			Key: u.Key,
+			User: model.User{
+				FirstName: u.FirstName,
+				LastName:  u.LastName,
+			},
 		},
 	}
 
@@ -123,7 +125,7 @@ func (this *Handler) UploadVideoFiles(c echo.Context) error {
 		return err
 	}
 
-	//user, err := this.repository.GetUserById(video.Creator.UID)
+	//user, err := this.repository.GetMemberById(video.Creator.UID)
 	//if err != nil {
 	//	log.Error(err)
 	//	return err
@@ -343,7 +345,7 @@ func (this *Handler) AddToFavorites(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "no token found")
 	}
 
-	u, err := this.repository.GetUserById(token.UID)
+	u, err := this.repository.GetMemberById(token.UID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "no user found")
 	}
@@ -368,7 +370,7 @@ func (this *Handler) RemoveFromFavorites(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "no token found")
 	}
 
-	u, err := this.repository.GetUserById(token.UID)
+	u, err := this.repository.GetMemberById(token.UID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "no user found")
 	}

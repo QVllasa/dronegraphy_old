@@ -18,7 +18,7 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	}
 
 	// ADMIN
-	routeGroup.GET("/users", controller.GetUsers)
+	routeGroup.GET("/users", controller.GetMembers)
 
 	// CREATOR
 	routeGroup.POST("/videos", controller.CreateVideo, mw.Auth())
@@ -32,9 +32,9 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	//e.PUT("/videos/:id", h.UpdateVideo, middleware.BodyLimit("1M"), customMiddleware.Auth())
 	//e.DELETE("/videos/:id", h.DeleteVideo, customMiddleware.Auth())
 
-	// MEMBER
-	routeGroup.GET("/users/:id", controller.GetUser, mw.Auth())
-	routeGroup.PUT("/users/:id", controller.UpdateUser, mw.Auth())
+	// USER
+	routeGroup.GET("/users/:id", controller.GetMember, mw.Auth())
+	routeGroup.PUT("/users/:id", controller.UpdateMember, mw.Auth())
 	routeGroup.POST("/addToFavorites/:id", controller.AddToFavorites, mw.Auth())
 	routeGroup.POST("/removeFromFavorites/:id", controller.RemoveFromFavorites, mw.Auth())
 	//routeGroup.POST("/users/:id", controller.UploadPhoto, mw.Auth())

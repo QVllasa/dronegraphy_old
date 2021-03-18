@@ -16,7 +16,7 @@ func (this *Handler) Register(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnprocessableEntity, "no password found")
 	}
 
-	newUser := model.User{}
+	newUser := model.Member{}
 
 	//Set Default Role
 	newUser.Role = "ROLE_MEMBER"
@@ -30,5 +30,4 @@ func (this *Handler) Register(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, newUser)
-
 }

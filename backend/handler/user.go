@@ -15,15 +15,15 @@ import (
 	"strings"
 )
 
-func (this *Handler) GetUser(c echo.Context) error {
+func (this *Handler) GetMember(c echo.Context) error {
 
-	user, err := this.repository.GetUserById(c.Param("id"))
+	user, err := this.repository.GetMemberById(c.Param("id"))
 	if err != nil {
 		log.Errorf("Unable to find User: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "user not found")
 	}
 
-	if err = this.service.FirebaseApp.UpdateRoleClaims(&user); err != nil {
+	if err = this.service.FirebaseApp.UpdateRoleClaims(user); err != nil {
 		log.Error(err)
 		return err
 	}
@@ -31,7 +31,7 @@ func (this *Handler) GetUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, user)
 }
 
-func (this *Handler) UpdateUser(c echo.Context) error {
+func (this *Handler) UpdateMember(c echo.Context) error {
 
 	// Update User in database
 	user, err := this.repository.UpdateUser(c.Param("id"), c.Request().Body)
@@ -43,9 +43,9 @@ func (this *Handler) UpdateUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, user)
 }
 
-func (this *Handler) GetUsers(c echo.Context) error {
+func (this *Handler) GetMembers(c echo.Context) error {
 
-	users, err := this.repository.GetAllUsers()
+	users, err := this.repository.GetAllMembers()
 	if err != nil {
 		log.Error(err)
 		return err
@@ -129,13 +129,12 @@ func (this *Handler) GetCreators(c echo.Context) error {
 		return err
 	}
 
-	if len(creators) == 0 {
+	if len(*creators) == 0 {
 		return echo.NewHTTPError(http.StatusOK, "No Creators found")
 	}
 
 	return c.JSON(http.StatusOK, creators)
 }
-
 
 func (this *Handler) GetCreator(c echo.Context) error {
 	key, err := strconv.ParseInt(c.Param("key"), 10, 64)
