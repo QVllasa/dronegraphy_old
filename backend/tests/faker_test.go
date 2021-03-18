@@ -149,7 +149,7 @@ func TestLoadUserFixtures(t *testing.T) {
 		user.Role = gofakeit.RandomString(roles)
 
 		if user.Role == "ROLE_CREATOR" {
-			user.Key = gofakeit.Number(100, 10000)
+			user.Key = int64(gofakeit.Number(100, 10000))
 		}
 		user.FirstName = gofakeit.FirstName()
 		user.LastName = gofakeit.LastName()
@@ -191,7 +191,6 @@ func TestLoadUserFixtures(t *testing.T) {
 				panic(err)
 			}
 		}
-
 
 		//https://thispersondoesnotexist.com/image
 		if err = util.DownloadFile("https://thispersondoesnotexist.com/image", target+user.UID+"/profileImage/"+fileID+".jpg"); err != nil {
@@ -310,7 +309,7 @@ func TestLoadVideoFixtures(t *testing.T) {
 
 		owner := creators[gofakeit.Number(0, len(creators)-1)]
 		video.Creator = model.Creator{
-			UID:       owner.UID,
+			Key:       owner.Key,
 			FirstName: owner.FirstName,
 			LastName:  owner.LastName,
 		}

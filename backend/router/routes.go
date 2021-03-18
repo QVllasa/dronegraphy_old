@@ -47,7 +47,8 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	routeGroup.GET("/creators", controller.GetCreators)
 
 	//routeGroup.GET("/hls/", controller.ServeHls)
-	routeGroup.GET("/creators/:id", controller.GetVideos)
+	routeGroup.GET("/creators/:key/videos", controller.GetVideos)
+	routeGroup.GET("/creators/:key", controller.GetCreator)
 	routeGroup.GET("/categories", controller.GetCategories)
 	//routeGroup.GET("/parent_categories", controller.GetParentCategories)
 	routeGroup.GET("/sorting", controller.GetSortingOptions)

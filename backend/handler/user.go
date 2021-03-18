@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -133,4 +134,19 @@ func (this *Handler) GetCreators(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, creators)
+}
+
+
+func (this *Handler) GetCreator(c echo.Context) error {
+	key, err := strconv.ParseInt(c.Param("key"), 10, 64)
+	if err != nil {
+		key = 0
+	}
+	creator, err := this.repository.GetCreator(key)
+	if err != nil {
+		log.Error(err)
+		return echo.NewHTTPError(http.StatusOK, "No Creator found")
+	}
+
+	return c.JSON(http.StatusOK, creator)
 }

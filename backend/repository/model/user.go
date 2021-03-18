@@ -8,7 +8,7 @@ import (
 type (
 	User struct {
 		ID               primitive.ObjectID `json:"-" bson:"_id,omitempty"`
-		Key              int                `json:"key,omitempty" bson:"key,omitempty"`
+		Key              int64                `json:"key,omitempty" bson:"key,omitempty"`
 		Email            string             `json:"email,omitempty" bson:"email,omitempty" validate:"required,email"`
 		FirstName        string             `json:"firstName" bson:"firstName" validate:"required"`
 		LastName         string             `json:"lastName" bson:"lastName"`
@@ -23,7 +23,7 @@ type (
 	}
 
 	Creator struct {
-		UID       string `json:"uid" bson:"uid"`
+		Key       int64 `json:"key" bson:"key"`
 		FirstName string `json:"firstName" bson:"firstName"`
 		LastName  string `json:"lastName" bson:"lastName"`
 	}

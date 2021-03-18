@@ -127,3 +127,14 @@ func (this *Repository) GetUserById(id string) (model.User, error) {
 	}
 	return user, nil
 }
+
+func (this *Repository) GetCreator(key int64) (model.User, error) {
+	var user model.User
+	filter := bson.M{"key": key}
+	err := this.UserColl.FindOne(context.Background(), filter).Decode(&user)
+	if err != nil {
+		log.Info("No user found")
+		return user, err
+	}
+	return user, nil
+}

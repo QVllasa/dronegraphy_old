@@ -25,7 +25,7 @@ import (
 type VideoResponse struct {
 	TotalCount int64         `json:"totalcount"`
 	TotalPages int           `json:"totalpages"`
-	UID        string        `json:"uid,omitempty"`
+	Key        int64        `json:"key,omitempty"`
 	Page       int64         `json:"page"`
 	Limit      int64         `json:"limit"`
 	Count      int           `json:"count"`
@@ -39,7 +39,7 @@ func (this *Handler) CreateVideo(c echo.Context) error {
 
 	video := &model.Video{
 		Creator: model.Creator{
-			UID:       u.UID,
+			Key:       u.Key,
 			FirstName: u.FirstName,
 			LastName:  u.LastName,
 		},
@@ -224,6 +224,11 @@ func (this *Handler) GetVideos(c echo.Context) error {
 		page = 1
 	}
 
+	key, err := strconv.ParseInt(c.Param("key"), 10, 64)
+	if err != nil {
+		key = 0
+	}
+
 	limit, err := strconv.ParseInt(c.QueryParam("limit"), 10, 64)
 	if err != nil {
 		// Defaults
@@ -292,9 +297,9 @@ func (this *Handler) GetVideos(c echo.Context) error {
 
 	var response VideoResponse
 
-	if c.Param("key") != "" {
-		filter["$and"] = append(filter["$and"], bson.M{"creator.key": c.Param("key")})
-		response.UID = c.Param("key")
+	if key != 0 {
+		filter["$and"] = append(filter["$and"], bson.M{"creator.key": key})
+		response.Key = key
 	}
 
 	fmt.Println("final filter:", filter)

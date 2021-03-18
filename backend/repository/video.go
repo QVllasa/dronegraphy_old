@@ -21,7 +21,7 @@ func (this *Repository) CreateVideo(video *model.Video, id string) (string, erro
 	u, _ := this.GetUserById(id)
 
 	creator := model.Creator{
-		UID:       u.UID,
+		Key:       u.Key,
 		FirstName: u.FirstName,
 		LastName:  u.LastName,
 	}
