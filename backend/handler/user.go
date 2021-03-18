@@ -95,7 +95,7 @@ func (this *Handler) UploadPhoto(c echo.Context) error {
 func (this *Handler) GetPhoto(c echo.Context) error {
 
 	var allFiles []string
-	var user model.User
+	var user model.Creator
 
 	id := c.Param("id")
 

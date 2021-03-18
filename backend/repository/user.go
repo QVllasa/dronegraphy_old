@@ -108,7 +108,7 @@ func (this *Repository) GetAllCreators() (*[]model.Creator, error) {
 	projection := bson.D{
 		//{"firstName", 1},
 		//{"lastName", 1},
-		{"user.uid", 0},
+		//{"user.uid", 0},
 		{"user.email", 0},
 	}
 

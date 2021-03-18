@@ -320,13 +320,13 @@ func TestLoadVideoFixtures(t *testing.T) {
 
 		fmt.Println(creators)
 
-		//owner := creators[gofakeit.Number(0, len(creators)-1)]
+		owner := creators[gofakeit.Number(0, len(creators)-1)]
 		video.Creator = model.Creator{
-			//Key: owner.Key,
-			//BaseUser: model.BaseUser{
-			//	FirstName: owner.FirstName,
-			//	LastName:  owner.LastName,
-			//},
+			Key: owner.Key,
+			User: model.User{
+				FirstName: owner.FirstName,
+				LastName:  owner.LastName,
+			},
 		}
 		video.CreatedAt = gofakeit.Date()
 		video.UpdatedAt = gofakeit.Date()
