@@ -3,13 +3,11 @@ package repository
 import (
 	"context"
 	"dronegraphy/backend/repository/model"
-	"encoding/json"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"io"
 	"net/http"
 	"time"
 )
@@ -18,36 +16,20 @@ type ErrorMessage struct {
 	Message string `json:"message"`
 }
 
-func (this *Repository) UpdateUser(id string, reqBody io.ReadCloser) (*model.Member, error) {
+func (this *Repository) UpdateUser(member model.Member) (*model.Member, error) {
 
-	user, err := this.GetMemberById(id)
-	if err != nil {
-		log.Errorf("User not found: %v", err)
-		return nil, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "User not found"})
-	}
+	fmt.Println(member)
 
-	if err := json.NewDecoder(reqBody).Decode(&user); err != nil {
-		log.Errorf("Unable decode using request body: %v", err)
-		return nil, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Unable to decode JSON"})
-	} else {
-		fmt.Printf("user: %v", user)
-	}
+	filter := bson.M{"user.uid": member.UID}
+	member.UpdatedAt = time.Now()
 
-	//if err := handler.V.Struct(user); err != nil {
-	//	log.Errorf("Unable to validate the struct: %v", err)
-	//	return user, err
-	//}
-
-	filter := bson.M{"uid": user.UID}
-	user.UpdatedAt = time.Now()
-
-	_, err = this.UserColl.UpdateOne(context.Background(), filter, bson.M{"$set": user})
+	_, err := this.UserColl.UpdateOne(context.Background(), filter, bson.M{"$set": member})
 	if err != nil {
 		log.Errorf("Unable to update the user: %v", err)
-		return nil, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Unable to update the User"})
+		return nil, echo.NewHTTPError(http.StatusInternalServerError, "Unable to update the User")
 	}
 
-	return user, nil
+	return &member, nil
 }
 
 func (this *Repository) CreateUser(model *model.Member) error {
@@ -70,9 +52,9 @@ func (this *Repository) CreateUser(model *model.Member) error {
 }
 
 // Restricted
-func (this *Repository) GetAllMembers() ([]model.User, error) {
+func (this *Repository) GetAllMembers() ([]model.Member, error) {
 
-	var users []model.User
+	var users []model.Member
 
 	cursor, err := this.UserColl.Find(context.Background(), bson.M{})
 	if err != nil {
@@ -91,7 +73,7 @@ func (this *Repository) GetAllMembers() ([]model.User, error) {
 // TODO replace with *model.... everywhere
 func (this *Repository) GetMemberById(id string) (*model.Member, error) {
 	var user model.Member
-	filter := bson.M{"uid": id}
+	filter := bson.M{"user.uid": id}
 	err := this.UserColl.FindOne(context.Background(), filter).Decode(&user)
 	if err != nil {
 		log.Info("No user found")
@@ -108,7 +90,7 @@ func (this *Repository) GetAllCreators() (*[]model.Creator, error) {
 	projection := bson.D{
 		//{"firstName", 1},
 		//{"lastName", 1},
-		//{"user.uid", 0},
+		{"user.uid", 0},
 		{"user.email", 0},
 	}
 
@@ -128,7 +110,14 @@ func (this *Repository) GetAllCreators() (*[]model.Creator, error) {
 func (this *Repository) GetCreator(key int64) (model.Creator, error) {
 	var user model.Creator
 	filter := bson.M{"key": key}
-	err := this.UserColl.FindOne(context.Background(), filter).Decode(&user)
+	projection := bson.D{
+		//{"firstName", 1},
+		//{"lastName", 1},
+		{"user.uid", 0},
+		{"user.email", 0},
+	}
+
+	err := this.UserColl.FindOne(context.Background(), filter, options.FindOne().SetProjection(projection)).Decode(&user)
 	if err != nil {
 		log.Info("No user found")
 		return user, err

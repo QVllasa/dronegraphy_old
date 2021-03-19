@@ -33,14 +33,20 @@ func (this *Handler) GetMember(c echo.Context) error {
 
 func (this *Handler) UpdateMember(c echo.Context) error {
 
+	// TODO only owner can update
 	// Update User in database
-	user, err := this.repository.UpdateUser(c.Param("id"), c.Request().Body)
+	var member model.Member
+	if err := this.bindRequest(c, &member); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Unable to decode JSON")
+	}
+
+	updatedMember, err := this.repository.UpdateUser(member)
 	if err != nil {
 		log.Errorf("Unable to update User: %v", err)
 		return err
 	}
 
-	return c.JSON(http.StatusOK, user)
+	return c.JSON(http.StatusOK, updatedMember)
 }
 
 func (this *Handler) GetMembers(c echo.Context) error {

@@ -8,6 +8,7 @@ import (
 type (
 	Video struct {
 		ID             primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+		Key            int                `json:"key" bson:"key,omitempty"`
 		Title          string             `json:"title" bson:"title" validate:"required"`
 		Camera         string             `json:"camera" bson:"camera" validate:"required"`
 		Location       string             `json:"location" bson:"location" validate:"required"`

@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-// Register the routes
+// RegisterFirebaseUser the routes
 func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	// Handler
 	controller, err := handler.NewHandler(this.Echo, this.Enforcer)
