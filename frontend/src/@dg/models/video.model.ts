@@ -11,6 +11,7 @@ interface FileInfo {
 
 export interface IVideo {
     id: string;
+    key: number;
     title: string;
     location: string;
     formats: string[];
@@ -38,6 +39,7 @@ export interface IVideo {
 export class Video implements IVideo, Deserializable {
 
     public id: string;
+    public key: number;
     public title: string;
     public location: string;
     public formats: string[];

@@ -39,48 +39,19 @@ export class AuthenticationService implements OnDestroy {
             lastName: getLastName(name),
         };
 
-        return this.userService.registerUser(user, password).pipe(
+        return this.userService.registerMember(user, password).pipe(
             take(1),
             switchMap(res => {
+                console.log('from register', res);
                 return this.handleLogin(user.email, password);
             }),
-            switchMap(res => {
+            switchMap(() => {
                 return this.afAuth.authState;
             }),
-            switchMap(user => {
-                return from(user.sendEmailVerification());
+            switchMap(res => {
+                return from(res.sendEmailVerification());
             })
         );
-
-        // return from(this.afAuth.createUserWithEmailAndPassword(email, password)).pipe(
-        //     switchMap(res => {
-        //         const userData: IUser = {
-        //             uid: res.user.uid,
-        //             email: res.user.email,
-        //             firstName: getFirstName(name),
-        //             lastName: getLastName(name),
-        //         };
-        //         return this.userService.createUser(userData);  // POST
-        //     }),
-        //     switchMap(user => {
-        //         return this.userService.getUser(user.uid);  // GET
-        //     }),
-        //     switchMap(user => {
-        //         this.userService.user$.next(new User().deserialize(user));
-        //         return this.afAuth.authState;
-        //     }),
-        //     switchMap(state => {
-        //         state.sendEmailVerification();
-        //         return from(state.getIdTokenResult(true));
-        //     }),
-        //     switchMap(token => {
-        //         return this.userService.user$.pipe(
-        //             map(user => {
-        //                 user.setClaims(Object.assign(token.claims));
-        //             })
-        //         );
-        //     }),
-        // );
     }
 
 
@@ -111,21 +82,20 @@ export class AuthenticationService implements OnDestroy {
     handleLogin(email: string, password: string) {
         return from(this.afAuth.signInWithEmailAndPassword(email, password)).pipe(
             switchMap(res => {
-                return this.userService.getUser(res.user.uid);
+                console.log('1. firebase', res);
+                return this.userService.getMember(res.user.uid);
             }),
             switchMap(user => {
-                this.userService.user$.next(new Member().deserialize(user));
-                if (this.stayLoggedIn) {
-                    localStorage.setItem('currentUser', JSON.stringify(user));
-                }
+                console.log('2. backend', user);
+                const u = new Member().deserialize(user);
+                this.userService.user$.next(u);
                 return this.afAuth.idTokenResult;
             }),
             switchMap(token => {
-                if (this.stayLoggedIn) {
-                    localStorage.setItem('idToken', JSON.stringify(token.token));
-                }
+                console.log('3. firebase', token);
                 return this.userService.user$.pipe(
                     map(user => {
+                        console.log('4. frontend', user);
                         user.setClaims(Object.assign(token.claims));
                     })
                 );

@@ -19,7 +19,7 @@ export class CreatorPageComponent implements OnInit {
     isLoading: boolean;
     videoCount: number;
 
-    creator: Creator;
+    creator: Creator = null;
 
     constructor(private videoService: VideoService, private route: ActivatedRoute, private userSerivce: UserService) {
         this.options = {

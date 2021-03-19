@@ -28,7 +28,7 @@
                             <mat-grid-tile class="rounded" *ngFor="let video of creator.footage">
                                 <dg-video-item class="h-full w-full" mode="actions" [videoItem]="video"></dg-video-item>
                             </mat-grid-tile>
-                            <mat-grid-tile class="bg-primary text-3xl font-bold text-white rounded">{{'+'+creator.videoCount}}</mat-grid-tile>
+                            <mat-grid-tile matRipple (click)="onLoadCreator(creator)" class="bg-primary text-3xl font-bold text-white rounded cursor-pointer">{{'+'+creator.videoCount}}</mat-grid-tile>
                         </mat-grid-list>
                     </div>
                 </div>

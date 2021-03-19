@@ -5,7 +5,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {AuthenticationService} from '../../../../@dg/services/auth.service';
 import {Subscription} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
-import {UserService} from "../../../../@dg/services/user.service";
+import {UserService} from '../../../../@dg/services/user.service';
 
 
 @Component({
@@ -20,7 +20,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     inputType = 'password';
     visible = false;
     loginProcess$: Subscription;
-    checkUser$: Subscription;
 
 
     constructor(private router: Router,
@@ -43,9 +42,9 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
     send() {
-        this.form.disable()
+        this.form.disable();
         if (this.userService.user$.value) {
-            this.form.enable()
+            this.form.enable();
             this._snackBar.open('Bitte vorher abmelden.', 'SCHLIESSEN');
             return;
         }
@@ -55,18 +54,18 @@ export class LoginComponent implements OnInit, OnDestroy {
 
         this.loginProcess$ = this.authService.login(email, password)
             .pipe(
-                switchMap(() => {
+                switchMap(res => {
+                    console.log('5. login component', res);
                     this.isLoading = false;
                     return this.router.navigate(['/']);
                 })
             )
             .subscribe(
-                () => {
-                },
+                () => {},
                 error => {
-                    console.log(error)
+                    console.log(error);
                     if (error) {
-                        this.form.enable()
+                        this.form.enable();
                         this.isLoading = false;
                         switch (error.code) {
                             case 'auth/user-not-found': {

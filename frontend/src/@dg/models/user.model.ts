@@ -1,7 +1,7 @@
 import {IClaims} from './JWTTokenDecoded.interface';
 import {Deserializable} from './deserialize.interface';
 import {environment} from '../../environments/environment';
-import {IVideo, Video} from './video.model';
+import {Video} from './video.model';
 
 export interface IUser {
     uid: string;
@@ -22,8 +22,8 @@ export class Member implements IUser, Deserializable {
     favoriteVideos?: string[];
 
 
-    #role: string = null;
-    #claims: IClaims = null;
+    role: string = null;
+    claims: IClaims = null;
 
     deserialize(input: IUser): this {
         Object.assign(this, input);
@@ -31,14 +31,14 @@ export class Member implements IUser, Deserializable {
     }
 
     setClaims(claims: IClaims) {
-        this.#claims = claims;
+        this.claims = claims;
     }
 
-    get role(): string | null {
-        if (this.#claims) {
-            this.#role = this.#claims['role'];
+    getRole(): string | null {
+        if (this.claims) {
+            this.role = this.claims['role'];
         }
-        return this.#role ? this.#role : null;
+        return this.role ? this.role : null;
     }
 
     setFavorites(favorites: string[]) {

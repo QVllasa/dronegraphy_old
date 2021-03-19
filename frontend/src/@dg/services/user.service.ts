@@ -18,7 +18,6 @@ export class UserService {
 
     user$: BehaviorSubject<Member | Creator> = new BehaviorSubject<Member | Creator>(null);
 
-
     constructor(private http: HttpClient,
                 private videoService: VideoService,
                 private _snackBar: MatSnackBar,
@@ -52,18 +51,17 @@ export class UserService {
         });
     }
 
-
-    registerUser(user, password: string) {
+    registerMember(user, password: string) {
         const options = {headers: new HttpHeaders().append('Pw', password)};
         return this.http.post<IUser>(environment.apiUrl + '/register', user, options);
     }
 
+    // TODO delete
+    // createMember(user: IUser) {
+    //     return this.http.post<IUser>(environment.apiUrl + '/users', user);
+    // }
 
-    createUser(user: IUser) {
-        return this.http.post<IUser>(environment.apiUrl + '/users', user);
-    }
-
-    getUser(uid) {
+    getMember(uid) {
         return this.http.get<IUser>(environment.apiUrl + '/users/' + uid);
     }
 

@@ -23,7 +23,7 @@ export class AuthResolver implements Resolve<Member | Creator> {
                     this.userService.user$.next(null);
                     return of(null);
                 }
-                return this.userService.getUser(user.uid).pipe(
+                return this.userService.getMember(user.uid).pipe(
                     catchError(err => {
                         return of(null);
                     })

@@ -44,6 +44,7 @@ export class VideoService {
         const checkedCategories$ = this.categoryService.categories$;
         const search$ = this.searchService.search$;
 
+        // TODO prevent loading everytime site loads
         merge(
             activeSort$
                 .pipe(

@@ -9,7 +9,7 @@
         </div>
     </ng-container>
 </section>
-<dg-page-layout class="w-full h-screen p-gutter pt-14 container relative" fxLayout="column"
+<dg-page-layout *ngIf="creator" class="w-full h-screen p-gutter pt-14 container relative" fxLayout="column"
                 fxLayoutAlign="start center">
     <dg-page-layout-header class="w-full mt-16">
         <div fxLayout="column" fxLayoutAlign="center start" class="px-gutter max-w-lg">

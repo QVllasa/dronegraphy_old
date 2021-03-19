@@ -1,7 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ToolbarUserComponent} from './toolbar-user.component';
-import {ToolbarUserDropdownComponent} from './toolbar-user-dropdown/toolbar-user-dropdown.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatIconModule} from '@angular/material/icon';
 import {MatRippleModule} from '@angular/material/core';
@@ -14,7 +13,7 @@ import {IconModule} from '@visurel/iconify-angular';
 
 
 @NgModule({
-  declarations: [ToolbarUserComponent, ToolbarUserDropdownComponent],
+  declarations: [ToolbarUserComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -28,7 +27,7 @@ import {IconModule} from '@visurel/iconify-angular';
     IconModule
   ],
   exports: [ToolbarUserComponent],
-  entryComponents: [ToolbarUserDropdownComponent]
+  entryComponents: []
 })
 export class ToolbarUserModule {
 }
