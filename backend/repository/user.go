@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"dronegraphy/backend/repository/model"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"go.mongodb.org/mongo-driver/bson"
@@ -17,21 +16,19 @@ type ErrorMessage struct {
 	Message string `json:"message"`
 }
 
-func (this *Repository) UpdateUser(member model.User) (*model.User, error) {
+func (this *Repository) UpdateUser(model model.User) (*model.User, error) {
 
-	fmt.Println(member)
-
-	filter := bson.M{"uid": member.UID}
+	filter := bson.M{"uid": model.UID}
 	ts := time.Now()
-	member.UpdatedAt = &ts
+	model.UpdatedAt = &ts
 
-	_, err := this.UserColl.UpdateOne(context.Background(), filter, bson.M{"$set": member})
+	_, err := this.UserColl.UpdateOne(context.Background(), filter, bson.M{"$set": model})
 	if err != nil {
 		log.Errorf("Unable to update the user: %v", err)
 		return nil, echo.NewHTTPError(http.StatusInternalServerError, "Unable to update the User")
 	}
 
-	return &member, nil
+	return &model, nil
 }
 
 func (this *Repository) CreateUser(model *model.User) error {

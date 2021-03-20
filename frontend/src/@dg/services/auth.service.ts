@@ -31,7 +31,6 @@ export class AuthenticationService implements OnDestroy {
                 private orderSerivce: OrderService,
                 private _snackBar: MatSnackBar,
                 private router: Router) {
-        //     TODO implement autologin on reload
     }
 
     // Sign Up User on Firebase

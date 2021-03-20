@@ -51,13 +51,18 @@ export class User implements IUser, Deserializable {
         return this.#role ? this.#role : null;
     }
 
-    setFavorites(favorites: string[]) {
-        this.favoriteVideos = favorites;
+    setFavorite(id: string) {
+        if (!this.favoriteVideos || (this.favoriteVideos.length === 0)) {
+            this.favoriteVideos = [];
+            this.favoriteVideos.push(id);
+        } else {
+            this.favoriteVideos.push(id);
+        }
     }
 
-    getFavorites(): string[] | null {
+    getFavorites(): string[] {
         if (!this.favoriteVideos || (this.favoriteVideos.length === 0)) {
-            return null;
+            return [];
         }
         return this.favoriteVideos;
     }
@@ -86,7 +91,7 @@ export class User implements IUser, Deserializable {
     }
 
     getProfileImage() {
-        return environment.apiUrl + '/photos/' + this.profileImage;
+        return environment.apiUrl + '/profileImages/' + this.profileImage;
     }
 
     setProfileImage(id) {

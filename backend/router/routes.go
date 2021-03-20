@@ -35,8 +35,7 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	// USER
 	routeGroup.GET("/users/:id", controller.GetUser, mw.Auth())
 	routeGroup.PUT("/users/:id", controller.UpdateUser, mw.Auth())
-	routeGroup.POST("/addToFavorites/:id", controller.AddToFavorites, mw.Auth())
-	routeGroup.POST("/removeFromFavorites/:id", controller.RemoveFromFavorites, mw.Auth())
+	routeGroup.PATCH("/favorites", controller.UpdateFavorites, mw.Auth())
 	//routeGroup.POST("/users/:id", controller.UploadPhoto, mw.Auth())
 
 	//// PUBLIC
@@ -44,15 +43,14 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	routeGroup.GET("/videos", controller.GetVideos)
 	routeGroup.GET("/videos/:id", controller.GetVideo)
 	routeGroup.GET("/:id/hls/:file", controller.GetPlaylist)
-	routeGroup.GET("/creators", controller.GetCreators)
 
-	//routeGroup.GET("/hls/", controller.ServeHls)
+	routeGroup.GET("/creators", controller.GetCreators)
 	routeGroup.GET("/creators/:key/videos", controller.GetVideos)
 	routeGroup.GET("/creators/:id", controller.GetCreator)
 	routeGroup.GET("/categories", controller.GetCategories)
 	//routeGroup.GET("/parent_categories", controller.GetParentCategories)
 	routeGroup.GET("/sorting", controller.GetSortingOptions)
-	routeGroup.GET("/photos/:id", controller.GetPhoto)
+	routeGroup.GET("/profileImages/:fileName", controller.GetProfileImage)
 
 	//// STATIC Endpoints
 	dir, _ := os.Getwd()

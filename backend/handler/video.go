@@ -337,8 +337,16 @@ func (this *Handler) GetPlaylist(c echo.Context) error {
 	return c.File(service.StorageRoot + service.Videos + "/" + id + "/hls/" + filename)
 }
 
-// TODO fix for Member and Creator
-func (this *Handler) AddToFavorites(c echo.Context) error {
+
+func (this *Handler) UpdateFavorites(c echo.Context) error {
+
+	var f []string
+
+	if err := this.bindRequest(c, &f); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "cannot bind payload")
+	}
+
+	fmt.Println(f)
 
 	token, err := this.service.FirebaseApp.GetAndVerifyToken(c)
 	if err != nil {
@@ -350,13 +358,12 @@ func (this *Handler) AddToFavorites(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "no user found")
 	}
 
-	u.FavoriteVideos = util.UniqueStringArray(append(u.FavoriteVideos, c.Param("id")))
+	u.FavoriteVideos = f
 
-	filter := bson.M{"uid": u.UID}
 	ts := time.Now()
 	u.UpdatedAt = &ts
 
-	_, err = this.repository.UserColl.UpdateOne(context.Background(), filter, bson.M{"$set": u})
+	u, err = this.repository.UpdateUser(*u)
 	if err != nil {
 		log.Errorf("Unable to update the user: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "Unable to add to favorites the User")

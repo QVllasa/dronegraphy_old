@@ -7,6 +7,7 @@ import {Subscription} from 'rxjs';
 import {UserService} from '../../../services/user.service';
 import {Router} from '@angular/router';
 import {FavoritesService} from '../../../services/favorites.service';
+import {User} from '../../../models/user.model';
 
 
 // declare var require: any;
@@ -38,10 +39,10 @@ import {FavoritesService} from '../../../services/favorites.service';
                     <mat-icon
                             class="material-icons-round text-xl">{{orderService.cart$.value?.includes(videoItem) ? 'shopping_cart' : 'add_shopping_cart' }}</mat-icon>
                 </button>
-                <button mat-icon-button (click)="updateFavorites(videoItem.id)"
-                        [color]="userService.user$.value?.getFavorites()?.includes(videoItem.id) ? 'warn' : null">
+                <button mat-icon-button (click)="toggleFavorite(videoItem.id)"
+                        [color]="isActive(videoItem.id) ? 'warn' : null">
                     <mat-icon
-                            class="material-icons-round text-xl">{{userService.user$.value?.getFavorites()?.includes(videoItem.id) ? 'favorite' : 'favorite_border'}}</mat-icon>
+                            class="material-icons-round text-xl">{{isActive(videoItem.id) ? 'favorite' : 'favorite_border'}}</mat-icon>
                 </button>
                 <button mat-icon-button>
                     <mat-icon class="material-icons-round text-xl">share</mat-icon>
@@ -60,6 +61,7 @@ import {FavoritesService} from '../../../services/favorites.service';
 export class VideoActionsComponent implements OnInit, OnDestroy {
 
     @Input() videoItem: Video;
+    user$: User = this.userService.user$.value;
 
 
     constructor(
@@ -72,12 +74,22 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        // this.userService.user$.subscribe(user => {
+        //     // console.log(user);
+        //     this.user = user;
+        // });
+    }
 
+    isActive(id): boolean {
+        if (!this.user$) {
+            return false;
+        }
+        return this.user$.getFavorites().includes(id);
     }
 
     // Adds and deletes items from cart
     updateCart() {
-        if (!this.userService.user$.value) {
+        if (!this.user$) {
             this.router.navigate(['/login']).then();
             return;
         }
@@ -98,25 +110,29 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
         this.orderService.cart$.next(videos);
     }
 
-    updateFavorites(id: string) {
-        if (!this.userService.user$.value) {
+    toggleFavorite(id: string) {
+        if (!this.user$) {
             this.router.navigate(['/login']).then();
             return;
         }
 
         console.log(id);
 
-        //Remove from favorites
-        if (this.userService.user$.value.favoriteVideos?.includes(id)) {
-            this.favoritesService.deleteFromFavorites(id).subscribe(res => {
-                this.userService.user$.value.setFavorites(res);
-                this._snackBar.open('Aus Favoriten entfernt.', 'SCHLIESSEN');
+        // Remove from favorites
+        if (this.user$.getFavorites().includes(id)) {
+            this.user$.favoriteVideos.splice(this.user$.favoriteVideos.indexOf(id, 0), 1);
+            this.favoritesService.updateFavorite(this.user$.favoriteVideos).subscribe(res => {
+                this.user$.favoriteVideos = res;
+                this.userService.user$.next(this.user$);
+                this._snackBar.open('Aus Favoriten entfernt.', 'SCHLIESSEN', {duration: 1000});
             });
-            //Add to favorites
+            // Add to favorites
         } else {
-            this.favoritesService.saveAsFavorite(id).subscribe(res => {
-                this.userService.user$.value.setFavorites(res);
-                this._snackBar.open('Zu Favoriten hinzugefügt.', 'SCHLIESSEN');
+            this.user$.setFavorite(id);
+            this.favoritesService.updateFavorite(this.user$.getFavorites()).subscribe(res => {
+                this.user$.favoriteVideos = res;
+                this.userService.user$.next(this.user$);
+                this._snackBar.open('Zu Favoriten hinzugefügt.', 'SCHLIESSEN', {duration: 1000});
             });
         }
     }

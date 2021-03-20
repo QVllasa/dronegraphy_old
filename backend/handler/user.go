@@ -77,22 +77,26 @@ func (this *Handler) GetCreators(c echo.Context) error {
 	return c.JSON(http.StatusOK, creators)
 }
 
+// Returns either Userdata for Owner or for Public
 func (this *Handler) GetCreator(c echo.Context) error {
 
 	var creator *model.User
 	id := c.Param("id")
 
-	// If token is present and id is equal to token.UID, then return whole data of user (creator)
-	// else return the data of a creator for public access
+	// If token is not present and id is not equal to token.UID,
+	//then return small set of data of user (creator) for public access
+	// else return whole data of a creator for owner access
 	t, err := this.service.FirebaseApp.GetAndVerifyToken(c)
+
+	// Public
 	if err != nil || t.UID != id {
 		log.Info(err)
-		// Get Creator by Key because no token
 		creator, err = this.repository.GetCreator(id)
 		if err != nil {
 			log.Error(err)
 			return echo.NewHTTPError(http.StatusOK, "No Creator found")
 		}
+		//	Private
 	} else if t.UID == id {
 		creator, err = this.repository.GetUser(id)
 		if err != nil {
@@ -138,12 +142,12 @@ func (this *Handler) UploadPhoto(c echo.Context) error {
 	return c.JSON(http.StatusOK, fileName)
 }
 
-func (this *Handler) GetPhoto(c echo.Context) error {
+func (this *Handler) GetProfileImage(c echo.Context) error {
 
 	var allFiles []string
 	var user model.User
 
-	id := c.Param("id")
+	id := c.Param("fileName")
 
 	res := this.repository.UserColl.FindOne(context.Background(), bson.M{"profileImage": id})
 	if err := res.Decode(&user); err != nil {
