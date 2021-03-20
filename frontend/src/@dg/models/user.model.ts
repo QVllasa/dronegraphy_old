@@ -2,6 +2,8 @@ import {IClaims} from './JWTTokenDecoded.interface';
 import {Deserializable} from './deserialize.interface';
 import {environment} from '../../environments/environment';
 import {Video} from './video.model';
+import {Order} from './order.model';
+import {removeDuplicateObjects} from '../utils/remove-duplicate-objects';
 
 export interface IUser {
     uid: string;
@@ -26,6 +28,8 @@ export class User implements IUser, Deserializable {
     key: number;
     slogan?: string;
     location?: string;
+    orders?: Order[];
+    activeCart?: Video[];
 
 
     #role: string = null;
@@ -96,6 +100,13 @@ export class User implements IUser, Deserializable {
 
     setProfileImage(id) {
         this.profileImage = id;
+    }
+
+
+    // TODO finish cart
+    addToCart(video: Video){
+        this.activeCart.push(video);
+        removeDuplicateObjects(this.activeCart);
     }
 
 }
