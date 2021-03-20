@@ -30,9 +30,8 @@
                         </mat-icon>
                     </div>
                 </button>
-                <button *ngIf="userService.user$ | async as user" mat-icon-button>
-                    <div *ngIf="user.getRole() === ('ROLE_CREATOR')"
-                         class="rounded-full flex items-center justify-center text-primary bg-primary-light cursor-pointer h-9 w-9">
+                <button *ngIf="user.getRole() === ('ROLE_CREATOR')" mat-icon-button>
+                    <div class="rounded-full flex items-center justify-center text-primary bg-primary-light cursor-pointer h-9 w-9">
                         <mat-icon>account_balance</mat-icon>
                     </div>
                 </button>
