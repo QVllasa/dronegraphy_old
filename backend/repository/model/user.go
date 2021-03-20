@@ -22,5 +22,6 @@ type (
 		ProfileImage     string             `json:"profileImage" bson:"profileImage"`
 		Location         string             `json:"location" bson:"location"`
 		Slogan           string             `json:"slogan" bson:"slogan"`
+		ActiveCart       []string           `json:"activeCart,omitempty" bson:"activeCart"`
 	}
 )

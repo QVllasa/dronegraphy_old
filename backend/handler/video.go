@@ -4,7 +4,6 @@ import (
 	"context"
 	"dronegraphy/backend/repository/model"
 	"dronegraphy/backend/service"
-	"dronegraphy/backend/util"
 	"encoding/json"
 	"fmt"
 	"github.com/labstack/echo/v4"
@@ -19,7 +18,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"time"
 )
 
 type VideoResponse struct {
@@ -360,9 +358,6 @@ func (this *Handler) UpdateFavorites(c echo.Context) error {
 
 	u.FavoriteVideos = f
 
-	ts := time.Now()
-	u.UpdatedAt = &ts
-
 	u, err = this.repository.UpdateUser(*u)
 	if err != nil {
 		log.Errorf("Unable to update the user: %v", err)
@@ -372,7 +367,16 @@ func (this *Handler) UpdateFavorites(c echo.Context) error {
 	return c.JSON(http.StatusOK, u.FavoriteVideos)
 }
 
-func (this *Handler) RemoveFromFavorites(c echo.Context) error {
+func (this *Handler) UpdateCart(c echo.Context) error {
+
+	var f []string
+
+	if err := this.bindRequest(c, &f); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "cannot bind payload")
+	}
+
+	fmt.Println(f)
+
 	token, err := this.service.FirebaseApp.GetAndVerifyToken(c)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "no token found")
@@ -383,20 +387,20 @@ func (this *Handler) RemoveFromFavorites(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "no user found")
 	}
 
-	u.FavoriteVideos = util.RemoveItemFromSlice(u.FavoriteVideos, c.Param("id"))
+	u.ActiveCart = f
 
-	filter := bson.M{"uid": u.UID}
-	ts := time.Now()
-	u.UpdatedAt = &ts
 
-	_, err = this.repository.UserColl.UpdateOne(context.Background(), filter, bson.M{"$set": u})
+
+	u, err = this.repository.UpdateUser(*u)
 	if err != nil {
 		log.Errorf("Unable to update the user: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "Unable to add to favorites the User")
 	}
 
-	return c.JSON(http.StatusOK, u.FavoriteVideos)
+	return c.JSON(http.StatusOK, u.ActiveCart)
 }
+
+
 
 func (this *Handler) GetSortingOptions(c echo.Context) error {
 	var f []model.SortOption

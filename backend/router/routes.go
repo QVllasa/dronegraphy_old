@@ -36,6 +36,7 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	routeGroup.GET("/users/:id", controller.GetUser, mw.Auth())
 	routeGroup.PUT("/users/:id", controller.UpdateUser, mw.Auth())
 	routeGroup.PATCH("/favorites", controller.UpdateFavorites, mw.Auth())
+	routeGroup.PATCH("/activeCart", controller.UpdateCart, mw.Auth())
 	//routeGroup.POST("/users/:id", controller.UploadPhoto, mw.Auth())
 
 	//// PUBLIC
