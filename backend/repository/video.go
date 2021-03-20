@@ -17,14 +17,12 @@ import (
 
 func (this *Repository) CreateVideo(video *model.Video, id string) (string, error) {
 
-	u, _ := this.GetCreatorById(id)
+	u, _ := this.GetCreator(id)
 
-	creator := model.Creator{
-		Key: u.Key,
-		//BaseUser: model.BaseUser{
-		//	FirstName: u.FirstName,
-		//	LastName:  u.LastName,
-		//},
+	creator := model.User{
+		Key:       u.Key,
+		FirstName: u.FirstName,
+		LastName:  u.LastName,
 	}
 
 	// Set CreatedAt

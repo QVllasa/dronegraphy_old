@@ -18,7 +18,7 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	}
 
 	// ADMIN
-	routeGroup.GET("/users", controller.GetMembers)
+	routeGroup.GET("/users", controller.GetUsers)
 
 	// CREATOR
 	routeGroup.POST("/videos", controller.CreateVideo, mw.Auth())
@@ -33,8 +33,8 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	//e.DELETE("/videos/:id", h.DeleteVideo, customMiddleware.Auth())
 
 	// USER
-	routeGroup.GET("/users/:id", controller.GetMember, mw.Auth())
-	routeGroup.PUT("/users/:id", controller.UpdateMember, mw.Auth())
+	routeGroup.GET("/users/:id", controller.GetUser, mw.Auth())
+	routeGroup.PUT("/users/:id", controller.UpdateUser, mw.Auth())
 	routeGroup.POST("/addToFavorites/:id", controller.AddToFavorites, mw.Auth())
 	routeGroup.POST("/removeFromFavorites/:id", controller.RemoveFromFavorites, mw.Auth())
 	//routeGroup.POST("/users/:id", controller.UploadPhoto, mw.Auth())
@@ -48,7 +48,7 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 
 	//routeGroup.GET("/hls/", controller.ServeHls)
 	routeGroup.GET("/creators/:key/videos", controller.GetVideos)
-	routeGroup.GET("/creators/:key", controller.GetCreator)
+	routeGroup.GET("/creators/:id", controller.GetCreator)
 	routeGroup.GET("/categories", controller.GetCategories)
 	//routeGroup.GET("/parent_categories", controller.GetParentCategories)
 	routeGroup.GET("/sorting", controller.GetSortingOptions)

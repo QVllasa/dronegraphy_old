@@ -35,15 +35,13 @@ type VideoResponse struct {
 func (this *Handler) CreateVideo(c echo.Context) error {
 	token, _ := this.service.FirebaseApp.GetAndVerifyToken(c)
 
-	u, _ := this.repository.GetCreatorById(token.UID)
+	u, _ := this.repository.GetCreator(token.UID)
 
 	video := &model.Video{
-		Creator: model.Creator{
-			Key: u.Key,
-			User: model.User{
-				FirstName: u.FirstName,
-				LastName:  u.LastName,
-			},
+		Creator: model.User{
+			Key:       u.Key,
+			FirstName: u.FirstName,
+			LastName:  u.LastName,
 		},
 	}
 
@@ -339,13 +337,15 @@ func (this *Handler) GetPlaylist(c echo.Context) error {
 	return c.File(service.StorageRoot + service.Videos + "/" + id + "/hls/" + filename)
 }
 
+// TODO fix for Member and Creator
 func (this *Handler) AddToFavorites(c echo.Context) error {
+
 	token, err := this.service.FirebaseApp.GetAndVerifyToken(c)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "no token found")
 	}
 
-	u, err := this.repository.GetMemberById(token.UID)
+	u, err := this.repository.GetUser(token.UID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "no user found")
 	}
@@ -353,7 +353,8 @@ func (this *Handler) AddToFavorites(c echo.Context) error {
 	u.FavoriteVideos = util.UniqueStringArray(append(u.FavoriteVideos, c.Param("id")))
 
 	filter := bson.M{"uid": u.UID}
-	u.UpdatedAt = time.Now()
+	ts := time.Now()
+	u.UpdatedAt = &ts
 
 	_, err = this.repository.UserColl.UpdateOne(context.Background(), filter, bson.M{"$set": u})
 	if err != nil {
@@ -370,7 +371,7 @@ func (this *Handler) RemoveFromFavorites(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "no token found")
 	}
 
-	u, err := this.repository.GetMemberById(token.UID)
+	u, err := this.repository.GetUser(token.UID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "no user found")
 	}
@@ -378,7 +379,8 @@ func (this *Handler) RemoveFromFavorites(c echo.Context) error {
 	u.FavoriteVideos = util.RemoveItemFromSlice(u.FavoriteVideos, c.Param("id"))
 
 	filter := bson.M{"uid": u.UID}
-	u.UpdatedAt = time.Now()
+	ts := time.Now()
+	u.UpdatedAt = &ts
 
 	_, err = this.repository.UserColl.UpdateOne(context.Background(), filter, bson.M{"$set": u})
 	if err != nil {

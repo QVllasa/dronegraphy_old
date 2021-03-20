@@ -11,13 +11,13 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 )
 
-func (this *Handler) GetMember(c echo.Context) error {
+// Member Functions
+func (this *Handler) GetUser(c echo.Context) error {
 
-	user, err := this.repository.GetMemberById(c.Param("id"))
+	user, err := this.repository.GetUser(c.Param("id"))
 	if err != nil {
 		log.Errorf("Unable to find User: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "user not found")
@@ -31,11 +31,26 @@ func (this *Handler) GetMember(c echo.Context) error {
 	return c.JSON(http.StatusOK, user)
 }
 
-func (this *Handler) UpdateMember(c echo.Context) error {
+func (this *Handler) GetUsers(c echo.Context) error {
+
+	users, err := this.repository.GetAllUsers()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	if len(users) == 0 {
+		return echo.NewHTTPError(http.StatusOK, "No Users found")
+	}
+
+	return c.JSON(http.StatusOK, users)
+}
+
+func (this *Handler) UpdateUser(c echo.Context) error {
 
 	// TODO only owner can update
 	// Update User in database
-	var member model.Member
+	var member model.User
 	if err := this.bindRequest(c, &member); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Unable to decode JSON")
 	}
@@ -49,19 +64,44 @@ func (this *Handler) UpdateMember(c echo.Context) error {
 	return c.JSON(http.StatusOK, updatedMember)
 }
 
-func (this *Handler) GetMembers(c echo.Context) error {
-
-	users, err := this.repository.GetAllMembers()
+// Creator Functions
+func (this *Handler) GetCreators(c echo.Context) error {
+	creators, err := this.repository.GetAllCreators()
 	if err != nil {
 		log.Error(err)
 		return err
 	}
+	if len(*creators) == 0 {
+		return echo.NewHTTPError(http.StatusOK, "No Creators found")
+	}
+	return c.JSON(http.StatusOK, creators)
+}
 
-	if len(users) == 0 {
-		return echo.NewHTTPError(http.StatusOK, "No Users found")
+func (this *Handler) GetCreator(c echo.Context) error {
+
+	var creator *model.User
+	id := c.Param("id")
+
+	// If token is present and id is equal to token.UID, then return whole data of user (creator)
+	// else return the data of a creator for public access
+	t, err := this.service.FirebaseApp.GetAndVerifyToken(c)
+	if err != nil || t.UID != id {
+		log.Info(err)
+		// Get Creator by Key because no token
+		creator, err = this.repository.GetCreator(id)
+		if err != nil {
+			log.Error(err)
+			return echo.NewHTTPError(http.StatusOK, "No Creator found")
+		}
+	} else if t.UID == id {
+		creator, err = this.repository.GetUser(id)
+		if err != nil {
+			log.Error(err)
+			return echo.NewHTTPError(http.StatusOK, "No User found")
+		}
 	}
 
-	return c.JSON(http.StatusOK, users)
+	return c.JSON(http.StatusOK, creator)
 }
 
 func (this *Handler) UploadPhoto(c echo.Context) error {
@@ -91,7 +131,7 @@ func (this *Handler) UploadPhoto(c echo.Context) error {
 	_, err = this.repository.UserColl.UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		log.Error(err)
-		os.Remove(f.Name())
+		_ = os.Remove(f.Name())
 		return c.JSON(http.StatusInternalServerError, "unable to set fileID")
 	}
 
@@ -101,7 +141,7 @@ func (this *Handler) UploadPhoto(c echo.Context) error {
 func (this *Handler) GetPhoto(c echo.Context) error {
 
 	var allFiles []string
-	var user model.Creator
+	var user model.User
 
 	id := c.Param("id")
 
@@ -126,32 +166,4 @@ func (this *Handler) GetPhoto(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusNotFound, "not found")
-}
-
-func (this *Handler) GetCreators(c echo.Context) error {
-	creators, err := this.repository.GetAllCreators()
-	if err != nil {
-		log.Error(err)
-		return err
-	}
-
-	if len(*creators) == 0 {
-		return echo.NewHTTPError(http.StatusOK, "No Creators found")
-	}
-
-	return c.JSON(http.StatusOK, creators)
-}
-
-func (this *Handler) GetCreator(c echo.Context) error {
-	key, err := strconv.ParseInt(c.Param("key"), 10, 64)
-	if err != nil {
-		key = 0
-	}
-	creator, err := this.repository.GetCreator(key)
-	if err != nil {
-		log.Error(err)
-		return echo.NewHTTPError(http.StatusOK, "No Creator found")
-	}
-
-	return c.JSON(http.StatusOK, creator)
 }

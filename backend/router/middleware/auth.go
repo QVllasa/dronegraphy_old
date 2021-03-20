@@ -14,13 +14,6 @@ func Auth() echo.MiddlewareFunc {
 func authenticate(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 
-		//client, err := service.FbClient
-
-		//if err != nil {
-		//	log.Error(err)
-		//	return echo.NewHTTPError(http.StatusBadRequest, "no connection to firebase")
-		//}
-
 		_, err := service.FbClient.GetAndVerifyToken(c)
 		if err != nil {
 			log.Error(err)

@@ -30,7 +30,7 @@ type (
 		StorageContent []FileInfo         `json:"storageContent" bson:"storageContent"`
 		CreatedAt      time.Time          `json:"createdAt,omitempty" bson:"createdAt,omitempty"`
 		UpdatedAt      time.Time          `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
-		Creator        Creator            `json:"creator" bson:"creator"`
+		Creator        User               `json:"creator" bson:"creator"`
 	}
 
 	FileInfo struct {

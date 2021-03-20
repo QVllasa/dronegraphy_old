@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-func (this *Service) RegisterFirebaseUser(user *model.Member, password string) (*model.Member, error) {
+func (this *Service) RegisterFirebaseUser(user *model.User, password string) (*model.User, error) {
 
 	// See Firebase Documentation how to create User Object in Firebase
 	params := (&auth.UserToCreate{}).

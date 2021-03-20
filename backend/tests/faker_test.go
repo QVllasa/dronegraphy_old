@@ -22,8 +22,8 @@ import (
 )
 
 var (
-	userCount   = 30
-	videoCount  = 400
+	userCount   = 3
+	videoCount  = 4
 	childCount  = 16
 	parentCount = 3
 )
@@ -149,6 +149,9 @@ func TestLoadUserFixtures(t *testing.T) {
 		baseUser.FirstName = gofakeit.FirstName()
 		baseUser.LastName = gofakeit.LastName()
 		baseUser.Email = gofakeit.Email()
+		baseUser.FavoriteVideos = []string{}
+		baseUser.DownloadedVideos = []string{}
+		baseUser.Orders = []string{}
 
 		params := (&auth.UserToCreate{}).
 			Email(baseUser.Email).
@@ -159,28 +162,22 @@ func TestLoadUserFixtures(t *testing.T) {
 			panic(err)
 		}
 		log.Printf("Successfully created user: %v\n", u)
-
 		claims := map[string]interface{}{
 			"role": baseUser.Role,
 		}
-
 		if err := fbClient.Client.SetCustomUserClaims(context.Background(), u.UID, claims); err != nil {
 			log.Errorf("setting custom claims failed: %v", err)
 			panic(err)
 		}
-
 		_ = fbClient.Client.RevokeRefreshTokens(context.Background(), baseUser.UID)
 
 		baseUser.UID = u.UID
 
 		if baseUser.Role == "ROLE_CREATOR" {
-
-			creator := model.Creator{}
-			creator.Key = int64(gofakeit.Number(100, 10000))
+			baseUser.Key = int64(gofakeit.Number(100, 10000))
 			location := gofakeit.City() + ", " + gofakeit.Country()
-			creator.Location = location
-			creator.Slogan = gofakeit.Sentence(7)
-
+			baseUser.Location = location
+			baseUser.Slogan = gofakeit.Sentence(7)
 			fileID := xid.New().String()
 			t := target + baseUser.UID + "/profileImage"
 			if _, err := os.Stat(t); os.IsNotExist(err) {
@@ -193,19 +190,9 @@ func TestLoadUserFixtures(t *testing.T) {
 				log.Error(err)
 				panic(err)
 			}
-
-			creator.ProfileImage = fileID + ".jpg"
-			creator.User = baseUser
-			_, _ = users.InsertOne(context.Background(), creator)
-
-		} else {
-			member := model.Member{}
-			member.FavoriteVideos = []string{}
-			member.DownloadedVideos = []string{}
-			member.Orders = []string{}
-			member.User = baseUser
-			_, _ = users.InsertOne(context.Background(), member)
+			baseUser.ProfileImage = fileID + ".jpg"
 		}
+		_, _ = users.InsertOne(context.Background(), baseUser)
 
 	}
 
@@ -245,10 +232,10 @@ func TestLoadVideoFixtures(t *testing.T) {
 
 	fmt.Println(categories)
 
-	var creators []model.Creator
+	var creators []model.User
 
 	usersColl := repository.DB.Client.Database("dronegraphy_db").Collection("users")
-	usersCursor, err := usersColl.Find(context.Background(), bson.M{"user.role": "ROLE_CREATOR"})
+	usersCursor, err := usersColl.Find(context.Background(), bson.M{"role": "ROLE_CREATOR"})
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
@@ -321,12 +308,10 @@ func TestLoadVideoFixtures(t *testing.T) {
 		fmt.Println(creators)
 
 		owner := creators[gofakeit.Number(0, len(creators)-1)]
-		video.Creator = model.Creator{
-			Key: owner.Key,
-			User: model.User{
-				FirstName: owner.FirstName,
-				LastName:  owner.LastName,
-			},
+		video.Creator = model.User{
+			Key:       owner.Key,
+			FirstName: owner.FirstName,
+			LastName:  owner.LastName,
 		}
 		video.CreatedAt = gofakeit.Date()
 		video.UpdatedAt = gofakeit.Date()

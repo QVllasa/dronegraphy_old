@@ -85,7 +85,7 @@ func (this *Config) CheckPermission(c echo.Context) (bool, error) {
 
 	id, _ := this.getUserIdFromToken(c)
 
-	user, _ := repository.Repo.GetMemberById(id)
+	user, _ := repository.Repo.GetUser(id)
 
 	if user.Role == "" {
 		user.Role = "ROLE_ANONYMOUS"

@@ -113,7 +113,7 @@ func (this *FirebaseClient) isEmailVerified(c echo.Context) (bool, error) {
 	return true, nil
 }
 
-func (this *FirebaseClient) UpdateRoleClaims(user *model.Member) error {
+func (this *FirebaseClient) UpdateRoleClaims(user *model.User) error {
 
 	claims := map[string]interface{}{
 		"role": user.Role,

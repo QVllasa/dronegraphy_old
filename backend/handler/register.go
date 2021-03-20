@@ -16,7 +16,7 @@ func (this *Handler) Register(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnprocessableEntity, "no password found")
 	}
 
-	newUser := model.Member{}
+	newUser := model.User{}
 
 	//Set Default Role for new Users which will be added to token claims from Firebase
 	newUser.Role = "ROLE_MEMBER"
