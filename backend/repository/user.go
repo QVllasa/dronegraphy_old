@@ -52,25 +52,24 @@ func (this *Repository) CreateUser(model *model.User) error {
 }
 
 // Restricted
-func (this *Repository) GetAllUsers() ([]model.User, error) {
+func (this *Repository) GetAllUsers() (*[]model.User, error) {
 
 	var users []model.User
 
 	cursor, err := this.UserColl.Find(context.Background(), bson.M{})
 	if err != nil {
 		log.Errorf("Unable to fetch users from database: %v", err)
-		return users, err
+		return &users, err
 	}
 
 	if err = cursor.All(context.Background(), &users); err != nil {
 		log.Errorf("Unable to read the cursor: %v", err)
-		return users, err
+		return &users, err
 	}
-	return users, nil
+	return &users, nil
 
 }
 
-// TODO replace with *model.... everywhere
 func (this *Repository) GetUser(id string) (*model.User, error) {
 	var user model.User
 	filter := bson.M{"uid": id}
