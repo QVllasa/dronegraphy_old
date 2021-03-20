@@ -12,7 +12,7 @@ export interface IUser {
     updatedAt: string;
 }
 
-export class Member implements IUser, Deserializable {
+export class User implements IUser, Deserializable {
     uid: string;
     firstName: string;
     lastName: string;
@@ -20,25 +20,35 @@ export class Member implements IUser, Deserializable {
     createdAt: string;
     updatedAt: string;
     favoriteVideos?: string[];
+    profileImage?: string;
+    footage: Video[];
+    videoCount: number;
+    key: number;
+    slogan?: string;
+    location?: string;
 
 
-    role: string = null;
-    claims: IClaims = null;
+    #role: string = null;
+    #claims: IClaims = null;
 
     deserialize(input: IUser): this {
         Object.assign(this, input);
         return this;
     }
 
+    getFullName() {
+        return this.firstName + ' ' + this.lastName;
+    }
+
     setClaims(claims: IClaims) {
-        this.claims = claims;
+        this.#claims = claims;
     }
 
     getRole(): string | null {
-        if (this.claims) {
-            this.role = this.claims['role'];
+        if (this.#claims) {
+            this.#role = this.#claims['role'];
         }
-        return this.role ? this.role : null;
+        return this.#role ? this.#role : null;
     }
 
     setFavorites(favorites: string[]) {
@@ -57,43 +67,6 @@ export class Member implements IUser, Deserializable {
             return;
         }
         this.favoriteVideos.splice(this.favoriteVideos.indexOf(id), count);
-    }
-
-}
-
-export class Creator implements IUser, Deserializable {
-    uid: string;
-    firstName: string;
-    lastName: string;
-    email?: string;
-    createdAt: string;
-    updatedAt: string;
-    profileImage?: string;
-    footage: Video[];
-    videoCount: number;
-    key: number;
-    slogan?: string;
-    location?: string;
-
-    // imgPath?: string;
-    // activated?: boolean;
-    // [videos: number]: Video[];
-    // orders?: Order[];
-    // favorites?: Video[];
-    // saved?: IUser[];
-    // job?: any;
-
-
-    #role: string = null;
-    #claims: IClaims = null;
-
-    deserialize(input: IUser): this {
-        Object.assign(this, input);
-        return this;
-    }
-
-    getFullName() {
-        return this.firstName + ' ' + this.lastName;
     }
 
     getFootage(): Video[] {
@@ -120,16 +93,6 @@ export class Creator implements IUser, Deserializable {
         this.profileImage = id;
     }
 
-    setClaims(claims: IClaims) {
-        this.#claims = claims;
-    }
-
-    get role(): string | null {
-        if (this.#claims) {
-            this.#role = this.#claims['role'];
-        }
-        return this.#role ? this.#role : null;
-    }
-
-
 }
+
+

@@ -7,7 +7,7 @@ import {LayoutService} from '../../@dg/services/layout.service';
 import {ConfigService} from '../../@dg/services/config.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {UserService} from '../../@dg/services/user.service';
-import {Member} from '../../@dg/models/user.model';
+import {User} from '../../@dg/models/user.model';
 
 
 @UntilDestroy()
@@ -32,7 +32,7 @@ export class CustomLayoutComponent implements OnInit {
 
     ngOnInit() {
         this.activatedRoute.data.subscribe(
-            (data: { user: Member }) => {
+            (data: { user: User }) => {
                 if (!data.user) {
                     this.userService.user$.next(null);
                 }

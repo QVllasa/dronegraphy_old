@@ -4,7 +4,7 @@
                     <ng-container *ngIf="userService.user$ | async as user">
                     <div fxLayout="column" fxLayoutGap="12px" fxLayoutAlign="center center" fxFlex="30"
                          class="p-4 trans-ease-out relative">
-                        <img class="avatar h-40 w-40 mx-auto" matRipple
+                        <img  class="avatar h-40 w-40 mx-auto" matRipple
                              [src]="user.getProfileImage()">
                         <button mat-mini-fab
                                 (click)="fileUpload.click()"

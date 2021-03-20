@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Creator} from '../../../@dg/models/user.model';
+import {User} from '../../../@dg/models/user.model';
 import {HttpClient} from '@angular/common/http';
 import {UserService} from '../../../@dg/services/user.service';
 import {mergeMap, take} from 'rxjs/operators';
@@ -16,7 +16,7 @@ import {hyphenateUrlParams} from '../../../@dg/utils/hyphenate-url-params';
 })
 export class CreatorsComponent implements OnInit {
 
-    creators: Creator[] = [];
+    creators: User[] = [];
     videos: Video[];
     isLoading: boolean;
     options: any;
@@ -33,7 +33,7 @@ export class CreatorsComponent implements OnInit {
 
         this.userService.getCreators()
             .pipe(
-                mergeMap((creators: Creator[]) => {
+                mergeMap((creators: User[]) => {
                     this.creators = creators;
                     const list: Observable<VideoResponse>[] = [];
                     for (const creator of creators) {
@@ -59,7 +59,7 @@ export class CreatorsComponent implements OnInit {
             });
     }
 
-    onLoadCreator(creator: Creator) {
+    onLoadCreator(creator: User) {
         this.router.navigate(['/creators', creator.key, hyphenateUrlParams(creator.getFullName())]).then();
     }
 

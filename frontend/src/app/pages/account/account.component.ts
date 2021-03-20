@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthenticationService} from "../../../@dg/services/auth.service";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {Link} from "../../../@dg/models/link.interface";
-import {UserService} from "../../../@dg/services/user.service";
+import {Link} from '../../../@dg/models/link.interface';
+import {UserService} from '../../../@dg/services/user.service';
 
 
 @Component({
@@ -43,14 +41,14 @@ export class AccountComponent implements OnInit {
             route: './income',
             disabled: false
         },
-    ]
+    ];
 
     adminLinks: Link[] = [
         {
             label: 'Admin',
             route: './admin',
         }
-        ];
+    ];
 
     constructor(public userService: UserService) {
     }
@@ -61,22 +59,22 @@ export class AccountComponent implements OnInit {
 
     get links() {
         let links: Link[];
-         this.userService.user$.subscribe(user => {
-             if (!user){
-                 return
-             }
-             if(!user.role){
-                 return
-             }
-            if (user.role.includes('ROLE_MEMBER')) {
-                links = this.memberLinks
-            }else if (user.role.includes('ROLE_CREATOR')){
-                links = this.creatorLinks
-            }else if(user.role.includes('ROLE_ADMIN')){
-                links = this.adminLinks
+        this.userService.user$.subscribe(user => {
+            if (!user) {
+                return;
             }
-        })
-        return links
+            if (!user.getRole()) {
+                return;
+            }
+            if (user.getRole() === ('ROLE_MEMBER')) {
+                links = this.memberLinks;
+            } else if (user.getRole() === ('ROLE_CREATOR')) {
+                links = this.creatorLinks;
+            } else if (user.getRole() === ('ROLE_ADMIN')) {
+                links = this.adminLinks;
+            }
+        });
+        return links;
     }
 
 

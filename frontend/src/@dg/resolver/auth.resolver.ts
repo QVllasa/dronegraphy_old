@@ -1,40 +1,33 @@
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
-import {Creator, IUser, Member} from '../models/user.model';
+import {IUser, User} from '../models/user.model';
 import {Observable, of} from 'rxjs';
 import {AuthenticationService} from '../services/auth.service';
 import {Injectable} from '@angular/core';
 import {catchError, switchMap, take, tap} from 'rxjs/operators';
 import {UserService} from '../services/user.service';
 import firebase from 'firebase';
+import {IClaims} from '../models/JWTTokenDecoded.interface';
 
 @Injectable({
     providedIn: 'root'
 })
-export class AuthResolver implements Resolve<Member | Creator> {
+export class AuthResolver implements Resolve<User> {
+
+    fbUser: firebase.User;
+    claims: IClaims;
 
     constructor(private authService: AuthenticationService,
                 private userService: UserService) {
     }
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Member | Creator> | Promise<Member | Creator> | Member | Creator {
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<User> | Promise<User> | User {
         return this.authService.afAuth.authState.pipe(
             switchMap(user => {
                 if (!user) {
                     this.userService.user$.next(null);
                     return of(null);
                 }
-                return this.userService.getMember(user.uid).pipe(
-                    catchError(err => {
-                        return of(null);
-                    })
-                );
-            }),
-            switchMap((user: IUser) => {
-                if (!user) {
-                    this.userService.user$.next(null);
-                    return of(null);
-                }
-                this.userService.user$.next(new Member().deserialize(user));
+                this.fbUser = user;
                 return this.authService.afAuth.idTokenResult;
             }),
             switchMap((token: firebase.auth.IdTokenResult) => {
@@ -42,14 +35,17 @@ export class AuthResolver implements Resolve<Member | Creator> {
                     this.userService.user$.next(null);
                     return of(null);
                 }
-                return this.userService.user$.pipe(
-                    tap(user => {
-                        if (!user) {
-                            return of(null);
-                        }
-                        user.setClaims(Object.assign(token.claims));
-                    })
-                );
+                console.log('token: ', token.token);
+                this.claims = Object.assign(token.claims);
+                return this.userService.getUser(this.fbUser.uid);
+            }),
+            switchMap((user) => {
+                if (!user) {
+                    this.userService.user$.next(null);
+                    return of(null);
+                }
+                const u = this.authService.mapUser(user, this.claims);
+                return of(u);
             }),
             take(1)
         );

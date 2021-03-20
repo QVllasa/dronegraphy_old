@@ -22,11 +22,11 @@
         <div class="card w-full">
             <div class="w-full p-gutter h-38" fxLayout="row" fxLayoutAlign="space-between start">
                 <div class="w-full" fxLayout="row" fxLayoutAlign="space-evenly" fxLayoutGap="12px">
-                    <div fxLayout="column">
-                        {{videoCount}} Aufnahmen
+                    <div fxLayout="column" fxLayoutAlign="center center">
+                       <mat-icon>subscriptions</mat-icon> {{videoCount}} Aufnahmen
                     </div>
-                    <div fxLayout="column">
-                        Aus {{creator.getLocation()}}
+                    <div fxLayout="column" fxLayoutAlign="center center">
+                        <mat-icon>place</mat-icon> {{creator.getLocation()}}
                     </div>
                 </div>
                 <div class="transform -translate-y-24 w-full ">

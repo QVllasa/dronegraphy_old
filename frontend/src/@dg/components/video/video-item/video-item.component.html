@@ -2,11 +2,11 @@
 <ng-container *ngIf="mode === 'actions'">
     <div class="rounded relative h-64 w-64 flex aspect-ratio-16/9 bg-no-repeat bg-center cursor-pointer"
          (mouseenter)="onShow()" (mouseleave)="onHide()"
-         (click)="onLoadVideo(videoItem)"
          [style.backgroundImage]="poster">
         <dg-vjs-player
                 [style.backgroundImage]="poster"
                 *ngIf="loadStatus"
+                (click)="onLoadVideo(videoItem)"
                 [options]="options"></dg-vjs-player>
     </div>
 </ng-container>
@@ -22,11 +22,11 @@
 <ng-container *ngIf="mode === 'details'">
     <div class="rounded relative h-full w-full flex aspect-ratio-16/9 bg-no-repeat bg-cover bg-top cursor-pointer"
          (mouseenter)="onShow()" (mouseleave)="onHide()"
-         (click)="onLoadVideo(videoItem)"
          [style.backgroundImage]="poster">
         <dg-vjs-player
                 [style.backgroundImage]="poster"
                 *ngIf="loadStatus"
+                (click)="onLoadVideo(videoItem)"
                 [options]="options"></dg-vjs-player>
         <dg-vjs-actions [videoItem]="videoItem" *ngIf="showActions"></dg-vjs-actions>
     </div>

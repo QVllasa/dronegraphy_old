@@ -1,14 +1,13 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Creator, IUser, Member} from '../models/user.model';
+import {IUser, User} from '../models/user.model';
 import {environment} from '../../environments/environment';
 import {AngularFireAuth} from '@angular/fire/auth';
-import {map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
-import {BehaviorSubject, concat, forkJoin, from, Observable, of} from 'rxjs';
+import {map, switchMap, take, tap} from 'rxjs/operators';
+import {BehaviorSubject, concat, from, Observable, of} from 'rxjs';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {VideoResponse, VideoService} from './video.service';
-import {Video} from '../models/video.model';
+import {VideoService} from './video.service';
 
 
 @Injectable({
@@ -16,7 +15,7 @@ import {Video} from '../models/video.model';
 })
 export class UserService {
 
-    user$: BehaviorSubject<Member | Creator> = new BehaviorSubject<Member | Creator>(null);
+    user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
     constructor(private http: HttpClient,
                 private videoService: VideoService,
@@ -56,20 +55,11 @@ export class UserService {
         return this.http.post<IUser>(environment.apiUrl + '/register', user, options);
     }
 
-    // TODO delete
-    // createMember(user: IUser) {
-    //     return this.http.post<IUser>(environment.apiUrl + '/users', user);
-    // }
-
-    getMember(uid) {
-        return this.http.get<IUser>(environment.apiUrl + '/users/' + uid);
+    getUser(id: string | number): Observable<IUser> {
+        return this.http.get<IUser>(environment.apiUrl + '/users/' + id);
     }
 
-    // getProfileImage(id){
-    //     return this.http.get<File>(environment.apiUrl + '/photo/' + id)
-    // }
-
-    updateUser(user: Member | Creator) {
+    updateUser(user: User) {
         return this.http.put<IUser>(environment.apiUrl + '/users/' + user.uid, user);
     }
 
@@ -86,11 +76,11 @@ export class UserService {
 
     }
 
-    changeUserInfo(user: Member | Creator): Observable<IUser | null> {
+    changeUserInfo(user: User): Observable<IUser | null> {
         return this.updateUser(user);
     }
 
-    changeUserEmail(user: Member | Creator): Observable<void> {
+    changeUserEmail(user: User): Observable<void> {
         return this.afAuth.authState.pipe(
             switchMap((res) => {
                 return from(res.updateEmail(user.email));
@@ -109,7 +99,6 @@ export class UserService {
         }
         return of(null);
     }
-
 
     sendChanges(form: FormGroup) {
         form.disable();
@@ -171,8 +160,12 @@ export class UserService {
         }
     }
 
-    getCreator(key: number) {
-        return this.http.get<IUser>(environment.apiUrl + '/creators/' + key);
+    registerCreator(user, password: string) {
+    }
+
+
+    getCreator(id: string | number): Observable<IUser> {
+        return this.http.get<IUser>(environment.apiUrl + '/creators/' + id);
     }
 
     getCreators() {
@@ -184,11 +177,10 @@ export class UserService {
             );
     }
 
-    mapCreators(res: IUser[]): Creator[] {
-        console.log('mapCreators: ', res);
-        const creators: Creator[] = [];
+    mapCreators(res: IUser[]): User[] {
+        const creators: User[] = [];
         for (const creator of res) {
-            creators.push(new Creator().deserialize(creator));
+            creators.push(new User().deserialize(creator));
         }
         return creators;
     }

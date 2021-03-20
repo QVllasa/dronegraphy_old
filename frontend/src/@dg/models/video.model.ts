@@ -1,4 +1,4 @@
-import {Creator} from './user.model';
+import { User} from './user.model';
 import {Deserializable} from './deserialize.interface';
 import {environment} from '../../environments/environment';
 
@@ -27,7 +27,7 @@ export interface IVideo {
     views: number;
     storageRef: string;
     storageContent: FileInfo[];
-    creator?: Creator;
+    creator?: User;
     thumbnail?: string;
     sell?: boolean;
     hls?: string;
@@ -62,7 +62,7 @@ export class Video implements IVideo, Deserializable {
 
     #sell: boolean;
     #onBanner: boolean;
-    #creator: Creator;
+    #creator: User;
     #favoriteBy: any;
 
 
@@ -92,11 +92,11 @@ export class Video implements IVideo, Deserializable {
         return this.thumbnail ? 'http://localhost:8080/img/' + this.thumbnail : null;
     }
 
-    setCreator(creator: Creator) {
+    setCreator(creator: User) {
         this.#creator = creator;
     }
 
-    getCreator(): Creator {
+    getCreator(): User {
         return this.#creator;
     }
 

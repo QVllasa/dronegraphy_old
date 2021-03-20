@@ -1,11 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {VideoResponse, VideoService} from '../../../../@dg/services/video.service';
 import {IVideo, Video} from '../../../../@dg/models/video.model';
-import {HttpClient} from '@angular/common/http';
 import {ActivatedRoute} from '@angular/router';
 import {switchMap, tap} from 'rxjs/operators';
 import {UserService} from '../../../../@dg/services/user.service';
-import {Creator} from '../../../../@dg/models/user.model';
+import {User} from '../../../../@dg/models/user.model';
 
 @Component({
     selector: 'dg-creator-page',
@@ -19,7 +18,7 @@ export class CreatorPageComponent implements OnInit {
     isLoading: boolean;
     videoCount: number;
 
-    creator: Creator = null;
+    creator: User = null;
 
     constructor(private videoService: VideoService, private route: ActivatedRoute, private userSerivce: UserService) {
         this.options = {
@@ -47,12 +46,11 @@ export class CreatorPageComponent implements OnInit {
         this.isLoading = true;
         this.route.params
             .pipe(
-                tap(param => console.log(param['key'])),
                 switchMap(param => {
                     return this.userSerivce.getCreator(+param['key']);
                 }),
                 switchMap(creator => {
-                    this.creator = new Creator().deserialize(creator);
+                    this.creator = new User().deserialize(creator);
                     return this.videoService.getVideosByCreator(this.creator.key);
                 }))
             .subscribe((res: VideoResponse) => {

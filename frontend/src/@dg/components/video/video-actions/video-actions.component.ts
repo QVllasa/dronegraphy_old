@@ -7,8 +7,6 @@ import {Subscription} from 'rxjs';
 import {UserService} from '../../../services/user.service';
 import {Router} from '@angular/router';
 import {FavoritesService} from '../../../services/favorites.service';
-import {hyphenateUrlParams} from '../../../utils/hyphenate-url-params';
-import {Creator} from '../../../models/user.model';
 
 
 // declare var require: any;
@@ -35,18 +33,16 @@ import {Creator} from '../../../models/user.model';
                     Von {{videoItem.getCreator().getFullName()}}</mat-label>
             </div>
             <div class="absolute bottom-0 right-0 p-1 text-white">
-                <ng-container *ngIf="!userService.user$.value || userService.user$.value.role.includes('ROLE_MEMBER')">
-                    <button (click)="updateCart()" mat-icon-button
-                            [color]="orderService.cart$.value?.includes(videoItem) ? 'warn' : null">
-                        <mat-icon
-                                class="material-icons-round text-xl">{{orderService.cart$.value?.includes(videoItem) ? 'shopping_cart' : 'add_shopping_cart' }}</mat-icon>
-                    </button>
-                    <!--                    <button mat-icon-button (click)="updateFavorites(videoItem.id)"-->
-                    <!--                            [color]="!(userService.user$.value instanceof Creator) && userService.user$.value?.getFavorites()?.includes(videoItem.id) ? 'warn' : null">-->
-                    <!--                        <mat-icon-->
-                    <!--                                class="material-icons-round text-xl">{{userService.user$.value?.getFavorites()?.includes(videoItem.id) ? 'favorite' : 'favorite_border'}}</mat-icon>-->
-                    <!--                    </button>-->
-                </ng-container>
+                <button (click)="updateCart()" mat-icon-button
+                        [color]="orderService.cart$.value?.includes(videoItem) ? 'warn' : null">
+                    <mat-icon
+                            class="material-icons-round text-xl">{{orderService.cart$.value?.includes(videoItem) ? 'shopping_cart' : 'add_shopping_cart' }}</mat-icon>
+                </button>
+                <button mat-icon-button (click)="updateFavorites(videoItem.id)"
+                        [color]="userService.user$.value?.getFavorites()?.includes(videoItem.id) ? 'warn' : null">
+                    <mat-icon
+                            class="material-icons-round text-xl">{{userService.user$.value?.getFavorites()?.includes(videoItem.id) ? 'favorite' : 'favorite_border'}}</mat-icon>
+                </button>
                 <button mat-icon-button>
                     <mat-icon class="material-icons-round text-xl">share</mat-icon>
                 </button>
@@ -102,25 +98,28 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
         this.orderService.cart$.next(videos);
     }
 
-    // updateFavorites(id: string) {
-    //     if (!this.userService.user$.value) {
-    //         this.router.navigate(['/login']).then();
-    //         return;
-    //     }
-    //     //Remove from favorites
-    //     if (this.userService.user$.value.favoriteVideos.includes(id)) {
-    //         this.favoritesService.deleteFromFavorites(id).subscribe(res => {
-    //             this.userService.user$.value.setFavorites(res);
-    //             this._snackBar.open('Aus Favoriten entfernt.', 'SCHLIESSEN');
-    //         });
-    //         //Add to favorites
-    //     } else {
-    //         this.favoritesService.saveAsFavorite(id).subscribe(res => {
-    //             this.userService.user$.value.setFavorites(res);
-    //             this._snackBar.open('Zu Favoriten hinzugefügt.', 'SCHLIESSEN');
-    //         });
-    //     }
-    // }
+    updateFavorites(id: string) {
+        if (!this.userService.user$.value) {
+            this.router.navigate(['/login']).then();
+            return;
+        }
+
+        console.log(id);
+
+        //Remove from favorites
+        if (this.userService.user$.value.favoriteVideos?.includes(id)) {
+            this.favoritesService.deleteFromFavorites(id).subscribe(res => {
+                this.userService.user$.value.setFavorites(res);
+                this._snackBar.open('Aus Favoriten entfernt.', 'SCHLIESSEN');
+            });
+            //Add to favorites
+        } else {
+            this.favoritesService.saveAsFavorite(id).subscribe(res => {
+                this.userService.user$.value.setFavorites(res);
+                this._snackBar.open('Zu Favoriten hinzugefügt.', 'SCHLIESSEN');
+            });
+        }
+    }
 
 
     ngOnDestroy() {

@@ -4,11 +4,11 @@ import {IVideo, Video} from '../models/video.model';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
-import {Creator, Member} from '../models/user.model';
 import {BehaviorSubject, combineLatest, concat, merge, of, zip} from 'rxjs';
 import {SearchService} from './search.service';
 import {ICategory} from '../models/category.model';
 import {CategoryService} from './category.service';
+import {User} from '../models/user.model';
 
 export interface VideoResponse {
     totalcount: number;
@@ -38,13 +38,16 @@ export class VideoService {
     searchWords: string[];
 
     constructor(private http: HttpClient, private searchService: SearchService, private categoryService: CategoryService) {
+        // TODO prevent loading everytime whole site loads
+        this.init();
+    }
 
-
+    init() {
         const activeSort$ = this.searchService.activeSort$;
         const checkedCategories$ = this.categoryService.categories$;
         const search$ = this.searchService.search$;
 
-        // TODO prevent loading everytime site loads
+
         merge(
             activeSort$
                 .pipe(
@@ -85,9 +88,7 @@ export class VideoService {
             .subscribe((res) => {
                 this.isLoading$.next(false);
             });
-
     }
-
 
     getVideos(limit?: number, page?: number, category?: string[], search?: string[], sortKey?: number) {
         if (!page) {
@@ -147,7 +148,6 @@ export class VideoService {
             });
     }
 
-
     onReloadVideos(limit?: number, page?: number, category?: string[], search?: string[], sort?: number) {
         return this.getVideos(limit, page, category, search, sort)
             .pipe(
@@ -165,7 +165,6 @@ export class VideoService {
                 })
             );
     }
-
 
     getVideosByCreator(key, limit?, page?) {
         if (!page) {
@@ -262,7 +261,7 @@ export class VideoService {
         let loadedVideo;
         loadedVideo = new Video()
             .deserialize(video);
-        loadedVideo.setCreator(new Creator()
+        loadedVideo.setCreator(new User()
             .deserialize(video.creator));
         loadedVideo.setLicense(video.sell);
         loadedVideo.setThumbnail(video.thumbnail);

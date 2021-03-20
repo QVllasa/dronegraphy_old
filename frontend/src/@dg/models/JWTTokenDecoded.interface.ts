@@ -1,6 +1,5 @@
-
 export interface IClaims {
-    roles: string[],
+    role: string;
     iss: string;
     aud: string;
     auth_time: number;

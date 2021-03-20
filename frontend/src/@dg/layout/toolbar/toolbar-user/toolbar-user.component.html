@@ -1,45 +1,44 @@
-<ng-container *ngIf="userService.user$ | async as user; else login" >
-  <div class="-mx-1 flex items-center " fxLayoutGap="8px">
-    <div class="rounded-full flex items-center justify-center text-primary bg-primary-light cursor-pointer">
-      <mat-icon>account_circle</mat-icon>
-      <a class="px-3 text-primary">{{user.firstName}}'s Aufnahmen</a>
+<ng-container *ngIf="userService.user$ | async as user; else login">
+    <div class="-mx-1 flex items-center " fxLayoutGap="8px">
+        <div class="rounded-full flex items-center justify-center text-primary bg-primary-light cursor-pointer">
+            <mat-icon>account_circle</mat-icon>
+            <a class="px-3 text-primary">{{user.firstName}}'s Aufnahmen</a>
+        </div>
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon color="primary">
+                keyboard_arrow_down
+            </mat-icon>
+        </button>
     </div>
-    <button mat-icon-button [matMenuTriggerFor]="menu">
-      <mat-icon color="primary">
-        keyboard_arrow_down
-      </mat-icon>
-    </button>
-  </div>
 </ng-container>
 
-<ng-template  #login>
-  <div class="flex items-center rounded cursor-pointer relative trans-ease-out select-none py-1 pr-1 pl-3 hover:bg-hover"
-       matRipple routerLink="login">
-    <div class="rounded-full h-9 w-9 flex items-center justify-center text-primary bg-primary-light">
-      <mat-icon>account_circle</mat-icon>
-    </div>
-    <div class="mat-body font-medium mx-3 text-primary" fxHide.xs>Login</div>
+<ng-template #login>
+    <div class="flex items-center rounded cursor-pointer relative trans-ease-out select-none py-1 pr-1 pl-3 hover:bg-hover"
+         matRipple routerLink="login">
+        <div class="rounded-full h-9 w-9 flex items-center justify-center text-primary bg-primary-light">
+            <mat-icon>account_circle</mat-icon>
+        </div>
+        <div class="mat-body font-medium mx-3 text-primary" fxHide.xs>Login</div>
 
-  </div>
+    </div>
 </ng-template>
 
 
-<!-- TODO add roles-->
 <mat-menu #menu="matMenu">
-  <ng-container *ngIf="userService.user$ | async as user">
-    <ng-container *ngIf="user.role">
-      <button [routerLink]="['account/profile']" mat-menu-item>
-        <span> Account </span>
-      </button>
-      <button  [routerLink]="['account/creator']" mat-menu-item>
-        <span> Creator Account </span>
-      </button>
+    <ng-container *ngIf="userService.user$ | async as user">
+        <ng-container *ngIf="user.getRole()">
+            <button *ngIf="user.getRole() === 'ROLE_MEMBER'" [routerLink]="['account/profile']" mat-menu-item>
+                <span> Account </span>
+            </button>
+            <button *ngIf="user.getRole() === 'ROLE_CREATOR'" [routerLink]="['account/creator']" mat-menu-item>
+                <span> Creator Account </span>
+            </button>
+        </ng-container>
     </ng-container>
-  </ng-container>
-  <button mat-menu-item [routerLink]="['/cockpit']">
-    <span> Cockpit </span>
-  </button>
-  <button mat-menu-item (click)="authService.signOut()">
-    <span> Ausloggen </span>
-  </button>
+    <button mat-menu-item [routerLink]="['/cockpit']">
+        <span> Cockpit </span>
+    </button>
+    <button mat-menu-item (click)="authService.signOut()">
+        <span> Ausloggen </span>
+    </button>
 </mat-menu>

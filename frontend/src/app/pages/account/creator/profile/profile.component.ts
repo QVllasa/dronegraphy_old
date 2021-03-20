@@ -8,7 +8,7 @@ import {UserService} from '../../../../../@dg/services/user.service';
 import {UploadService} from '../../../../../@dg/services/upload.service';
 import {HttpEvent, HttpEventType} from '@angular/common/http';
 import {of} from 'rxjs';
-import {Creator} from '../../../../../@dg/models/user.model';
+import {} from '../../../../../@dg/models/user.model';
 
 @Component({
     selector: 'dg-profile',
@@ -43,7 +43,7 @@ export class ProfileComponent implements OnInit {
                 takeWhile(user => !user, true),
             )
             .subscribe(user => {
-
+                console.log('user : ', user);
                 if (!user) {
                     return;
                 }
@@ -96,6 +96,7 @@ export class ProfileComponent implements OnInit {
         const fd = new FormData();
         fd.append('file', this.file, this.file.name);
 
+
         this.uploadService.uploadImage(fd)
             .pipe(
                 map((event) => {
@@ -107,11 +108,9 @@ export class ProfileComponent implements OnInit {
             )
             .subscribe(res => {
                 if (res) {
-                    if (this.userService.user$.value instanceof Creator) {
-                        this.userService.user$.value.setProfileImage(res);
-                        this._snackBar.open('Profilbild aktualisiert', 'SCHLIESSEN');
-                        this.fileUpload.nativeElement.value = '';
-                    }
+                    this.userService.user$.value.setProfileImage(res);
+                    this._snackBar.open('Profilbild aktualisiert', 'SCHLIESSEN');
+                    this.fileUpload.nativeElement.value = '';
                 }
             });
 
