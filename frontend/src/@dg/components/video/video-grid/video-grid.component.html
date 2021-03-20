@@ -1,5 +1,6 @@
 <div [class]="gridLayout" class="grid gap-1 grid-cols-video-grid" >
     <ng-container *ngFor="let video of videos">
+<!--        TODO change to Mat-Grid-List -->
         <dg-video-item class="rounded" mode="details" [videoItem]="video" ></dg-video-item>
     </ng-container>
 </div>

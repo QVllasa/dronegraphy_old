@@ -13,13 +13,14 @@
                 <button routerLink="/pricing" mat-raised-button color="primary">Konto aufladen</button>
             </div>
             <!--            <dg-video-grid [videos]="videos"></dg-video-grid>-->
-            <div *ngIf="!(orderService.cart$ | async)" fxLayout="column" class="h-full" fxLayoutAlign="start center">
+            <div *ngIf="user$.getActiveCart().length === 0" fxLayout="column" class="h-full" fxLayoutAlign="start center">
                 <div class="mat-display-1">Dein Warenkorb ist leer.</div>
                 <img class="h-full w-auto max-h-xxxs" src="assets/img/illustrations/videographer.svg" alt="">
             </div>
-            <mat-list class="list" *ngIf="orderService.cart$ | async as videos">
+            <mat-list class="list" *ngIf="videos.length !== 0">
                 <h3 mat-subheader>Lizenzfrei</h3>
                 <ng-container *ngFor="let video of videos">
+<!--                     TODO fix checkout page-->
                     <mat-list-item *ngIf="!video.sell">
                         <img mat-list-avatar src="assets/img/avatars/1.jpg">
                         <h3 matLine>John</h3>

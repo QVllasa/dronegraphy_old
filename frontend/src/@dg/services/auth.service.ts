@@ -28,7 +28,6 @@ export class AuthenticationService implements OnDestroy {
     constructor(public afAuth: AngularFireAuth,
                 private http: HttpClient,
                 private userService: UserService,
-                private orderSerivce: OrderService,
                 private _snackBar: MatSnackBar,
                 private router: Router) {
     }
@@ -62,7 +61,6 @@ export class AuthenticationService implements OnDestroy {
     }
 
     signOut() {
-        this.orderSerivce.cart$.next(null);
         this.logout$ = from(this.afAuth.signOut()).pipe(
             switchMap(() => {
                 localStorage.removeItem('currentUser');

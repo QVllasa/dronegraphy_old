@@ -34,15 +34,15 @@ import {User} from '../../../models/user.model';
                     Von {{videoItem.getCreator().getFullName()}}</mat-label>
             </div>
             <div class="absolute bottom-0 right-0 p-1 text-white">
-                <button (click)="updateCart()" mat-icon-button
-                        [color]="orderService.cart$.value?.includes(videoItem) ? 'warn' : null">
+                <button (click)="updateCart(videoItem.id)" mat-icon-button
+                        [color]="inCart(videoItem.id) ? 'warn' : null">
                     <mat-icon
-                            class="material-icons-round text-xl">{{orderService.cart$.value?.includes(videoItem) ? 'shopping_cart' : 'add_shopping_cart' }}</mat-icon>
+                            class="material-icons-round text-xl">{{inCart(videoItem.id) ? 'shopping_cart' : 'add_shopping_cart' }}</mat-icon>
                 </button>
                 <button mat-icon-button (click)="toggleFavorite(videoItem.id)"
-                        [color]="isActive(videoItem.id) ? 'warn' : null">
+                        [color]="isFavorite(videoItem.id) ? 'warn' : null">
                     <mat-icon
-                            class="material-icons-round text-xl">{{isActive(videoItem.id) ? 'favorite' : 'favorite_border'}}</mat-icon>
+                            class="material-icons-round text-xl">{{isFavorite(videoItem.id) ? 'favorite' : 'favorite_border'}}</mat-icon>
                 </button>
                 <button mat-icon-button>
                     <mat-icon class="material-icons-round text-xl">share</mat-icon>
@@ -80,34 +80,42 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
         // });
     }
 
-    isActive(id): boolean {
+    isFavorite(id): boolean {
         if (!this.user$) {
             return false;
         }
         return this.user$.getFavorites().includes(id);
     }
 
+    inCart(id) {
+        if (!this.user$) {
+            return false;
+        }
+        return this.user$.getActiveCart().includes(id);
+    }
+
     // Adds and deletes items from cart
-    updateCart() {
+    updateCart(id: string) {
         if (!this.user$) {
             this.router.navigate(['/login']).then();
             return;
         }
-        let videos = this.orderService.cart$.value;
-        if (videos && !videos.includes(this.videoItem)) {
-            videos.push(this.videoItem);
-            this._snackBar.open('Zum Warenkorb hinzugefügt.', 'SCHLIESSEN');
-            return;
-        } else if (videos && videos.includes(this.videoItem)) {
-            videos.splice(videos.indexOf(this.videoItem), 1);
-            this._snackBar.open('Vom Warenkorb gelöscht.', 'SCHLIESSEN');
-            return;
+        if (this.user$.getActiveCart().includes(id)) {
+            this.user$.activeCart.splice(this.user$.activeCart.indexOf(id, 0), 1);
+            this.orderService.updateCart(this.user$.activeCart).subscribe(res => {
+                this.user$.activeCart = res;
+                this.userService.user$.next(this.user$);
+                this._snackBar.open('Zum Warenkorb hinzugefügt.', 'SCHLIESSEN', {duration: 1000});
+            });
+            // Add to favorites
+        } else {
+            this.user$.addToCart(id);
+            this.orderService.updateCart(this.user$.getActiveCart()).subscribe(res => {
+                this.user$.activeCart = res;
+                this.userService.user$.next(this.user$);
+                this._snackBar.open('Aus Warenkorb entfernt.', 'SCHLIESSEN', {duration: 1000});
+            });
         }
-
-
-        videos = [];
-        videos.push(this.videoItem);
-        this.orderService.cart$.next(videos);
     }
 
     toggleFavorite(id: string) {
@@ -128,7 +136,7 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
             });
             // Add to favorites
         } else {
-            this.user$.setFavorite(id);
+            this.user$.addToFavorite(id);
             this.favoritesService.updateFavorite(this.user$.getFavorites()).subscribe(res => {
                 this.user$.favoriteVideos = res;
                 this.userService.user$.next(this.user$);

@@ -29,7 +29,7 @@ export class User implements IUser, Deserializable {
     slogan?: string;
     location?: string;
     orders?: Order[];
-    activeCart?: Video[];
+    activeCart?: string[];
 
 
     #role: string = null;
@@ -55,7 +55,7 @@ export class User implements IUser, Deserializable {
         return this.#role ? this.#role : null;
     }
 
-    setFavorite(id: string) {
+    addToFavorite(id: string) {
         if (!this.favoriteVideos || (this.favoriteVideos.length === 0)) {
             this.favoriteVideos = [];
             this.favoriteVideos.push(id);
@@ -71,12 +71,6 @@ export class User implements IUser, Deserializable {
         return this.favoriteVideos;
     }
 
-    removeFavorite(id: string, count: number) {
-        if (!this.favoriteVideos || (this.favoriteVideos.length === 0)) {
-            return;
-        }
-        this.favoriteVideos.splice(this.favoriteVideos.indexOf(id), count);
-    }
 
     getFootage(): Video[] {
         return this.footage;
@@ -104,9 +98,27 @@ export class User implements IUser, Deserializable {
 
 
     // TODO finish cart
-    addToCart(video: Video){
-        this.activeCart.push(video);
-        removeDuplicateObjects(this.activeCart);
+    addToCart(id: string) {
+        if (!this.activeCart || (this.activeCart.length === 0)) {
+            this.activeCart = [];
+            this.activeCart.push(id);
+        } else {
+            this.activeCart.push(id);
+        }
+    }
+
+    getActiveCart(): string[]{
+        if (!this.activeCart || (this.activeCart.length === 0)) {
+            return [];
+        }
+        return this.activeCart;
+    }
+
+    removeFromCart(id: string){
+        // if (!this.favoriteVideos || (this.favoriteVideos.length === 0)) {
+        //     return;
+        // }
+        // this.favoriteVideos.splice(this.favoriteVideos.indexOf(id), count);
     }
 
 }
