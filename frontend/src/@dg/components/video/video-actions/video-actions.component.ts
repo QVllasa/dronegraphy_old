@@ -109,7 +109,7 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
             });
             // Add to favorites
         } else {
-            this.user$.addToCart(id);
+            this.user$.addToActiveCart(id);
             this.orderService.updateCart(this.user$.getActiveCart()).subscribe(res => {
                 this.user$.activeCart = res;
                 this.userService.user$.next(this.user$);

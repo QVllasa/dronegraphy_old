@@ -39,6 +39,7 @@ export class VideoService {
 
     constructor(private http: HttpClient, private searchService: SearchService, private categoryService: CategoryService) {
         // TODO prevent loading everytime whole site loads
+        // instead load only on main/results page
         this.init();
     }
 

@@ -97,8 +97,7 @@ export class User implements IUser, Deserializable {
     }
 
 
-    // TODO finish cart
-    addToCart(id: string) {
+    addToActiveCart(id: string) {
         if (!this.activeCart || (this.activeCart.length === 0)) {
             this.activeCart = [];
             this.activeCart.push(id);
