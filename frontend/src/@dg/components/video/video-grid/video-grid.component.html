@@ -4,9 +4,10 @@
 <!--    </ng-container>-->
 <!--</div>-->
 
+<!-- TODO fix load video on click-->
 <mat-grid-list [responsiveCols]="{xs: 1, sm: 2, md: 2, lg: 3, xl: 4}" rowHeight="16:9" gutterSize="4px">
-    <mat-grid-tile *ngFor="let video of videos">
-        <dg-video-item class="rounded w-full h-full" mode="details" [videoItem]="video"></dg-video-item>
+    <mat-grid-tile *ngFor="let video of videos" (click)="onClick($event)">
+        <dg-video-item  class="rounded w-full h-full relative" mode="details" [videoItem]="video"></dg-video-item>
     </mat-grid-tile>
 </mat-grid-list>
 

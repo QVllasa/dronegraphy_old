@@ -102,9 +102,9 @@ export class VideoItemComponent implements OnInit {
         this.loadStatus = false;
     }
 
-    onLoadVideo(video: Video) {
-        this.router.navigate(['footage', video.id, hyphenateUrlParams(video.title)]).then();
-    }
+    // onLoadVideo(video: Video) {
+    //     this.router.navigate(['footage', video.id, hyphenateUrlParams(video.title)]).then();
+    // }
 
 
 }

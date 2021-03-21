@@ -2,6 +2,8 @@ import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit, SimpleC
 import {DomSanitizer} from '@angular/platform-browser';
 import {VideoService} from '../../../services/video.service';
 import {Video} from '../../../models/video.model';
+import {hyphenateUrlParams} from '../../../utils/hyphenate-url-params';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -15,14 +17,16 @@ export class VideoGridComponent implements OnInit {
     @Input() gridLayout: string;
 
 
-    constructor() {
+    constructor(private router: Router) {
     }
 
     ngOnInit() {
     }
 
+    onClick(ev: MouseEvent) {
 
-
+        // this.router.navigate(['footage', video.id, hyphenateUrlParams(video.title)]).then();
+    }
 
 
 }

@@ -8,6 +8,7 @@ import {UserService} from '../../../services/user.service';
 import {Router} from '@angular/router';
 import {FavoritesService} from '../../../services/favorites.service';
 import {User} from '../../../models/user.model';
+import {hyphenateUrlParams} from '../../../utils/hyphenate-url-params';
 
 
 // declare var require: any;
@@ -28,10 +29,10 @@ import {User} from '../../../models/user.model';
                 </mat-chip-list>
             </div>
             <div class="absolute bottom-0 left-0 text-white cursor-pointer p-1">
-                <mat-label class="text-sm  mat-body-strong">{{videoItem.title}}</mat-label>
+                <mat-label (click)="onLoadVideo(videoItem)"  class="text-sm  mat-body-strong">{{videoItem.title}}</mat-label>
                 <br>
                 <mat-label class=" text-sm mat-body-1 font-weight-lighter">
-                    Von {{videoItem.getCreator().getFullName()}}</mat-label>
+                    Von <span (click)="onLoadCreator(videoItem.getCreator())">{{videoItem.getCreator().getFullName()}}</span></mat-label>
             </div>
             <div class="absolute bottom-0 right-0 p-1 text-white">
                 <button (click)="updateCart(videoItem.id)" mat-icon-button
@@ -97,7 +98,7 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
     // Adds and deletes items from cart
     updateCart(id: string) {
         if (!this.user$) {
-            this.router.navigate(['/login']).then();
+            this.router.navigate(['/register']).then();
             return;
         }
         if (this.user$.getActiveCart().includes(id)) {
@@ -120,7 +121,7 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
 
     toggleFavorite(id: string) {
         if (!this.user$) {
-            this.router.navigate(['/login']).then();
+            this.router.navigate(['/register']).then();
             return;
         }
 
@@ -145,6 +146,13 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
         }
     }
 
+    onLoadVideo(video: Video) {
+        this.router.navigate(['footage', video.id, hyphenateUrlParams(video.title)]).then();
+    }
+
+    onLoadCreator(creator: User) {
+        this.router.navigate(['creators', creator.key, hyphenateUrlParams(creator.getFullName())]).then();
+    }
 
     ngOnDestroy() {
 

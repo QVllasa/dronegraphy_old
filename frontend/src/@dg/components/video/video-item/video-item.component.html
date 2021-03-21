@@ -6,7 +6,6 @@
         <dg-vjs-player
                 [style.backgroundImage]="poster"
                 *ngIf="loadStatus"
-                (click)="onLoadVideo(videoItem)"
                 [options]="options"></dg-vjs-player>
     </div>
 </ng-container>
@@ -26,7 +25,6 @@
         <dg-vjs-player
                 [style.backgroundImage]="poster"
                 *ngIf="loadStatus"
-                (click)="onLoadVideo(videoItem)"
                 [options]="options"></dg-vjs-player>
         <dg-vjs-actions [videoItem]="videoItem" *ngIf="showActions"></dg-vjs-actions>
     </div>
