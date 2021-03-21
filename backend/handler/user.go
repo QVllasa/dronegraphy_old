@@ -39,7 +39,7 @@ func (this *Handler) GetUsers(c echo.Context) error {
 		return err
 	}
 
-	if len(users) == 0 {
+	if len(*users) == 0 {
 		return echo.NewHTTPError(http.StatusOK, "No Users found")
 	}
 
