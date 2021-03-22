@@ -29,7 +29,6 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	routeGroup.POST("/video_files/:id", controller.UploadVideoFiles)
 	routeGroup.POST("/photos", controller.UploadPhoto, mw.Auth())
 	routeGroup.GET("/users/:id/videos", controller.GetVideosByOwner, mw.Auth())
-	//routeGroup.POST("/child_categories", controller.CreateChildCategory)
 	//e.PUT("/videos/:id", h.UpdateVideo, middleware.BodyLimit("1M"), customMiddleware.Auth())
 	//e.DELETE("/videos/:id", h.DeleteVideo, customMiddleware.Auth())
 

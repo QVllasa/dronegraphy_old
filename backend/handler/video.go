@@ -64,7 +64,15 @@ func (this *Handler) CreateVideo(c echo.Context) error {
 
 func (this *Handler) UpdateVideo(c echo.Context) error {
 
-	video, err := this.repository.UpdateVideo(c.Param("id"), c.Request().Body)
+	id := c.Param("id")
+	updates := make(map[string]interface{})
+
+	if err := this.bindRequest(c, &updates); err != nil {
+		log.Errorf("Unable decode using request body: %v", err)
+		return echo.NewHTTPError(http.StatusInternalServerError, "Unable to decode JSON")
+	}
+
+	video, err := this.repository.UpdateVideo(id, updates)
 	if err != nil {
 		log.Errorf("Unable to update Video: %v", err)
 		return err
@@ -372,52 +380,6 @@ func (this *Handler) GetPlaylist(c echo.Context) error {
 	return c.File(service.StorageRoot + service.Videos + "/" + id + "/hls/" + filename)
 }
 
-//func (this *Handler) UpdateFavorites(c echo.Context) error {
-//
-//	f := make(map[string]interface{})
-//
-//	if err := this.bindRequest(c, &f); err != nil {
-//		return echo.NewHTTPError(http.StatusInternalServerError, "cannot bind payload")
-//	}
-//
-//	fmt.Println(f)
-//
-//	token, err := this.service.FirebaseApp.GetAndVerifyToken(c)
-//	if err != nil {
-//		return echo.NewHTTPError(http.StatusInternalServerError, "no token found")
-//	}
-//
-//	u, err := this.repository.UpdateUser(token.UID, f)
-//	if err != nil {
-//		log.Errorf("Unable to update the user: %v", err)
-//		return echo.NewHTTPError(http.StatusInternalServerError, "Unable to add to favorites the User")
-//	}
-//
-//	return c.JSON(http.StatusOK, u.FavoriteVideos)
-//}
-
-//func (this *Handler) UpdateCart(c echo.Context) error {
-//
-//	f := make(map[string]interface{})
-//
-//	if err := this.bindRequest(c, &f); err != nil {
-//		return echo.NewHTTPError(http.StatusInternalServerError, "cannot bind payload")
-//	}
-//
-//	token, err := this.service.FirebaseApp.GetAndVerifyToken(c)
-//	if err != nil {
-//		return echo.NewHTTPError(http.StatusInternalServerError, "no token found")
-//	}
-//
-//	u, err := this.repository.UpdateUser(token.UID, f)
-//	if err != nil {
-//		log.Errorf("Unable to update the user: %v", err)
-//		return echo.NewHTTPError(http.StatusInternalServerError, "Unable to add to favorites the User")
-//	}
-//
-//	return c.JSON(http.StatusOK, u.ActiveCart)
-//}
-
 func (this *Handler) GetSortingOptions(c echo.Context) error {
 	var f []model.SortOption
 
@@ -428,29 +390,6 @@ func (this *Handler) GetSortingOptions(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, f)
 }
-
-//func (this *Handler) UpdateProfileHeader(c echo.Context) error {
-//	h := make(map[string]interface{})
-//
-//	if err := this.bindRequest(c, &h); err != nil {
-//		log.Error(err)
-//		return echo.NewHTTPError(http.StatusBadRequest, "cannot bind payload")
-//	}
-//
-//	token, err := this.service.FirebaseApp.GetAndVerifyToken(c)
-//	if err != nil {
-//		return echo.NewHTTPError(http.StatusBadRequest, "no token found")
-//	}
-//
-//
-//	u, err := this.repository.UpdateUser(token.UID, h)
-//	if err != nil {
-//		log.Errorf("Unable to update the user: %v", err)
-//		return echo.NewHTTPError(http.StatusInternalServerError, "Unable to add to favorites the User")
-//	}
-//
-//	return c.JSON(http.StatusOK, u.VideoHeader)
-//}
 
 func getCategoriesFromString(categories string) []int64 {
 	var c []int64

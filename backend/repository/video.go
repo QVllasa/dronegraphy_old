@@ -3,14 +3,12 @@ package repository
 import (
 	"context"
 	"dronegraphy/backend/repository/model"
-	"encoding/json"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"io"
 	"net/http"
 	"time"
 )
@@ -76,26 +74,21 @@ func (this *Repository) GetVideoById(id string) (*model.Video, error) {
 	return video, nil
 }
 
-func (this *Repository) UpdateVideo(id string, reqBody io.ReadCloser) (*model.Video, error) {
+func (this *Repository) UpdateVideo(id string, model map[string]interface{}) (*model.Video, error) {
+
+	filter := bson.M{"_id": id}
+	update := bson.M{"$set": model}
+
+	_, err := this.VideoColl.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		log.Errorf("Unable to update the video: %v", err)
+		return nil, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Unable to update the Video"})
+	}
 
 	video, err := this.GetVideoById(id)
 	if err != nil {
 		log.Errorf("Video not found: %v", err)
 		return nil, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Video not found"})
-	}
-
-	if err := json.NewDecoder(reqBody).Decode(&video); err != nil {
-		log.Errorf("Unable decode using request body: %v", err)
-		return nil, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Unable to decode JSON"})
-	}
-
-	filter := bson.M{"_id": video.ID}
-	video.UpdatedAt = time.Now()
-
-	_, err = this.VideoColl.UpdateOne(context.Background(), filter, bson.M{"$set": video})
-	if err != nil {
-		log.Errorf("Unable to update the video: %v", err)
-		return nil, echo.NewHTTPError(http.StatusInternalServerError, ErrorMessage{Message: "Unable to update the Video"})
 	}
 
 	return video, nil
