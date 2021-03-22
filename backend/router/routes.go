@@ -28,15 +28,14 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	routeGroup.POST("/thumbnails/:id", controller.UploadThumbnail, mw.Auth())
 	routeGroup.POST("/video_files/:id", controller.UploadVideoFiles)
 	routeGroup.POST("/photos", controller.UploadPhoto, mw.Auth())
+	routeGroup.GET("/users/:id/videos", controller.GetVideosByOwner, mw.Auth())
 	//routeGroup.POST("/child_categories", controller.CreateChildCategory)
 	//e.PUT("/videos/:id", h.UpdateVideo, middleware.BodyLimit("1M"), customMiddleware.Auth())
 	//e.DELETE("/videos/:id", h.DeleteVideo, customMiddleware.Auth())
 
 	// USER
-	routeGroup.GET("/users/:id", controller.GetUser, mw.Auth())
-	routeGroup.PUT("/users/:id", controller.UpdateUser, mw.Auth())
-	routeGroup.PATCH("/favorites", controller.UpdateFavorites, mw.Auth())
-	routeGroup.PATCH("/activeCart", controller.UpdateCart, mw.Auth())
+	routeGroup.GET("/users/:uid", controller.GetUser, mw.Auth())
+	routeGroup.PATCH("/users/:uid", controller.UpdateUser, mw.Auth())
 	//routeGroup.POST("/users/:id", controller.UploadPhoto, mw.Auth())
 
 	//// PUBLIC

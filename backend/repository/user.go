@@ -16,19 +16,24 @@ type ErrorMessage struct {
 	Message string `json:"message"`
 }
 
-func (this *Repository) UpdateUser(model model.User) (*model.User, error) {
+func (this *Repository) UpdateUser(uid string, model map[string]interface{}) (*model.User, error) {
 
-	filter := bson.M{"uid": model.UID}
-	ts := time.Now()
-	model.UpdatedAt = &ts
+	filter := bson.M{"uid": uid}
+	update := bson.M{"$set": model}
 
-	_, err := this.UserColl.UpdateOne(context.Background(), filter, bson.M{"$set": model})
+	_, err := this.UserColl.UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		log.Errorf("Unable to update the user: %v", err)
 		return nil, echo.NewHTTPError(http.StatusInternalServerError, "Unable to update the User")
 	}
 
-	return &model, nil
+	user, err := this.GetUser(uid)
+	if err != nil {
+		log.Errorf("User not found: %v", err)
+		return nil, echo.NewHTTPError(http.StatusInternalServerError, "User not found")
+	}
+
+	return user, nil
 }
 
 func (this *Repository) CreateUser(model *model.User) error {
@@ -75,7 +80,7 @@ func (this *Repository) GetUser(id string) (*model.User, error) {
 	filter := bson.M{"uid": id}
 	err := this.UserColl.FindOne(context.Background(), filter).Decode(&user)
 	if err != nil {
-		log.Info("No user found")
+		log.Error("No user found")
 		return &user, err
 	}
 	return &user, nil

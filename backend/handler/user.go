@@ -4,6 +4,7 @@ import (
 	"context"
 	"dronegraphy/backend/repository/model"
 	"dronegraphy/backend/service"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"github.com/rs/xid"
@@ -17,7 +18,7 @@ import (
 // Member Functions
 func (this *Handler) GetUser(c echo.Context) error {
 
-	user, err := this.repository.GetUser(c.Param("id"))
+	user, err := this.repository.GetUser(c.Param("uid"))
 	if err != nil {
 		log.Errorf("Unable to find User: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "user not found")
@@ -49,19 +50,22 @@ func (this *Handler) GetUsers(c echo.Context) error {
 func (this *Handler) UpdateUser(c echo.Context) error {
 
 	// TODO only owner can update
-	// Update User in database
-	var member model.User
-	if err := this.bindRequest(c, &member); err != nil {
+	uid := c.Param("uid")
+	updates := make(map[string]interface{})
+
+	if err := this.bindRequest(c, &updates); err != nil {
+		log.Errorf("Unable decode using request body: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "Unable to decode JSON")
 	}
 
-	updatedMember, err := this.repository.UpdateUser(member)
+	// Update User in database
+	user, err := this.repository.UpdateUser(uid, updates)
 	if err != nil {
 		log.Errorf("Unable to update User: %v", err)
 		return err
 	}
 
-	return c.JSON(http.StatusOK, updatedMember)
+	return c.JSON(http.StatusOK, user)
 }
 
 // Creator Functions
@@ -115,6 +119,7 @@ func (this *Handler) UploadPhoto(c echo.Context) error {
 	file, err := c.FormFile("file")
 	if err != nil {
 		log.Fatal(err)
+		return c.JSON(http.StatusBadRequest, "no file in request")
 	}
 
 	//Validate File of type image
@@ -125,7 +130,12 @@ func (this *Handler) UploadPhoto(c echo.Context) error {
 	fileID := xid.New().String()
 	target := service.StorageRoot + service.Creator + "/" + token.UID + service.ProfileImage
 
+	fmt.Println(target)
 	f, err := this.service.SaveImage(file, target, fileID, true, false)
+	if err != nil {
+		log.Error(err)
+		return c.JSON(http.StatusBadRequest, "something went wrong")
+	}
 
 	fileName := filepath.Base(f.Name())
 

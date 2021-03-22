@@ -11,7 +11,7 @@ type (
 		Email            string             `json:"email,omitempty" bson:"email,omitempty" validate:"required,email"`
 		FirstName        string             `json:"firstName,omitempty" bson:"firstName" validate:"required"`
 		LastName         string             `json:"lastName,omitempty" bson:"lastName"`
-		UID              string             `json:"uid,omitempty" bson:"uid"`
+		UID              string             `json:"uid,omitempty" bson:"uid,omitempty"`
 		Role             string             `json:"-" bson:"role"`
 		CreatedAt        *time.Time         `json:"createdAt,omitempty" bson:"createdAt"`
 		UpdatedAt        *time.Time         `json:"updatedAt,omitempty" bson:"updatedAt"`
@@ -23,5 +23,6 @@ type (
 		Location         string             `json:"location" bson:"location"`
 		Slogan           string             `json:"slogan" bson:"slogan"`
 		ActiveCart       []string           `json:"activeCart,omitempty" bson:"activeCart"`
+		VideoHeader      []string           `json:"videoHeader,omitempty" bson:"videoHeader,omitempty"`
 	}
 )
