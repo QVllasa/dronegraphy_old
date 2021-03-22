@@ -106,17 +106,15 @@ export class AppComponent {
                 label: 'Preise',
                 route: '/pricing'
             },
-            // TODO create Page
             {
                 type: 'link',
-                label: 'Support',
-                route: '/'
+                label: 'Häufige Fragen',
+                route: '/support'
             },
-            // TODO create Page
             {
                 type: 'link',
                 label: 'Über uns',
-                route: '/'
+                route: '/about-us'
             },
             // TODO create page
             {
@@ -124,17 +122,15 @@ export class AppComponent {
                 label: 'Tipps und Tricks',
                 route: '/'
             },
-            // TODO create page
             {
                 type: 'link',
                 label: 'Pilot werden',
-                route: '/'
+                route: '/become-pilot'
             },
-            // TODO create page
             {
                 type: 'button',
                 label: 'Aufnahmen verkaufen',
-                route: '/'
+                route: '/apply-for-pilot'
             },
         ];
     }

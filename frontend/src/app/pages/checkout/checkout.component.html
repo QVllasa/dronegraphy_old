@@ -20,7 +20,6 @@
             <mat-list class="list" *ngIf="videos.length !== 0">
                 <h3 mat-subheader>Lizenzfrei</h3>
                 <ng-container *ngFor="let video of videos">
-<!--                     TODO fix checkout page-->
                     <mat-list-item *ngIf="!video.sell">
                         <img mat-list-avatar src="assets/img/avatars/1.jpg">
                         <h3 matLine>John</h3>
