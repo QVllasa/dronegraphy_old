@@ -18,7 +18,7 @@ import {hyphenateUrlParams} from '../../../utils/hyphenate-url-params';
 @Component({
     selector: 'dg-vjs-actions',
     template: `
-        <div @fadeIn class="rounded absolute top-0 right-0 left-0 h-full w-full">
+        <div @fadeIn class="rounded">
             <div class="absolute top-0 right-0 p-1">
                 <mat-chip-list>
                     <mat-chip *ngIf="videoItem.getLicense()" color="primary" class="text-xxs min-h-full h-6" selected>
@@ -59,7 +59,7 @@ import {hyphenateUrlParams} from '../../../utils/hyphenate-url-params';
         fadeIn400ms
     ]
 })
-export class VideoActionsComponent implements OnInit, OnDestroy {
+export class VideoActionsComponent {
 
     @Input() videoItem: Video;
     user$: User = this.userService.user$.value;
@@ -72,13 +72,6 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
         public userService: UserService,
         private _snackBar: MatSnackBar
     ) {
-    }
-
-    ngOnInit() {
-        // this.userService.user$.subscribe(user => {
-        //     // console.log(user);
-        //     this.user = user;
-        // });
     }
 
     isFavorite(id): boolean {
@@ -154,7 +147,4 @@ export class VideoActionsComponent implements OnInit, OnDestroy {
         this.router.navigate(['creators', creator.key, hyphenateUrlParams(creator.getFullName())]).then();
     }
 
-    ngOnDestroy() {
-
-    }
 }

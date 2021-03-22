@@ -15,6 +15,8 @@ export class VideoGridComponent implements OnInit {
 
     @Input() videos: Video[] = [];
     @Input() gridLayout: string;
+    showActions: boolean;
+    timer: any;
 
 
     constructor(private router: Router) {
@@ -23,9 +25,8 @@ export class VideoGridComponent implements OnInit {
     ngOnInit() {
     }
 
-    onClick(ev: MouseEvent) {
-
-        // this.router.navigate(['footage', video.id, hyphenateUrlParams(video.title)]).then();
+    onLoadVideo(video: Video) {
+        this.router.navigate(['footage', video.id, hyphenateUrlParams(video.title)]).then();
     }
 
 

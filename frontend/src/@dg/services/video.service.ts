@@ -91,6 +91,7 @@ export class VideoService {
             });
     }
 
+    // TODO show only published videos
     getVideos(limit?: number, page?: number, category?: string[], search?: string[], sortKey?: number) {
         if (!page) {
             // Same as in Backend
@@ -120,7 +121,6 @@ export class VideoService {
             .set('sort', '' + sortKey);
 
         // console.log(params);
-
 
         return this.http.get<VideoResponse>(environment.apiUrl + '/videos', {params}).pipe(take(1));
     }
@@ -166,6 +166,7 @@ export class VideoService {
                 })
             );
     }
+
 
     getVideosByCreator(key, limit?, page?) {
         if (!page) {

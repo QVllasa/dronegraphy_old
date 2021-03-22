@@ -26,7 +26,7 @@ import {RouterModule} from '@angular/router';
         OnHoverModule,
         RouterModule
     ],
-    exports: [VideoItemComponent]
+    exports: [VideoItemComponent, VideoActionsComponent]
 })
 export class VideoItemModule {
 }
