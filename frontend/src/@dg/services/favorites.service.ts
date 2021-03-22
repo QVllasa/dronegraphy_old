@@ -16,7 +16,8 @@ export class FavoritesService {
     }
 
     updateFavorite(videoIds: string[]) {
-        return this.http.patch<string[]>(environment.apiUrl + '/favorites', videoIds);
+        const favorites = {favoriteVideos: videoIds};
+        return this.http.patch<string[]>(environment.apiUrl + '/favorites', favorites);
     }
 
 

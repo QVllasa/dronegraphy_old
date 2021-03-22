@@ -60,7 +60,7 @@ export class UserService {
     }
 
     updateUser(user: User) {
-        return this.http.put<IUser>(environment.apiUrl + '/users/' + user.uid, user);
+        return this.http.patch<IUser>(environment.apiUrl + '/users/' + user.uid, user);
     }
 
     deleteUser() {
@@ -77,9 +77,11 @@ export class UserService {
     }
 
     changeUserInfo(user: User): Observable<IUser | null> {
+        console.log('user to change', user);
         return this.updateUser(user);
     }
 
+    // Firebase
     changeUserEmail(user: User): Observable<void> {
         return this.afAuth.authState.pipe(
             switchMap((res) => {
@@ -88,6 +90,7 @@ export class UserService {
         );
     }
 
+    // Firebase
     changePassword(newPassword, form): Observable<void> {
         if ((newPassword !== '') && !form.get('password').invalid) {
             return this.afAuth.authState.pipe(
@@ -113,6 +116,7 @@ export class UserService {
         this.user$.value.email = form.get('info.email').value;
         this.user$.value.firstName = form.get('info.firstName').value;
         this.user$.value.lastName = form.get('info.lastName').value;
+        this.user$.value.slogan = form.get('info.slogan').value;
 
         const changeUserInfo$ = this.changeUserInfo(this.user$.value).pipe(take(1));
         const changeEmail$ = this.changeUserEmail(this.user$.value).pipe(take(1));

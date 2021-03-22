@@ -19,11 +19,9 @@ export class VideoGridComponent implements OnInit {
     timer: any;
 
 
-    constructor(private router: Router) {
-    }
+    constructor(private router: Router) {}
 
-    ngOnInit() {
-    }
+    ngOnInit() {}
 
     onLoadVideo(video: Video) {
         this.router.navigate(['footage', video.id, hyphenateUrlParams(video.title)]).then();

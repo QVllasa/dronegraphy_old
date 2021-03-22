@@ -38,12 +38,6 @@ export class FootageComponent implements OnInit, AfterViewInit {
         {label: 'Klicks', property: 'views', type: 'text', visible: true},
         {label: 'Downloads', property: 'downloads', type: 'text', visible: true},
         {label: 'Erstellt', property: 'createdAt', type: 'date', visible: true},
-        // { label: 'Camera', property: 'address', type: 'text', visible: true, cssClasses: ['text-secondary', 'font-medium'] },
-        // { label: 'tags', property: 'street', type: 'text', visible: false, cssClasses: ['text-secondary', 'font-medium'] },
-        // { label: 'Zipcode', property: 'zipcode', type: 'text', visible: false, cssClasses: ['text-secondary', 'font-medium'] },
-        // { label: 'City', property: 'city', type: 'text', visible: false, cssClasses: ['text-secondary', 'font-medium'] },
-        // { label: 'Phone', property: 'phoneNumber', type: 'text', visible: true, cssClasses: ['text-secondary', 'font-medium'] },
-        // { label: 'Labels', property: 'labels', type: 'button', visible: true },
         {label: '', property: 'actions', type: 'button', visible: true}
     ];
     pageSize = 5;
@@ -89,10 +83,6 @@ export class FootageComponent implements OnInit, AfterViewInit {
         return this.columns.filter(column => column.visible).map(column => column.property);
     }
 
-    /**
-     * Example on how to get data and pass it to the table - usually you would want a dedicated service with a HTTP request for this
-     * We are simulating this request here.
-     */
     getData() {
         return this.videoService.getVideosByCreator(this.userSevice.user$.value.uid, -1, 0).pipe(
             map(res => {

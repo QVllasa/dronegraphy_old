@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {ChangeDetectorRef, Injectable} from '@angular/core';
 
 import {IVideo, Video} from '../models/video.model';
 import {HttpClient, HttpParams} from '@angular/common/http';
@@ -37,13 +37,13 @@ export class VideoService {
     selectedCategories: string[] = [];
     searchWords: string[];
 
-    constructor(private http: HttpClient, private searchService: SearchService, private categoryService: CategoryService) {
-        // TODO prevent loading everytime whole site loads
-        // instead load only on main/results page
-        this.init();
+    constructor(private http: HttpClient,
+                private searchService: SearchService,
+                private categoryService: CategoryService) {
     }
 
     init() {
+        console.log('init videos');
         const activeSort$ = this.searchService.activeSort$;
         const checkedCategories$ = this.categoryService.categories$;
         const search$ = this.searchService.search$;
@@ -179,6 +179,18 @@ export class VideoService {
         return this.http.get<VideoResponse>(environment.apiUrl + '/creators/' + key + '/videos', {params});
     }
 
+    getVideosByOwner(uid, limit?, page?) {
+        if (!page) {
+            page = 0;
+        }
+        if (!limit) {
+            limit = 0;
+        }
+        const params = new HttpParams().set('limit', limit).set('page', page);
+
+        return this.http.get<VideoResponse>(environment.apiUrl + '/users/' + uid + '/videos', {params});
+    }
+
     getVideo(id) {
         return this.http.get<IVideo>(environment.apiUrl + '/videos/' + id).pipe(
             map(res => {
@@ -269,5 +281,8 @@ export class VideoService {
         return loadedVideo;
     }
 
-
+    setProfileHeader(storageRef: string[]) {
+        const videoHeader = {videoHeader: storageRef};
+        return this.http.patch<string[]>(environment.apiUrl + '/header', videoHeader);
+    }
 }

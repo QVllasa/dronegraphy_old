@@ -20,8 +20,7 @@ export class ResultsComponent implements OnInit {
                 private categoryService: CategoryService,
                 private searchService: SearchService,
                 public videoService: VideoService,
-                private route: ActivatedRoute,
-                private sortingService: SortingService) {
+                private route: ActivatedRoute) {
 
 
         const queryParams = this.route.snapshot.queryParams['search'];
@@ -34,13 +33,10 @@ export class ResultsComponent implements OnInit {
         } else {
             this.searchService.search$.next([queryParams]);
         }
-
-
-
-
     }
 
     ngOnInit(): void {
+        this.videoService.init();
         this.categoryService.getCategories()
             .pipe(
                 switchMap(() => {

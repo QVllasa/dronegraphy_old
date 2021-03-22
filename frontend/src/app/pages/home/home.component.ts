@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, HostListener, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Video} from '../../../@dg/models/video.model';
@@ -18,7 +18,7 @@ import {removeDuplicateObjects} from '../../../@dg/utils/remove-duplicate-object
 })
 export class HomeComponent implements OnInit {
 
-
+    videos$ = this.videoService.videos$;
     videoItem: Video = null;
     options;
 
@@ -34,6 +34,7 @@ export class HomeComponent implements OnInit {
             aspectRatio: '16:9',
             autoplay: true,
             controls: false,
+            loop: true,
             inactivityTimeout: 0,
             videopage: false,
             sources: [{
@@ -44,6 +45,7 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.videoService.init();
         if (!this.videoItem) {
             this.videoService.headerVideo$
                 .subscribe(video => {
@@ -51,6 +53,7 @@ export class HomeComponent implements OnInit {
                 });
         }
     }
+
 
     loadMore() {
         this.videoService.onLoadMore();

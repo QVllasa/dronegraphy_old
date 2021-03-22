@@ -18,15 +18,17 @@
         </div>
     </dg-page-layout-header>
 
-    <dg-page-layout-content dgContainer fxLayout="column" fxLayoutAlign="center center">
+    <dg-page-layout-content dgContainer class="w-full" fxLayout="column" fxLayoutAlign="center center">
         <div class="card w-full">
             <div class="w-full p-gutter h-38" fxLayout="row" fxLayoutAlign="space-between start">
                 <div class="w-full" fxLayout="row" fxLayoutAlign="space-evenly" fxLayoutGap="12px">
                     <div fxLayout="column" fxLayoutAlign="center center">
-                       <mat-icon>subscriptions</mat-icon> {{videoCount}} Aufnahmen
+                       <mat-icon color="primary">subscriptions</mat-icon>
+                        <span class="text-primary">{{videoCount}} Aufnahmen</span>
                     </div>
                     <div fxLayout="column" fxLayoutAlign="center center">
-                        <mat-icon>place</mat-icon> {{creator.getLocation()}}
+                        <mat-icon color="primary" >place</mat-icon>
+                        <span class="text-primary">{{creator.getLocation()}}</span>
                     </div>
                 </div>
                 <div class="transform -translate-y-24 w-full ">

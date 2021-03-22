@@ -19,7 +19,8 @@ export class OrderService {
     }
 
     updateCart(ids: string[]) {
-        return this.http.patch<string[]>(environment.apiUrl + '/activeCart', ids);
+        const cart = {activeCart: ids};
+        return this.http.patch<string[]>(environment.apiUrl + '/activeCart', cart);
     }
 
 }

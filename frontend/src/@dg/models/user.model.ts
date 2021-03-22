@@ -12,6 +12,7 @@ export interface IUser {
     email?: string;
     createdAt: string;
     updatedAt: string;
+    slogan?: string;
 }
 
 export class User implements IUser, Deserializable {
@@ -30,6 +31,7 @@ export class User implements IUser, Deserializable {
     location?: string;
     orders?: Order[];
     activeCart?: string[];
+    videoHeader?: string[] | null;
 
 
     #role: string = null;
@@ -43,6 +45,10 @@ export class User implements IUser, Deserializable {
     getFullName() {
         return this.firstName + ' ' + this.lastName;
     }
+
+    // getVideoHeaders(): string | null {
+    //     return environment.apiUrl + '/' + this.header + '/hls/playlist.m3u8';
+    // }
 
     setClaims(claims: IClaims) {
         this.#claims = claims;
@@ -106,14 +112,14 @@ export class User implements IUser, Deserializable {
         }
     }
 
-    getActiveCart(): string[]{
+    getActiveCart(): string[] {
         if (!this.activeCart || (this.activeCart.length === 0)) {
             return [];
         }
         return this.activeCart;
     }
 
-    removeFromCart(id: string){
+    removeFromCart(id: string) {
         // if (!this.favoriteVideos || (this.favoriteVideos.length === 0)) {
         //     return;
         // }
