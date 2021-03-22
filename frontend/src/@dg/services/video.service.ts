@@ -157,7 +157,6 @@ export class VideoService {
                         this.videos$.next([...this.videos$.value, ...this.mapVideos(res)]);
                     } else {
                         this.videos$.next(this.mapVideos(res));
-                        // TODO remove Demo
                         this.headerVideo$.next(this.videos$.value[0]);
                     }
 

@@ -40,7 +40,6 @@ export class LayoutComponent implements OnInit {
 
     ngOnInit() {
 
-        //TODO fix sidenav with close button
         /**
          * Open/Close Sidenav through LayoutService
          */
