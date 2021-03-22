@@ -18,9 +18,9 @@ export class OrderService {
     constructor(private http: HttpClient) {
     }
 
-    updateCart(ids: string[]) {
-        const cart = {activeCart: ids};
-        return this.http.patch<string[]>(environment.apiUrl + '/activeCart', cart);
-    }
+    // updateCart(ids: string[]) {
+    //     const cart = {activeCart: ids};
+    //     return this.http.patch<string[]>(environment.apiUrl + '/activeCart', cart);
+    // }
 
 }

@@ -15,10 +15,10 @@ export class FavoritesService {
                 private http: HttpClient) {
     }
 
-    updateFavorite(videoIds: string[]) {
-        const favorites = {favoriteVideos: videoIds};
-        return this.http.patch<string[]>(environment.apiUrl + '/favorites', favorites);
-    }
+    // updateFavorite(videoIds: string[]) {
+    //     const favorites = {favoriteVideos: videoIds};
+    //     return this.http.patch<string[]>(environment.apiUrl + '/favorites', favorites);
+    // }
 
 
 }

@@ -96,16 +96,16 @@ export class VideoActionsComponent {
         }
         if (this.user$.getActiveCart().includes(id)) {
             this.user$.activeCart.splice(this.user$.activeCart.indexOf(id, 0), 1);
-            this.orderService.updateCart(this.user$.activeCart).subscribe(res => {
-                this.user$.activeCart = res;
+            this.userService.updateUser(this.user$).subscribe(res => {
+                // this.user$.activeCart = res;
                 this.userService.user$.next(this.user$);
                 this._snackBar.open('Zum Warenkorb hinzugefügt.', 'SCHLIESSEN', {duration: 1000});
             });
             // Add to favorites
         } else {
             this.user$.addToActiveCart(id);
-            this.orderService.updateCart(this.user$.getActiveCart()).subscribe(res => {
-                this.user$.activeCart = res;
+            this.userService.updateUser(this.user$).subscribe(res => {
+                // this.user$.activeCart = res;
                 this.userService.user$.next(this.user$);
                 this._snackBar.open('Aus Warenkorb entfernt.', 'SCHLIESSEN', {duration: 1000});
             });
@@ -123,16 +123,16 @@ export class VideoActionsComponent {
         // Remove from favorites
         if (this.user$.getFavorites().includes(id)) {
             this.user$.favoriteVideos.splice(this.user$.favoriteVideos.indexOf(id, 0), 1);
-            this.favoritesService.updateFavorite(this.user$.favoriteVideos).subscribe(res => {
-                this.user$.favoriteVideos = res;
+            this.userService.updateUser(this.user$).subscribe(res => {
+                // this.user$.favoriteVideos = res;
                 this.userService.user$.next(this.user$);
                 this._snackBar.open('Aus Favoriten entfernt.', 'SCHLIESSEN', {duration: 1000});
             });
             // Add to favorites
         } else {
             this.user$.addToFavorite(id);
-            this.favoritesService.updateFavorite(this.user$.getFavorites()).subscribe(res => {
-                this.user$.favoriteVideos = res;
+            this.userService.updateUser(this.user$).subscribe(res => {
+                // this.user$ = res;
                 this.userService.user$.next(this.user$);
                 this._snackBar.open('Zu Favoriten hinzugefügt.', 'SCHLIESSEN', {duration: 1000});
             });

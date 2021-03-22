@@ -281,8 +281,8 @@ export class VideoService {
         return loadedVideo;
     }
 
-    setProfileHeader(storageRef: string[]) {
-        const videoHeader = {videoHeader: storageRef};
-        return this.http.patch<string[]>(environment.apiUrl + '/header', videoHeader);
-    }
+    // setProfileHeader(storageRef: string[]) {
+    //     const videoHeader = {videoHeader: storageRef};
+    //     return this.http.patch<string[]>(environment.apiUrl + '/header', videoHeader);
+    // }
 }

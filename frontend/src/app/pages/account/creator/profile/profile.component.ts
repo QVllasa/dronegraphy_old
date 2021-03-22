@@ -107,7 +107,7 @@ export class ProfileComponent implements OnInit {
                     }
                 });
         this.user.videoHeader = this.videoCtrl.value;
-        this.videoService.setProfileHeader(this.user.videoHeader).subscribe();
+        this.userService.updateUser(this.user).subscribe();
     }
 
     togglePassword() {
