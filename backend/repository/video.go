@@ -43,7 +43,7 @@ func (this *Repository) CreateVideo(video *model.Video, id string) (string, erro
 	return vID, nil
 }
 
-func (this *Repository) GetVideos(page int64, limit int64, filter map[string][]map[string]interface{}, opt *options.FindOptions) ([]model.Video, error) {
+func (this *Repository) GetVideos(filter interface{}, opt *options.FindOptions) ([]model.Video, error) {
 
 	var videos []model.Video
 

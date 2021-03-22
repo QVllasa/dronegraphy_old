@@ -24,9 +24,9 @@ type VideoResponse struct {
 	TotalCount int64         `json:"totalcount"`
 	TotalPages int           `json:"totalpages"`
 	Key        int64         `json:"key,omitempty"`
-	Page       int64         `json:"page"`
-	Limit      int64         `json:"limit"`
-	Count      int           `json:"count"`
+	Page       int64         `json:"page,omitempty"`
+	Limit      int64         `json:"limit,omitempty"`
+	Count      int           `json:"count,omitempty"`
 	Videos     []model.Video `json:"videos,omitempty"`
 }
 
@@ -214,6 +214,7 @@ func (this *Handler) GetVideo(c echo.Context) error {
 	return c.JSON(http.StatusOK, video)
 }
 
+// TODO get only published videos for public and all videos for owner
 func (this *Handler) GetVideos(c echo.Context) error {
 
 	page, err := strconv.ParseInt(c.QueryParam("page"), 10, 64)
@@ -242,7 +243,6 @@ func (this *Handler) GetVideos(c echo.Context) error {
 	sortKey, err := strconv.ParseInt(c.QueryParam("sort"), 10, 64)
 	if err != nil {
 		fmt.Println("sortkey: ", err)
-
 	}
 
 	if limit != -1 {
@@ -302,11 +302,46 @@ func (this *Handler) GetVideos(c echo.Context) error {
 
 	fmt.Println("final filter:", filter)
 
-	response.Videos, _ = this.repository.GetVideos(page, limit, filter, opt)
+	response.Videos, err = this.repository.GetVideos(filter, opt)
+	if err != nil {
+		log.Error(err)
+		return echo.NewHTTPError(http.StatusInternalServerError, "no videos found")
+	}
+
 	response.TotalCount, _ = this.repository.VideoColl.CountDocuments(context.Background(), filter)
 	response.TotalPages = int(math.Ceil(float64(response.TotalCount) / float64(limit)))
 	response.Limit = limit
 	response.Page = page
+	response.Count = len(response.Videos)
+
+	return c.JSON(http.StatusOK, response)
+}
+
+func (this *Handler) GetOwnerVideos(c echo.Context) error {
+	var response VideoResponse
+
+	token, _ := this.service.FirebaseApp.GetAndVerifyToken(c)
+	u, _ := this.repository.GetCreator(token.UID)
+
+	filter := bson.M{"creator.key": u.Key}
+	opt := options.Find()
+
+	videos, err := this.repository.GetVideos(filter, opt)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	limit, err := strconv.ParseInt(c.QueryParam("limit"), 10, 64)
+	if err != nil {
+		// Defaults
+		limit = 50
+	}
+
+	response.Videos = videos
+	response.TotalCount, _ = this.repository.VideoColl.CountDocuments(context.Background(), filter)
+	response.TotalPages = int(math.Ceil(float64(response.TotalCount) / float64(limit)))
+	response.Limit = limit
 	response.Count = len(response.Videos)
 
 	return c.JSON(http.StatusOK, response)
@@ -334,7 +369,6 @@ func (this *Handler) GetPlaylist(c echo.Context) error {
 	filename := c.Param("file")
 	return c.File(service.StorageRoot + service.Videos + "/" + id + "/hls/" + filename)
 }
-
 
 func (this *Handler) UpdateFavorites(c echo.Context) error {
 
@@ -389,8 +423,6 @@ func (this *Handler) UpdateCart(c echo.Context) error {
 
 	u.ActiveCart = f
 
-
-
 	u, err = this.repository.UpdateUser(*u)
 	if err != nil {
 		log.Errorf("Unable to update the user: %v", err)
@@ -399,8 +431,6 @@ func (this *Handler) UpdateCart(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, u.ActiveCart)
 }
-
-
 
 func (this *Handler) GetSortingOptions(c echo.Context) error {
 	var f []model.SortOption
