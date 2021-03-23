@@ -225,133 +225,130 @@ func (this *Handler) GetVideo(c echo.Context) error {
 // TODO get only published videos for public and all videos for owner
 func (this *Handler) GetVideos(c echo.Context) error {
 
-	page, err := strconv.ParseInt(c.QueryParam("page"), 10, 64)
-	if err != nil {
-		// Defaults
-		page = 1
-	}
+	uid := c.Param("uid")
+	token, err := this.service.FirebaseApp.GetAndVerifyToken(c)
 
-	key, err := strconv.ParseInt(c.Param("key"), 10, 64)
-	if err != nil {
-		key = 0
-	}
-
-	limit, err := strconv.ParseInt(c.QueryParam("limit"), 10, 64)
-	if err != nil {
-		// Defaults
-		limit = 50
-	}
-
-	categoryKeys := getCategoriesFromString(c.QueryParam("category"))
-
-	search := c.QueryParam("search")
-
-	// Options
-	opt := options.Find()
-	sortKey, err := strconv.ParseInt(c.QueryParam("sort"), 10, 64)
-	if err != nil {
-		fmt.Println("sortkey: ", err)
-	}
-
-	if limit != -1 {
-		opt.SetSkip((page - 1) * limit)
-		opt.SetLimit(limit)
-	}
-	if sortKey == 0 {
-		opt.SetSort(bson.M{"downloads": -1})
-	}
-	if sortKey == 2 {
-		opt.SetSort(bson.M{"createdAt": -1})
-	}
-
-	// Filter
-	filter := map[string][]map[string]interface{}{}
-
-	if search != "" {
-		fmt.Println("search: ", search)
-		filter["$and"] = append(filter["$and"], bson.M{"$text": bson.M{"$search": search}})
-	}
-
-	// Sortieren nach besondere Auswahl
-	if sortKey == 1 {
-		filter["$and"] = append(filter["$and"], bson.M{"stuff_pick": true})
-	}
-
-	// Sortieren nach Kostenlos
-	if sortKey == 3 {
-		filter["$and"] = append(filter["$and"], bson.M{"sell": false})
-	}
-
-	// All
-	if sortKey == 4 {
-		filter["$and"] = append(filter["$and"], bson.M{})
-	}
-	if len(categoryKeys) > 0 {
-		var c []bson.M
-		for _, j := range categoryKeys {
-			fmt.Println(j)
-			c = append(c, bson.M{"$elemMatch": bson.M{"$eq": j}})
-		}
-
-		f := bson.M{
-			"categories": bson.M{
-				"$all": c,
-			},
-		}
-		filter["$and"] = append(filter["$and"], f)
-	}
-
+	var videos []model.Video
 	var response VideoResponse
 
-	if key != 0 {
-		filter["$and"] = append(filter["$and"], bson.M{"creator.key": key})
-		response.Key = key
+	fmt.Println("uid: ", uid)
+	fmt.Println(token)
+
+	if err == nil && token.UID == uid {
+		u, _ := this.repository.GetUser(token.UID)
+
+		filter := bson.M{"creator.key": u.Key}
+		opt := options.Find()
+
+		videos, err = this.repository.GetVideos(filter, opt)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+
+		response.Videos = videos
+		response.TotalCount, _ = this.repository.VideoColl.CountDocuments(context.Background(), filter)
+		response.Count = len(response.Videos)
+
+	} else {
+		page, err := strconv.ParseInt(c.QueryParam("page"), 10, 64)
+		if err != nil {
+			// Defaults
+			page = 1
+		}
+
+		key, err := strconv.ParseInt(c.Param("key"), 10, 64)
+		if err != nil {
+			key = 0
+		}
+
+		limit, err := strconv.ParseInt(c.QueryParam("limit"), 10, 64)
+		if err != nil {
+			// Defaults
+			limit = 50
+		}
+
+		categoryKeys := getCategoriesFromString(c.QueryParam("category"))
+
+		search := c.QueryParam("search")
+
+		// Options
+		opt := options.Find()
+		sortKey, err := strconv.ParseInt(c.QueryParam("sort"), 10, 64)
+		if err != nil {
+			fmt.Println("sortkey: ", err)
+		}
+
+		if limit != -1 {
+			opt.SetSkip((page - 1) * limit)
+			opt.SetLimit(limit)
+		}
+		if sortKey == 0 {
+			opt.SetSort(bson.M{"downloads": -1})
+		}
+		if sortKey == 2 {
+			opt.SetSort(bson.M{"createdAt": -1})
+		}
+
+		// Filter
+		filter := map[string][]map[string]interface{}{}
+
+		if search != "" {
+			fmt.Println("search: ", search)
+			filter["$and"] = append(filter["$and"], bson.M{"$text": bson.M{"$search": search}})
+		}
+
+		// Sortieren nach besondere Auswahl
+		if sortKey == 1 {
+			filter["$and"] = append(filter["$and"], bson.M{"stuff_pick": true})
+		}
+
+		// Sortieren nach Kostenlos
+		if sortKey == 3 {
+			filter["$and"] = append(filter["$and"], bson.M{"sell": false})
+		}
+
+		// All
+		if sortKey == 4 {
+			filter["$and"] = append(filter["$and"], bson.M{})
+		}
+		if len(categoryKeys) > 0 {
+			var c []bson.M
+			for _, j := range categoryKeys {
+				fmt.Println(j)
+				c = append(c, bson.M{"$elemMatch": bson.M{"$eq": j}})
+			}
+
+			f := bson.M{
+				"categories": bson.M{
+					"$all": c,
+				},
+			}
+			filter["$and"] = append(filter["$and"], f)
+		}
+
+		if key != 0 {
+			filter["$and"] = append(filter["$and"], bson.M{"creator.key": key})
+			response.Key = key
+		}
+
+		// Load only published Videos
+		filter["$and"] = append(filter["$and"], bson.M{"published": true})
+
+		fmt.Println("final filter:", filter)
+
+		response.Videos, err = this.repository.GetVideos(filter, opt)
+		if err != nil {
+			log.Error(err)
+			return echo.NewHTTPError(http.StatusInternalServerError, "no videos found")
+		}
+
+		response.TotalCount, _ = this.repository.VideoColl.CountDocuments(context.Background(), filter)
+		response.TotalPages = int(math.Ceil(float64(response.TotalCount) / float64(limit)))
+		response.Limit = limit
+		response.Page = page
 	}
 
-	// Load only published Videos
-	filter["$and"] = append(filter["$and"], bson.M{"published": true})
-
-	fmt.Println("final filter:", filter)
-
-	response.Videos, err = this.repository.GetVideos(filter, opt)
-	if err != nil {
-		log.Error(err)
-		return echo.NewHTTPError(http.StatusInternalServerError, "no videos found")
-	}
-
-	response.TotalCount, _ = this.repository.VideoColl.CountDocuments(context.Background(), filter)
-	response.TotalPages = int(math.Ceil(float64(response.TotalCount) / float64(limit)))
-	response.Limit = limit
-	response.Page = page
-	response.Count = len(response.Videos)
-
-	return c.JSON(http.StatusOK, response)
-}
-
-func (this *Handler) GetVideosByOwner(c echo.Context) error {
-	var response VideoResponse
-
-	uid := c.Param("id")
-	token, _ := this.service.FirebaseApp.GetAndVerifyToken(c)
-
-	if token.UID != uid {
-		log.Error("token UID != UID")
-		return echo.NewHTTPError(http.StatusInternalServerError, "invalid token")
-	}
-
-	u, _ := this.repository.GetUser(token.UID)
-
-	filter := bson.M{"creator.key": u.Key}
-	opt := options.Find()
-
-	videos, err := this.repository.GetVideos(filter, opt)
-	if err != nil {
-		log.Error(err)
-		return err
-	}
-
-	response.Videos = videos
-	response.TotalCount, _ = this.repository.VideoColl.CountDocuments(context.Background(), filter)
 	response.Count = len(response.Videos)
 
 	return c.JSON(http.StatusOK, response)

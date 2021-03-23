@@ -16,6 +16,7 @@ type (
 		CreatedAt        *time.Time         `json:"createdAt,omitempty" bson:"createdAt"`
 		UpdatedAt        *time.Time         `json:"updatedAt,omitempty" bson:"updatedAt"`
 		FavoriteVideos   []string           `json:"favoriteVideos,omitempty" bson:"favoriteVideos"`
+		FavoriteCreators []string           `json:"favoriteCreators,omitempty" bson:"favoriteCreators"`
 		DownloadedVideos []string           `json:"downloadedVideos,omitempty" bson:"downloadedVideos"`
 		Orders           []string           `json:"orders,omitempty" bson:"orders"`
 		Key              int64              `json:"key" bson:"key"`
@@ -24,5 +25,6 @@ type (
 		Slogan           string             `json:"slogan" bson:"slogan"`
 		ActiveCart       []string           `json:"activeCart,omitempty" bson:"activeCart"`
 		VideoHeader      []string           `json:"videoHeader,omitempty" bson:"videoHeader,omitempty"`
+		Credits          int                `json:"credits,omitempty" bson:"credits"`
 	}
 )

@@ -17,6 +17,15 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 		return
 	}
 
+	// Example Group Routing
+	//rootGroup.GET("/users", controller.GetUsers, jwtMiddleware).Name = "users.get"
+	//userGroup := rootGroup.Group("/user")
+	//userGroup.Use(jwtMiddleware)
+	//userGroup.GET("", controller.GetUser).Name = "user.get"
+	//userGroup.GET("/:id", controller.GetUser).Name = "user.get.id"
+	//userGroup.POST("", controller.StoreUser).Name = "user.create"
+	//userGroup.PUT("", controller.UpdateUser).Name = "user.update"
+
 	// ADMIN
 	routeGroup.GET("/users", controller.GetUsers)
 
@@ -27,8 +36,11 @@ func (this *Router) RegisterRoutes(routeGroup *echo.Group) {
 	routeGroup.DELETE("/videos/:id", controller.DeleteVideo, mw.Auth())
 	routeGroup.POST("/thumbnails/:id", controller.UploadThumbnail, mw.Auth())
 	routeGroup.POST("/video_files/:id", controller.UploadVideoFiles)
+
+	// Only owner can access these routes
+	routeGroup.GET("/users/:uid/videos", controller.GetVideos, mw.Auth())
 	routeGroup.POST("/photos", controller.UploadPhoto, mw.Auth())
-	routeGroup.GET("/users/:id/videos", controller.GetVideosByOwner, mw.Auth())
+
 	//e.PUT("/videos/:id", h.UpdateVideo, middleware.BodyLimit("1M"), customMiddleware.Auth())
 	//e.DELETE("/videos/:id", h.DeleteVideo, customMiddleware.Auth())
 

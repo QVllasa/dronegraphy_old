@@ -152,6 +152,7 @@ func TestLoadUserFixtures(t *testing.T) {
 		baseUser.FavoriteVideos = []string{}
 		baseUser.DownloadedVideos = []string{}
 		baseUser.Orders = []string{}
+		baseUser.Credits = gofakeit.Number(0, 100)
 
 		params := (&auth.UserToCreate{}).
 			Email(baseUser.Email).
@@ -373,4 +374,8 @@ func TestLoadFilterFixtures(t *testing.T) {
 		_, _ = filters.InsertOne(context.Background(), i)
 	}
 
+}
+
+func TestAdditionalUserInfo(t *testing.T) {
+	//	TODO add favoriteVideos, FavoriteCreators, DownloadedVideos, VideoHeader Fixtures
 }
