@@ -1,7 +1,7 @@
 <div class="p-6 h-lg">
     <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
-        <div fxFlex="auto">
-            <form (ngSubmit)="send()" class="px-6 py-4" fxLayout="column"
+        <div fxFlex="auto" fxLayoutAlign="center center">
+            <form (ngSubmit)="send()" class="px-6 py-4 w-full max-w-lg" fxLayout="column"
                   [formGroup]="form">
                 <div fxLayout="column" fxFlex formGroupName="info">
                     <mat-form-field fxFlex="auto" appearance="standard">

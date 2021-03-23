@@ -1,4 +1,12 @@
-<div class="card">
+<div id="card" class="card relative">
+    <div id="actions" fxLayoutGap="8px" class="absolute -top-4 right-4 opacity-0 z-10">
+        <button color="white" mat-mini-fab>
+            <mat-icon color="primary">favorite_border</mat-icon>
+        </button>
+        <button color="white" mat-mini-fab>
+            <mat-icon color="primary">share</mat-icon>
+        </button>
+    </div>
     <div fxLayout="row" fxLayoutAlign="space-evenly center"
          (click)="onLoadCreator(creator)"
          class="p-4 text-center hover:bg-hover trans-ease-out cursor-pointer relative"

@@ -6,9 +6,9 @@
                                           [showButton]="false"
                                           gdColumn.lt-sm="1"
                                           label="Pro Downloads verfügbar"
-                                          [value]="'67'"></dg-widget-quick-value-center>
+                                          [value]="''+user$.value.getCredits()"></dg-widget-quick-value-center>
             <div fxLayout="column" fxLayoutAlign="space-evenly center">
-                <button mat-raised-button color="primary">Konto aufladen</button>
+                <button routerLink="/pricing" mat-raised-button color="primary">Konto aufladen</button>
                 <button class="mt-8" mat-button color="primary">Support kontaktieren</button>
             </div>
         </div>

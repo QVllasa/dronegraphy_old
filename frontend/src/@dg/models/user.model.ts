@@ -32,6 +32,7 @@ export class User implements IUser, Deserializable {
     orders?: Order[];
     activeCart?: string[];
     videoHeader?: string[] | null;
+    credits?: number;
 
 
     #role: string = null;
@@ -117,6 +118,10 @@ export class User implements IUser, Deserializable {
             return [];
         }
         return this.activeCart;
+    }
+
+    getCredits(): number {
+        return this.credits ? this.credits : 0;
     }
 
     removeFromCart(id: string) {
