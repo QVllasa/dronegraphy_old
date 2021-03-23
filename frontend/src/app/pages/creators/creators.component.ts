@@ -59,8 +59,6 @@ export class CreatorsComponent implements OnInit {
             });
     }
 
-    onLoadCreator(creator: User) {
-        this.router.navigate(['/creators', creator.key, hyphenateUrlParams(creator.getFullName())]).then();
-    }
+
 
 }

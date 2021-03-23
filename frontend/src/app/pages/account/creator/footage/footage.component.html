@@ -85,7 +85,7 @@
                     <ng-container *ngIf="column.type === 'image'" [matColumnDef]="column.property">
                         <th *matHeaderCellDef mat-header-cell></th>
                         <td *matCellDef="let row" class="w-8 min-w-8 pr-0 object-cover" mat-cell>
-                            <img [src]="row.getThumbnail()" class="h-8 w-8 align-middle" alt="">
+                            <img [src]="row.getThumbnail()" class="h-8 w-8 rounded align-middle" alt="">
                         </td>
                     </ng-container>
                 </ng-container>

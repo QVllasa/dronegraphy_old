@@ -15,11 +15,12 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import {VideoItemModule} from '../../../@dg/components/video/video-item/video-item.module';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {CreatorPageModule} from './creator-page/creator-page.module';
+import { CreatorCardComponent } from './creator-card/creator-card.component';
 
 
 
 @NgModule({
-    declarations: [CreatorsComponent],
+    declarations: [CreatorsComponent, CreatorCardComponent],
     imports: [
         CommonModule,
         CreatorsRoutingModule,

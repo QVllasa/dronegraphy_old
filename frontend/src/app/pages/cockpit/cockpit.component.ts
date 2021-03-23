@@ -15,6 +15,7 @@ export class CockpitComponent implements OnInit {
     videos: Video[];
     favoriteVideos: Video[] = [];
     downloadedVideos: Video[];
+    gridLayout = {xs: 1, sm: 2, md: 2, lg: 2, xl: 3};
 
 
     constructor(

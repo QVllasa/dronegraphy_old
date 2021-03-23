@@ -14,7 +14,7 @@ import {Router} from '@angular/router';
 export class VideoGridComponent implements OnInit {
 
     @Input() videos: Video[] = [];
-    @Input() gridLayout: string;
+    @Input() gridLayout: any = {xs: 1, sm: 2, md: 2, lg: 3, xl: 4};
     showActions: boolean;
     timer: any;
 

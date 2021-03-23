@@ -84,7 +84,7 @@ export class FootageComponent implements OnInit, AfterViewInit {
     }
 
     getData() {
-        return this.videoService.getVideosByCreator(this.userSevice.user$.value.uid, -1, 0).pipe(
+        return this.videoService.getVideosByOwner(this.userSevice.user$.value.uid, -1, 0).pipe(
             map(res => {
                 this.totalCount = res.totalcount;
                 if (!res.videos) {

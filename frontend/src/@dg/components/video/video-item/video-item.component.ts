@@ -22,7 +22,7 @@ export class VideoItemComponent implements OnInit {
     @Input() videoItem: Video;
     // @Input() options: any;
     @Input() playOnHover: boolean;
-    @Input() mode: 'base' | 'actions' | 'details' = 'details';
+    @Input() mode: 'base' | 'clean' | 'details' = 'details';
 
 
     options: any;
@@ -38,7 +38,7 @@ export class VideoItemComponent implements OnInit {
     ngOnInit(): void {
         this.poster = this.domSanitizer.bypassSecurityTrustStyle(`url(${this.videoItem.getThumbnail()})`);
         switch (this.mode) {
-            case 'actions':
+            case 'clean':
                 this.options = {
                     poster: this.videoItem.getThumbnail(),
                     fluid: false,

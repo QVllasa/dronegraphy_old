@@ -1,6 +1,6 @@
 
-<ng-container *ngIf="mode === 'actions'">
-    <div class="rounded relative h-64 w-64 flex aspect-ratio-16/9 bg-no-repeat bg-center cursor-pointer"
+<ng-container *ngIf="mode === 'clean'">
+    <div class="rounded relative h-full w-full bg-contain flex aspect-ratio-16/9 bg-no-repeat bg-center cursor-pointer"
          (mouseenter)="onShow()" (mouseleave)="onHide()"
          [style.backgroundImage]="poster">
         <dg-vjs-player
