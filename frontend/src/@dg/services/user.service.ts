@@ -8,6 +8,7 @@ import {BehaviorSubject, concat, from, Observable, of} from 'rxjs';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {VideoService} from './video.service';
+import {Router} from '@angular/router';
 
 
 @Injectable({
@@ -18,6 +19,7 @@ export class UserService {
     user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
     constructor(private http: HttpClient,
+                private router: Router,
                 private videoService: VideoService,
                 private _snackBar: MatSnackBar,
                 private afAuth: AngularFireAuth) {
@@ -189,5 +191,27 @@ export class UserService {
         return creators;
     }
 
+    updateCart(id: string){
+        if (!this.user$.value) {
+            this.router.navigate(['/register']).then();
+            return;
+        }
+        if (this.user$.value.getActiveCart().includes(id)) {
+            this.user$.value.activeCart.splice(this.user$.value.activeCart.indexOf(id, 0), 1);
+            this.updateUser(this.user$.value).subscribe(res => {
+                // this.user$.activeCart = res;
+                this.user$.next(this.user$.value);
+                this._snackBar.open('Aus Warenkorb entfernt.', 'SCHLIESSEN', {duration: 1000});
+            });
+            // Add to favorites
+        } else {
+            this.user$.value.addToActiveCart(id);
+            this.updateUser(this.user$.value).subscribe(res => {
+                // this.user$.activeCart = res;
+                this.user$.next(this.user$.value);
+                this._snackBar.open('Zum Warenkorb hinzugefügt.', 'SCHLIESSEN', {duration: 1000});
+            });
+        }
+    }
 
 }

@@ -13,38 +13,48 @@
                 <button routerLink="/pricing" mat-raised-button color="primary">Konto aufladen</button>
             </div>
             <!--            <dg-video-grid [videos]="videos"></dg-video-grid>-->
-            <div *ngIf="user$.getActiveCart().length === 0" fxLayout="column" class="h-full" fxLayoutAlign="start center">
-                <div class="mat-display-1">Dein Warenkorb ist leer.</div>
-                <img class="h-full w-auto max-h-xxxs" src="assets/img/illustrations/videographer.svg" alt="">
+            <div *ngIf="videos.length === 0" fxLayout="column" class="h-full"
+                 fxLayoutAlign="space-around center">
+                <div class="mat-display-1 mt-6">Dein Warenkorb ist leer.</div>
+                <ng-lottie width="200px"
+                           height="100px"
+                           [options]="options"
+                           (animationCreated)="animationCreated($event)"></ng-lottie>
+                <div class="subheading-1 mt-6">Starte gleich dein nächstes Projekt.</div>
             </div>
-            <mat-list class="list" *ngIf="videos.length !== 0">
+            <mat-selection-list class="list" *ngIf="videos.length !== 0" [multiple]="false">
                 <h3 mat-subheader>Lizenzfrei</h3>
                 <ng-container *ngFor="let video of videos">
-                    <mat-list-item *ngIf="!video.sell">
-                        <img mat-list-avatar src="assets/img/avatars/1.jpg">
-                        <h3 matLine>John</h3>
+                    <mat-list-option *ngIf="!video.getLicense()">
+                        <img mat-list-avatar class="rounded" [src]="video.getThumbnail()">
+                        <h3 matLine>{{video.title}}</h3>
                         <p matLine>
-                            <span>Brunch?</span>
-                            <span class="subline">-- Did you want to go on Sunday? I was thinking</span>
+                            <span>Von {{video.getCreator().getFullName()}}</span>
+<!--                            <span class="subline">&#45;&#45; Did you want to go on Sunday? I was thinking</span>-->
                         </p>
-                    </mat-list-item>
+                        <mat-icon (click)="updateCart(video.id)" mat-list-icon class="text-sm" inline>close</mat-icon>
+                    </mat-list-option>
                 </ng-container>
                 <mat-divider></mat-divider>
                 <h3 mat-subheader>Pro Aufnahmen</h3>
                 <ng-container *ngFor="let video of videos">
-                    <mat-list-item *ngIf="video.sell">
-                        <img mat-list-avatar src="assets/img/avatars/4.jpg">
-                        <h3 matLine>Frank</h3>
+                    <mat-list-option *ngIf="video.getLicense()">
+                        <img mat-list-avatar class="rounded" [src]="video.getThumbnail()">
+                        <h3 matLine>{{video.title}}</h3>
                         <p matLine>
-                            <span>Pretty decent!</span>
-                            <span class="subline">-- You look pretty... decent!</span>
+                            <span>Von {{video.getCreator().getFullName()}}</span>
+<!--                            <span class="subline">&#45;&#45; You look pretty... decent!</span>-->
                         </p>
-                    </mat-list-item>
+                        <mat-icon (click)="updateCart(video.id)" mat-list-icon class="text-sm" inline>close</mat-icon>
+                    </mat-list-option>
                 </ng-container>
-            </mat-list>
+            </mat-selection-list>
         </div>
-        <div fxLayout="row" fxLayoutAlign="center center" class="mt-6">
+        <div *ngIf="videos.length !== 0" fxLayout="row" fxLayoutAlign="center center" class="mt-6">
             <button mat-raised-button color="primary">Downloads starten</button>
         </div>
+        <button class="mt-6" *ngIf="videos.length === 0" routerLink="/" mat-raised-button color="primary" >
+            <span>Zurück zu den Aufnahmen</span>
+        </button>
     </dg-page-layout-content>
 </dg-page-layout>

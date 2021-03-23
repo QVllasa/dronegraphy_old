@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component, HostListener, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Video} from '../../../@dg/models/video.model';
@@ -7,7 +7,7 @@ import {UserService} from '../../../@dg/services/user.service';
 import {SearchService} from '../../../@dg/services/search.service';
 import {ICategory} from '../../../@dg/models/category.model';
 import {map, take} from 'rxjs/operators';
-import {BehaviorSubject, pipe} from 'rxjs';
+import {BehaviorSubject, pipe, Subscription} from 'rxjs';
 import {removeDuplicateObjects} from '../../../@dg/utils/remove-duplicate-objects';
 
 
@@ -16,11 +16,12 @@ import {removeDuplicateObjects} from '../../../@dg/utils/remove-duplicate-object
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
     videos$ = this.videoService.videos$;
     videoItem: Video = null;
     options;
+    initVideos$: Subscription;
 
 
     constructor(public userService: UserService,
@@ -45,7 +46,9 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.videoService.init();
+        this.initVideos$ = this.videoService.init().subscribe((res) => {
+            this.videoService.isLoading$.next(false);
+        });
         if (!this.videoItem) {
             this.videoService.headerVideo$
                 .subscribe(video => {
@@ -59,5 +62,8 @@ export class HomeComponent implements OnInit {
         this.videoService.onLoadMore();
     }
 
+    ngOnDestroy() {
+        this.initVideos$.unsubscribe();
+    }
 
 }

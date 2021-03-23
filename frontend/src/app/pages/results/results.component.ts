@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from '../../../@dg/services/user.service';
 import {SortingService} from '../../../@dg/services/sorting.service';
 import {VideoService} from '../../../@dg/services/video.service';
@@ -6,6 +6,7 @@ import {SearchService} from '../../../@dg/services/search.service';
 import {ActivatedRoute} from '@angular/router';
 import {switchMap, take, tap} from 'rxjs/operators';
 import {CategoryService} from '../../../@dg/services/category.service';
+import {Subscription} from 'rxjs';
 
 
 @Component({
@@ -13,8 +14,9 @@ import {CategoryService} from '../../../@dg/services/category.service';
     templateUrl: './results.component.html',
     styleUrls: ['./results.component.scss']
 })
-export class ResultsComponent implements OnInit {
+export class ResultsComponent implements OnInit, OnDestroy {
 
+    initVideos$: Subscription;
 
     constructor(public userService: UserService,
                 private categoryService: CategoryService,
@@ -36,7 +38,9 @@ export class ResultsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.videoService.init();
+        this.initVideos$ = this.videoService.init().subscribe((res) => {
+            this.videoService.isLoading$.next(false);
+        });
         this.categoryService.getCategories()
             .pipe(
                 switchMap(() => {
@@ -56,6 +60,10 @@ export class ResultsComponent implements OnInit {
 
     loadMore() {
         this.videoService.onLoadMore();
+    }
+
+    ngOnDestroy() {
+        this.initVideos$.unsubscribe();
     }
 
 }

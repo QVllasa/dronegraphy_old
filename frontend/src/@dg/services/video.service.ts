@@ -49,7 +49,7 @@ export class VideoService {
         const search$ = this.searchService.search$;
 
 
-        merge(
+        return merge(
             activeSort$
                 .pipe(
                     tap(sortOption => {
@@ -85,10 +85,7 @@ export class VideoService {
                         this.sortKey
                     );
                 })
-            )
-            .subscribe((res) => {
-                this.isLoading$.next(false);
-            });
+            );
     }
 
     // TODO show only published videos
@@ -152,15 +149,16 @@ export class VideoService {
     onReloadVideos(limit?: number, page?: number, category?: string[], search?: string[], sort?: number) {
         return this.getVideos(limit, page, category, search, sort)
             .pipe(
-                tap(res => {
+                map(res => {
                     if (this.videos$.value.length > 0) {
                         this.videos$.next([...this.videos$.value, ...this.mapVideos(res)]);
                     } else {
+                        this.videos$.next([]);
                         this.videos$.next(this.mapVideos(res));
                         this.headerVideo$.next(this.videos$.value[0]);
                     }
 
-                    // console.log('Total Reloaded Videos', this.videos$.value.length, res);
+                    console.log('Total Reloaded Videos', this.videos$.value.length, res);
                     this.response = res;
                 })
             );

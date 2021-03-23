@@ -29,7 +29,7 @@ import {hyphenateUrlParams} from '../../../utils/hyphenate-url-params';
                 </mat-chip-list>
             </div>
             <div class="absolute bottom-0 left-0 text-white cursor-pointer p-1">
-                <mat-label (click)="onLoadVideo(videoItem)"  class="text-sm  mat-body-strong">{{videoItem.title}}</mat-label>
+                <mat-label (click)="onLoadVideo(videoItem)" class="text-sm  mat-body-strong">{{videoItem.title}}</mat-label>
                 <br>
                 <mat-label class=" text-sm mat-body-1 font-weight-lighter">
                     Von <span (click)="onLoadCreator(videoItem.getCreator())">{{videoItem.getCreator().getFullName()}}</span></mat-label>
@@ -90,26 +90,27 @@ export class VideoActionsComponent {
 
     // Adds and deletes items from cart
     updateCart(id: string) {
-        if (!this.user$) {
-            this.router.navigate(['/register']).then();
-            return;
-        }
-        if (this.user$.getActiveCart().includes(id)) {
-            this.user$.activeCart.splice(this.user$.activeCart.indexOf(id, 0), 1);
-            this.userService.updateUser(this.user$).subscribe(res => {
-                // this.user$.activeCart = res;
-                this.userService.user$.next(this.user$);
-                this._snackBar.open('Zum Warenkorb hinzugefügt.', 'SCHLIESSEN', {duration: 1000});
-            });
-            // Add to favorites
-        } else {
-            this.user$.addToActiveCart(id);
-            this.userService.updateUser(this.user$).subscribe(res => {
-                // this.user$.activeCart = res;
-                this.userService.user$.next(this.user$);
-                this._snackBar.open('Aus Warenkorb entfernt.', 'SCHLIESSEN', {duration: 1000});
-            });
-        }
+        this.userService.updateCart(id);
+        // if (!this.user$) {
+        //     this.router.navigate(['/register']).then();
+        //     return;
+        // }
+        // if (this.user$.getActiveCart().includes(id)) {
+        //     this.user$.activeCart.splice(this.user$.activeCart.indexOf(id, 0), 1);
+        //     this.userService.updateUser(this.user$).subscribe(res => {
+        //         // this.user$.activeCart = res;
+        //         this.userService.user$.next(this.user$);
+        //         this._snackBar.open('Zum Warenkorb hinzugefügt.', 'SCHLIESSEN', {duration: 1000});
+        //     });
+        //     // Add to favorites
+        // } else {
+        //     this.user$.addToActiveCart(id);
+        //     this.userService.updateUser(this.user$).subscribe(res => {
+        //         // this.user$.activeCart = res;
+        //         this.userService.user$.next(this.user$);
+        //         this._snackBar.open('Aus Warenkorb entfernt.', 'SCHLIESSEN', {duration: 1000});
+        //     });
+        // }
     }
 
     toggleFavorite(id: string) {

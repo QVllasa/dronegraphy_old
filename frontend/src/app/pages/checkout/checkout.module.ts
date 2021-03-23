@@ -10,20 +10,24 @@ import {ContainerModule} from "../../../@dg/directives/container/container.modul
 import {MatButtonModule} from "@angular/material/button";
 import {MatListModule} from "@angular/material/list";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatIconModule} from '@angular/material/icon';
+import {LottieModule} from 'ngx-lottie';
 
 
 @NgModule({
   declarations: [CheckoutComponent],
-  imports: [
-    CommonModule,
-    CheckoutRoutingModule,
-    FlexLayoutModule,
-    PageLayoutModule,
-    VideoGridModule,
-    ContainerModule,
-    MatButtonModule,
-    MatListModule,
-    MatTooltipModule
-  ]
+    imports: [
+        CommonModule,
+        CheckoutRoutingModule,
+        FlexLayoutModule,
+        PageLayoutModule,
+        VideoGridModule,
+        ContainerModule,
+        MatButtonModule,
+        MatListModule,
+        MatTooltipModule,
+        MatIconModule,
+        LottieModule
+    ]
 })
 export class CheckoutModule { }
