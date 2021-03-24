@@ -377,5 +377,70 @@ func TestLoadFilterFixtures(t *testing.T) {
 }
 
 func TestAdditionalUserInfo(t *testing.T) {
-	//	TODO add favoriteVideos, FavoriteCreators, DownloadedVideos, VideoHeader Fixtures
+
+	gofakeit.Seed(123)
+
+	if repository.DB == nil {
+		repository.NewDatabase()
+	}
+
+	var videos []string
+
+	vidProjection := bson.D{
+		//{"key", 1},
+	}
+
+	vidsColl := repository.DB.Client.Database("dronegraphy_db").Collection("videos")
+	vidsCursor, err := vidsColl.Find(context.Background(), bson.M{}, options.Find().SetProjection(vidProjection))
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer vidsCursor.Close(context.Background())
+
+	for vidsCursor.Next(context.Background()) {
+		var video model.Video
+		if err = vidsCursor.Decode(&video); err != nil {
+			log.Fatal(err)
+		}
+
+		videos = append(videos, video.ID.Hex())
+	}
+
+	var users []model.User
+	filter := bson.M{"role": "ROLE_CREATOR"}
+	usersColl := repository.DB.Client.Database("dronegraphy_db").Collection("users")
+	usersCursor, err := usersColl.Find(context.Background(), filter, options.Find().SetProjection(vidProjection))
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer usersCursor.Close(context.Background())
+
+	for usersCursor.Next(context.Background()) {
+		var user model.User
+		if err = usersCursor.Decode(&user); err != nil {
+			log.Fatal(err)
+		}
+
+		users = append(users, user)
+	}
+
+	var updatedUsers []model.User
+	for _, u := range users {
+		var list []string
+		for i := 1; i < gofakeit.Number(1, 5); i++ {
+			list = append(list, gofakeit.RandomString(videos))
+		}
+		fmt.Println(list)
+		u.FavoriteVideos = list
+		u.DownloadedVideos = list
+
+		updatedUsers = append(updatedUsers, u)
+	}
+
+	for _, u := range updatedUsers {
+		_, err = usersColl.UpdateOne(context.Background(), bson.M{"uid": u.UID}, bson.D{
+			{"$set", u},
+		})
+	}
+
 }
