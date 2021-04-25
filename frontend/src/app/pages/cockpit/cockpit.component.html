@@ -7,7 +7,6 @@
             <mat-tab-group mat-align-tabs="center" >
                 <mat-tab label="Meine Downloads">
                     <div class="p-6 max-h-3xl">
-<!--                        TODO fix change detection-->
                         <ng-container *ngIf="downloadedVideos.length !== 0">
                             <dg-video-grid [videos]="downloadedVideos" ></dg-video-grid>
                         </ng-container>
@@ -22,7 +21,6 @@
                 </mat-tab>
                 <mat-tab label="Gespeicherte Piloten">
                     <div class="p-6 max-h-3xl">
-<!--                        TODO favorite pilots-->
 <!--                        <dg-video-grid [videos]="videos" ></dg-video-grid>-->
                     </div>
                 </mat-tab>

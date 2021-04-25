@@ -116,7 +116,6 @@ export class AppComponent {
                 label: 'Über uns',
                 route: '/about-us'
             },
-            // TODO create page
             {
                 type: 'link',
                 label: 'Tipps und Tricks',

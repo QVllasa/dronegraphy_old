@@ -26,8 +26,6 @@ export class CockpitComponent implements OnInit {
 
 
     ngOnInit(): void {
-
-        //TODO fix change detection
         const videos = [];
         this.downloadedVideos = [];
         this.userService.user$.subscribe(value => {

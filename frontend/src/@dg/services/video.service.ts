@@ -88,7 +88,6 @@ export class VideoService {
             );
     }
 
-    // TODO show only published videos
     getVideos(limit?: number, page?: number, category?: string[], search?: string[], sortKey?: number) {
         if (!page) {
             // Same as in Backend
