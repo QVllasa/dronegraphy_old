@@ -172,7 +172,6 @@ func (this *Handler) UploadVideoFiles(c echo.Context) error {
 								{"converted", true}}},
 					})
 				this.service.SendEmail(
-					//TODO generic -> replace with user.UID
 					"qendrim.vllasa@gmail.com",
 					1)
 			}
@@ -222,7 +221,6 @@ func (this *Handler) GetVideo(c echo.Context) error {
 	return c.JSON(http.StatusOK, video)
 }
 
-// TODO get only published videos for public and all videos for owner
 func (this *Handler) GetVideos(c echo.Context) error {
 
 	uid := c.Param("uid")

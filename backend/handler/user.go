@@ -49,7 +49,6 @@ func (this *Handler) GetUsers(c echo.Context) error {
 
 func (this *Handler) UpdateUser(c echo.Context) error {
 
-	// TODO only owner can update
 	uid := c.Param("uid")
 	updates := make(map[string]interface{})
 

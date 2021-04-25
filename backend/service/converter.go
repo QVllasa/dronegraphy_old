@@ -140,8 +140,6 @@ func getOptions(srcPath, targetPath, res string) ([]string, error) {
 	filenameTS := filepath.Join(targetPath, res+"_%03d.ts")
 	filenameM3U8 := filepath.Join(targetPath, res+".m3u8")
 
-
-	// TODO change for better video quality
 	options := []string{
 		"-v", "verbose",
 		"-hide_banner",
